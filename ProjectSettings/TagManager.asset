@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - LevelPart
+  - Dummie
+  - SecondCamera
+  - BulletSpawn
+  - CinemachineTarget
   layers:
   - Default
   - TransparentFX
@@ -11,9 +16,9 @@ TagManager:
   - Ground
   - Water
   - UI
-  - HandsAndGuns
-  - 
-  - 
+  - FirstPerson
+  - ThirdPerson
+  - Weapon
   - 
   - 
   - 
