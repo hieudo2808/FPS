@@ -15,13 +15,11 @@ namespace FPS
 
         private void Start()
         {
-            // Khởi tạo và ẩn tất cả vũ khí trừ vũ khí đầu tiên
             for (int i = 0; i < weapons.Count; i++)
             {
                 weapons[i].SetActive(i == currentWeaponIndex);
             }
 
-            // Cập nhật UI ban đầu
             HUDManager.Instance.UpdateWeaponUI();
         }
 
@@ -40,14 +38,10 @@ namespace FPS
         {
             if (newIndex == currentWeaponIndex || newIndex >= weapons.Count) return;
 
-            // Ẩn vũ khí hiện tại
             weapons[currentWeaponIndex].gameObject.SetActive(false);
-
-            // Hiện vũ khí mới
             currentWeaponIndex = newIndex;
             weapons[currentWeaponIndex].gameObject.SetActive(true);
 
-            // Cập nhật UI
             HUDManager.Instance.UpdateWeaponUI();
         }
 
