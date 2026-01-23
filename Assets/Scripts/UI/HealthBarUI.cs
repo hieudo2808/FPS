@@ -45,7 +45,6 @@ namespace FPS
             float healthPercent = current / max;
             healthText.text = $"HP: {Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";
             
-            // Đổi màu theo HP
             if (healthPercent <= criticalThreshold)
                 healthText.color = criticalColor;
             else if (healthPercent <= warningThreshold)

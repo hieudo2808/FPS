@@ -16,7 +16,6 @@ namespace FPS
         [Header("Debug")]
         [SerializeField] private bool showDebugGizmos = false;
         
-        // Slot data per player
         private Dictionary<int, AttackSlot[]> playerSlots = new Dictionary<int, AttackSlot[]>();
         private Dictionary<EnemyAI, SlotAssignment> zombieAssignments = new Dictionary<EnemyAI, SlotAssignment>();
 
@@ -33,7 +32,7 @@ namespace FPS
         {
             public int playerIndex;
             public int slotIndex;
-            public bool isAttacker; // true = attacking, false = waiting
+            public bool isAttacker;
         }
 
         private void Awake()
@@ -96,13 +95,11 @@ namespace FPS
 
         public bool RequestSlot(EnemyAI zombie, int targetPlayerIndex)
         {
-            // Ensure slots exist for this player
             if (!playerSlots.ContainsKey(targetPlayerIndex))
             {
                 CreateSlotsForPlayer(targetPlayerIndex);
             }
             
-            // Already has assignment?
             if (zombieAssignments.ContainsKey(zombie))
             {
                 return zombieAssignments[zombie].isAttacker;
@@ -116,7 +113,6 @@ namespace FPS
             Vector3 zombiePos = zombie.transform.position;
             Vector3 toZombie = (zombiePos - playerPos).normalized;
             
-            // Find best free slot (closest to zombie's approach direction)
             AttackSlot bestSlot = null;
             float bestDot = -1f;
             
@@ -134,7 +130,6 @@ namespace FPS
             
             if (bestSlot != null)
             {
-                // Claim slot
                 bestSlot.occupant = zombie;
                 bestSlot.claimTime = Time.time;
                 
@@ -148,7 +143,6 @@ namespace FPS
                 return true;
             }
             
-            // No free slot - become waiter
             zombieAssignments[zombie] = new SlotAssignment
             {
                 playerIndex = targetPlayerIndex,
@@ -251,7 +245,6 @@ namespace FPS
                 {
                     if (!slot.IsFree && Time.time - slot.claimTime > slotTimeout)
                     {
-                        // Timeout - release slot
                         if (slot.occupant != null)
                         {
                             zombieAssignments.Remove(slot.occupant);
@@ -264,12 +257,10 @@ namespace FPS
 
         private void UpdateSlotPositions()
         {
-            // Promote waiters to attackers when slots become free
             foreach (var kvp in zombieAssignments)
             {
                 if (!kvp.Value.isAttacker && kvp.Key != null)
                 {
-                    // Try to get a slot
                     if (RequestSlotForWaiter(kvp.Key, kvp.Value.playerIndex))
                     {
                         kvp.Value.isAttacker = true;

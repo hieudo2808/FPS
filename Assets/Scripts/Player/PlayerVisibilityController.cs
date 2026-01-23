@@ -2,10 +2,6 @@ using UnityEngine;
 
 namespace FPS
 {
-    /// <summary>
-    /// Điều khiển visibility của First Person Arms vs Third Person Body.
-    /// Sử dụng cho multiplayer: Local player thấy FPS Arms, other players thấy Full Body.
-    /// </summary>
     public class PlayerVisibilityController : MonoBehaviour
     {
         [Header("References")]
@@ -34,17 +30,13 @@ namespace FPS
         {
             SetupVisibility(isLocalPlayer);
         }
-
-        /// <summary>
-        /// Gọi method này khi biết đây có phải local player hay không (multiplayer)
-        /// </summary>
+        
         public void SetupVisibility(bool isLocal)
         {
             isLocalPlayer = isLocal;
 
             if (isLocalPlayer)
             {
-                // Local player: Thấy FPS Arms, không thấy Third Person Body trong camera của mình
                 if (firstPersonArms != null)
                 {
                     firstPersonArms.SetActive(true);
@@ -59,7 +51,6 @@ namespace FPS
 
                 if (thirdPersonBody != null)
                 {
-                    // Giữ active cho shadow và network sync, nhưng đổi layer
                     thirdPersonBody.SetActive(true);
                     SetLayerRecursively(thirdPersonBody, thirdPersonLayer);
                 }
@@ -72,7 +63,6 @@ namespace FPS
             }
             else
             {
-                // Other players: Không thấy FPS Arms của họ, chỉ thấy Full Body
                 if (firstPersonArms != null)
                 {
                     firstPersonArms.SetActive(false);
@@ -97,9 +87,6 @@ namespace FPS
             }
         }
 
-        /// <summary>
-        /// Đổi layer cho GameObject và tất cả children
-        /// </summary>
         private void SetLayerRecursively(GameObject obj, string layerName)
         {
             if (obj == null) return;
@@ -123,9 +110,6 @@ namespace FPS
             }
         }
 
-        /// <summary>
-        /// Chuyển đổi weapons giữa FPS và Third Person (dùng khi đổi súng)
-        /// </summary>
         public void SetWeapons(GameObject fpWeapon, GameObject tpWeapon)
         {
             firstPersonWeapon = fpWeapon;

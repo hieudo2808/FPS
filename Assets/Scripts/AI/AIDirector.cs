@@ -42,7 +42,6 @@ namespace FPS
         [Header("Debug")]
         [SerializeField] private bool showDebugLogs = true;
         
-        // State
         private GamePhase currentPhase = GamePhase.BUILD;
         private float phaseTimer;
         private float intensity;
@@ -50,12 +49,10 @@ namespace FPS
         private int totalKills;
         private float spawnTimer;
         
-        // Learning modifiers
         private float hpModifier = 1f;
         private float speedModifier = 1f;
         private float damageModifier = 1f;
         
-        // Properties
         public GamePhase CurrentPhase => currentPhase;
         public float Intensity => intensity;
         public int ZombiesAlive => zombiesAlive;
@@ -78,7 +75,6 @@ namespace FPS
 
         private void Start()
         {
-            // Start with BUILD phase after short delay
             StartCoroutine(StartFirstWave());
         }
 
@@ -94,7 +90,6 @@ namespace FPS
             UpdateSpawning();
             UpdateUI();
             
-            // Intensity decay
             intensity -= Time.deltaTime * 2f;
             intensity = Mathf.Clamp(intensity, 0f, 100f);
         }
@@ -136,7 +131,6 @@ namespace FPS
             if (showDebugLogs)
                 Debug.Log($"[AIDirector] Phase changed to: {newPhase}");
             
-            // Show announcement
             if (newPhase == GamePhase.PEAK)
             {
                 ShowAnnouncement("INCOMING HORDE!");
@@ -167,13 +161,11 @@ namespace FPS
         {
             float interval = baseSpawnInterval;
             
-            // Faster spawning during PEAK
             if (currentPhase == GamePhase.PEAK)
             {
                 interval *= 0.5f;
             }
             
-            // Scale with player count
             int playerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
             interval /= (1f + (playerCount - 1) * 0.3f);
             
@@ -188,7 +180,6 @@ namespace FPS
                 return;
             }
             
-            // Try spawn special during PEAK
             if (currentPhase == GamePhase.PEAK && enableSpecialInfected && Random.value < specialSpawnChance)
             {
                 if (TrySpawnSpecial())
@@ -197,13 +188,11 @@ namespace FPS
             
             GameObject zombie;
             
-            // Smart spawning: target isolated players or spawn behind team
             if (useSmartSpawning && TeamAnalyzer.Instance != null)
             {
                 var isolated = TeamAnalyzer.Instance.GetMostIsolatedPlayer();
                 if (isolated != null && Random.value < 0.4f)
                 {
-                    // Spawn near isolated player
                     zombie = ZombieFactory.Instance.SpawnZombieBehindPlayer(
                         isolated.playerIndex,
                         hpModifier, speedModifier, damageModifier
@@ -211,7 +200,6 @@ namespace FPS
                 }
                 else
                 {
-                    // Smart spawn using influence map
                     zombie = ZombieFactory.Instance.SpawnZombieAtSmartPosition(
                         hpModifier, speedModifier, damageModifier
                     );
@@ -229,7 +217,6 @@ namespace FPS
                 zombiesAlive++;
                 intensity += 5f;
                 
-                // Subscribe to death event
                 EnemyHealth health = zombie.GetComponent<EnemyHealth>();
                 if (health != null)
                 {
@@ -292,7 +279,6 @@ namespace FPS
             totalKills++;
             intensity -= 3f;
             
-            // Update learning modifiers
             UpdateLearningModifiers();
         }
 
@@ -303,25 +289,22 @@ namespace FPS
             PlayerProfile carry = PlayerProfiler.Instance.GetCarryPlayer();
             if (carry == null) return;
             
-            // Performance-based adjustment
             float performanceScore = carry.headshotRatio * 0.4f
                                    + Mathf.Min(carry.totalKills / 100f, 1f) * 0.3f
                                    + (carry.avgReactionTime > 0 ? Mathf.Min(1f / carry.avgReactionTime, 1f) * 0.3f : 0f);
             
-            if (performanceScore > 0.3f) // Player doing well
+            if (performanceScore > 0.3f)
             {
                 hpModifier = Mathf.Min(hpModifier + learningRate, maxHPModifier);
                 speedModifier = Mathf.Min(speedModifier + learningRate * 0.5f, maxSpeedModifier);
                 damageModifier = Mathf.Min(damageModifier + learningRate, maxDamageModifier);
             }
             
-            // Counter-play: camping players face faster zombies
             if (carry.isCamping && carry.campingDuration > 15f)
             {
                 speedModifier = Mathf.Min(speedModifier + learningRate * 2f, maxSpeedModifier);
             }
             
-            // Counter-play: high headshot = more HP
             if (carry.headshotRatio > 0.5f)
             {
                 hpModifier = Mathf.Min(hpModifier + learningRate * 2f, maxHPModifier);

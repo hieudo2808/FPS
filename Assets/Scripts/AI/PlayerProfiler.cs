@@ -6,33 +6,28 @@ namespace FPS
     [System.Serializable]
     public class PlayerProfile
     {
-        // Player reference
         public Transform playerTransform;
         public int playerIndex;
 
         public Transform cameraTransform;
         
-        // Position tracking
         public List<Vector3> positionHistory = new List<Vector3>();
         public Vector3 mostFrequentPosition;
         public bool isCamping;
         public float campingDuration;
         
-        // Combat stats
         public int totalKills;
         public int headshotKills;
         public float headshotRatio;
         public float avgKillDistance;
         public float avgReactionTime;
         
-        // Current state
         public float currentHealth;
         public float currentAmmoPercent;
         public bool isReloading;
         public bool isMoving;
         public Vector3 lookDirection;
         
-        // Team metrics
         public float distanceToNearestAlly;
         public bool isIsolated;
     }
@@ -76,17 +71,14 @@ namespace FPS
 
         private void Update()
         {
-            // Update position tracking
             if (Time.time - lastPositionUpdate >= positionUpdateInterval)
             {
                 UpdatePositionTracking();
                 lastPositionUpdate = Time.time;
             }
             
-            // Update current state
             UpdateCurrentState();
             
-            // Update team metrics
             if (playerProfiles.Count > 1)
             {
                 UpdateTeamMetrics();
@@ -122,16 +114,13 @@ namespace FPS
             {
                 if (profile.playerTransform == null) continue;
                 
-                // Add current position to history
                 profile.positionHistory.Add(profile.playerTransform.position);
                 
-                // Limit history size
                 while (profile.positionHistory.Count > positionHistorySize)
                 {
                     profile.positionHistory.RemoveAt(0);
                 }
                 
-                // Check camping
                 UpdateCampingStatus(profile);
             }
         }
@@ -140,7 +129,6 @@ namespace FPS
         {
             if (profile.positionHistory.Count < 20) return;
             
-            // Get last 20 positions (10 seconds worth)
             int checkCount = Mathf.Min(20, profile.positionHistory.Count);
             Vector3 avgPosition = Vector3.zero;
             
@@ -150,7 +138,6 @@ namespace FPS
             }
             avgPosition /= checkCount;
             
-            // Check max deviation
             float maxDeviation = 0f;
             for (int i = profile.positionHistory.Count - checkCount; i < profile.positionHistory.Count; i++)
             {
@@ -158,7 +145,6 @@ namespace FPS
                 maxDeviation = Mathf.Max(maxDeviation, dist);
             }
             
-            // Camping if stayed within radius
             bool wasCamping = profile.isCamping;
             profile.isCamping = maxDeviation < campingRadius;
             
@@ -182,20 +168,17 @@ namespace FPS
             {
                 if (profile.playerTransform == null) continue;
                 
-                // Health
                 PlayerHealth health = profile.playerTransform.GetComponent<PlayerHealth>();
                 if (health != null)
                 {
                     profile.currentHealth = health.CurrentHealth;
                 }
                 
-                // Look direction (Camera)
                 if (profile.cameraTransform != null)
                 {
                     profile.lookDirection = profile.cameraTransform.forward;
                 }
                 
-                // Movement check
                 if (profile.positionHistory.Count >= 2)
                 {
                     Vector3 lastPos = profile.positionHistory[profile.positionHistory.Count - 1];
@@ -229,7 +212,6 @@ namespace FPS
             }
         }
 
-        // Called by zombie when killed
         public void ReportKill(int playerIndex, Vector3 zombiePosition, bool wasHeadshot, float reactionTime)
         {
             if (playerIndex < 0 || playerIndex >= playerProfiles.Count) return;

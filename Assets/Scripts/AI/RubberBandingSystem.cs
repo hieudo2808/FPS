@@ -4,12 +4,6 @@ using System.Collections.Generic;
 
 namespace FPS
 {
-    /// <summary>
-    /// RubberBandingSystem - Manages zombie teleportation and catch-up speed
-    /// - Teleports zombies that are too far behind
-    /// - Increases speed for zombies behind player (out of view)
-    /// - Maintains consistent pressure on players
-    /// </summary>
     public class RubberBandingSystem : Singleton<RubberBandingSystem>
     {
         [Header("Teleport Settings")]
@@ -46,9 +40,6 @@ namespace FPS
             UpdateCatchUpSpeed();
         }
 
-        /// <summary>
-        /// Register a zombie for rubber banding
-        /// </summary>
         public void RegisterZombie(EnemyAI zombie)
         {
             if (zombie == null || trackedZombies.ContainsKey(zombie)) return;
@@ -62,9 +53,6 @@ namespace FPS
             };
         }
 
-        /// <summary>
-        /// Unregister zombie (when it dies)
-        /// </summary>
         public void UnregisterZombie(EnemyAI zombie)
         {
             trackedZombies.Remove(zombie);
@@ -92,10 +80,8 @@ namespace FPS
 
                 float distance = Vector3.Distance(zombie.transform.position, nearestPlayer.position);
 
-                // Check if zombie is out of range
                 if (distance > maxDistanceFromPlayer)
                 {
-                    // Check if out of view
                     if (!IsInAnyPlayerView(zombie.transform.position))
                     {
                         data.timeOutOfRange += teleportCheckInterval;
@@ -108,7 +94,7 @@ namespace FPS
                     }
                     else
                     {
-                        data.timeOutOfRange = 0f; // Reset if in view
+                        data.timeOutOfRange = 0f;
                     }
                 }
                 else
@@ -117,7 +103,6 @@ namespace FPS
                 }
             }
 
-            // Cleanup null zombies
             foreach (var zombie in toRemove)
             {
                 trackedZombies.Remove(zombie);
@@ -141,13 +126,11 @@ namespace FPS
 
         private Vector3 GetTeleportPosition()
         {
-            // Use InfluenceMap if available
             if (InfluenceMapManager.Instance != null)
             {
                 return InfluenceMapManager.Instance.GetBestSpawnPosition();
             }
 
-            // Fallback: spawn behind nearest player
             var player = GetNearestPlayer();
             if (player == null) return Vector3.zero;
 
@@ -179,12 +162,10 @@ namespace FPS
                 Vector3 toZombie = (zombie.transform.position - nearestPlayer.position).normalized;
                 float dot = Vector3.Dot(nearestPlayer.forward, toZombie);
 
-                // Zombie is behind player (player facing away)
                 if (dot < behindPlayerDotThreshold && !IsInAnyPlayerView(zombie.transform.position))
                 {
                     if (!data.isSpeedBoosted)
                     {
-                        // Calculate speed boost based on distance
                         float distance = Vector3.Distance(zombie.transform.position, nearestPlayer.position);
                         float speedMultiplier = 1f + (distance / 100f);
                         speedMultiplier = Mathf.Min(speedMultiplier, maxSpeedBoost);
@@ -198,7 +179,6 @@ namespace FPS
                 }
                 else
                 {
-                    // Reset to normal speed when in view
                     if (data.isSpeedBoosted)
                     {
                         agent.speed = data.originalSpeed;
@@ -219,10 +199,8 @@ namespace FPS
                 Vector3 toPos = (position - profile.playerTransform.position).normalized;
                 float dot = Vector3.Dot(profile.lookDirection, toPos);
 
-                // In FOV (roughly 90 degrees each side)
                 if (dot > 0f)
                 {
-                    // Also check if not too far
                     float dist = Vector3.Distance(position, profile.playerTransform.position);
                     if (dist < 40f)
                         return true;
@@ -243,7 +221,6 @@ namespace FPS
             {
                 if (profile.playerTransform == null) continue;
                 
-                // Just return first valid player for simplicity
                 return profile.playerTransform;
             }
 

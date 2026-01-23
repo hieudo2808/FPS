@@ -11,23 +11,17 @@ namespace FPS
         private const string SFX_VOLUME_PARAM = "sfx";
         private const string MUSIC_VOLUME_PARAM = "music";
         private const string MASTER_VOLUME_PARAM = "master";
-        private const float MIN_VOLUME_DB = -80f; // Giá trị âm lượng tối thiểu (im lặng)
-        private const float MAX_VOLUME_DB = 0f;   // Giá trị âm lượng tối đa
-        private const float VOLUME_STEP = 0.1f;   // Bước tăng/giảm âm lượng
-        private const float DEFAULT_VOLUME = 0.5f; // Giá trị âm lượng mặc định
-        private const float VOLUME_ADJUST_DELAY = 0.1f; // Thời gian chờ giữa các lần điều chỉnh âm lượng
+        private const float MIN_VOLUME_DB = -80f;
+        private const float MAX_VOLUME_DB = 0f;
+        private const float VOLUME_STEP = 0.1f;
+        private const float DEFAULT_VOLUME = 0.5f;
+        private const float VOLUME_ADJUST_DELAY = 0.1f;
         private float lastVolumeAdjustTime = 0f;
 
         private void Start()
         {
-            // Khởi tạo âm lượng từ PlayerPrefs hoặc đặt về mặc định
             float sfxVolume = PlayerPrefs.GetFloat(SFX_VOLUME_PARAM, DEFAULT_VOLUME);
-            //float musicVolume = PlayerPrefs.GetFloat(MUSIC_VOLUME_PARAM, DEFAULT_VOLUME);
-            //float masterVolume = PlayerPrefs.GetFloat(MASTER_VOLUME_PARAM, DEFAULT_VOLUME);
-
             SetSFXVolume(sfxVolume);
-            //SetMusicVolume(musicVolume);
-            //SetMasterVolume(masterVolume);
         }
 
         public void PlaySFXSound(AudioClip clip, float volume = 1f)
@@ -81,7 +75,6 @@ namespace FPS
             PlayerPrefs.SetFloat(MASTER_VOLUME_PARAM, volume);
         }
 
-        // ✅ IMPROVED: Extract common conversion logic
         private float ConvertVolumeToDecibels(float volume)
         {
             return (volume <= 0.01f) ? MIN_VOLUME_DB : Mathf.Log10(volume) * 20f;
@@ -116,7 +109,6 @@ namespace FPS
             return ConvertDecibelsToVolume(dB);
         }
 
-        // ✅ IMPROVED: Generic volume adjustment method
         private void AdjustVolume(System.Action<float> setVolumeAction, System.Func<float> getVolumeFunc, float adjustment)
         {
             if (Time.time - lastVolumeAdjustTime < VOLUME_ADJUST_DELAY) return;
@@ -157,7 +149,6 @@ namespace FPS
             AdjustVolume(SetMasterVolume, GetMasterVolume, -VOLUME_STEP);
         }
 
-        // ✅ ADDED: Utility methods
         public void MuteAll()
         {
             SetMasterVolume(0f);
@@ -175,7 +166,6 @@ namespace FPS
             SetMasterVolume(DEFAULT_VOLUME);
         }
 
-        // ✅ ADDED: Save settings explicitly (good practice)
         public void SaveSettings()
         {
             PlayerPrefs.Save();

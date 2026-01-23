@@ -18,13 +18,11 @@ namespace FPS
         {
             Debug.Log("Hit " + collision.gameObject.name);
 
-            // Kiểm tra nếu trúng enemy
             EnemyHealth enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
             if (enemyHealth != null)
             {
                 enemyHealth.TakeDamage(damage);
             }
-            // Tạo bullet hole nếu trúng tường/vật thể (layer 3)
             else if (collision.gameObject.layer == 3)
             {
                 CreateBulletHole(collision);

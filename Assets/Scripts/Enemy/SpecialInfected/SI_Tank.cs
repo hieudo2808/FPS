@@ -13,18 +13,16 @@ namespace FPS
             base.Start();
             specialType = SpecialType.Tank;
             allowedInSoloMode = true;
-            specialHPMultiplier = 5f; // Very tanky
+            specialHPMultiplier = 5f;
         }
 
         public override void UseAbility()
         {
-            // TODO: Ground slam or throw rock
             Debug.Log("[Tank] Ground slam!");
         }
 
         public override bool ShouldSpawn(PlayerProfile profile)
         {
-            // Spawn during peak phase when team is winning
             return AIDirector.Instance?.CurrentPhase == GamePhase.PEAK;
         }
     }

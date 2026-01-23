@@ -18,14 +18,12 @@ namespace FPS
         [Header("Debug")]
         [SerializeField] private bool showDebugLogs = false;
         
-        // Team state
         private TeamFormation currentFormation = TeamFormation.SOLO;
         private List<PlayerProfile> isolatedPlayers = new List<PlayerProfile>();
         private int carryPlayerIndex = -1;
         private Vector3 teamCentroid;
         private float teamSpread;
         
-        // Properties
         public TeamFormation Formation => currentFormation;
         public List<PlayerProfile> IsolatedPlayers => isolatedPlayers;
         public int CarryPlayerIndex => carryPlayerIndex;
@@ -66,7 +64,6 @@ namespace FPS
                 return;
             }
             
-            // Calculate distances between all pairs
             float maxDistance = 0f;
             float minDistance = float.MaxValue;
             float totalDistance = 0f;
@@ -93,7 +90,6 @@ namespace FPS
             
             teamSpread = pairCount > 0 ? totalDistance / pairCount : 0f;
             
-            // Determine formation
             if (maxDistance <= groupedDistance)
             {
                 currentFormation = TeamFormation.GROUPED;
@@ -117,7 +113,6 @@ namespace FPS
 
         private bool HasTwoPairs(List<PlayerProfile> profiles)
         {
-            // Simplified check: if there are 2 pairs of players close together
             int closeCount = 0;
             for (int i = 0; i < profiles.Count; i++)
             {
@@ -134,7 +129,7 @@ namespace FPS
                         closeCount++;
                 }
             }
-            return closeCount == 2; // Exactly 2 close pairs
+            return closeCount == 2;
         }
 
         private void AnalyzeRoles()
@@ -142,7 +137,6 @@ namespace FPS
             var profiles = PlayerProfiler.Instance.AllProfiles;
             if (profiles.Count == 0) return;
             
-            // Find carry (highest kills + headshot ratio)
             float highestThreat = 0f;
             carryPlayerIndex = 0;
             
@@ -204,7 +198,6 @@ namespace FPS
             if (profile.isIsolated)
                 return PlayerRole.LONE_WOLF;
             
-            // Simple heuristic for frontline vs support
             if (profile.totalKills > 10 && profile.avgKillDistance < 15f)
                 return PlayerRole.FRONTLINE;
             

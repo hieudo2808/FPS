@@ -78,7 +78,6 @@ namespace FPS
             Transform spawnPoint = GetRandomSpawnPoint();
             if (spawnPoint == null) return Vector3.zero;
             
-            // Add random offset
             Vector3 offset = new Vector3(
                 Random.Range(-3f, 3f),
                 0f,
@@ -91,7 +90,6 @@ namespace FPS
         public int ZombieTypeCount => zombieTypes.Count;
         public int SpawnPointCount => spawnPoints.Count;
         
-        // Editor helper
         public void AddZombieType(ZombieData data)
         {
             zombieTypes.Add(data);

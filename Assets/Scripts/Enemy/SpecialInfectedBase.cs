@@ -5,11 +5,11 @@ namespace FPS
     public enum SpecialType
     {
         None,
-        Stalker,    // Stealth, backstab
-        Screamer,   // Call horde
-        Spitter,    // AoE acid
-        Charger,    // Charge + pin
-        Tank        // Mini-boss
+        Stalker,
+        Screamer,
+        Spitter,
+        Charger,
+        Tank
     }
 
     public abstract class SpecialInfectedBase : EnemyAI
@@ -29,9 +29,8 @@ namespace FPS
         protected override void Start()
         {
             base.Start();
-            lastAbilityTime = -abilityCooldown; // Ready immediately
+            lastAbilityTime = -abilityCooldown;
             
-            // Apply special HP scaling
             ApplySpecialScaling();
         }
 
@@ -39,12 +38,9 @@ namespace FPS
         {
             int playerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
             
-            // Exponential scaling for specials
             float hpScale = Mathf.Pow(1.5f, playerCount - 1);
             
-            // Solo mode: reduce HP
-            if (playerCount == 1)
-            {
+            if (playerCount == 1) {
                 hpScale *= 0.5f;
             }
             
@@ -58,7 +54,6 @@ namespace FPS
 
         protected virtual void Update()
         {
-            // Check ability usage
             if (abilityReady && CanUseAbility())
             {
                 UseAbility();
@@ -66,7 +61,6 @@ namespace FPS
             }
         }
 
-        // Override in subclasses
         public abstract void UseAbility();
         
         protected virtual bool CanUseAbility()
@@ -74,7 +68,6 @@ namespace FPS
             return true;
         }
 
-        // Override to define spawn conditions
         public virtual bool ShouldSpawn(PlayerProfile profile)
         {
             return true;

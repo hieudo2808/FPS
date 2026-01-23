@@ -177,7 +177,6 @@ namespace FPS
                     Quaternion.LookRotation(shootDirection));
                 currentAmmo--;
                 
-                // Set damage từ Weapon
                 Bullet bulletScript = bulletInstance.GetComponent<Bullet>();
                 if (bulletScript != null)
                 {
@@ -185,7 +184,7 @@ namespace FPS
                 }
                 
                 Rigidbody rb = bulletInstance.GetComponent<Rigidbody>();
-                rb.velocity = shootDirection * bulletSpeed;
+                rb.linearVelocity = shootDirection * bulletSpeed;
 
                 AudioManager.Instance.PlaySFXSound(shootSound);
                 Destroy(bulletInstance, bulletLiveTime);
@@ -194,7 +193,7 @@ namespace FPS
 
         private void ReloadWeapon()
         {
-            if (isReloading) return; // Prevent double reload
+            if (isReloading) return;
             
             canShoot = false;
             isReloading = true;
@@ -245,22 +244,15 @@ namespace FPS
             isReloading = false;
             canShoot = true;
             
-            // Ensure magazine is back on gun
             InsertMagazine();
         }
         
-        /// <summary>
-        /// Rút băng đạn ra khỏi súng (gọi từ Animation Event)
-        /// </summary>
         public void GrabMagazine()
         {
             if (magazineOnGun != null) magazineOnGun.SetActive(false);
             if (magazineInHand != null) magazineInHand.SetActive(true);
         }
         
-        /// <summary>
-        /// Lắp băng đạn vào súng (gọi từ Animation Event)
-        /// </summary>
         public void InsertMagazine()
         {
             if (magazineOnGun != null) magazineOnGun.SetActive(true);

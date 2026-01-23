@@ -52,7 +52,6 @@ namespace FPS
 
         private void InitializeDefaultTypes()
         {
-            // Add placeholder types if empty
             if (specialTypes.Count == 0)
             {
                 specialTypes.Add(new SpecialInfectedData
@@ -99,7 +98,6 @@ namespace FPS
 
         private void Update()
         {
-            // Cleanup dead specials
             aliveSpecials.RemoveAll(s => s == null);
         }
 

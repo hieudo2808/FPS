@@ -13,7 +13,6 @@ namespace FPS
         public GameObject SpawnZombie(Vector3 position, Quaternion rotation, 
             float hpModifier = 1f, float speedModifier = 1f, float damageModifier = 1f)
         {
-            // Get random zombie type
             ZombieData data = ZombieRegistry.Instance?.GetRandomZombie();
             if (data == null || data.prefab == null)
             {
@@ -21,7 +20,6 @@ namespace FPS
                 return null;
             }
             
-            // Get zombie from pool or instantiate
             GameObject zombie;
             if (usePooling && ZombiePoolManager.Instance != null)
             {
@@ -34,10 +32,8 @@ namespace FPS
             
             if (zombie == null) return null;
             
-            // Apply stats with modifiers
             float playerScale = GetPlayerCountMultiplier();
             
-            // Apply HP
             EnemyHealth health = zombie.GetComponent<EnemyHealth>();
             if (health != null)
             {
@@ -45,7 +41,6 @@ namespace FPS
                 health.SetMaxHealth(finalHP);
             }
             
-            // Apply Speed and Damage
             EnemyAI ai = zombie.GetComponent<EnemyAI>();
             if (ai != null)
             {
@@ -53,7 +48,6 @@ namespace FPS
                 float finalDamage = data.baseDamage * damageModifier * playerScale;
                 ai.SetStats(finalSpeed, finalDamage, data.attackRate);
                 
-                // Register with RubberBandingSystem
                 RubberBandingSystem.Instance?.RegisterZombie(ai);
             }
             
@@ -74,17 +68,14 @@ namespace FPS
             return SpawnZombie(pos, Quaternion.identity, hpMod, speedMod, damageMod);
         }
 
-        // Smart spawn using InfluenceMap
         public GameObject SpawnZombieAtSmartPosition(float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
         {
             Vector3 pos;
             
-            // Try InfluenceMap first
             if (InfluenceMapManager.Instance != null)
             {
                 pos = InfluenceMapManager.Instance.GetBestSpawnPosition();
                 
-                // Fallback if position is zero
                 if (pos == Vector3.zero)
                 {
                     pos = ZombieRegistry.Instance.GetSpawnPosition();
@@ -98,7 +89,6 @@ namespace FPS
             return SpawnZombie(pos, Quaternion.identity, hpMod, speedMod, damageMod);
         }
 
-        // Spawn near specific player (behind them)
         public GameObject SpawnZombieBehindPlayer(int playerIndex, float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
         {
             Vector3 pos;
@@ -123,7 +113,6 @@ namespace FPS
                 playerCount = Mathf.Max(1, PlayerProfiler.Instance.PlayerCount);
             }
             
-            // 1P: 1.0, 2P: 1.35, 3P: 1.7, 4P: 2.05
             return 1f + (playerCount - 1) * 0.35f;
         }
     }

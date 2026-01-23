@@ -53,7 +53,6 @@ namespace FPS
                 }
             }
 
-            // Lưu vị trí gốc của weapon nếu có
             if (weaponTransform != null && weaponBasePosition == Vector3.zero)
             {
                 weaponBasePosition = weaponTransform.localPosition;
@@ -113,18 +112,15 @@ namespace FPS
 
         private void OffsetWeapon(float cameraPitch)
         {
-            // Tính offset dựa trên góc camera
             float normalizedPitch = Mathf.Clamp(cameraPitch / cameraMaxAngle, -1f, 1f);
 
             Vector3 targetOffset;
             if (normalizedPitch >= 0)
             {
-                // Nhìn lên -> đẩy weapon lên
                 targetOffset = Vector3.Lerp(Vector3.zero, weaponUpOffset, normalizedPitch);
             }
             else
             {
-                // Nhìn xuống -> đẩy weapon xuống
                 targetOffset = Vector3.Lerp(Vector3.zero, weaponDownOffset, -normalizedPitch);
             }
 

@@ -49,7 +49,7 @@ namespace FPS
             Debug.Log("Player died!");
             PlayerDeathEvent?.Invoke();
 
-            // TODO: Xử lý game over, respawn, v.v.
+
         }
 
         public void Heal(float amount)

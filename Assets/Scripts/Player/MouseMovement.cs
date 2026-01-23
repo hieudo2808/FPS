@@ -29,7 +29,6 @@ namespace FPS
         {
             Instance = this;
             
-            // Load saved sensitivity
             if (PlayerPrefs.HasKey("MouseSensitivity"))
             {
                 mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity");

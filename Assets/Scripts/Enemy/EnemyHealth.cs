@@ -65,7 +65,6 @@ namespace FPS
                 col.enabled = false;
             }
 
-            // Use pooling instead of destroy
             if (usePooling && ZombiePoolManager.Instance != null)
             {
                 Invoke(nameof(ReturnToPool), destroyDelay);
@@ -81,9 +80,6 @@ namespace FPS
             ZombiePoolManager.Instance?.ReturnZombie(gameObject);
         }
 
-        /// <summary>
-        /// Reset health for object pooling
-        /// </summary>
         public void ResetHealth()
         {
             isDead = false;

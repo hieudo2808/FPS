@@ -3,9 +3,7 @@ using UniBT;
 
 namespace FPS.BT
 {
-    // ============================================
-    // CONDITION NODES
-    // ============================================
+
 
     [System.Serializable]
     public class IsPlayerInRange : Conditional

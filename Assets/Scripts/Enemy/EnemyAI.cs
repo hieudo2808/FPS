@@ -51,14 +51,12 @@ namespace FPS
             if (agent == null) agent = GetComponent<NavMeshAgent>();
             if (animator == null) animator = GetComponent<Animator>();
 
-            // Find player
             FindPlayer();
 
-            // Setup agent
             if (agent != null)
             {
                 agent.speed = runSpeed;
-                agent.stoppingDistance = 0.5f; // Nhỏ - tự quản lý dừng
+                agent.stoppingDistance = 0.5f;
                 agent.updateRotation = false;
                 
                 if (agent.isOnNavMesh)
@@ -83,12 +81,10 @@ namespace FPS
             if (currentState == State.Dead) return;
             if (player == null) { FindPlayer(); return; }
 
-            // Target switching (multiplayer)
             UpdateTarget();
 
             float distToPlayer = Vector3.Distance(transform.position, player.position);
 
-            // State Machine với switch-case
             switch (currentState)
             {
                 case State.Idle:
@@ -107,7 +103,7 @@ namespace FPS
                     if (distToPlayer > attackRange * 1.2f)
                     {
                         SwitchState(State.Chase);
-                        ChaseBehavior(); // Start moving immediately!
+                        ChaseBehavior();
                     }
                     else
                         AttackBehavior();
@@ -173,7 +169,6 @@ namespace FPS
             if (attackSound != null && AudioManager.Instance != null)
                 AudioManager.Instance.PlaySFXSound(attackSound, soundVolume);
 
-            // Damage after delay
             Invoke(nameof(DealDamage), attackDelay);
         }
 
@@ -255,21 +250,17 @@ namespace FPS
             if (currentState == State.Dead) return;
             currentState = State.Dead;
 
-            // Release slot
             AttackSlotManager.Instance?.ReleaseSlot(this);
             hasSlot = false;
 
-            // Disable
             if (agent != null) agent.enabled = false;
             var col = GetComponent<Collider>();
             if (col != null) col.enabled = false;
 
-            // Animation & Sound
             if (animator != null) animator.SetTrigger(AnimDead);
             if (deathSound != null && AudioManager.Instance != null)
                 AudioManager.Instance.PlaySFXSound(deathSound, soundVolume);
 
-            // Unregister
             RubberBandingSystem.Instance?.UnregisterZombie(this);
         }
 
@@ -281,9 +272,6 @@ namespace FPS
             if (agent != null) agent.speed = runSpeed;
         }
 
-        /// <summary>
-        /// Reset AI for object pooling
-        /// </summary>
         public virtual void ResetAI()
         {
             currentState = State.Idle;

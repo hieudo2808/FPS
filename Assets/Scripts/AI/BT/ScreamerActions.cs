@@ -24,7 +24,6 @@ namespace FPS.BT
             if (agent == null || player == null) return Status.Failure;
             if (!agent.isOnNavMesh) return Status.Failure;
             
-            // Don't move while screaming
             if (screamer != null && screamer.IsScreaming)
             {
                 agent.isStopped = true;
@@ -47,7 +46,6 @@ namespace FPS.BT
                 );
             }
             
-            // Update animator Speed for Blend Tree
             if (animator != null)
             {
                 float speed = agent.velocity.magnitude;
@@ -93,14 +91,11 @@ namespace FPS.BT
             
             if (agent == null || player == null) return Status.Failure;
             
-            // Check NavMesh
             if (!agent.isOnNavMesh) return Status.Failure;
 
-            // Calculate flee direction
             Vector3 fleeDir = (gameObject.transform.position - player.position).normalized;
             Vector3 fleePos = gameObject.transform.position + fleeDir * fleeDistance;
 
-            // Find valid NavMesh position
             if (NavMesh.SamplePosition(fleePos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
             {
                 agent.isStopped = false;
@@ -133,29 +128,23 @@ namespace FPS.BT
             
             if (player == null) return Status.Failure;
 
-            // Stop moving
             if (agent != null && agent.isOnNavMesh)
                 agent.isStopped = true;
 
-            // Face player
             Vector3 dir = (player.position - gameObject.transform.position).normalized;
             dir.y = 0;
             if (dir != Vector3.zero)
                 gameObject.transform.rotation = Quaternion.LookRotation(dir);
 
-            // Attack with cooldown
             if (Time.time - lastAttackTime >= attackCooldown)
             {
                 lastAttackTime = Time.time;
                 
-                // Only trigger if animator has the parameter
                 if (animator != null)
                 {
-                    // Try to set trigger, ignore if not exists
                     try { animator.SetTrigger(attackTrigger); } catch { }
                 }
 
-                // Deal damage using EnemyAI's attack damage
                 float damage = enemyAI != null ? enemyAI.AttackDamage : 10f;
                 player.GetComponent<PlayerHealth>()?.TakeDamage(damage);
             }

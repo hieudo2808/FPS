@@ -52,7 +52,6 @@ namespace FPS
 
         private void UpdateInfluenceMap()
         {
-            // Reset grid
             for (int x = 0; x < gridWidth; x++)
             {
                 for (int y = 0; y < gridHeight; y++)
@@ -63,7 +62,6 @@ namespace FPS
             
             if (PlayerProfiler.Instance == null) return;
             
-            // Apply influence from each player
             foreach (var profile in PlayerProfiler.Instance.AllProfiles)
             {
                 if (profile.playerTransform == null) continue;
@@ -83,19 +81,15 @@ namespace FPS
                     Vector3 cellCenter = GetCellWorldPosition(x, y);
                     float distance = Vector3.Distance(playerPos, cellCenter);
                     
-                    // Skip if too far
                     if (distance > fovInfluenceRadius * 1.5f) continue;
                     
-                    // Base influence (negative = dangerous to spawn)
                     float influence = 0f;
                     
-                    // Close to player = very dangerous
                     if (distance < playerInfluenceRadius)
                     {
                         influence -= 100f * (1f - distance / playerInfluenceRadius);
                     }
                     
-                    // In FOV = dangerous
                     Vector3 toCell = (cellCenter - playerPos).normalized;
                     float angle = Vector3.Angle(lookDir, toCell);
                     
@@ -104,7 +98,6 @@ namespace FPS
                         influence -= 50f * (1f - angle / (fovInfluenceAngle / 2f));
                     }
                     
-                    // Behind player = good spawn spot (blind spot)
                     if (angle > 120f && distance > 10f && distance < 30f)
                     {
                         influence += 30f;
@@ -114,11 +107,10 @@ namespace FPS
                 }
             }
             
-            // Bonus for isolated players
             if (profile.isIsolated)
             {
                 Vector2Int cell = WorldToGrid(playerPos);
-                ApplyBonus(cell.x, cell.y, 5, 20f); // Radius 5 cells, +20 bonus
+                ApplyBonus(cell.x, cell.y, 5, 20f);
             }
         }
 
@@ -155,11 +147,10 @@ namespace FPS
                 {
                     float score = influenceGrid[x, y];
                     
-                    if (score > bestScore - 10f) // Top candidates
+                    if (score > bestScore - 10f)
                     {
                         Vector3 pos = GetCellWorldPosition(x, y);
                         
-                        // Verify NavMesh
                         if (NavMesh.SamplePosition(pos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
                         {
                             if (score > bestScore)
@@ -173,7 +164,6 @@ namespace FPS
                 }
             }
             
-            // Random from top candidates for variety
             if (candidates.Count > 0)
             {
                 bestPos = candidates[Random.Range(0, candidates.Count)];
@@ -191,25 +181,22 @@ namespace FPS
             Vector3 playerPos = profile.playerTransform.position;
             Vector3 lookDir = profile.lookDirection;
             
-            // Generate positions behind player
             List<Vector3> candidates = new List<Vector3>();
             
             for (int i = 0; i < 8; i++)
             {
-                float angle = (i * 45f - 180f) * Mathf.Deg2Rad; // Behind to sides
+                float angle = (i * 45f - 180f) * Mathf.Deg2Rad;
                 Vector3 offset = new Vector3(
                     Mathf.Sin(angle) * 20f,
                     0f,
                     Mathf.Cos(angle) * 20f
                 );
                 
-                // Rotate by player's look direction
                 offset = Quaternion.LookRotation(lookDir) * offset;
                 Vector3 testPos = playerPos + offset;
                 
                 if (NavMesh.SamplePosition(testPos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
                 {
-                    // Check if behind player
                     Vector3 toPos = (hit.position - playerPos).normalized;
                     float dot = Vector3.Dot(lookDir, toPos);
                     

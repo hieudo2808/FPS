@@ -19,13 +19,11 @@ namespace FPS
 
         public override void UseAbility()
         {
-            // TODO: Spawn acid pool at player position
             Debug.Log("[Spitter] Spit acid!");
         }
 
         protected override bool CanUseAbility()
         {
-            // Only spit if player is in range
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player == null) return false;
             
