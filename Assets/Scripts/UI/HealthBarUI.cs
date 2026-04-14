@@ -19,16 +19,22 @@ namespace FPS
         
         private PlayerHealth playerHealth;
 
-        private void Start()
+        private void Update()
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
+            if (playerHealth == null)
             {
-                playerHealth = player.GetComponent<PlayerHealth>();
-                if (playerHealth != null)
+                if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsConnectedClient)
                 {
-                    playerHealth.HealthChangedEvent += OnHealthChanged;
-                    UpdateHealthText(playerHealth.CurrentHealth, playerHealth.MaxHealth);
+                    var localClient = Unity.Netcode.NetworkManager.Singleton.LocalClient;
+                    if (localClient != null && localClient.PlayerObject != null)
+                    {
+                        playerHealth = localClient.PlayerObject.GetComponent<PlayerHealth>();
+                        if (playerHealth != null)
+                        {
+                            playerHealth.HealthChangedEvent += OnHealthChanged;
+                            UpdateHealthText(playerHealth.CurrentHealth, playerHealth.MaxHealth);
+                        }
+                    }
                 }
             }
         }

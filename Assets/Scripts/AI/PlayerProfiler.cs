@@ -52,6 +52,8 @@ namespace FPS
         public List<PlayerProfile> AllProfiles => playerProfiles;
         public int PlayerCount => playerProfiles.Count;
 
+        private float lastPlayerCheck;
+
         private void Awake()
         {
             if (Instance == null)
@@ -71,6 +73,12 @@ namespace FPS
 
         private void Update()
         {
+            if (Time.time - lastPlayerCheck > 2f)
+            {
+                lastPlayerCheck = Time.time;
+                FindAllPlayers();
+            }
+
             if (Time.time - lastPositionUpdate >= positionUpdateInterval)
             {
                 UpdatePositionTracking();
@@ -280,6 +288,26 @@ namespace FPS
             }
             
             return carry;
+        }
+
+        public PlayerProfile GetClosestPlayer(Vector3 position)
+        {
+            PlayerProfile closest = null;
+            float minDist = float.MaxValue;
+            
+            foreach (var profile in playerProfiles)
+            {
+                if (profile.playerTransform == null) continue;
+                
+                float dist = (profile.playerTransform.position - position).sqrMagnitude;
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    closest = profile;
+                }
+            }
+            
+            return closest;
         }
     }
 }

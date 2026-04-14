@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using TMPro;
 
@@ -6,7 +7,7 @@ namespace FPS
 {
     public enum GamePhase { BUILD, PEAK, RELAX }
 
-    public class AIDirector : MonoBehaviour
+    public class AIDirector : NetworkBehaviour
     {
         public static AIDirector Instance { get; private set; }
         
@@ -42,40 +43,103 @@ namespace FPS
         [Header("Debug")]
         [SerializeField] private bool showDebugLogs = true;
         
-        private GamePhase currentPhase = GamePhase.BUILD;
+        private NetworkVariable<GamePhase> networkPhase = new NetworkVariable<GamePhase>(
+            GamePhase.BUILD, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
+        );
+
+        private NetworkVariable<int> networkZombiesAlive = new NetworkVariable<int>(
+            0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
+        );
+
+        private NetworkVariable<int> networkTotalKills = new NetworkVariable<int>(
+            0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
+        );
+
         private float phaseTimer;
         private float intensity;
-        private int zombiesAlive;
-        private int totalKills;
         private float spawnTimer;
         
         private float hpModifier = 1f;
         private float speedModifier = 1f;
         private float damageModifier = 1f;
         
-        public GamePhase CurrentPhase => currentPhase;
+        public GamePhase CurrentPhase => networkPhase.Value;
         public float Intensity => intensity;
-        public int ZombiesAlive => zombiesAlive;
-        public int TotalKills => totalKills;
+        public int ZombiesAlive => networkZombiesAlive.Value;
+        public int TotalKills => networkTotalKills.Value;
         public float HPModifier => hpModifier;
         public float SpeedModifier => speedModifier;
         public float DamageModifier => damageModifier;
 
         private void Awake()
         {
-            if (Instance == null)
+            if (Instance == null) Instance = this;
+            else Destroy(gameObject);
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            networkPhase.OnValueChanged += OnPhaseChanged;
+            networkZombiesAlive.OnValueChanged += UpdateZombieCountUI;
+            networkTotalKills.OnValueChanged += UpdateZombieCountUI;
+            UpdatePhaseUI(networkPhase.Value);
+            UpdateZombieCountUI(0, 0);
+
+            if (IsServer)
             {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
+                StartCoroutine(StartFirstWave());
             }
         }
 
-        private void Start()
+        public override void OnNetworkDespawn()
         {
-            StartCoroutine(StartFirstWave());
+            networkPhase.OnValueChanged -= OnPhaseChanged;
+            networkZombiesAlive.OnValueChanged -= UpdateZombieCountUI;
+            networkTotalKills.OnValueChanged -= UpdateZombieCountUI;
+        }
+
+        private void OnPhaseChanged(GamePhase oldPhase, GamePhase newPhase)
+        {
+            UpdatePhaseUI(newPhase);
+
+            if (newPhase == GamePhase.PEAK) ShowAnnouncement("INCOMING HORDE!");
+            else if (newPhase == GamePhase.RELAX) ShowAnnouncement("CLEAR!");
+        }
+
+        private void UpdatePhaseUI(GamePhase phase)
+        {
+            if (phaseText != null) phaseText.text = $"Phase: {phase}";
+        }
+
+        private void UpdateZombieCountUI(int previousValue, int newValue)
+        {
+            if (zombieCountText != null)
+            {
+                zombieCountText.text = $"Zombies: {networkZombiesAlive.Value} | Kills: {networkTotalKills.Value}";
+            }
+        }
+
+        private void ShowAnnouncement(string message)
+        {
+            if (announcementText != null) announcementText.text = message;
+            
+            if (waveAnnouncementPanel != null)
+            {
+                waveAnnouncementPanel.SetActive(true);
+                StartCoroutine(HideAnnouncementAfterDelay(2f));
+            }
+        }
+
+        [ClientRpc]
+        private void ShowAnnouncementClientRpc(string message)
+        {
+            ShowAnnouncement(message);
+        }
+
+        private IEnumerator HideAnnouncementAfterDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            if (waveAnnouncementPanel != null) waveAnnouncementPanel.SetActive(false);
         }
 
         private IEnumerator StartFirstWave()
@@ -86,10 +150,11 @@ namespace FPS
 
         private void Update()
         {
+            if (!IsServer) return;
+
             UpdatePacing();
             UpdateSpawning();
-            UpdateUI();
-            
+        
             intensity -= Time.deltaTime * 2f;
             intensity = Mathf.Clamp(intensity, 0f, 100f);
         }
@@ -98,56 +163,36 @@ namespace FPS
         {
             phaseTimer += Time.deltaTime;
             
-            switch (currentPhase)
+            switch (networkPhase.Value)
             {
                 case GamePhase.BUILD:
-                    if (intensity >= 80f || phaseTimer >= buildDuration)
-                    {
-                        TransitionTo(GamePhase.PEAK);
-                    }
+                    if (intensity >= 80f || phaseTimer >= buildDuration) TransitionTo(GamePhase.PEAK);
                     break;
                     
                 case GamePhase.PEAK:
-                    if (phaseTimer >= peakDuration)
-                    {
-                        TransitionTo(GamePhase.RELAX);
-                    }
+                    if (phaseTimer >= peakDuration) TransitionTo(GamePhase.RELAX);
                     break;
                     
                 case GamePhase.RELAX:
-                    if (zombiesAlive <= 2 || phaseTimer >= relaxDuration)
-                    {
-                        TransitionTo(GamePhase.BUILD);
-                    }
+                    if (networkZombiesAlive.Value <= 2 || phaseTimer >= relaxDuration) TransitionTo(GamePhase.BUILD);
                     break;
             }
         }
 
         private void TransitionTo(GamePhase newPhase)
         {
-            currentPhase = newPhase;
+            networkPhase.Value = newPhase;
             phaseTimer = 0f;
             
-            if (showDebugLogs)
-                Debug.Log($"[AIDirector] Phase changed to: {newPhase}");
-            
-            if (newPhase == GamePhase.PEAK)
-            {
-                ShowAnnouncement("INCOMING HORDE!");
-            }
-            else if (newPhase == GamePhase.RELAX)
-            {
-                ShowAnnouncement("CLEAR!");
-            }
+            if (showDebugLogs) Debug.Log($"[AIDirector] Phase changed to: {newPhase}");
         }
 
         private void UpdateSpawning()
         {
-            if (currentPhase == GamePhase.RELAX) return;
-            if (zombiesAlive >= maxZombiesAlive) return;
+            if (networkPhase.Value == GamePhase.RELAX) return;
+            if (networkZombiesAlive.Value >= maxZombiesAlive) return;
             
             spawnTimer += Time.deltaTime;
-            
             float interval = GetSpawnInterval();
             
             if (spawnTimer >= interval)
@@ -160,11 +205,7 @@ namespace FPS
         private float GetSpawnInterval()
         {
             float interval = baseSpawnInterval;
-            
-            if (currentPhase == GamePhase.PEAK)
-            {
-                interval *= 0.5f;
-            }
+            if (networkPhase.Value == GamePhase.PEAK) interval *= 0.5f;
             
             int playerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
             interval /= (1f + (playerCount - 1) * 0.3f);
@@ -174,111 +215,73 @@ namespace FPS
 
         private void SpawnZombie()
         {
-            if (ZombieFactory.Instance == null || ZombieRegistry.Instance == null)
+            if (networkPhase.Value == GamePhase.PEAK && enableSpecialInfected && Random.value < specialSpawnChance)
             {
-                Debug.LogError("[AIDirector] ZombieFactory or ZombieRegistry not found!");
-                return;
+                if (TrySpawnSpecial()) return;
             }
             
-            if (currentPhase == GamePhase.PEAK && enableSpecialInfected && Random.value < specialSpawnChance)
-            {
-                if (TrySpawnSpecial())
-                    return;
-            }
-            
-            GameObject zombie;
+            GameObject zombie = null;
             
             if (useSmartSpawning && TeamAnalyzer.Instance != null)
             {
                 var isolated = TeamAnalyzer.Instance.GetMostIsolatedPlayer();
                 if (isolated != null && Random.value < 0.4f)
                 {
-                    zombie = ZombieFactory.Instance.SpawnZombieBehindPlayer(
-                        isolated.playerIndex,
-                        hpModifier, speedModifier, damageModifier
-                    );
+                    zombie = ZombieFactory.Instance.SpawnZombieBehindPlayer(isolated.playerIndex, hpModifier, speedModifier, damageModifier);
                 }
                 else
                 {
-                    zombie = ZombieFactory.Instance.SpawnZombieAtSmartPosition(
-                        hpModifier, speedModifier, damageModifier
-                    );
+                    zombie = ZombieFactory.Instance.SpawnZombieAtSmartPosition(hpModifier, speedModifier, damageModifier);
                 }
             }
             else
             {
-                zombie = ZombieFactory.Instance.SpawnZombieAtRandomPoint(
-                    hpModifier, speedModifier, damageModifier
-                );
+                zombie = ZombieFactory.Instance.SpawnZombieAtRandomPoint(hpModifier, speedModifier, damageModifier);
             }
             
             if (zombie != null)
             {
-                zombiesAlive++;
+                var netObj = zombie.GetComponent<NetworkObject>();
+                if (netObj != null && !netObj.IsSpawned) netObj.Spawn(true);
+
+                networkZombiesAlive.Value++;
                 intensity += 5f;
-                
-                EnemyHealth health = zombie.GetComponent<EnemyHealth>();
-                if (health != null)
-                {
-                    StartCoroutine(WaitForDeath(zombie, health));
-                }
             }
         }
 
         private bool TrySpawnSpecial()
         {
-            if (SpecialInfectedRegistry.Instance == null)
-                return false;
+            // Logic tương tự SpawnZombie
+            if (SpecialInfectedRegistry.Instance == null || !SpecialInfectedRegistry.Instance.CanSpawnSpecial()) return false;
             
-            if (!SpecialInfectedRegistry.Instance.CanSpawnSpecial())
-                return false;
-            
-            Vector3 pos;
-            if (InfluenceMapManager.Instance != null)
-            {
-                pos = InfluenceMapManager.Instance.GetBestSpawnPosition();
-            }
-            else
-            {
-                pos = ZombieRegistry.Instance.GetSpawnPosition();
-            }
+            Vector3 pos = (InfluenceMapManager.Instance != null) 
+                ? InfluenceMapManager.Instance.GetBestSpawnPosition() 
+                : ZombieRegistry.Instance.GetSpawnPosition();
             
             GameObject special = SpecialInfectedRegistry.Instance.SpawnSpecial(pos);
             
             if (special != null)
             {
-                zombiesAlive++;
-                intensity += 15f; // Specials add more intensity
+                var netObj = special.GetComponent<NetworkObject>();
+                if (netObj != null && !netObj.IsSpawned) netObj.Spawn(true);
+
+                networkZombiesAlive.Value++;
+                intensity += 15f;
                 
-                EnemyHealth health = special.GetComponent<EnemyHealth>();
-                if (health != null)
-                {
-                    StartCoroutine(WaitForDeath(special, health));
-                }
-                
-                ShowAnnouncement("SPECIAL INCOMING!");
+                ShowAnnouncementClientRpc("SPECIAL INCOMING!");
                 return true;
             }
-            
             return false;
-        }
-
-        private IEnumerator WaitForDeath(GameObject zombie, EnemyHealth health)
-        {
-            while (zombie != null && !health.IsDead)
-            {
-                yield return null;
-            }
-            
-            OnZombieDied();
         }
 
         public void OnZombieDied()
         {
-            zombiesAlive = Mathf.Max(0, zombiesAlive - 1);
-            totalKills++;
+            if (!IsServer) return; // Bảo mật thêm
+
+            networkZombiesAlive.Value = Mathf.Max(0, networkZombiesAlive.Value - 1);
+            networkTotalKills.Value++;
             intensity -= 3f;
-            
+
             UpdateLearningModifiers();
         }
 
@@ -308,47 +311,6 @@ namespace FPS
             if (carry.headshotRatio > 0.5f)
             {
                 hpModifier = Mathf.Min(hpModifier + learningRate * 2f, maxHPModifier);
-            }
-            
-            if (showDebugLogs && totalKills % 10 == 0)
-            {
-                Debug.Log($"[AIDirector] Modifiers - HP: {hpModifier:F2}x, Speed: {speedModifier:F2}x, Damage: {damageModifier:F2}x");
-            }
-        }
-
-        private void UpdateUI()
-        {
-            if (phaseText != null)
-            {
-                phaseText.text = $"Phase: {currentPhase}";
-            }
-            
-            if (zombieCountText != null)
-            {
-                zombieCountText.text = $"Zombies: {zombiesAlive} | Kills: {totalKills}";
-            }
-        }
-
-        private void ShowAnnouncement(string message)
-        {
-            if (announcementText != null)
-            {
-                announcementText.text = message;
-            }
-            
-            if (waveAnnouncementPanel != null)
-            {
-                waveAnnouncementPanel.SetActive(true);
-                StartCoroutine(HideAnnouncementAfterDelay(2f));
-            }
-        }
-
-        private IEnumerator HideAnnouncementAfterDelay(float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            if (waveAnnouncementPanel != null)
-            {
-                waveAnnouncementPanel.SetActive(false);
             }
         }
     }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace FPS
 {
-    public class ZombieFactory : Singleton<ZombieFactory>
+    public class ZombieFactory : SceneSingleton<ZombieFactory>
     {
         [Header("Pooling")]
         [SerializeField] private bool usePooling = true;

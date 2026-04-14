@@ -1,15 +1,28 @@
+using Unity.Netcode;
 using UnityEngine;
 
 namespace FPS
 {
-    public class PlayerHealth : MonoBehaviour
+    public class PlayerHealth : NetworkBehaviour
     {
         [Header("Health Settings")]
         [SerializeField] private float maxHealth = 100f;
-        [SerializeField] private float currentHealth;
 
-        public float CurrentHealth => currentHealth;
+        private NetworkVariable<float> networkHealth = new NetworkVariable<float>(
+            100f,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server
+        );
+
+        private NetworkVariable<bool> networkIsDead = new NetworkVariable<bool>(
+            false,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server
+        );
+
+        public float CurrentHealth => networkHealth.Value;
         public float MaxHealth => maxHealth;
+        public bool IsDead => networkIsDead.Value;
 
         public delegate void OnHealthChanged(float current, float max);
         public event OnHealthChanged HealthChangedEvent;
@@ -17,54 +30,116 @@ namespace FPS
         public delegate void OnPlayerDeath();
         public event OnPlayerDeath PlayerDeathEvent;
 
-        private bool isDead = false;
-
-        private void Start()
+        public override void OnNetworkSpawn()
         {
-            currentHealth = maxHealth;
-            HealthChangedEvent?.Invoke(currentHealth, maxHealth);
+            if (IsServer)
+            {
+                networkHealth.Value = maxHealth;
+                networkIsDead.Value = false;
+            }
+
+            // Subscribe to network variable changes for UI updates
+            networkHealth.OnValueChanged += OnHealthValueChanged;
+            networkIsDead.OnValueChanged += OnDeadValueChanged;
+
+            // Initial UI update
+            HealthChangedEvent?.Invoke(networkHealth.Value, maxHealth);
         }
 
-        public void TakeDamage(float damage)
+        public override void OnNetworkDespawn()
         {
-            if (isDead) return;
+            networkHealth.OnValueChanged -= OnHealthValueChanged;
+            networkIsDead.OnValueChanged -= OnDeadValueChanged;
+        }
 
-            currentHealth -= damage;
-            currentHealth = Mathf.Max(0, currentHealth);
-            
-            Debug.Log("Player took " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);
-            HealthChangedEvent?.Invoke(currentHealth, maxHealth);
+        private void OnHealthValueChanged(float oldValue, float newValue)
+        {
+            HealthChangedEvent?.Invoke(newValue, maxHealth);
+        }
 
-            if (currentHealth <= 0)
+        private void OnDeadValueChanged(bool oldValue, bool newValue)
+        {
+            if (newValue && !oldValue)
+            {
+                PlayerDeathEvent?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Ai cũng có thể gọi (enemy, traps, etc.) — chạy trên server
+        /// </summary>
+        [ServerRpc(RequireOwnership = false)]
+        public void TakeDamageServerRpc(float damage)
+        {
+            if (networkIsDead.Value) return;
+
+            networkHealth.Value -= damage;
+            networkHealth.Value = Mathf.Max(0, networkHealth.Value);
+
+            Debug.Log($"Player took {damage} damage. HP: {networkHealth.Value}/{maxHealth}");
+
+            if (networkHealth.Value <= 0)
             {
                 Die();
             }
         }
 
+        /// <summary>
+        /// Backward-compatible local call — routes to ServerRpc
+        /// </summary>
+        public void TakeDamage(float damage)
+        {
+            if (IsServer)
+            {
+                // Server can apply directly
+                TakeDamageServerRpc(damage);
+            }
+            else
+            {
+                TakeDamageServerRpc(damage);
+            }
+        }
+
         private void Die()
         {
-            if (isDead) return;
-            
-            isDead = true;
-            Debug.Log("Player died!");
+            if (networkIsDead.Value) return;
+
+            networkIsDead.Value = true;
+            Debug.Log($"Player {OwnerClientId} died!");
+
+            // Notify all clients
+            OnPlayerDiedClientRpc();
+        }
+
+        [ClientRpc]
+        private void OnPlayerDiedClientRpc()
+        {
             PlayerDeathEvent?.Invoke();
+        }
 
+        [ServerRpc(RequireOwnership = false)]
+        public void HealServerRpc(float amount)
+        {
+            if (networkIsDead.Value) return;
 
+            networkHealth.Value = Mathf.Min(networkHealth.Value + amount, maxHealth);
         }
 
         public void Heal(float amount)
         {
-            if (isDead) return;
-            
-            currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
-            HealthChangedEvent?.Invoke(currentHealth, maxHealth);
+            HealServerRpc(amount);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void ResetHealthServerRpc()
+        {
+            networkIsDead.Value = false;
+            networkHealth.Value = maxHealth;
         }
 
         public void ResetHealth()
         {
-            isDead = false;
-            currentHealth = maxHealth;
-            HealthChangedEvent?.Invoke(currentHealth, maxHealth);
+            ResetHealthServerRpc();
         }
     }
 }

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Unity.Netcode;
 
 namespace FPS
 {
-    public class ZombiePoolManager : Singleton<ZombiePoolManager>
+    public class ZombiePoolManager : SceneSingleton<ZombiePoolManager>
     {
         [Header("Pool Settings")]
         [SerializeField] private int poolSizePerType = 20;
@@ -50,7 +51,8 @@ namespace FPS
 
         private GameObject CreatePooledObject(GameObject prefab)
         {
-            GameObject obj = Instantiate(prefab, poolContainer);
+            GameObject obj = Instantiate(prefab); 
+           // UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(obj, UnityEngine.SceneManagement.SceneManager.GetActiveScene());
             obj.SetActive(false);
             return obj;
         }
@@ -88,6 +90,15 @@ namespace FPS
             ResetZombie(zombie, position, rotation);
             zombie.SetActive(true);
             
+            if (Unity.Netcode.NetworkManager.Singleton.IsServer)
+            {
+                var netObj = zombie.GetComponent<NetworkObject>();
+                if (netObj != null && !netObj.IsSpawned)
+                {
+                    netObj.Spawn(true);
+                }
+            }
+            
             return zombie;
         }
 
@@ -102,8 +113,16 @@ namespace FPS
                 return;
             }
             
+            if (Unity.Netcode.NetworkManager.Singleton.IsServer)
+            {
+                var netObj = zombie.GetComponent<NetworkObject>();
+                if (netObj != null && netObj.IsSpawned)
+                {
+                    netObj.Despawn(false); // false means don't destroy GameObject
+                }
+            }
             zombie.SetActive(false);
-            zombie.transform.SetParent(poolContainer);
+            // BẮT BUỘC: Không set parent trong NGO
             
             if (pools.ContainsKey(key))
             {

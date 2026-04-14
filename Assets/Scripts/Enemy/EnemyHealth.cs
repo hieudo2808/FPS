@@ -1,8 +1,10 @@
+using Unity.Netcode;
 using UnityEngine;
+using System.Collections;
 
 namespace FPS
 {
-    public class EnemyHealth : MonoBehaviour
+    public class EnemyHealth : NetworkBehaviour
     {
         [Header("Health Settings")]
         [SerializeField] private float maxHealth = 100f;
@@ -27,22 +29,52 @@ namespace FPS
             enemyAI = GetComponent<EnemyAI>();
         }
 
-        public void SetMaxHealth(float newMaxHealth)
+        public override void OnNetworkSpawn()
         {
-            maxHealth = newMaxHealth;
-            currentHealth = maxHealth;
+            if (IsServer)
+            {
+                currentHealth = maxHealth;
+                isDead = false;
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void TakeDamageServerRpc(float damage)
+        {
+            TakeDamageInternal(damage);
         }
 
         public void TakeDamage(float damage)
         {
+            TakeDamageServerRpc(damage);
+        }
+
+        private void TakeDamageInternal(float damage)
+        {
             if (isDead) return;
 
             currentHealth -= damage;
+            currentHealth = Mathf.Max(0f, currentHealth);
+
+            Debug.Log($"[EnemyHealth] {gameObject.name} took {damage} damage. HP: {currentHealth}/{maxHealth}");
 
             if (currentHealth <= 0)
             {
                 Die();
             }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetMaxHealthServerRpc(float newMaxHealth)
+        {
+            maxHealth = newMaxHealth;
+            currentHealth = maxHealth;
+            Debug.Log($"[EnemyHealth] {gameObject.name} maxHealth scaled to {maxHealth}");
+        }
+
+        public void SetMaxHealth(float newMaxHealth)
+        {
+            SetMaxHealthServerRpc(newMaxHealth);
         }
 
         private void Die()
@@ -65,8 +97,15 @@ namespace FPS
                 col.enabled = false;
             }
 
-            if (usePooling && ZombiePoolManager.Instance != null)
+            var netObj = GetComponent<Unity.Netcode.NetworkObject>();
+            if (netObj != null && netObj.IsSpawned)
             {
+                // Multiplayer: Despawn via network
+                StartCoroutine(DespawnRoutine(netObj, destroyDelay));
+            }
+            else if (usePooling && ZombiePoolManager.HasInstance)
+            {
+                // Singleplayer w/ Pool
                 Invoke(nameof(ReturnToPool), destroyDelay);
             }
             else
@@ -75,9 +114,27 @@ namespace FPS
             }
         }
 
+        private IEnumerator DespawnRoutine(Unity.Netcode.NetworkObject netObj, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            if (netObj != null && netObj.IsSpawned && Unity.Netcode.NetworkManager.Singleton.IsServer)
+            {
+                if (usePooling && ZombiePoolManager.HasInstance)
+                {
+                    netObj.Despawn(false);
+                    ZombiePoolManager.Instance.ReturnZombie(gameObject);
+                }
+                else
+                {
+                    netObj.Despawn(true);
+                }
+            }
+        }
+
         private void ReturnToPool()
         {
-            ZombiePoolManager.Instance?.ReturnZombie(gameObject);
+            if (ZombiePoolManager.HasInstance)
+                ZombiePoolManager.Instance.ReturnZombie(gameObject);
         }
 
         public void ResetHealth()

@@ -24,7 +24,7 @@ namespace FPS
             {
                 weapon = GetComponentInChildren<Weapon>();
                 if (weapon == null)
-                    weapon = FindObjectOfType<Weapon>();
+                    weapon = FindFirstObjectByType<Weapon>();
             }
         }
     }

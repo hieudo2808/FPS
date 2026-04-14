@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections;
-using Unity.VisualScripting;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace FPS
 {
-    public class Weapon : MonoBehaviour
+    public class Weapon : NetworkBehaviour
     {
         [Header("References")]
         [SerializeField] private GameObject bullet;
@@ -26,17 +26,21 @@ namespace FPS
         [SerializeField] private float bulletLiveTime = 2f;
         [SerializeField] private int burstCount = 3;
 
+        [Header("Recoil System")]
+        [SerializeField] private RecoilPattern weaponRecoilPattern;
+        private RecoilController recoilController;
+
         [Header("Weapon Reloading")]
         [SerializeField] private float reloadTime = 1.5f;
         [SerializeField] private int magazineSize = 30;
         [SerializeField] private int totalAmmo = 120;
-        
+
         [Header("Magazine Visuals")]
         [Tooltip("Băng đạn đang gắn trên súng")]
         [SerializeField] private GameObject magazineOnGun;
         [Tooltip("Băng đạn trong tay (khi rút ra)")]
         [SerializeField] private GameObject magazineInHand;
-        
+
         private int currentAmmo;
         private int reservedAmmo;
 
@@ -50,12 +54,17 @@ namespace FPS
         public int ReservedAmmo => reservedAmmo;
         public Sprite WeaponIcon => weaponIcon;
 
-        private bool isQ = false;
-
         private void Start()
         {
             currentAmmo = magazineSize;
             reservedAmmo = totalAmmo - currentAmmo;
+
+            if (IsOwner)
+            {
+                recoilController = GetComponentInParent<RecoilController>();
+                if (recoilController == null)
+                    recoilController = FindFirstObjectByType<RecoilController>();
+            }
         }
 
         private void OnEnable()
@@ -74,13 +83,10 @@ namespace FPS
 
         private void Update()
         {
-            if(Input.GetKeyDown(KeyCode.Q))
-            {
-                Time.timeScale = isQ ? 1 : 0;
-                isQ = !isQ;
-            }
+            if (!IsOwner) return;
 
-            if (canShoot && !isReloading) {
+            if (canShoot && !isReloading)
+            {
                 if (currentAmmo <= 0 && reservedAmmo > 0)
                 {
                     ReloadWeapon();
@@ -92,7 +98,7 @@ namespace FPS
         private void HandleFire()
         {
             if (isReloading) return;
-            
+
             if (currentAmmo == 0 && reservedAmmo == 0)
             {
                 canShoot = false;
@@ -140,61 +146,94 @@ namespace FPS
             {
                 FireBullet();
                 bulletsLeft--;
-                
+
                 if (bulletsLeft > 0)
                     yield return new WaitForSeconds(fireRate);
             }
 
-            yield return new WaitForSeconds(fireRate); 
-            
+            yield return new WaitForSeconds(fireRate);
+
             burstCoroutine = null;
             canShoot = true;
         }
 
         private void FireBullet()
         {
-            muzzleEffect.GetComponent<ParticleSystem>().Play();
+            if (currentAmmo <= 0) return;
 
-            if (gameObject.layer == LayerMask.NameToLayer("FirstPerson") || 
-                gameObject.layer == LayerMask.NameToLayer("Weapon"))
+            currentAmmo--;
+
+            if (recoilController != null && weaponRecoilPattern != null && IsOwner)
             {
-                Camera cam = Camera.main;
-                Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-                
-                Vector3 targetPoint;
-                if (Physics.Raycast(ray, out RaycastHit hit, 500f))
-                {
-                    targetPoint = hit.point;
-                }
-                else
-                {
-                    targetPoint = ray.GetPoint(500f);
-                }
-                
-                Vector3 shootDirection = (targetPoint - bulletSpawnPoint.position).normalized;
-                
-                GameObject bulletInstance = Instantiate(bullet, bulletSpawnPoint.position, 
-                    Quaternion.LookRotation(shootDirection));
-                currentAmmo--;
-                
-                Bullet bulletScript = bulletInstance.GetComponent<Bullet>();
-                if (bulletScript != null)
-                {
-                    bulletScript.SetDamage(bulletDamage);
-                }
-                
-                Rigidbody rb = bulletInstance.GetComponent<Rigidbody>();
-                rb.linearVelocity = shootDirection * bulletSpeed;
-
-                AudioManager.Instance.PlaySFXSound(shootSound);
-                Destroy(bulletInstance, bulletLiveTime);
+                recoilController.Fire(weaponRecoilPattern);
             }
+
+            Camera cam = Camera.main;
+            if (cam == null) return;
+
+            if (muzzleEffect != null) muzzleEffect.GetComponent<ParticleSystem>().Play();
+            if (shootSound != null && AudioManager.Instance != null) AudioManager.Instance.PlaySFXSound(shootSound);
+
+            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            Vector3 targetPoint;
+            if (Physics.Raycast(ray, out RaycastHit hit, 500f))
+            {
+                targetPoint = hit.point;
+            }
+            else
+            {
+                targetPoint = ray.GetPoint(500f);
+            }
+
+            Vector3 spawnPos = bulletSpawnPoint.position;
+            Vector3 shootDirection = (targetPoint - spawnPos).normalized;
+
+            SpawnVisualBullet(spawnPos, shootDirection);
+
+            FireServerRpc(spawnPos, shootDirection);
+        }
+
+        private void SpawnVisualBullet(Vector3 position, Vector3 direction)
+        {
+            GameObject bulletInstance = Instantiate(bullet, position, Quaternion.LookRotation(direction));
+            Rigidbody rb = bulletInstance.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.linearVelocity = direction * bulletSpeed;
+            }
+            Destroy(bulletInstance, bulletLiveTime);
+        }
+
+        [ServerRpc]
+        private void FireServerRpc(Vector3 spawnPosition, Vector3 direction)
+        {
+            if (Physics.Raycast(spawnPosition, direction, out RaycastHit hit, 500f))
+            {
+                EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
+                if (enemyHealth != null)
+                {
+                    enemyHealth.TakeDamage(bulletDamage);
+                }
+            }
+
+            FireEffectsClientRpc(spawnPosition, direction);
+        }
+
+        [ClientRpc]
+        private void FireEffectsClientRpc(Vector3 spawnPosition, Vector3 direction)
+        {
+            if (IsOwner) return;
+
+            if (muzzleEffect != null) muzzleEffect.GetComponent<ParticleSystem>().Play();
+            if (shootSound != null && AudioManager.Instance != null) AudioManager.Instance.PlaySFXSound(shootSound);
+            
+            SpawnVisualBullet(spawnPosition, direction);
         }
 
         private void ReloadWeapon()
         {
             if (isReloading) return;
-            
+
             canShoot = false;
             isReloading = true;
 
@@ -203,13 +242,17 @@ namespace FPS
 
         private IEnumerator ReloadCoroutine()
         {
-            if (reloadSound != null)
+            if (reloadSound != null && AudioManager.Instance != null)
             {
                 AudioManager.Instance.PlaySFXSound(reloadSound);
             }
 
-            WeaponManager.Instance.CharacterAnimation.SetTrigger("Reload");
-            
+            var weaponManager = GetComponentInParent<WeaponManager>();
+            if (weaponManager != null && weaponManager.CharacterAnimation != null)
+            {
+                weaponManager.CharacterAnimation.SetTrigger("Reload");
+            }
+
             if (fpsArmsAnimator != null)
             {
                 fpsArmsAnimator.SetTrigger("Reload");
@@ -228,7 +271,7 @@ namespace FPS
                     yield return null;
                 }
             }
-            
+
             yield return new WaitForSeconds(reloadTime);
             ReloadCompleted();
         }
@@ -243,16 +286,16 @@ namespace FPS
 
             isReloading = false;
             canShoot = true;
-            
+
             InsertMagazine();
         }
-        
+
         public void GrabMagazine()
         {
             if (magazineOnGun != null) magazineOnGun.SetActive(false);
             if (magazineInHand != null) magazineInHand.SetActive(true);
         }
-        
+
         public void InsertMagazine()
         {
             if (magazineOnGun != null) magazineOnGun.SetActive(true);

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace FPS
@@ -7,26 +5,13 @@ namespace FPS
     public class Bullet : MonoBehaviour
     {
         [SerializeField] private GameObject bulletHolePrefab;
-        private float damage = 25f;
-
-        public void SetDamage(float weaponDamage)
-        {
-            damage = weaponDamage;
-        }
 
         private void OnCollisionEnter(Collision collision)
         {
             Debug.Log("Hit " + collision.gameObject.name);
 
-            EnemyHealth enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();
-            if (enemyHealth != null)
-            {
-                enemyHealth.TakeDamage(damage);
-            }
-            else if (collision.gameObject.layer == 3)
-            {
+            if (collision.gameObject.layer == 3)
                 CreateBulletHole(collision);
-            }
 
             Destroy(gameObject);
         }

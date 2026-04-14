@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 namespace FPS
 {
-    public class BodyAim : MonoBehaviour
+    public class BodyAim : NetworkBehaviour
     {
         [Header("References")]
         [SerializeField] private Transform cameraTransform;
@@ -61,12 +62,13 @@ namespace FPS
 
         private void LateUpdate()
         {
+            if (!IsOwner) return;
             if (!isAimingActive || cameraTransform == null) return;
 
             float cameraPitch = GetCameraPitch();
-            
+
             RotateSpine(cameraPitch);
-            
+
             if (enableWeaponOffset && weaponTransform != null)
             {
                 OffsetWeapon(cameraPitch);
@@ -84,9 +86,8 @@ namespace FPS
         {
             if (spineBones == null || spineBones.Length == 0) return;
 
-            // Tính tỷ lệ góc camera -> góc spine (spine xoay ít hơn camera)
             float normalizedPitch = Mathf.Clamp(cameraPitch / cameraMaxAngle, -1f, 1f);
-            
+
             float targetAngle;
             if (normalizedPitch >= 0)
             {

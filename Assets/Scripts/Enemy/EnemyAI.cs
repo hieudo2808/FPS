@@ -1,10 +1,11 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 
 namespace FPS
 {
-    public class EnemyAI : MonoBehaviour
+    public class EnemyAI : NetworkBehaviour
     {
         [Header("References")]
         [SerializeField] protected NavMeshAgent agent;
@@ -68,16 +69,21 @@ namespace FPS
 
         private void FindPlayer()
         {
-            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj != null)
+            if (PlayerProfiler.Instance != null && PlayerProfiler.Instance.PlayerCount > 0)
             {
-                player = playerObj.transform;
-                Debug.Log("[EnemyAI] Found player: " + playerObj.name);
+                var closest = PlayerProfiler.Instance.GetClosestPlayer(transform.position);
+                if (closest != null)
+                {
+                    player = closest.playerTransform;
+                }
             }
         }
 
         protected virtual void Update()
         {
+            // AI logic chỉ chạy trên server
+            if (!IsServer) return;
+
             if (currentState == State.Dead) return;
             if (player == null) { FindPlayer(); return; }
 
@@ -110,6 +116,7 @@ namespace FPS
                     break;
             }
 
+            // Animation updated on server, synced via NetworkAnimator or manual sync
             UpdateAnimation();
             SmoothLookAtPlayer();
         }
@@ -166,20 +173,37 @@ namespace FPS
             if (animator != null)
                 animator.SetTrigger(AnimAttack);
 
-            if (attackSound != null && AudioManager.Instance != null)
-                AudioManager.Instance.PlaySFXSound(attackSound, soundVolume);
+            if (attackSound != null)
+                PlaySoundClientRpc(true);
 
             Invoke(nameof(DealDamage), attackDelay);
         }
 
+        [ClientRpc]
+        private void PlaySoundClientRpc(bool isAttackSound)
+        {
+            if (AudioManager.Instance == null) return;
+
+            if (isAttackSound && attackSound != null)
+                AudioManager.Instance.PlaySFXSound(attackSound, soundVolume);
+            else if (!isAttackSound && deathSound != null)
+                AudioManager.Instance.PlaySFXSound(deathSound, soundVolume);
+        }
+
         private void DealDamage()
         {
+            if (!IsServer) return;
             if (player == null) return;
 
             float dist = Vector3.Distance(transform.position, player.position);
             if (dist <= attackRange * 1.2f)
             {
-                player.GetComponent<PlayerHealth>()?.TakeDamage(attackDamage);
+                var health = player.GetComponent<PlayerHealth>();
+                if (health != null)
+                {
+                    // Server directly calls ServerRpc (which runs immediately on server)
+                    health.TakeDamageServerRpc(attackDamage);
+                }
                 Debug.Log($"[EnemyAI] Dealt {attackDamage} damage!");
             }
         }
@@ -258,10 +282,14 @@ namespace FPS
             if (col != null) col.enabled = false;
 
             if (animator != null) animator.SetTrigger(AnimDead);
-            if (deathSound != null && AudioManager.Instance != null)
-                AudioManager.Instance.PlaySFXSound(deathSound, soundVolume);
+            
+            if (deathSound != null)
+                PlaySoundClientRpc(false);
 
-            RubberBandingSystem.Instance?.UnregisterZombie(this);
+            if (RubberBandingSystem.HasInstance)
+            {
+                RubberBandingSystem.Instance.UnregisterZombie(this);
+            }
         }
 
         public void SetStats(float speed, float damage, float cooldown)

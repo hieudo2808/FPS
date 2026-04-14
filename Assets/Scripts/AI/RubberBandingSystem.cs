@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FPS
 {
-    public class RubberBandingSystem : Singleton<RubberBandingSystem>
+    public class RubberBandingSystem : SceneSingleton<RubberBandingSystem>
     {
         [Header("Teleport Settings")]
         [SerializeField] private float maxDistanceFromPlayer = 50f;
