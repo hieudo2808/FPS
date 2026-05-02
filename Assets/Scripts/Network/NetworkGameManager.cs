@@ -30,6 +30,8 @@ namespace FPS
         public string CurrentJoinCode { get; private set; } = "";
         public bool IsServicesInitialized { get; private set; } = false;
 
+        private ISession currentSession;
+
         private async void Awake()
         {
             if (Instance == null)
@@ -82,24 +84,28 @@ namespace FPS
 
             try 
             {
-                var options = new SessionOptions
-                {
-                    MaxPlayers = 4
-                };
-                
-                var session = await MultiplayerService.Instance.CreateSessionAsync(options);
-                
-                CurrentJoinCode = session.Code;
-                Debug.Log($"[Multiplayer] Session created with Join Code: {CurrentJoinCode}");
-                
-                NetworkManager.Singleton.StartHost();
-
+                // Đăng ký callback TRƯỚC khi tạo session để không bỏ lỡ event
                 NetworkManager.Singleton.OnClientConnectedCallback += HandleClientConnected;
                 NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnected;
 
+                // WithRelayNetwork() để MPS tự cấu hình Relay + StartHost()
+                var options = new SessionOptions
+                {
+                    MaxPlayers = 4
+                }.WithRelayNetwork();
+
+                currentSession = await MultiplayerService.Instance.CreateSessionAsync(options);
+                CurrentJoinCode = currentSession.Code;
+
+                Debug.Log($"[Multiplayer] Session created. Join Code: {CurrentJoinCode}");
+
                 OnHostStarted?.Invoke();
-                
-                NetworkManager.Singleton.SceneManager.LoadScene(gameScene, LoadSceneMode.Single);
+
+                // MPS đã tự gọi StartHost(), chỉ cần load scene
+                if (NetworkManager.Singleton.IsServer)
+                {
+                    NetworkManager.Singleton.SceneManager.LoadScene(gameScene, LoadSceneMode.Single);
+                }
             } 
             catch(Exception e) 
             {
@@ -116,7 +122,7 @@ namespace FPS
                 return;
             }
 
-            if (string.IsNullOrEmpty(joinCode))
+            if (string.IsNullOrWhiteSpace(joinCode))
             {
                 OnConnectionFailed?.Invoke("Join Code is empty!");
                 return;
@@ -124,16 +130,15 @@ namespace FPS
 
             try 
             {
+                // Đăng ký callback TRƯỚC khi join session
                 NetworkManager.Singleton.OnClientConnectedCallback += HandleClientConnected;
                 NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnected;
 
-                var session = await MultiplayerService.Instance.JoinSessionByCodeAsync(joinCode);
-                
+                // MPS tự cấu hình Relay transport + StartClient() khi join
+                currentSession = await MultiplayerService.Instance.JoinSessionByCodeAsync(joinCode);
                 CurrentJoinCode = joinCode;
-                
-                NetworkManager.Singleton.StartClient();
 
-                Debug.Log($"[Multiplayer] Joined session successful!");
+                Debug.Log("[Multiplayer] Joined session successfully.");
             } 
             catch(Exception e) 
             {
@@ -150,6 +155,7 @@ namespace FPS
             NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnected;
 
             NetworkManager.Singleton.Shutdown();
+            currentSession = null;
             CurrentJoinCode = "";
             Debug.Log("[NetworkGameManager] Disconnected");
 
@@ -173,6 +179,7 @@ namespace FPS
             if (clientId == NetworkManager.Singleton.LocalClientId)
             {
                 OnClientDisconnected?.Invoke();
+                currentSession = null;
                 CurrentJoinCode = "";
                 SceneManager.LoadScene(mainMenuScene);
             }

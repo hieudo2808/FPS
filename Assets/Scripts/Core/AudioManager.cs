@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Audio;
 
 namespace FPS
@@ -20,8 +20,23 @@ namespace FPS
 
         private void Start()
         {
-            float sfxVolume = PlayerPrefs.GetFloat(SFX_VOLUME_PARAM, DEFAULT_VOLUME);
-            SetSFXVolume(sfxVolume);
+            // Auto-tạo AudioSource nếu quên gán trong Inspector
+            if (sfxSource == null)
+            {
+                sfxSource = gameObject.AddComponent<AudioSource>();
+                sfxSource.playOnAwake = false;
+                Debug.LogWarning("[AudioManager] SFX AudioSource was not assigned — auto-created one.");
+            }
+
+            if (audioMixer != null)
+            {
+                float sfxVolume = PlayerPrefs.GetFloat(SFX_VOLUME_PARAM, DEFAULT_VOLUME);
+                SetSFXVolume(sfxVolume);
+            }
+            else
+            {
+                Debug.LogWarning("[AudioManager] AudioMixer is not assigned. Volume controls will be disabled.");
+            }
         }
 
         public void PlaySFXSound(AudioClip clip, float volume = 1f)
