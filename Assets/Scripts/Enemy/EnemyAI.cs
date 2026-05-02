@@ -1,7 +1,7 @@
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
 
 namespace FPS
 {
@@ -43,7 +43,7 @@ namespace FPS
         private float lastAttackTime;
         private bool hasSlot;
         private float lastTargetSwitchTime;
-        private int currentTargetIndex;
+        private int currentTargetIndex = -1;
 
         public float AttackDamage => attackDamage;
 
@@ -52,14 +52,14 @@ namespace FPS
             if (agent == null) agent = GetComponent<NavMeshAgent>();
             if (animator == null) animator = GetComponent<Animator>();
 
-            FindPlayer();
+            FindPlayer(forceRefresh: true);
 
             if (agent != null)
             {
                 agent.speed = runSpeed;
                 agent.stoppingDistance = 0.5f;
                 agent.updateRotation = false;
-                
+
                 if (agent.isOnNavMesh)
                     Debug.Log("[EnemyAI] NavMeshAgent OK");
                 else
@@ -67,25 +67,66 @@ namespace FPS
             }
         }
 
-        private void FindPlayer()
+        private void FindPlayer(bool forceRefresh = false)
         {
+            Transform bestTarget = null;
+            int bestIndex = -1;
+            float bestDistance = float.MaxValue;
+
             if (PlayerProfiler.Instance != null && PlayerProfiler.Instance.PlayerCount > 0)
             {
-                var closest = PlayerProfiler.Instance.GetClosestPlayer(transform.position);
-                if (closest != null)
+                for (int i = 0; i < PlayerProfiler.Instance.PlayerCount; i++)
                 {
-                    player = closest.playerTransform;
+                    PlayerProfile profile = PlayerProfiler.Instance.GetProfile(i);
+                    if (!IsValidTarget(profile?.playerTransform)) continue;
+
+                    float sqrDistance = (profile.playerTransform.position - transform.position).sqrMagnitude;
+                    if (!forceRefresh && sqrDistance > maxTargetDistance * maxTargetDistance) continue;
+
+                    if (sqrDistance < bestDistance)
+                    {
+                        bestDistance = sqrDistance;
+                        bestTarget = profile.playerTransform;
+                        bestIndex = i;
+                    }
                 }
             }
+
+            if (bestTarget == null && NetworkManager.Singleton != null)
+            {
+                int fallbackIndex = 0;
+                foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+                {
+                    NetworkObject playerObject = client.PlayerObject;
+                    if (playerObject == null || !playerObject.IsSpawned) continue;
+                    if (!IsValidTarget(playerObject.transform)) continue;
+
+                    float sqrDistance = (playerObject.transform.position - transform.position).sqrMagnitude;
+                    if (sqrDistance < bestDistance)
+                    {
+                        bestDistance = sqrDistance;
+                        bestTarget = playerObject.transform;
+                        bestIndex = fallbackIndex;
+                    }
+
+                    fallbackIndex++;
+                }
+            }
+
+            player = bestTarget;
+            currentTargetIndex = bestIndex;
         }
 
         protected virtual void Update()
         {
-            // AI logic chỉ chạy trên server
             if (!IsServer) return;
-
             if (currentState == State.Dead) return;
-            if (player == null) { FindPlayer(); return; }
+
+            if (!IsValidTarget(player))
+            {
+                FindPlayer(forceRefresh: true);
+                if (player == null) return;
+            }
 
             UpdateTarget();
 
@@ -112,11 +153,12 @@ namespace FPS
                         ChaseBehavior();
                     }
                     else
+                    {
                         AttackBehavior();
+                    }
                     break;
             }
 
-            // Animation updated on server, synced via NetworkAnimator or manual sync
             UpdateAnimation();
             SmoothLookAtPlayer();
         }
@@ -141,9 +183,9 @@ namespace FPS
 
         private void ChaseBehavior()
         {
-            if (agent == null || !agent.isOnNavMesh) return;
+            if (agent == null || !agent.isOnNavMesh || player == null) return;
 
-            if (AttackSlotManager.Instance != null)
+            if (AttackSlotManager.Instance != null && currentTargetIndex >= 0)
             {
                 if (!hasSlot)
                     hasSlot = AttackSlotManager.Instance.RequestSlot(this, currentTargetIndex);
@@ -152,8 +194,8 @@ namespace FPS
                 {
                     if (!AttackSlotManager.Instance.IsAttacker(this))
                     {
-                        hasSlot = false; 
-                        agent.SetDestination(player.position); 
+                        hasSlot = false;
+                        agent.SetDestination(player.position);
                         return;
                     }
 
@@ -161,11 +203,13 @@ namespace FPS
                     return;
                 }
             }
+
             agent.SetDestination(player.position);
         }
 
         private void AttackBehavior()
         {
+            if (player == null) return;
             if (Time.time - lastAttackTime < attackCooldown) return;
 
             lastAttackTime = Time.time;
@@ -176,6 +220,7 @@ namespace FPS
             if (attackSound != null)
                 PlaySoundClientRpc(true);
 
+            CancelInvoke(nameof(DealDamage));
             Invoke(nameof(DealDamage), attackDelay);
         }
 
@@ -193,18 +238,18 @@ namespace FPS
         private void DealDamage()
         {
             if (!IsServer) return;
-            if (player == null) return;
+            if (!IsValidTarget(player)) return;
 
             float dist = Vector3.Distance(transform.position, player.position);
             if (dist <= attackRange * 1.2f)
             {
-                var health = player.GetComponent<PlayerHealth>();
+                PlayerHealth health = player.GetComponent<PlayerHealth>();
                 if (health != null)
                 {
-                    // Server directly calls ServerRpc (which runs immediately on server)
-                    health.TakeDamageServerRpc(attackDamage);
+                    health.TakeDamage(attackDamage);
                 }
-                Debug.Log($"[EnemyAI] Dealt {attackDamage} damage!");
+
+                Debug.Log($"[EnemyAI] Dealt {attackDamage} damage to {player.name}!");
             }
         }
 
@@ -219,7 +264,7 @@ namespace FPS
             if (currentState == State.Idle || player == null) return;
 
             Vector3 dir = (player.position - transform.position).normalized;
-            dir.y = 0;
+            dir.y = 0f;
 
             if (dir != Vector3.zero)
             {
@@ -235,12 +280,12 @@ namespace FPS
 
             Transform bestTarget = null;
             float bestScore = float.MinValue;
-            int bestIndex = 0;
+            int bestIndex = -1;
 
             for (int i = 0; i < PlayerProfiler.Instance.PlayerCount; i++)
             {
-                var profile = PlayerProfiler.Instance.GetProfile(i);
-                if (profile?.playerTransform == null) continue;
+                PlayerProfile profile = PlayerProfiler.Instance.GetProfile(i);
+                if (profile?.playerTransform == null || !IsValidTarget(profile.playerTransform)) continue;
 
                 float dist = Vector3.Distance(transform.position, profile.playerTransform.position);
                 if (dist > maxTargetDistance) continue;
@@ -274,15 +319,16 @@ namespace FPS
             if (currentState == State.Dead) return;
             currentState = State.Dead;
 
+            CancelInvoke(nameof(DealDamage));
             AttackSlotManager.Instance?.ReleaseSlot(this);
             hasSlot = false;
 
             if (agent != null) agent.enabled = false;
-            var col = GetComponent<Collider>();
+            Collider col = GetComponent<Collider>();
             if (col != null) col.enabled = false;
 
             if (animator != null) animator.SetTrigger(AnimDead);
-            
+
             if (deathSound != null)
                 PlaySoundClientRpc(false);
 
@@ -306,22 +352,39 @@ namespace FPS
             lastAttackTime = 0f;
             hasSlot = false;
             lastTargetSwitchTime = 0f;
+            currentTargetIndex = -1;
 
-            FindPlayer();
+            CancelInvoke(nameof(DealDamage));
+            player = null;
+            FindPlayer(forceRefresh: true);
             RubberBandingSystem.Instance?.RegisterZombie(this);
         }
 
         protected virtual void OnEnable()
         {
-            FindPlayer();
-            
+            CancelInvoke(nameof(DealDamage));
+            player = null;
+            currentTargetIndex = -1;
+            FindPlayer(forceRefresh: true);
+
             if (animator != null)
             {
                 animator.Rebind();
                 animator.Update(0f);
             }
-            
+
             currentState = State.Idle;
+        }
+
+        private bool IsValidTarget(Transform target)
+        {
+            if (target == null) return false;
+            if (!target.gameObject.activeInHierarchy) return false;
+
+            PlayerHealth health = target.GetComponent<PlayerHealth>();
+            if (health == null) return false;
+
+            return !health.IsDead;
         }
 
         private void OnDrawGizmosSelected()
