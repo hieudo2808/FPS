@@ -41,6 +41,14 @@ namespace FPS
                 var netObj = zombie.GetComponent<NetworkObject>();
                 if (netObj != null && !netObj.IsSpawned)
                 {
+                    // Validate: zombie PHẢI có NetworkTransform để sync vị trí về client
+                    if (zombie.GetComponent<Unity.Netcode.Components.NetworkTransform>() == null)
+                    {
+                        zombie.AddComponent<Unity.Netcode.Components.NetworkTransform>();
+                        Debug.LogWarning($"[ZombieFactory] '{zombie.name}' thiếu NetworkTransform! Đã tự thêm runtime. " +
+                            "HÃY THÊM VÀO PREFAB trong Inspector để fix vĩnh viễn.");
+                    }
+
                     netObj.Spawn(true);
                 }
             }

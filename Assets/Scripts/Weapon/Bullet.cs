@@ -8,8 +8,6 @@ namespace FPS
 
         private void OnCollisionEnter(Collision collision)
         {
-            Debug.Log("Hit " + collision.gameObject.name);
-
             if (collision.gameObject.layer == 3)
                 CreateBulletHole(collision);
 

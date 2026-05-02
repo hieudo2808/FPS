@@ -46,9 +46,6 @@ namespace FPS
         [SerializeField] private float campingTimeThreshold = 10f;
         [SerializeField] private float isolationDistance = 15f;
 
-        [Header("Debug")]
-        [SerializeField] private bool showDebugLogs = false;
-
         private readonly List<PlayerProfile> playerProfiles = new List<PlayerProfile>();
         private readonly Dictionary<ulong, PlayerProfile> profilesByClientId = new Dictionary<ulong, PlayerProfile>();
         private float lastPositionUpdate;
@@ -139,11 +136,6 @@ namespace FPS
             playerProfiles.AddRange(nextProfiles);
 
             CleanupStaleProfiles(nextProfiles);
-
-            if (showDebugLogs)
-            {
-                Debug.Log($"[PlayerProfiler] Refreshed {playerProfiles.Count} network players on authoritative side");
-            }
         }
 
         private void RefreshTaggedPlayers()
@@ -245,11 +237,6 @@ namespace FPS
             {
                 profile.campingDuration = 0f;
             }
-
-            if (showDebugLogs && profile.isCamping && !wasCamping && profile.campingDuration >= campingTimeThreshold)
-            {
-                Debug.Log($"[PlayerProfiler] Player {profile.playerIndex} started camping");
-            }
         }
 
         private void UpdateCurrentState()
@@ -324,8 +311,6 @@ namespace FPS
             profile.avgKillDistance = (profile.avgKillDistance * (profile.totalKills - 1) + distance) / profile.totalKills;
             profile.avgReactionTime = (profile.avgReactionTime * (profile.totalKills - 1) + reactionTime) / profile.totalKills;
 
-            if (showDebugLogs)
-                Debug.Log($"[PlayerProfiler] Player {playerIndex} kill #{profile.totalKills}, Headshot: {wasHeadshot}");
         }
 
         public PlayerProfile GetProfile(int index)

@@ -63,7 +63,6 @@ namespace FPS
                     }
 
                     await AuthenticationService.Instance.SignInAnonymouslyAsync();
-                    Debug.Log($"[Services] Signed in anonymously as {AuthenticationService.Instance.PlayerId}");
                 }
                 
                 IsServicesInitialized = true;
@@ -96,8 +95,7 @@ namespace FPS
 
                 currentSession = await MultiplayerService.Instance.CreateSessionAsync(options);
                 CurrentJoinCode = currentSession.Code;
-
-                Debug.Log($"[Multiplayer] Session created. Join Code: {CurrentJoinCode}");
+                Debug.Log($"[Multiplayer] Join Code: {CurrentJoinCode}");
 
                 OnHostStarted?.Invoke();
 
@@ -137,8 +135,6 @@ namespace FPS
                 // MPS tự cấu hình Relay transport + StartClient() khi join
                 currentSession = await MultiplayerService.Instance.JoinSessionByCodeAsync(joinCode);
                 CurrentJoinCode = joinCode;
-
-                Debug.Log("[Multiplayer] Joined session successfully.");
             } 
             catch(Exception e) 
             {
@@ -157,15 +153,12 @@ namespace FPS
             NetworkManager.Singleton.Shutdown();
             currentSession = null;
             CurrentJoinCode = "";
-            Debug.Log("[NetworkGameManager] Disconnected");
 
             SceneManager.LoadScene(mainMenuScene);
         }
 
         private void HandleClientConnected(ulong clientId)
         {
-            Debug.Log($"[NetworkGameManager] Client connected: {clientId}");
-
             if (clientId == NetworkManager.Singleton.LocalClientId)
             {
                 OnClientConnected?.Invoke();
@@ -174,7 +167,6 @@ namespace FPS
 
         private void HandleClientDisconnected(ulong clientId)
         {
-            Debug.Log($"[NetworkGameManager] Client disconnected: {clientId}");
 
             if (clientId == NetworkManager.Singleton.LocalClientId)
             {

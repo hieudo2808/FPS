@@ -129,7 +129,6 @@ namespace FPS
 
             if (IsOwner && hasTickedOnce)
             {
-                // Restore simulation position (LateUpdate may have moved it for visual lerp)
                 transform.position = currentTickPosition;
             }
 
@@ -155,7 +154,6 @@ namespace FPS
                 networkTimer.CurrentTick++;
             }
 
-            // --- Frame layer: visuals ---
             if (!IsOwner && !IsServer)
                 InterpolateRemote();
 
@@ -266,9 +264,12 @@ namespace FPS
         }
 
         private bool hasStartedServerTicking = false;
+        private const int SERVER_INPUT_BUFFER_TICKS = 3;
 
         private void ServerTick()
         {
+            if (pendingInputs.Count < SERVER_INPUT_BUFFER_TICKS) return;
+            
             if (!hasStartedServerTicking)
             {
                 if (pendingInputs.Count > 0)

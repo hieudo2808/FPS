@@ -35,52 +35,23 @@ namespace FPS
 
             if (isLocalPlayer)
             {
-                if (firstPersonArms != null)
-                {
-                    firstPersonArms.SetActive(true);
-                    SetLayerRecursively(firstPersonArms, firstPersonLayer);
-                }
-                if (firstPersonWeapon != null)
-                {
-                    firstPersonWeapon.SetActive(true);
-                    SetLayerRecursively(firstPersonWeapon, weaponLayer);
-                }
+                SetGroupVisible(firstPersonArms, true);
+                SetGroupVisible(firstPersonWeapon, true);
+                SetGroupVisible(thirdPersonBody, false);
+                SetGroupVisible(thirdPersonWeapon, false);
 
-                if (thirdPersonBody != null) thirdPersonBody.SetActive(false);
-                if (thirdPersonWeapon != null) thirdPersonWeapon.SetActive(false);
-            }
-            else
-            {                
-                if (firstPersonArms != null) firstPersonArms.SetActive(false);
-                if (firstPersonWeapon != null) firstPersonWeapon.SetActive(false);
-
-                if (thirdPersonBody != null)
-                {
-                    thirdPersonBody.SetActive(true);
-                    SetLayerRecursively(thirdPersonBody, thirdPersonLayer);
-                }
-                if (thirdPersonWeapon != null)
-                {
-                    thirdPersonWeapon.SetActive(true);
-                    SetLayerRecursively(thirdPersonWeapon, thirdPersonLayer);
-                }
-            }
-        }
-
-        private void Update()
-        {
-            if (!isLocalPlayer)
-            {
-                if (firstPersonArms != null && firstPersonArms.activeSelf) 
-                    firstPersonArms.SetActive(false);
-                
-                if (firstPersonWeapon != null && firstPersonWeapon.activeSelf) 
-                    firstPersonWeapon.SetActive(false);
+                SetLayerRecursively(firstPersonArms, firstPersonLayer);
+                SetLayerRecursively(firstPersonWeapon, weaponLayer);
             }
             else
             {
-                if (thirdPersonBody != null && thirdPersonBody.activeSelf) 
-                    thirdPersonBody.SetActive(false);
+                SetGroupVisible(firstPersonArms, false);
+                SetGroupVisible(firstPersonWeapon, false);
+                SetGroupVisible(thirdPersonBody, true);
+                SetGroupVisible(thirdPersonWeapon, true);
+
+                SetLayerRecursively(thirdPersonBody, thirdPersonLayer);
+                SetLayerRecursively(thirdPersonWeapon, thirdPersonLayer);
             }
         }
 
@@ -92,16 +63,31 @@ namespace FPS
             SetupVisibility(isLocalPlayer);
         }
 
+        private static void SetGroupVisible(GameObject target, bool visible)
+        {
+            if (target == null) return;
+
+            var renderers = target.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null)
+                    renderers[i].enabled = visible;
+            }
+
+            var animators = target.GetComponentsInChildren<Animator>(true);
+            for (int i = 0; i < animators.Length; i++)
+            {
+                if (animators[i] != null)
+                    animators[i].enabled = visible;
+            }
+        }
+
         private void SetLayerRecursively(GameObject obj, string layerName)
         {
             if (obj == null) return;
 
             int layer = LayerMask.NameToLayer(layerName);
-            if (layer == -1)
-            {
-                Debug.LogWarning($"[Visibility] Layer '{layerName}' không tồn tại! Hãy tạo trong Project Settings.");
-                return;
-            }
+            if (layer == -1) return;
 
             SetLayerRecursivelyInternal(obj, layer);
         }

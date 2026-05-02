@@ -53,7 +53,49 @@ namespace FPS
                 playerNameInput.text = PlayerPrefs.GetString("PlayerName", "Player" + Random.Range(1000, 9999));
             }
 
+            // Đăng ký callback MỘT LẦN DUY NHẤT
+            if (NetworkGameManager.Instance != null)
+            {
+                NetworkGameManager.Instance.OnHostStarted += HandleHostStarted;
+                NetworkGameManager.Instance.OnClientConnected += HandleClientConnected;
+                NetworkGameManager.Instance.OnClientDisconnected += HandleClientDisconnected;
+                NetworkGameManager.Instance.OnConnectionFailed += HandleConnectionFailed;
+            }
+
             UpdateStatus("MAIN MENU READY");
+        }
+
+        private void OnDestroy()
+        {
+            if (NetworkGameManager.HasInstance)
+            {
+                NetworkGameManager.Instance.OnHostStarted -= HandleHostStarted;
+                NetworkGameManager.Instance.OnClientConnected -= HandleClientConnected;
+                NetworkGameManager.Instance.OnClientDisconnected -= HandleClientDisconnected;
+                NetworkGameManager.Instance.OnConnectionFailed -= HandleConnectionFailed;
+            }
+        }
+
+        private void HandleHostStarted()
+        {
+            UpdateStatus($"SERVER ESTABLISHED. JOIN CODE: {NetworkGameManager.Instance.CurrentJoinCode}");
+        }
+
+        private void HandleClientConnected()
+        {
+            UpdateStatus("CONNECTED. ENTERING MATCH...");
+        }
+
+        private void HandleClientDisconnected()
+        {
+            UpdateStatus("CONNECTION LOST");
+            SetButtonsInteractable(true);
+        }
+
+        private void HandleConnectionFailed(string msg)
+        {
+            UpdateStatus($"FAILED: {msg}");
+            SetButtonsInteractable(true);
         }
 
         private void OpenMainMenu()
@@ -100,16 +142,6 @@ namespace FPS
 
             UpdateStatus("CREATING SERVER THROUGH RELAY...");
             SetButtonsInteractable(false);
-
-            NetworkGameManager.Instance.OnHostStarted += () =>
-                UpdateStatus($"SERVER ESTABLISHED. JOIN CODE: {NetworkGameManager.Instance.CurrentJoinCode}");
-
-            NetworkGameManager.Instance.OnConnectionFailed += (msg) =>
-            {
-                UpdateStatus($"HOST FAILED: {msg}");
-                SetButtonsInteractable(true);
-            };
-
             NetworkGameManager.Instance.StartHostGame();
         }
 
@@ -130,22 +162,6 @@ namespace FPS
 
             UpdateStatus($"CONNECTING TO ROOM {code}...");
             SetButtonsInteractable(false);
-
-            NetworkGameManager.Instance.OnClientConnected += () =>
-                UpdateStatus("CONNECTED. ENTERING MATCH...");
-
-            NetworkGameManager.Instance.OnClientDisconnected += () =>
-            {
-                UpdateStatus("CONNECTION LOST");
-                SetButtonsInteractable(true);
-            };
-
-            NetworkGameManager.Instance.OnConnectionFailed += (msg) =>
-            {
-                UpdateStatus($"MATCHMAKING FAILED: {msg}");
-                SetButtonsInteractable(true);
-            };
-
             NetworkGameManager.Instance.JoinGame(code);
         }
 
@@ -161,8 +177,7 @@ namespace FPS
         {
             if (statusText != null)
                 statusText.text = message;
-
-            Debug.Log($"[LobbyUI] {message}");
         }
     }
 }
+
