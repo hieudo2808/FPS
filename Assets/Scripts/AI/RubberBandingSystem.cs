@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections.Generic;
 
 namespace FPS
 {
@@ -15,9 +15,6 @@ namespace FPS
         [SerializeField] private float catchUpSpeedMultiplier = 1.5f;
         [SerializeField] private float behindPlayerDotThreshold = -0.5f;
         [SerializeField] private float maxSpeedBoost = 1.5f;
-
-        [Header("Debug")]
-        [SerializeField] private bool showDebugLogs = true;
 
         private Dictionary<EnemyAI, ZombieTrackingData> trackedZombies = new Dictionary<EnemyAI, ZombieTrackingData>();
         private float lastTeleportCheck;
@@ -62,7 +59,7 @@ namespace FPS
         {
             if (PlayerProfiler.Instance == null) return;
 
-            var nearestPlayer = GetNearestPlayer();
+            Transform nearestPlayer = GetNearestPlayerToCenter();
             if (nearestPlayer == null) return;
 
             List<EnemyAI> toRemove = new List<EnemyAI>();
@@ -104,9 +101,7 @@ namespace FPS
             }
 
             foreach (var zombie in toRemove)
-            {
                 trackedZombies.Remove(zombie);
-            }
         }
 
         private void TeleportZombie(EnemyAI zombie)
@@ -118,35 +113,28 @@ namespace FPS
             if (agent != null && agent.isOnNavMesh)
             {
                 agent.Warp(newPos);
-
-                if (showDebugLogs)
-                    Debug.Log($"[RubberBanding] Teleported zombie to {newPos}");
             }
         }
 
         private Vector3 GetTeleportPosition()
         {
             if (InfluenceMapManager.Instance != null)
-            {
                 return InfluenceMapManager.Instance.GetBestSpawnPosition();
-            }
 
-            var player = GetNearestPlayer();
+            Transform player = GetNearestPlayerToCenter();
             if (player == null) return Vector3.zero;
 
             Vector3 behindPlayer = player.position - player.forward * 15f;
-            
+
             if (NavMesh.SamplePosition(behindPlayer, out NavMeshHit hit, 10f, NavMesh.AllAreas))
-            {
                 return hit.position;
-            }
 
             return Vector3.zero;
         }
 
         private void UpdateCatchUpSpeed()
         {
-            var nearestPlayer = GetNearestPlayer();
+            Transform nearestPlayer = GetNearestPlayerToCenter();
             if (nearestPlayer == null) return;
 
             foreach (var kvp in trackedZombies)
@@ -157,7 +145,7 @@ namespace FPS
                 if (zombie == null) continue;
 
                 var agent = zombie.GetComponent<NavMeshAgent>();
-                if (agent == null) continue;
+                if (agent == null || !agent.enabled) continue;
 
                 Vector3 toZombie = (zombie.transform.position - nearestPlayer.position).normalized;
                 float dot = Vector3.Dot(nearestPlayer.forward, toZombie);
@@ -167,14 +155,10 @@ namespace FPS
                     if (!data.isSpeedBoosted)
                     {
                         float distance = Vector3.Distance(zombie.transform.position, nearestPlayer.position);
-                        float speedMultiplier = 1f + (distance / 100f);
-                        speedMultiplier = Mathf.Min(speedMultiplier, maxSpeedBoost);
+                        float speedMultiplier = Mathf.Min(1f + (distance / 100f), maxSpeedBoost);
 
                         agent.speed = data.originalSpeed * speedMultiplier;
                         data.isSpeedBoosted = true;
-
-                        if (showDebugLogs)
-                            Debug.Log($"[RubberBanding] Speed boost: {speedMultiplier:F2}x");
                     }
                 }
                 else
@@ -202,29 +186,43 @@ namespace FPS
                 if (dot > 0f)
                 {
                     float dist = Vector3.Distance(position, profile.playerTransform.position);
-                    if (dist < 40f)
-                        return true;
+                    if (dist < 40f) return true;
                 }
             }
 
             return false;
         }
 
-        private Transform GetNearestPlayer()
+        private Transform GetNearestPlayerToCenter()
         {
             if (PlayerProfiler.Instance == null) return null;
 
             Transform nearest = null;
             float minDist = float.MaxValue;
 
+            Vector3 reference = TeamAnalyzer.Instance != null
+                ? TeamAnalyzer.Instance.TeamCentroid
+                : Vector3.zero;
+
             foreach (var profile in PlayerProfiler.Instance.AllProfiles)
             {
                 if (profile.playerTransform == null) continue;
-                
-                return profile.playerTransform;
+
+                float dist = Vector3.Distance(profile.playerTransform.position, reference);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    nearest = profile.playerTransform;
+                }
             }
 
             return nearest;
+        }
+
+        public Transform GetNearestPlayerTo(Vector3 position)
+        {
+            var profile = PlayerProfiler.Instance?.GetNearest(position);
+            return profile?.playerTransform;
         }
     }
 }

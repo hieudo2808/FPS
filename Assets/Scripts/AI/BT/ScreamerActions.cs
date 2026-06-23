@@ -31,6 +31,16 @@ namespace FPS.BT
                 return Status.Running;
             }
 
+            if (animator != null)
+            {
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                if (stateInfo.IsName("Attack") || stateInfo.IsName("Death"))
+                {
+                    agent.isStopped = true;
+                    return Status.Running;
+                }
+            }
+
             agent.isStopped = false;
             agent.SetDestination(player.position);
             

@@ -167,22 +167,7 @@ namespace FPS
 
         private void CalculateTeamCentroid()
         {
-            var profiles = PlayerProfiler.Instance.AllProfiles;
-            if (profiles.Count == 0) return;
-            
-            Vector3 sum = Vector3.zero;
-            int count = 0;
-            
-            foreach (var profile in profiles)
-            {
-                if (profile.playerTransform != null)
-                {
-                    sum += profile.playerTransform.position;
-                    count++;
-                }
-            }
-            
-            teamCentroid = count > 0 ? sum / count : Vector3.zero;
+            teamCentroid = PlayerProfiler.Instance.GetCentroid();
         }
 
         public PlayerRole GetPlayerRole(int playerIndex)

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,31 +9,37 @@ namespace FPS
         [SerializeField] private List<GameObject> weapons;
         [SerializeField] private Animator characterAnimation;
 
-        // Biến mạng: Khi Server đổi số này, TẤT CẢ client sẽ tự động update
         private NetworkVariable<int> networkedWeaponIndex = new NetworkVariable<int>(
             0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
         );
 
         public static WeaponManager LocalInstance { get; private set; }
 
-        public GameObject CurrentWeapon => weapons[networkedWeaponIndex.Value];
-        public GameObject UnusedWeapon => weapons[(networkedWeaponIndex.Value + 1) % weapons.Count];
+        public GameObject CurrentWeapon  => weapons[networkedWeaponIndex.Value];
+        public GameObject UnusedWeapon   => weapons[(networkedWeaponIndex.Value + 1) % weapons.Count];
         public Animator CharacterAnimation => characterAnimation;
 
         public override void OnNetworkSpawn()
         {
             if (IsOwner) LocalInstance = this;
 
-            // Lắng nghe sự kiện đổi súng từ Server
             networkedWeaponIndex.OnValueChanged += OnWeaponChanged;
-
-            // Khởi tạo vũ khí ban đầu cho mọi người
             UpdateWeaponVisibility(networkedWeaponIndex.Value);
+
+            // Set owner flag sau khi IsOwner đã chính xác
+            foreach (var weaponObj in weapons)
+            {
+                var weapon = weaponObj.GetComponent<Weapon>();
+                if (weapon != null)
+                    weapon.SetOwner(IsOwner);
+            }
         }
 
         public override void OnNetworkDespawn()
         {
-            if (IsOwner && LocalInstance == this) LocalInstance = null;
+            if (IsOwner && LocalInstance == this)
+                LocalInstance = null;
+
             networkedWeaponIndex.OnValueChanged -= OnWeaponChanged;
         }
 
@@ -41,17 +47,13 @@ namespace FPS
         {
             if (!IsOwner) return;
 
-            // Xử lý Input đổi súng
             if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2))
-            {
                 RequestSwitchWeaponServerRpc();
-            }
         }
 
         [ServerRpc]
         private void RequestSwitchWeaponServerRpc()
         {
-            // Server đổi giá trị -> kích hoạt OnValueChanged trên toàn bộ máy
             networkedWeaponIndex.Value = (networkedWeaponIndex.Value + 1) % weapons.Count;
         }
 
@@ -63,9 +65,7 @@ namespace FPS
         private void UpdateWeaponVisibility(int index)
         {
             for (int i = 0; i < weapons.Count; i++)
-            {
                 weapons[i].SetActive(i == index);
-            }
 
             if (IsOwner && HUDManager.HasInstance)
                 HUDManager.Instance.UpdateWeaponUI();
@@ -74,6 +74,60 @@ namespace FPS
         public void AddWeapon(GameObject newWeapon)
         {
             if (weapons.Count < 2) weapons.Add(newWeapon);
+        }
+
+        [ServerRpc]
+        public void RequestFireServerRpc(Vector3 spawnPosition, Vector3 direction)
+        {
+            // Server tự lookup damage từ WeaponData — không tin client
+            int currentIndex = networkedWeaponIndex.Value;
+            if (currentIndex < 0 || currentIndex >= weapons.Count) return;
+            var weapon = weapons[currentIndex]?.GetComponent<Weapon>();
+            if (weapon == null || weapon.Data == null) return;
+            float damage = weapon.Data.damage;
+
+            if (Physics.Raycast(spawnPosition, direction, out RaycastHit hit, 500f))
+            {
+                EnemyHealth enemyHealth = hit.collider.GetComponentInParent<EnemyHealth>();
+                if (enemyHealth != null)
+                    enemyHealth.TakeDamage(damage);
+
+                PlayerHealth playerHealth = hit.collider.GetComponentInParent<PlayerHealth>();
+                if (playerHealth != null && !playerHealth.IsOwner)
+                    playerHealth.TakeDamage(damage);
+            }
+
+            FireEffectsClientRpc(spawnPosition, direction);
+        }
+
+        [ClientRpc]
+        private void FireEffectsClientRpc(Vector3 spawnPosition, Vector3 direction)
+        {
+            if (IsOwner) return;
+
+            Weapon currentWeapon = CurrentWeapon?.GetComponent<Weapon>();
+            if (currentWeapon == null) return;
+
+            currentWeapon.SpawnVisualBullet(spawnPosition, direction);
+            currentWeapon.PlayMuzzleEffect();
+            currentWeapon.PlayShootSound();
+        }
+
+        /// <summary>
+        /// Thêm đạn cho vũ khí hiện tại — tránh chain call qua CurrentWeapon.
+        /// </summary>
+        public void AddAmmoToCurrentWeapon(int amount)
+        {
+            var weapon = CurrentWeapon?.GetComponent<Weapon>();
+            weapon?.AddReserveAmmo(amount);
+        }
+
+        /// <summary>
+        /// Trigger animation trên character — tránh expose CharacterAnimation.
+        /// </summary>
+        public void TriggerAnimation(string triggerName)
+        {
+            characterAnimation?.SetTrigger(triggerName);
         }
     }
 }

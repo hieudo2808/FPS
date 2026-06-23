@@ -5,10 +5,11 @@ namespace FPS
     public class Bullet : MonoBehaviour
     {
         [SerializeField] private GameObject bulletHolePrefab;
+        [SerializeField] private LayerMask bulletHoleLayer;
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.layer == 3)
+            if (((1 << collision.gameObject.layer) & bulletHoleLayer) != 0)
                 CreateBulletHole(collision);
 
             Destroy(gameObject);

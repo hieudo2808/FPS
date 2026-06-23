@@ -6,18 +6,21 @@ namespace FPS
     public class AttackSlotManager : MonoBehaviour
     {
         public static AttackSlotManager Instance { get; private set; }
-        
+
         [Header("Settings")]
         [SerializeField] private int slotsPerPlayer = 8;
         [SerializeField] private float slotRadius = 2f;
         [SerializeField] private float slotTimeout = 5f;
         [SerializeField] private float navMeshSampleRange = 1.0f;
-        
+
         [Header("Debug")]
         [SerializeField] private bool showDebugGizmos = false;
-        
+
         private Dictionary<int, AttackSlot[]> playerSlots = new Dictionary<int, AttackSlot[]>();
         private Dictionary<EnemyAI, SlotAssignment> zombieAssignments = new Dictionary<EnemyAI, SlotAssignment>();
+        private readonly List<EnemyAI> _deadZombieCache = new List<EnemyAI>();
+        private float _lastTimeoutCheck;
+        [SerializeField] private float timeoutCheckInterval = 1f;
 
         public class AttackSlot
         {
@@ -37,41 +40,28 @@ namespace FPS
 
         private void Awake()
         {
-            if (Instance == null)
-                Instance = this;
-            else
-                Destroy(gameObject);
-        }
-
-        private void Start()
-        {
-            InitializeSlots();
+            if (Instance == null) Instance = this;
+            else Destroy(gameObject);
         }
 
         private void Update()
         {
             CleanupDeadZombies();
-            CheckSlotTimeouts();
             UpdateSlotPositions();
-        }
-
-        private void InitializeSlots()
-        {
-            if (PlayerProfiler.Instance == null) return;
-            
-            for (int p = 0; p < PlayerProfiler.Instance.PlayerCount; p++)
+            if (Time.time - _lastTimeoutCheck >= timeoutCheckInterval)
             {
-                CreateSlotsForPlayer(p);
+                _lastTimeoutCheck = Time.time;
+                CheckSlotTimeouts();
             }
         }
 
         private void CreateSlotsForPlayer(int playerIndex)
         {
             if (playerSlots.ContainsKey(playerIndex)) return;
-            
+
             AttackSlot[] slots = new AttackSlot[slotsPerPlayer];
             float angleStep = 360f / slotsPerPlayer;
-            
+
             for (int i = 0; i < slotsPerPlayer; i++)
             {
                 float angle = i * angleStep * Mathf.Deg2Rad;
@@ -80,7 +70,7 @@ namespace FPS
                     0f,
                     Mathf.Cos(angle) * slotRadius
                 );
-                
+
                 slots[i] = new AttackSlot
                 {
                     slotIndex = i,
@@ -89,37 +79,34 @@ namespace FPS
                     claimTime = 0f
                 };
             }
-            
+
             playerSlots[playerIndex] = slots;
         }
 
         public bool RequestSlot(EnemyAI zombie, int targetPlayerIndex)
         {
             if (!playerSlots.ContainsKey(targetPlayerIndex))
-            {
                 CreateSlotsForPlayer(targetPlayerIndex);
-            }
-            
+
             if (zombieAssignments.ContainsKey(zombie))
-            {
                 return zombieAssignments[zombie].isAttacker;
-            }
-            
+
             AttackSlot[] slots = playerSlots[targetPlayerIndex];
+
             PlayerProfile profile = PlayerProfiler.Instance?.GetProfile(targetPlayerIndex);
             if (profile?.playerTransform == null) return false;
-            
+
             Vector3 playerPos = profile.playerTransform.position;
             Vector3 zombiePos = zombie.transform.position;
             Vector3 toZombie = (zombiePos - playerPos).normalized;
-            
+
             AttackSlot bestSlot = null;
             float bestDot = -1f;
-            
+
             foreach (var slot in slots)
             {
                 if (!slot.IsFree) continue;
-                
+
                 float dot = Vector3.Dot(toZombie, slot.localOffset.normalized);
                 if (dot > bestDot)
                 {
@@ -127,29 +114,29 @@ namespace FPS
                     bestSlot = slot;
                 }
             }
-            
+
             if (bestSlot != null)
             {
                 bestSlot.occupant = zombie;
                 bestSlot.claimTime = Time.time;
-                
+
                 zombieAssignments[zombie] = new SlotAssignment
                 {
                     playerIndex = targetPlayerIndex,
                     slotIndex = bestSlot.slotIndex,
                     isAttacker = true
                 };
-                
+
                 return true;
             }
-            
+
             zombieAssignments[zombie] = new SlotAssignment
             {
                 playerIndex = targetPlayerIndex,
                 slotIndex = -1,
                 isAttacker = false
             };
-            
+
             return false;
         }
 
@@ -157,48 +144,41 @@ namespace FPS
         {
             if (!zombieAssignments.TryGetValue(zombie, out SlotAssignment assignment))
                 return;
-            
+
             if (assignment.slotIndex >= 0 && playerSlots.ContainsKey(assignment.playerIndex))
             {
                 var slot = playerSlots[assignment.playerIndex][assignment.slotIndex];
                 if (slot.occupant == zombie)
-                {
                     slot.occupant = null;
-                }
             }
-            
+
             zombieAssignments.Remove(zombie);
         }
 
         public Vector3 GetSlotWorldPosition(EnemyAI zombie, Transform fallbackTarget)
         {
-            if (!zombieAssignments.TryGetValue(zombie, out SlotAssignment assignment))
-            {
-                return fallbackTarget != null ? fallbackTarget.position : zombie.transform.position;
-            }
+            Vector3 fallback = fallbackTarget != null
+                ? fallbackTarget.position
+                : zombie.transform.position;
 
-            if (assignment.slotIndex < 0) 
-            {
-                return fallbackTarget != null ? fallbackTarget.position : zombie.transform.position;
-            }
-            
+            if (!zombieAssignments.TryGetValue(zombie, out SlotAssignment assignment))
+                return fallback;
+
+            if (assignment.slotIndex < 0)
+                return fallback;
+
             PlayerProfile profile = PlayerProfiler.Instance?.GetProfile(assignment.playerIndex);
-            
-            if (profile?.playerTransform == null) 
-                return fallbackTarget != null ? fallbackTarget.position : zombie.transform.position;
+            if (profile?.playerTransform == null)
+                return fallback;
 
             if (!playerSlots.ContainsKey(assignment.playerIndex))
                 return profile.playerTransform.position;
 
             var slot = playerSlots[assignment.playerIndex][assignment.slotIndex];
-            
             Vector3 targetPos = profile.playerTransform.position + slot.localOffset;
 
-            UnityEngine.AI.NavMeshHit hit;
-            if (UnityEngine.AI.NavMesh.SamplePosition(targetPos, out hit, navMeshSampleRange, UnityEngine.AI.NavMesh.AllAreas))
-            {
+            if (UnityEngine.AI.NavMesh.SamplePosition(targetPos, out UnityEngine.AI.NavMeshHit hit, navMeshSampleRange, UnityEngine.AI.NavMesh.AllAreas))
                 return hit.position;
-            }
 
             return profile.playerTransform.position;
         }
@@ -214,27 +194,21 @@ namespace FPS
         {
             int count = 0;
             foreach (var kvp in zombieAssignments)
-            {
                 if (kvp.Value.playerIndex == playerIndex)
                     count++;
-            }
             return count;
         }
 
         private void CleanupDeadZombies()
         {
-            List<EnemyAI> toRemove = new List<EnemyAI>();
-            
+            _deadZombieCache.Clear();
+
             foreach (var kvp in zombieAssignments)
-            {
                 if (kvp.Key == null)
-                    toRemove.Add(kvp.Key);
-            }
-            
-            foreach (var zombie in toRemove)
-            {
+                    _deadZombieCache.Add(kvp.Key);
+
+            foreach (var zombie in _deadZombieCache)
                 ReleaseSlot(zombie);
-            }
         }
 
         private void CheckSlotTimeouts()
@@ -246,9 +220,8 @@ namespace FPS
                     if (!slot.IsFree && Time.time - slot.claimTime > slotTimeout)
                     {
                         if (slot.occupant != null)
-                        {
                             zombieAssignments.Remove(slot.occupant);
-                        }
+
                         slot.occupant = null;
                     }
                 }
@@ -262,9 +235,7 @@ namespace FPS
                 if (!kvp.Value.isAttacker && kvp.Key != null)
                 {
                     if (RequestSlotForWaiter(kvp.Key, kvp.Value.playerIndex))
-                    {
                         kvp.Value.isAttacker = true;
-                    }
                 }
             }
         }
@@ -272,14 +243,14 @@ namespace FPS
         private bool RequestSlotForWaiter(EnemyAI zombie, int playerIndex)
         {
             if (!playerSlots.ContainsKey(playerIndex)) return false;
-            
+
             foreach (var slot in playerSlots[playerIndex])
             {
                 if (slot.IsFree)
                 {
                     slot.occupant = zombie;
                     slot.claimTime = Time.time;
-                    
+
                     if (zombieAssignments.ContainsKey(zombie))
                     {
                         zombieAssignments[zombie].slotIndex = slot.slotIndex;
@@ -289,24 +260,6 @@ namespace FPS
                 }
             }
             return false;
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (!showDebugGizmos || PlayerProfiler.Instance == null) return;
-            
-            foreach (var kvp in playerSlots)
-            {
-                var profile = PlayerProfiler.Instance.GetProfile(kvp.Key);
-                if (profile?.playerTransform == null) continue;
-                
-                foreach (var slot in kvp.Value)
-                {
-                    Vector3 pos = profile.playerTransform.position + slot.localOffset;
-                    Gizmos.color = slot.IsFree ? Color.green : Color.red;
-                    Gizmos.DrawWireSphere(pos, 0.3f);
-                }
-            }
         }
     }
 }

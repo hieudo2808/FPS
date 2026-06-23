@@ -98,9 +98,9 @@ namespace FPS
             {
                 if (currentAmmo != null) currentAmmo.text = currentWeapon.CurrentAmmo.ToString();
                 if (reservedAmmo != null) reservedAmmo.text = currentWeapon.ReservedAmmo.ToString();
-                if (weaponIcon != null && currentWeapon.WeaponIcon != null) 
+                if (weaponIcon != null && currentWeapon.Data != null && currentWeapon.Data.weaponIcon != null) 
                 {
-                    weaponIcon.sprite = currentWeapon.WeaponIcon;
+                    weaponIcon.sprite = currentWeapon.Data.weaponIcon;
                     weaponIcon.enabled = true;
                 }
             }
@@ -111,9 +111,9 @@ namespace FPS
 
             if (unusedWeapon != null)
             {
-                if (unusedWeaponIcon != null && unusedWeapon.WeaponIcon != null)
+                if (unusedWeaponIcon != null && unusedWeapon.Data != null && unusedWeapon.Data.weaponIcon != null)
                 {
-                    unusedWeaponIcon.sprite = unusedWeapon.WeaponIcon;
+                    unusedWeaponIcon.sprite = unusedWeapon.Data.weaponIcon;
                     unusedWeaponIcon.enabled = true;
                 }
             }

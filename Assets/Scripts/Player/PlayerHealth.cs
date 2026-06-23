@@ -68,7 +68,7 @@ namespace FPS
         /// <summary>
         /// Ai cũng có thể gọi (enemy, traps, etc.) — chạy trên server
         /// </summary>
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         public void TakeDamageServerRpc(float damage)
         {
             if (networkIsDead.Value) return;
@@ -117,7 +117,7 @@ namespace FPS
             PlayerDeathEvent?.Invoke();
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         public void HealServerRpc(float amount)
         {
             if (networkIsDead.Value) return;
@@ -130,7 +130,7 @@ namespace FPS
             HealServerRpc(amount);
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         public void ResetHealthServerRpc()
         {
             networkIsDead.Value = false;

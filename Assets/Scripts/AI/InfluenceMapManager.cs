@@ -21,6 +21,9 @@ namespace FPS
         [Header("Debug")]
         [SerializeField] private bool showDebugGizmos = false;
         
+        [SerializeField] private float updateInterval = 0.1f;
+        private float lastUpdateTime;
+
         private float[,] influenceGrid;
         private int gridWidth;
         private int gridHeight;
@@ -40,7 +43,11 @@ namespace FPS
 
         private void Update()
         {
-            UpdateInfluenceMap();
+            if (Time.time - lastUpdateTime >= updateInterval)
+            {
+                lastUpdateTime = Time.time;
+                UpdateInfluenceMap();
+            }
         }
 
         private void InitializeGrid()

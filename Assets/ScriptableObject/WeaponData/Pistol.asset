@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c8b7e004fa79d4d8b2a9f3e4fc1289, type: 3}
+  m_Name: Pistol
+  m_EditorClassIdentifier: Assembly-CSharp::FPS.WeaponData
+  weaponName: Pistol
+  weaponIcon: {fileID: 21300028, guid: 5acb27b603af6d44ea6113c4b7b15385, type: 3}
+  damage: 75
+  bulletSpeed: 200
+  fireRate: 0.15
+  bulletLiveTime: 2
+  burstCount: 3
+  fireMode: 0
+  magazineSize: 12
+  totalAmmo: 48
+  reloadTime: 1.5
+  bulletPrefab: {fileID: 2729925768574407125, guid: 390e2392dda96af4c93a94d6f1d128a0, type: 3}
+  shootSound: {fileID: 8300000, guid: b9fd822133f5e7040be05f1a11852a32, type: 3}
+  reloadSound: {fileID: 8300000, guid: 7bc4498f904cee64599929b2ac675444, type: 3}
+  recoilPattern: {fileID: 0}

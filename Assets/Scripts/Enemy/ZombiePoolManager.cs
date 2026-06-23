@@ -10,49 +10,65 @@ namespace FPS
         [Header("Pool Settings")]
         [SerializeField] private int poolSizePerType = 20;
         [SerializeField] private bool autoExpand = true;
-        
+
         [Header("Debug")]
         [SerializeField] private bool showDebugLogs = false;
-        
+
         private Dictionary<string, Queue<GameObject>> pools = new Dictionary<string, Queue<GameObject>>();
         private Dictionary<string, GameObject> prefabLookup = new Dictionary<string, GameObject>();
-        private Transform poolContainer;
+        private Dictionary<string, ZombieNetworkPoolHandler> handlers = new Dictionary<string, ZombieNetworkPoolHandler>();
 
         protected override void Awake()
         {
             base.Awake();
-            
-            poolContainer = new GameObject("ZombiePool").transform;
-            poolContainer.SetParent(transform);
         }
 
         public void InitializePool(GameObject prefab, int size = -1)
         {
             if (prefab == null) return;
-            
-            string key = prefab.name;
+
+            string key = GetPrefabKey(prefab.name);
             if (pools.ContainsKey(key)) return;
-            
+
             int poolSize = size > 0 ? size : poolSizePerType;
-            Queue<GameObject> pool = new Queue<GameObject>();
-            
+            var pool = new Queue<GameObject>();
+
             for (int i = 0; i < poolSize; i++)
-            {
-                GameObject obj = CreatePooledObject(prefab);
-                pool.Enqueue(obj);
-            }
-            
+                pool.Enqueue(CreatePooledObject(prefab));
+
             pools[key] = pool;
             prefabLookup[key] = prefab;
-            
+
+            RegisterNetworkHandler(prefab, key);
+
             if (showDebugLogs)
-                Debug.Log($"[ZombiePool] Initialized pool for '{key}' with {poolSize} objects");
+                Debug.Log($"[ZombiePool] Initialized pool '{key}' with {poolSize} objects");
+        }
+
+        private void RegisterNetworkHandler(GameObject prefab, string key)
+        {
+            if (NetworkManager.Singleton == null) return;
+            if (handlers.ContainsKey(key)) return;
+
+            var handler = new ZombieNetworkPoolHandler(prefab, this);
+            NetworkManager.Singleton.PrefabHandler.AddHandler(prefab, handler);
+            handlers[key] = handler;
+        }
+
+        private void OnDestroy()
+        {
+            if (NetworkManager.Singleton == null) return;
+
+            foreach (var kvp in handlers)
+            {
+                if (prefabLookup.TryGetValue(kvp.Key, out var prefab))
+                    NetworkManager.Singleton.PrefabHandler.RemoveHandler(prefab);
+            }
         }
 
         private GameObject CreatePooledObject(GameObject prefab)
         {
-            GameObject obj = Instantiate(prefab); 
-           // UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(obj, UnityEngine.SceneManagement.SceneManager.GetActiveScene());
+            GameObject obj = Instantiate(prefab);
             obj.SetActive(false);
             return obj;
         }
@@ -60,130 +76,158 @@ namespace FPS
         public GameObject GetZombie(GameObject prefab, Vector3 position, Quaternion rotation)
         {
             if (prefab == null) return null;
-            
-            string key = prefab.name;
-            
+
+            string key = GetPrefabKey(prefab.name);
+
             if (!pools.ContainsKey(key))
-            {
                 InitializePool(prefab);
-            }
-            
-            Queue<GameObject> pool = pools[key];
-            GameObject zombie;
-            
-            if (pool.Count > 0)
-            {
-                zombie = pool.Dequeue();
-            }
-            else if (autoExpand)
-            {
-                zombie = CreatePooledObject(prefabLookup[key]);
-                if (showDebugLogs)
-                    Debug.Log($"[ZombiePool] Auto-expanded pool for '{key}'");
-            }
-            else
-            {
-                Debug.LogWarning($"[ZombiePool] Pool empty for '{key}'");
-                return null;
-            }
-            
+
+            GameObject zombie = DequeueOrExpand(key, prefab);
+            if (zombie == null) return null;
+
             ResetZombie(zombie, position, rotation);
+
             zombie.SetActive(true);
-            
-            if (Unity.Netcode.NetworkManager.Singleton.IsServer)
+
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
             {
                 var netObj = zombie.GetComponent<NetworkObject>();
                 if (netObj != null && !netObj.IsSpawned)
-                {
                     netObj.Spawn(true);
-                }
             }
-            
+
+            if (showDebugLogs)
+                Debug.Log($"[ZombiePool] Got '{key}' from pool");
+
             return zombie;
+        }
+
+        public GameObject GetFromPoolOnly(GameObject prefab, Vector3 position, Quaternion rotation)
+        {
+            if (prefab == null) return null;
+
+            string key = GetPrefabKey(prefab.name);
+
+            if (!pools.ContainsKey(key))
+                InitializePool(prefab);
+
+            GameObject zombie = DequeueOrExpand(key, prefab);
+            if (zombie == null) return null;
+
+            ResetZombie(zombie, position, rotation);
+            return zombie;
+        }
+
+        private GameObject DequeueOrExpand(string key, GameObject prefab)
+        {
+            var pool = pools[key];
+
+            if (pool.Count > 0)
+                return pool.Dequeue();
+
+            if (autoExpand)
+            {
+                if (showDebugLogs)
+                    Debug.Log($"[ZombiePool] Auto-expanded pool '{key}'");
+                return CreatePooledObject(prefabLookup[key]);
+            }
+
+            Debug.LogWarning($"[ZombiePool] Pool empty for '{key}' and autoExpand is off");
+            return null;
         }
 
         public void ReturnZombie(GameObject zombie)
         {
             if (zombie == null) return;
-            
+
             string key = GetPoolKey(zombie);
             if (string.IsNullOrEmpty(key))
             {
                 Destroy(zombie);
                 return;
             }
-            
-            if (Unity.Netcode.NetworkManager.Singleton.IsServer)
+
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
             {
                 var netObj = zombie.GetComponent<NetworkObject>();
                 if (netObj != null && netObj.IsSpawned)
                 {
-                    netObj.Despawn(false); // false means don't destroy GameObject
+                    netObj.Despawn(false);
+                    return;
                 }
             }
+
+            ReturnToPoolInternal(zombie);
+        }
+
+        public void ReturnToPoolInternal(GameObject zombie)
+        {
+            if (zombie == null) return;
+
+            string key = GetPoolKey(zombie);
+            if (string.IsNullOrEmpty(key))
+            {
+                Destroy(zombie);
+                return;
+            }
+
             zombie.SetActive(false);
-            // BẮT BUỘC: Không set parent trong NGO
-            
+
             if (pools.ContainsKey(key))
             {
                 pools[key].Enqueue(zombie);
-                
-                if (showDebugLogs)
-                    Debug.Log($"[ZombiePool] Returned zombie to pool '{key}'");
-            }
-        }
 
-        private string GetPoolKey(GameObject zombie)
-        {
-            string name = zombie.name;
-            
-            if (name.Contains("(Clone)"))
-            foreach (var key in pools.Keys) {
-                if (name.StartsWith(key))
-                    return key;
+                if (showDebugLogs)
+                    Debug.Log($"[ZombiePool] Returned '{key}' to pool");
             }
-            
-            return null;
         }
 
         private void ResetZombie(GameObject zombie, Vector3 position, Quaternion rotation)
         {
+            zombie.transform.SetParent(null);
             zombie.transform.position = position;
             zombie.transform.rotation = rotation;
-            zombie.transform.SetParent(null);
-            
+
             NavMeshAgent agent = zombie.GetComponent<NavMeshAgent>();
             if (agent != null)
             {
                 agent.enabled = false;
-                
                 zombie.transform.position = position;
-                
                 agent.enabled = true;
+
+                if (agent.isOnNavMesh)
+                    agent.Warp(position);
             }
-            
+
             Collider col = zombie.GetComponent<Collider>();
             if (col != null)
                 col.enabled = true;
-            
-            EnemyHealth health = zombie.GetComponent<EnemyHealth>();
-            if (health != null)
-            {
-                health.ResetHealth();
-            }
-            
-            EnemyAI ai = zombie.GetComponent<EnemyAI>();
-            if (ai != null)
-            {
-                ai.ResetAI();
-            }
+
+            // Tự động reset mọi component implement IPoolResettable
+            foreach (var resettable in zombie.GetComponents<IPoolResettable>())
+                resettable.ResetForPool();
+        }
+
+        private static string GetPrefabKey(string name)
+        {
+            return name.Replace("(Clone)", "").Trim();
+        }
+
+        private string GetPoolKey(GameObject zombie)
+        {
+            string cleaned = GetPrefabKey(zombie.name);
+
+            foreach (var key in pools.Keys)
+                if (cleaned == key || cleaned.StartsWith(key))
+                    return key;
+
+            return null;
         }
 
         public int GetPoolCount(string prefabName)
         {
-            if (pools.ContainsKey(prefabName))
-                return pools[prefabName].Count;
-            return 0;
+            string key = GetPrefabKey(prefabName);
+            return pools.ContainsKey(key) ? pools[key].Count : 0;
         }
 
         public int GetTotalPooled()

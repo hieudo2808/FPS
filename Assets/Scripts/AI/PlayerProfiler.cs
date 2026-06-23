@@ -13,6 +13,7 @@ namespace FPS
         public ulong clientId;
 
         public Transform cameraTransform;
+        public PlayerHealth cachedHealth;
 
         public List<Vector3> positionHistory = new List<Vector3>();
         public Vector3 mostFrequentPosition;
@@ -66,14 +67,35 @@ namespace FPS
             }
         }
 
+        private bool subscribedToNetworkEvents;
+
         private void Start()
         {
+            // Subscribe sau Awake() của tất cả objects — đảm bảo NetworkManager đã init
+            if (NetworkManager.Singleton != null)
+            {
+                NetworkManager.Singleton.OnClientConnectedCallback += OnClientChanged;
+                NetworkManager.Singleton.OnClientDisconnectCallback += OnClientChanged;
+                subscribedToNetworkEvents = true;
+            }
             RefreshPlayers();
         }
 
+        private void OnDestroy()
+        {
+            if (subscribedToNetworkEvents && NetworkManager.Singleton != null)
+            {
+                NetworkManager.Singleton.OnClientConnectedCallback -= OnClientChanged;
+                NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientChanged;
+            }
+        }
+
+        private void OnClientChanged(ulong clientId) => RefreshPlayers();
+
         private void Update()
         {
-            if (Time.time - lastPlayerCheck > 1f)
+            // Giữ poll fallback interval dài hơn cho trường hợp NetworkManager chưa subscribe được
+            if (!subscribedToNetworkEvents && Time.time - lastPlayerCheck > 10f)
             {
                 lastPlayerCheck = Time.time;
                 RefreshPlayers();
@@ -126,6 +148,7 @@ namespace FPS
 
                 profile.clientId = client.ClientId;
                 profile.playerTransform = playerObject.transform;
+                profile.cachedHealth = playerObject.GetComponent<PlayerHealth>();
                 profile.playerIndex = index++;
                 profile.cameraTransform = FindCameraTransform(playerObject.gameObject);
 
@@ -156,7 +179,8 @@ namespace FPS
                 {
                     playerTransform = player.transform,
                     playerIndex = index++,
-                    cameraTransform = FindCameraTransform(player)
+                    cameraTransform = FindCameraTransform(player),
+                    cachedHealth = player.GetComponent<PlayerHealth>()
                 };
 
                 playerProfiles.Add(profile);
@@ -245,11 +269,8 @@ namespace FPS
             {
                 if (!IsProfileValid(profile)) continue;
 
-                PlayerHealth health = profile.playerTransform.GetComponent<PlayerHealth>();
-                if (health != null)
-                {
-                    profile.currentHealth = health.CurrentHealth;
-                }
+                if (profile.cachedHealth != null)
+                    profile.currentHealth = profile.cachedHealth.CurrentHealth;
 
                 if (profile.cameraTransform != null)
                 {
@@ -387,8 +408,37 @@ namespace FPS
             if (profile == null || profile.playerTransform == null) return false;
             if (!profile.playerTransform.gameObject.activeInHierarchy) return false;
 
-            PlayerHealth health = profile.playerTransform.GetComponent<PlayerHealth>();
-            return health == null || !health.IsDead;
+            return profile.cachedHealth == null || !profile.cachedHealth.IsDead;
+        }
+
+        public PlayerProfile GetNearest(Vector3 position)
+        {
+            PlayerProfile nearest = null;
+            float minDist = float.MaxValue;
+            foreach (var profile in playerProfiles)
+            {
+                if (!IsProfileValid(profile)) continue;
+                float dist = (profile.playerTransform.position - position).sqrMagnitude;
+                if (dist < minDist) { minDist = dist; nearest = profile; }
+            }
+            return nearest;
+        }
+
+        public Vector3 GetCentroid()
+        {
+            if (playerProfiles.Count == 0) return Vector3.zero;
+            Vector3 sum = Vector3.zero;
+            int count = 0;
+            foreach (var p in playerProfiles)
+                if (p.playerTransform != null) { sum += p.playerTransform.position; count++; }
+            return count > 0 ? sum / count : Vector3.zero;
+        }
+
+        public PlayerProfile GetProfileByTransform(Transform t)
+        {
+            foreach (var p in playerProfiles)
+                if (p.playerTransform == t) return p;
+            return null;
         }
     }
 }

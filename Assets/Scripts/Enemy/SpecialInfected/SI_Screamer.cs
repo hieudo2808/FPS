@@ -37,7 +37,7 @@ namespace FPS
             if (!isScreaming)
             {
                 StartCoroutine(ScreamRoutine());
-                lastAbilityTime = Time.time; // Reset cooldown for BT
+                lastAbilityTime = Time.time;
             }
         }
 
@@ -50,8 +50,6 @@ namespace FPS
             if (animator != null)
             
             if (screamSound != null && AudioManager.Instance != null)
-            
-            Debug.Log("[Screamer] SCREAMING! Calling horde!");
             
             yield return new WaitForSeconds(screamDuration);
             
@@ -68,8 +66,6 @@ namespace FPS
                         ZombieFactory.Instance.SpawnZombie(hit.position, Quaternion.identity);
                     }
                 }
-                
-                Debug.Log($"[Screamer] Called {zombiesToSpawn} zombies!");
             }
             
             if (agent != null && agent.isOnNavMesh)
