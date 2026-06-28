@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -33,8 +34,26 @@ namespace FPS
                 lastTeleportCheck = Time.time;
                 CheckAndTeleportDistantZombies();
             }
+        }
 
-            UpdateCatchUpSpeed();
+        private void OnEnable()
+        {
+            StartCoroutine(CatchUpSpeedLoop());
+        }
+
+        private void OnDisable()
+        {
+            StopAllCoroutines();
+        }
+
+        private IEnumerator CatchUpSpeedLoop()
+        {
+            var wait = new WaitForSeconds(0.1f);
+            while (true)
+            {
+                UpdateCatchUpSpeed();
+                yield return wait;
+            }
         }
 
         public void RegisterZombie(EnemyAI zombie)
