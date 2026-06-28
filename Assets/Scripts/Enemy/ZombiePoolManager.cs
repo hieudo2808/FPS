@@ -153,7 +153,6 @@ namespace FPS
                 if (netObj != null && netObj.IsSpawned)
                 {
                     netObj.Despawn(false);
-                    return;
                 }
             }
 

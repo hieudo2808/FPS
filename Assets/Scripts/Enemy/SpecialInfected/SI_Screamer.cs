@@ -27,11 +27,6 @@ namespace FPS
             allowedInSoloMode = true;
         }
 
-        protected override void Update()
-        {
-
-        }
-
         public override void UseAbility()
         {
             if (!isScreaming)
@@ -46,10 +41,13 @@ namespace FPS
             isScreaming = true;
             
             if (agent != null && agent.isOnNavMesh)
+                agent.isStopped = true;
             
             if (animator != null)
+                animator.SetTrigger(ScreamTrigger);
             
             if (screamSound != null && AudioManager.Instance != null)
+                AudioManager.Instance.PlaySFXSound(screamSound, screamVolume);
             
             yield return new WaitForSeconds(screamDuration);
             

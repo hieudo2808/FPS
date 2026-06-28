@@ -17,7 +17,7 @@ namespace FPS.BT
         protected override Status OnUpdate()
         {
             if (agent == null) agent = gameObject.GetComponent<NavMeshAgent>();
-            if (player == null) player = GameObject.FindGameObjectWithTag("Player")?.transform;
+            player = BTUtility.GetTargetPlayer(gameObject);
             if (animator == null) animator = gameObject.GetComponent<Animator>();
             if (screamer == null) screamer = gameObject.GetComponent<SI_Screamer>();
             
@@ -97,7 +97,7 @@ namespace FPS.BT
         protected override Status OnUpdate()
         {
             if (agent == null) agent = gameObject.GetComponent<NavMeshAgent>();
-            if (player == null) player = GameObject.FindGameObjectWithTag("Player")?.transform;
+            player = BTUtility.GetTargetPlayer(gameObject);
             
             if (agent == null || player == null) return Status.Failure;
             
@@ -132,7 +132,7 @@ namespace FPS.BT
         protected override Status OnUpdate()
         {
             if (animator == null) animator = gameObject.GetComponent<Animator>();
-            if (player == null) player = GameObject.FindGameObjectWithTag("Player")?.transform;
+            player = BTUtility.GetTargetPlayer(gameObject);
             if (agent == null) agent = gameObject.GetComponent<NavMeshAgent>();
             if (enemyAI == null) enemyAI = gameObject.GetComponent<EnemyAI>();
             
@@ -176,6 +176,19 @@ namespace FPS.BT
                 agent.isStopped = true;
 
             return Status.Success;
+        }
+    }
+
+    public static class BTUtility
+    {
+        public static Transform GetTargetPlayer(GameObject gameObject)
+        {
+            if (PlayerProfiler.Instance != null)
+            {
+                var profile = PlayerProfiler.Instance.GetNearest(gameObject.transform.position);
+                return profile?.playerTransform;
+            }
+            return GameObject.FindGameObjectWithTag("Player")?.transform;
         }
     }
 }

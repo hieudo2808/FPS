@@ -14,11 +14,22 @@ namespace FPS.BT
 
         protected override void OnAwake()
         {
-            player = GameObject.FindGameObjectWithTag("Player")?.transform;
+            player = null;
+        }
+
+        private Transform GetTargetPlayer()
+        {
+            if (PlayerProfiler.Instance != null)
+            {
+                var profile = PlayerProfiler.Instance.GetNearest(gameObject.transform.position);
+                return profile?.playerTransform;
+            }
+            return GameObject.FindGameObjectWithTag("Player")?.transform;
         }
 
         protected override bool IsUpdatable()
         {
+            player = GetTargetPlayer();
             if (player == null) return false;
             float dist = Vector3.Distance(gameObject.transform.position, player.position);
             return dist <= range;
@@ -85,11 +96,22 @@ namespace FPS.BT
 
         protected override void OnAwake()
         {
-            player = GameObject.FindGameObjectWithTag("Player")?.transform;
+            player = null;
+        }
+
+        private Transform GetTargetPlayer()
+        {
+            if (PlayerProfiler.Instance != null)
+            {
+                var profile = PlayerProfiler.Instance.GetNearest(gameObject.transform.position);
+                return profile?.playerTransform;
+            }
+            return GameObject.FindGameObjectWithTag("Player")?.transform;
         }
 
         protected override bool IsUpdatable()
         {
+            player = GetTargetPlayer();
             if (player == null) return false;
             float dist = Vector3.Distance(gameObject.transform.position, player.position);
             return dist <= attackRange;

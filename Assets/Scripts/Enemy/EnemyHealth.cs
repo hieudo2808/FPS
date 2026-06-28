@@ -194,7 +194,14 @@ namespace FPS
             if (!netObj.IsSpawned) yield break;
             if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer) yield break;
 
-            netObj.Despawn(true);
+            if (usePooling && ZombiePoolManager.HasInstance)
+            {
+                ZombiePoolManager.Instance.ReturnZombie(gameObject);
+            }
+            else
+            {
+                netObj.Despawn(true);
+            }
         }
 
         private void ReturnToPool()

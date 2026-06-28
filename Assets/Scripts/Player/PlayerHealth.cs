@@ -117,29 +117,19 @@ namespace FPS
             PlayerDeathEvent?.Invoke();
         }
 
-        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        public void HealServerRpc(float amount)
+        public void Heal(float amount)
         {
+            if (!IsServer) return;
             if (networkIsDead.Value) return;
 
             networkHealth.Value = Mathf.Min(networkHealth.Value + amount, maxHealth);
         }
 
-        public void Heal(float amount)
-        {
-            HealServerRpc(amount);
-        }
-
-        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        public void ResetHealthServerRpc()
-        {
-            networkIsDead.Value = false;
-            networkHealth.Value = maxHealth;
-        }
-
         public void ResetHealth()
         {
-            ResetHealthServerRpc();
+            if (!IsServer) return;
+            networkIsDead.Value = false;
+            networkHealth.Value = maxHealth;
         }
     }
 }

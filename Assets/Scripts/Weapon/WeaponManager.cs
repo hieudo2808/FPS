@@ -79,6 +79,14 @@ namespace FPS
         [ServerRpc]
         public void RequestFireServerRpc(Vector3 spawnPosition, Vector3 direction)
         {
+            // Xác thực khoảng cách: spawnPosition không được cách quá xa vị trí player thực tế trên server
+            float dist = Vector3.Distance(transform.position, spawnPosition);
+            if (dist > 5.0f)
+            {
+                Debug.LogWarning($"[WeaponManager] Rejecting fire request from player {OwnerClientId}. Distance {dist}m exceeds limit.");
+                return;
+            }
+
             // Server tự lookup damage từ WeaponData — không tin client
             int currentIndex = networkedWeaponIndex.Value;
             if (currentIndex < 0 || currentIndex >= weapons.Count) return;
