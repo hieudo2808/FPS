@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FPS
 {
-    public class EnemyHealth : NetworkBehaviour, IPoolResettable
+    public class EnemyHealth : NetworkBehaviour, IPoolResettable, IDamageable
     {
         public void ResetForPool() => ResetHealth();
         [Header("Health Settings")]

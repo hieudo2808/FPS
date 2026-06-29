@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace FPS
 {
-    public class PlayerHealth : NetworkBehaviour
+    public class PlayerHealth : NetworkBehaviour, IDamageable
     {
         [Header("Health Settings")]
         [SerializeField] private float maxHealth = 100f;
