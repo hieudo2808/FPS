@@ -174,7 +174,8 @@ namespace FPS
             Vector3 shootDirection  = (targetPoint - spawnPos).normalized;
 
             SpawnVisualBullet(spawnPos, shootDirection);
-            WeaponManager.LocalInstance?.RequestFireServerRpc(spawnPos, shootDirection);
+            var fireHandler = GetComponentInParent<WeaponFireHandler>();
+            fireHandler?.RequestFireServerRpc(spawnPos, shootDirection);
         }
 
         public void SpawnVisualBullet(Vector3 position, Vector3 direction)

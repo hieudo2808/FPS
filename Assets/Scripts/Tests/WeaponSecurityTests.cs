@@ -43,13 +43,15 @@ namespace FPS.Tests
             ownerField.SetValue(netObj, networkManager);
 
             var wm = playerGo.AddComponent<WeaponManager>();
+            var fireHandler = playerGo.AddComponent<WeaponFireHandler>();
             var nbIsServerProp = typeof(NetworkBehaviour).GetProperty("IsServer", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             nbIsServerProp.SetValue(wm, true);
+            nbIsServerProp.SetValue(fireHandler, true);
 
             // Set __rpc_exec_stage to Execute (1) để chạy thân hàm RPC thay vì gửi qua mạng
             var execStageField = typeof(NetworkBehaviour).GetField("__rpc_exec_stage", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             Assert.NotNull(execStageField, "Không tìm thấy trường __rpc_exec_stage trong NetworkBehaviour");
-            execStageField.SetValue(wm, 1); // 1 = Execute
+            execStageField.SetValue(fireHandler, 1); // 1 = Execute
 
             // Setup a mock weapon list to prevent null reference in RequestFireServerRpc
             var weaponsField = typeof(WeaponManager).GetField("weapons", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -68,13 +70,13 @@ namespace FPS.Tests
 
             // 3. Test Fire within limits (e.g. 2 meters away)
             // It should not log any "Rejecting fire request" warning
-            wm.RequestFireServerRpc(new Vector3(0, 0, 2f), Vector3.forward);
+            fireHandler.RequestFireServerRpc(new Vector3(0, 0, 2f), Vector3.forward);
 
             // 4. Test Fire outside limits (e.g. 10 meters away)
             // It should log a "Rejecting fire request" warning
             LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("Rejecting fire request"));
-            execStageField.SetValue(wm, 1); // 1 = Execute (Cần thiết lập lại vì Netcode tự động reset về Send sau mỗi cuộc gọi RPC)
-            wm.RequestFireServerRpc(new Vector3(0, 0, 10f), Vector3.forward);
+            execStageField.SetValue(fireHandler, 1); // 1 = Execute
+            fireHandler.RequestFireServerRpc(new Vector3(0, 0, 10f), Vector3.forward);
 
             // Clean up
             singletonProp.SetValue(null, null);
