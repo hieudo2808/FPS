@@ -56,16 +56,19 @@ namespace FPS
             gridWidth = Mathf.CeilToInt(mapSize.x / cellSize);
             gridHeight = Mathf.CeilToInt(mapSize.y / cellSize);
             influenceGrid = new float[gridWidth, gridHeight];
-            BakeNavMeshCache();
+            StartCoroutine(BakeNavMeshCache());
         }
 
         /// <summary>
         /// Goi mot lan tai Start() de cache truoc toan bo cac o grid co vi tri hop le tren NavMesh.
         /// Tranh goi NavMesh.SamplePosition() dong trong GetBestSpawnPosition().
+        /// Su dung Coroutine de khong block Main Thread.
         /// </summary>
-        private void BakeNavMeshCache()
+        private System.Collections.IEnumerator BakeNavMeshCache()
         {
             cachedNavMeshPoints = new List<Vector3>();
+            int iterations = 0;
+            
             for (int x = 0; x < gridWidth; x++)
             {
                 for (int y = 0; y < gridHeight; y++)
@@ -75,6 +78,13 @@ namespace FPS
                     {
                         // Luu kem toa do grid de tra cuu influence score nhanh
                         cachedNavMeshPoints.Add(hit.position);
+                    }
+                    
+                    iterations++;
+                    if (iterations >= 50)
+                    {
+                        iterations = 0;
+                        yield return null; // wait for next frame
                     }
                 }
             }
