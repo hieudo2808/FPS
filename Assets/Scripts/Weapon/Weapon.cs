@@ -97,7 +97,7 @@ namespace FPS
                 return;
             }
 
-            if (Input.GetKey(KeyCode.R) && currentAmmo < weaponData.magazineSize && reservedAmmo > 0 && !isReloading)
+            if (InputManager.Instance != null && InputManager.Instance.GetReloadInput() && currentAmmo < weaponData.magazineSize && reservedAmmo > 0 && !isReloading)
             {
                 ReloadWeapon();
                 return;
@@ -106,17 +106,17 @@ namespace FPS
             switch (weaponData.fireMode)
             {
                 case FireMode.Single:
-                    if (Input.GetKeyDown(KeyCode.Mouse0) && canShoot)
+                    if (InputManager.Instance != null && InputManager.Instance.GetFireInputDown() && canShoot)
                         StartCoroutine(ShootCooldown());
                     break;
 
                 case FireMode.Auto:
-                    if (Input.GetKey(KeyCode.Mouse0) && canShoot)
+                    if (InputManager.Instance != null && InputManager.Instance.GetFireInput() && canShoot)
                         StartCoroutine(ShootCooldown());
                     break;
 
                 case FireMode.Burst:
-                    if (Input.GetKeyDown(KeyCode.Mouse0) && burstCoroutine == null)
+                    if (InputManager.Instance != null && InputManager.Instance.GetFireInputDown() && burstCoroutine == null)
                         burstCoroutine = StartCoroutine(FireBurst());
                     break;
             }

@@ -12,7 +12,7 @@ namespace FPS
         {
             if (!IsOwner) return;
 
-            if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2))
+            if (InputManager.Instance != null && (InputManager.Instance.GetWeapon1InputDown() || InputManager.Instance.GetWeapon2InputDown()))
             {
                 if (weaponManager != null)
                 {
