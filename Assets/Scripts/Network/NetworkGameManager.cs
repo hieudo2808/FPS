@@ -25,6 +25,8 @@ namespace FPS
         public event Action<ulong> OnPlayerJoinedLobby;
         public event Action<ulong> OnPlayerLeftLobby;
 
+        public DifficultyLevel SelectedDifficulty { get; set; } = DifficultyLevel.Medium;
+
         public bool IsConnected => NetworkManager.Singleton != null && NetworkManager.Singleton.IsConnectedClient;
         public bool IsHosting => NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost;
         public int ConnectedPlayerCount => NetworkManager.Singleton != null

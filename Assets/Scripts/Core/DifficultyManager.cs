@@ -43,6 +43,11 @@ namespace FPS
 
         public override void OnNetworkSpawn()
         {
+            if (IsServer && NetworkGameManager.Instance != null)
+            {
+                CurrentDifficulty.Value = NetworkGameManager.Instance.SelectedDifficulty;
+            }
+
             CurrentDifficulty.OnValueChanged += HandleDifficultyChanged;
             
             // Client and Server need to apply local states like RubberBanding System based on the synced difficulty

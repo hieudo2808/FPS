@@ -43,6 +43,7 @@ namespace FPS
         public static WaitingRoomManager Instance { get; private set; }
 
         public NetworkList<PlayerLobbyData> Players { get; private set; }
+        public NetworkVariable<DifficultyLevel> LobbyDifficulty { get; private set; } = new NetworkVariable<DifficultyLevel>(DifficultyLevel.Medium);
 
         public event Action OnPlayerListChanged;
         public event Action<bool> OnAllReadyChanged;
@@ -198,6 +199,21 @@ namespace FPS
         }
 
         // ==========================================
+        // SET DIFFICULTY — Host only
+        // ==========================================
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetDifficultyServerRpc(DifficultyLevel level, ServerRpcParams rpcParams = default)
+        {
+            // Only host can change difficulty (Assuming Host is LocalClientId 0 or just check if sender is Host)
+            if (rpcParams.Receive.SenderClientId != NetworkManager.Singleton.LocalClientId) return; 
+            LobbyDifficulty.Value = level;
+            
+            if (NetworkGameManager.Instance != null)
+                NetworkGameManager.Instance.SelectedDifficulty = level;
+        }
+
+        // ==========================================
         // START MATCH — Host only
         // ==========================================
 
@@ -206,7 +222,11 @@ namespace FPS
             if (!IsServer) return;
             if (!AreAllPlayersReady()) return;
 
-            NetworkGameManager.Instance?.StartMatch();
+            if (NetworkGameManager.Instance != null)
+            {
+                NetworkGameManager.Instance.SelectedDifficulty = LobbyDifficulty.Value;
+                NetworkGameManager.Instance.StartMatch();
+            }
         }
 
         // ==========================================
