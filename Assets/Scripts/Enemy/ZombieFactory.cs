@@ -45,7 +45,19 @@ namespace FPS
                 }
             }
 
-            ApplyStats(zombie, data, hpModifier, speedModifier, damageModifier);
+            float finalHpMod = hpModifier;
+            float finalSpeedMod = speedModifier;
+            float finalDamageMod = damageModifier;
+
+            if (DifficultyManager.Instance != null)
+            {
+                DifficultyStats diffStats = DifficultyManager.Instance.GetCurrentStats();
+                finalHpMod *= diffStats.hpMultiplier;
+                finalSpeedMod *= diffStats.speedMultiplier;
+                finalDamageMod *= diffStats.damageMultiplier;
+            }
+
+            ApplyStats(zombie, data, finalHpMod, finalSpeedMod, finalDamageMod);
 
             if (showDebugLogs)
             {
