@@ -8,6 +8,16 @@ namespace FPS
 {
     public class SettingsUI : MonoBehaviour
     {
+        [Header("Tabs")]
+        [SerializeField] private Button audioTabButton;
+        [SerializeField] private Button graphicsTabButton;
+        [SerializeField] private Button inputTabButton;
+
+        [Header("Tab Panels")]
+        [SerializeField] private GameObject audioPanel;
+        [SerializeField] private GameObject graphicsPanel;
+        [SerializeField] private GameObject inputPanel;
+
         [Header("Audio Settings")]
         [SerializeField] private Slider masterVolumeSlider;
         [SerializeField] private Slider musicVolumeSlider;
@@ -33,10 +43,28 @@ namespace FPS
 
         private void Start()
         {
+            InitializeTabs();
             InitializeAudioSettings();
             InitializeGraphicsSettings();
             InitializeMouseSettings();
             InitializeKeybindings();
+        }
+
+        private void InitializeTabs()
+        {
+            if (audioTabButton != null) audioTabButton.onClick.AddListener(() => SwitchTab(audioPanel));
+            if (graphicsTabButton != null) graphicsTabButton.onClick.AddListener(() => SwitchTab(graphicsPanel));
+            if (inputTabButton != null) inputTabButton.onClick.AddListener(() => SwitchTab(inputPanel));
+
+            // Mở tab Audio mặc định
+            SwitchTab(audioPanel);
+        }
+
+        private void SwitchTab(GameObject targetPanel)
+        {
+            if (audioPanel != null) audioPanel.SetActive(audioPanel == targetPanel);
+            if (graphicsPanel != null) graphicsPanel.SetActive(graphicsPanel == targetPanel);
+            if (inputPanel != null) inputPanel.SetActive(inputPanel == targetPanel);
         }
 
         private void InitializeAudioSettings()
