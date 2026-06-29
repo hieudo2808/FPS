@@ -8,6 +8,7 @@ namespace FPS
     {
         [SerializeField] private List<GameObject> weapons;
         [SerializeField] private Animator characterAnimation;
+        [SerializeField] private int maxWeaponSlots = 2;
 
         private NetworkVariable<int> networkedWeaponIndex = new NetworkVariable<int>(
             0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
@@ -67,7 +68,7 @@ namespace FPS
 
         public void AddWeapon(GameObject newWeapon)
         {
-            if (weapons.Count < 2) weapons.Add(newWeapon);
+            if (weapons.Count < maxWeaponSlots) weapons.Add(newWeapon);
         }
 
 
