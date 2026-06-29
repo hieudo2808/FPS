@@ -23,6 +23,7 @@ namespace FPS
         private int carryPlayerIndex = -1;
         private Vector3 teamCentroid;
         private float teamSpread;
+        private int frameCounter;
         
         public TeamFormation Formation => currentFormation;
         public List<PlayerProfile> IsolatedPlayers => isolatedPlayers;
@@ -46,7 +47,11 @@ namespace FPS
                 currentFormation = TeamFormation.SOLO;
                 return;
             }
-            
+
+            frameCounter++;
+            if (frameCounter < 10) return;
+            frameCounter = 0;
+
             AnalyzeFormation();
             AnalyzeRoles();
             FindIsolatedPlayers();

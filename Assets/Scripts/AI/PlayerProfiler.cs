@@ -51,6 +51,7 @@ namespace FPS
         private readonly Dictionary<ulong, PlayerProfile> profilesByClientId = new Dictionary<ulong, PlayerProfile>();
         private float lastPositionUpdate;
         private float lastPlayerCheck;
+        private int lastIsMovingHistoryCount;
 
         public List<PlayerProfile> AllProfiles => playerProfiles;
         public int PlayerCount => playerProfiles.Count;
@@ -265,6 +266,14 @@ namespace FPS
 
         private void UpdateCurrentState()
         {
+            // Dem tong so entry positionHistory de quyet dinh co can tinh isMoving lai khong
+            int totalHistoryCount = 0;
+            foreach (var p in playerProfiles)
+                if (p.positionHistory != null) totalHistoryCount += p.positionHistory.Count;
+
+            bool historyChanged = totalHistoryCount != lastIsMovingHistoryCount;
+            lastIsMovingHistoryCount = totalHistoryCount;
+
             foreach (var profile in playerProfiles)
             {
                 if (!IsProfileValid(profile)) continue;
@@ -281,7 +290,8 @@ namespace FPS
                     profile.lookDirection = profile.playerTransform.forward;
                 }
 
-                if (profile.positionHistory.Count >= 2)
+                // Chi tinh lai isMoving khi positionHistory thuc su thay doi
+                if (historyChanged && profile.positionHistory.Count >= 2)
                 {
                     Vector3 lastPos = profile.positionHistory[profile.positionHistory.Count - 1];
                     Vector3 prevPos = profile.positionHistory[profile.positionHistory.Count - 2];
