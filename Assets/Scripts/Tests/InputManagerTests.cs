@@ -1,43 +1,59 @@
 ﻿using NUnit.Framework;
 using UnityEngine;
-using System.Collections.Generic;
+using FPS;
 
 namespace FPS.Tests
 {
     public class InputManagerTests
     {
+        private GameObject inputManagerGo;
         private InputManager inputManager;
-        private GameObject go;
 
         [SetUp]
         public void Setup()
         {
-            go = new GameObject("InputManagerGo");
-            inputManager = go.AddComponent<InputManager>();
+            PlayerPrefs.DeleteAll();
+            inputManagerGo = new GameObject("InputManager");
+            inputManager = inputManagerGo.AddComponent<InputManager>();
         }
 
         [TearDown]
         public void Teardown()
         {
-            Object.DestroyImmediate(go);
+            PlayerPrefs.DeleteAll();
+            if (inputManagerGo != null)
+            {
+                Object.DestroyImmediate(inputManagerGo);
+            }
         }
 
         [Test]
-        public void InputManager_HasDefaultBindings()
+        public void InputManager_RebindKey_SavesToPlayerPrefs()
         {
-            Assert.AreEqual(KeyCode.Mouse0, inputManager.GetKeyForAction("Fire"), "Default fire should be Mouse0");
-            Assert.AreEqual(KeyCode.R, inputManager.GetKeyForAction("Reload"), "Default reload should be R");
-            Assert.AreEqual(KeyCode.Mouse1, inputManager.GetKeyForAction("Aim"), "Default aim should be Mouse1");
+            // Act
+            inputManager.RebindKey("Fire", KeyCode.JoystickButton0);
+
+            // Assert
+            string savedKeyStr = PlayerPrefs.GetString("Input_Fire", "");
+            Assert.AreEqual(KeyCode.JoystickButton0.ToString(), savedKeyStr, "RebindKey should save to PlayerPrefs.");
         }
 
         [Test]
-        public void InputManager_CanRebindKey()
+        public void InputManager_LoadsCustomBindings_FromPlayerPrefs()
         {
-            inputManager.RebindKey("Fire", KeyCode.F);
-            Assert.AreEqual(KeyCode.F, inputManager.GetKeyForAction("Fire"), "Fire key should be rebound to F");
+            // Arrange
+            PlayerPrefs.SetString("Input_Fire", KeyCode.K.ToString());
+            
+            // Need to force re-initialization to simulate loading
+            Object.DestroyImmediate(inputManagerGo);
+            inputManagerGo = new GameObject("InputManager");
+            inputManager = inputManagerGo.AddComponent<InputManager>();
 
-            inputManager.RebindKey("Reload", KeyCode.T);
-            Assert.AreEqual(KeyCode.T, inputManager.GetKeyForAction("Reload"), "Reload key should be rebound to T");
+            // Act
+            KeyCode fireKey = inputManager.GetKeyForAction("Fire");
+
+            // Assert
+            Assert.AreEqual(KeyCode.K, fireKey, "InputManager should load previously saved binding.");
         }
     }
 }

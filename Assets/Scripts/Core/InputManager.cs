@@ -26,11 +26,26 @@ namespace FPS
         {
             keyBindings = new Dictionary<string, KeyCode>
             {
-                { "Fire", KeyCode.Mouse0 },
-                { "Reload", KeyCode.R },
-                { "Aim", KeyCode.Mouse1 }
+                { "Fire", LoadKey("Fire", KeyCode.Mouse0) },
+                { "Reload", LoadKey("Reload", KeyCode.R) },
+                { "Aim", LoadKey("Aim", KeyCode.Mouse1) },
+                { "Weapon1", LoadKey("Weapon1", KeyCode.Alpha1) },
+                { "Weapon2", LoadKey("Weapon2", KeyCode.Alpha2) }
             };
         }
+
+        private KeyCode LoadKey(string action, KeyCode defaultKey)
+        {
+            string savedKey = PlayerPrefs.GetString("Input_" + action, "");
+            if (string.IsNullOrEmpty(savedKey))
+            {
+                return defaultKey;
+            }
+            if (System.Enum.TryParse(savedKey, out KeyCode parsedKey))
+            {
+                return parsedKey;
+            }
+            return defaultKey;
 
         public KeyCode GetKeyForAction(string action)
         {
@@ -55,6 +70,9 @@ namespace FPS
             {
                 keyBindings.Add(action, newKey);
             }
+            
+            PlayerPrefs.SetString("Input_" + action, newKey.ToString());
+            PlayerPrefs.Save();
         }
 
         public bool GetFireInput()
@@ -72,9 +90,24 @@ namespace FPS
             return Input.GetKeyDown(GetKeyForAction("Reload"));
         }
 
+        public bool GetReloadInput()
+        {
+            return Input.GetKey(GetKeyForAction("Reload"));
+        }
+
         public bool GetAimInput()
         {
             return Input.GetKey(GetKeyForAction("Aim"));
+        }
+
+        public bool GetWeapon1InputDown()
+        {
+            return Input.GetKeyDown(GetKeyForAction("Weapon1"));
+        }
+
+        public bool GetWeapon2InputDown()
+        {
+            return Input.GetKeyDown(GetKeyForAction("Weapon2"));
         }
     }
 }
