@@ -96,13 +96,15 @@ namespace FPS
 
             if (Physics.Raycast(spawnPosition, direction, out RaycastHit hit, 500f))
             {
-                EnemyHealth enemyHealth = hit.collider.GetComponentInParent<EnemyHealth>();
-                if (enemyHealth != null)
-                    enemyHealth.TakeDamage(damage);
-
-                PlayerHealth playerHealth = hit.collider.GetComponentInParent<PlayerHealth>();
-                if (playerHealth != null && !playerHealth.IsOwner)
-                    playerHealth.TakeDamage(damage);
+                IDamageable damageable = hit.collider.GetComponentInParent<IDamageable>();
+                if (damageable != null)
+                {
+                    PlayerHealth playerHealth = damageable as PlayerHealth;
+                    if (playerHealth == null || !playerHealth.IsOwner)
+                    {
+                        damageable.TakeDamage(damage);
+                    }
+                }
             }
 
             FireEffectsClientRpc(spawnPosition, direction);
