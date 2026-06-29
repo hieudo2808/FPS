@@ -17,6 +17,10 @@ namespace FPS
 
         private RecoilController recoilController;
 
+        [Header("Bullet Pooling")]
+        [Tooltip("Gan ObjectPooling tuong ung voi bulletPrefab. Neu bo trong, dan se dung Instantiate/Destroy.]")]
+        [SerializeField] private ObjectPooling bulletPool;
+
         [Header("Magazine Visuals")]
         [Tooltip("Băng đạn đang gắn trên súng")]
         [SerializeField] private GameObject magazineOnGun;
@@ -175,14 +179,43 @@ namespace FPS
 
         public void SpawnVisualBullet(Vector3 position, Vector3 direction)
         {
-            if (weaponData.bulletPrefab == null) return;
+            if (weaponData == null || weaponData.bulletPrefab == null) return;
 
-            GameObject bulletInstance = Instantiate(weaponData.bulletPrefab, position, Quaternion.LookRotation(direction));
-            Rigidbody rb = bulletInstance.GetComponent<Rigidbody>();
-            if (rb != null)
-                rb.linearVelocity = direction * weaponData.bulletSpeed;
+            if (bulletPool != null)
+            {
+                // Su dung pool: lay dan tu pool, dat vi tri/huong/velocity
+                GameObject bulletInstance = bulletPool.GetObject();
+                if (bulletInstance == null) return; // pool rong, bo qua
 
-            Destroy(bulletInstance, weaponData.bulletLiveTime);
+                bulletInstance.transform.SetPositionAndRotation(position, Quaternion.LookRotation(direction));
+                Rigidbody rb = bulletInstance.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.linearVelocity = Vector3.zero;
+                    rb.linearVelocity = direction * weaponData.bulletSpeed;
+                }
+
+                StartCoroutine(ReturnBulletToPool(bulletInstance, weaponData.bulletLiveTime));
+            }
+            else
+            {
+                // Fallback: hanh vi cu Instantiate/Destroy (backward compatible)
+                GameObject bulletInstance = Instantiate(weaponData.bulletPrefab, position, Quaternion.LookRotation(direction));
+                Rigidbody rb = bulletInstance.GetComponent<Rigidbody>();
+                if (rb != null)
+                    rb.linearVelocity = direction * weaponData.bulletSpeed;
+
+                Destroy(bulletInstance, weaponData.bulletLiveTime);
+            }
+        }
+
+        private IEnumerator ReturnBulletToPool(GameObject bullet, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            if (bulletPool != null)
+                bulletPool.ReturnObject(bullet);
+            else if (bullet != null)
+                Destroy(bullet);
         }
 
         public void PlayMuzzleEffect()
