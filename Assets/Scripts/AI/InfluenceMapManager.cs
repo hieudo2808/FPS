@@ -27,6 +27,7 @@ namespace FPS
         private float[,] influenceGrid;
         private int gridWidth;
         private int gridHeight;
+        private List<Vector3> cachedNavMeshPoints;
 
         private void Awake()
         {
@@ -55,6 +56,28 @@ namespace FPS
             gridWidth = Mathf.CeilToInt(mapSize.x / cellSize);
             gridHeight = Mathf.CeilToInt(mapSize.y / cellSize);
             influenceGrid = new float[gridWidth, gridHeight];
+            BakeNavMeshCache();
+        }
+
+        /// <summary>
+        /// Goi mot lan tai Start() de cache truoc toan bo cac o grid co vi tri hop le tren NavMesh.
+        /// Tranh goi NavMesh.SamplePosition() dong trong GetBestSpawnPosition().
+        /// </summary>
+        private void BakeNavMeshCache()
+        {
+            cachedNavMeshPoints = new List<Vector3>();
+            for (int x = 0; x < gridWidth; x++)
+            {
+                for (int y = 0; y < gridHeight; y++)
+                {
+                    Vector3 pos = GetCellWorldPosition(x, y);
+                    if (NavMesh.SamplePosition(pos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+                    {
+                        // Luu kem toa do grid de tra cuu influence score nhanh
+                        cachedNavMeshPoints.Add(hit.position);
+                    }
+                }
+            }
         }
 
         private void UpdateInfluenceMap()
@@ -144,39 +167,34 @@ namespace FPS
 
         public Vector3 GetBestSpawnPosition()
         {
+            // Fallback: neu cache chua duoc bake (e.g. goi truoc Start)
+            if (cachedNavMeshPoints == null || cachedNavMeshPoints.Count == 0)
+                return Vector3.zero;
+
             float bestScore = float.MinValue;
-            Vector3 bestPos = Vector3.zero;
             List<Vector3> candidates = new List<Vector3>();
-            
-            for (int x = 0; x < gridWidth; x++)
+
+            foreach (Vector3 navPos in cachedNavMeshPoints)
             {
-                for (int y = 0; y < gridHeight; y++)
+                // Doi chieu vi tri cache voi o grid tuong ung de lay influence score
+                Vector2Int cell = WorldToGrid(navPos);
+                float score = influenceGrid[cell.x, cell.y];
+
+                if (score > bestScore - 10f)
                 {
-                    float score = influenceGrid[x, y];
-                    
-                    if (score > bestScore - 10f)
+                    if (score > bestScore)
                     {
-                        Vector3 pos = GetCellWorldPosition(x, y);
-                        
-                        if (NavMesh.SamplePosition(pos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-                        {
-                            if (score > bestScore)
-                            {
-                                bestScore = score;
-                                candidates.Clear();
-                            }
-                            candidates.Add(hit.position);
-                        }
+                        bestScore = score;
+                        candidates.Clear();
                     }
+                    candidates.Add(navPos);
                 }
             }
-            
+
             if (candidates.Count > 0)
-            {
-                bestPos = candidates[Random.Range(0, candidates.Count)];
-            }
-            
-            return bestPos;
+                return candidates[Random.Range(0, candidates.Count)];
+
+            return Vector3.zero;
         }
 
         public Vector3 GetSpawnPositionNearPlayer(int playerIndex, bool behindOnly = false)
