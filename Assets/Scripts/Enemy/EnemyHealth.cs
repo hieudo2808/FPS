@@ -40,6 +40,7 @@ namespace FPS
         // Event để UI hoặc các script khác subscribe
         public event System.Action<float, float> OnHealthChanged; // (current, max)
         public event System.Action OnDied;
+        public event System.Action OnDeathServer;
 
         // ==========================================
         // INITIALIZATION
@@ -166,8 +167,7 @@ namespace FPS
             currentHealth.Value = 0f;
             Debug.Log($"[EnemyHealth] {gameObject.name} died!");
 
-            if (enemyAI != null)
-                enemyAI.OnDeath();
+            OnDeathServer?.Invoke();
 
             NetworkObject netObj = GetComponent<NetworkObject>();
             if (netObj != null && netObj.IsSpawned)

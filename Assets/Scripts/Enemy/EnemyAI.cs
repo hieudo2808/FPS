@@ -60,6 +60,21 @@ namespace FPS
                 agent.stoppingDistance = 0.5f;
                 agent.updateRotation = false;
             }
+
+            EnemyHealth health = GetComponent<EnemyHealth>();
+            if (health != null)
+            {
+                health.OnDeathServer += OnDeath;
+            }
+        }
+
+        protected virtual void OnDestroy()
+        {
+            EnemyHealth health = GetComponent<EnemyHealth>();
+            if (health != null)
+            {
+                health.OnDeathServer -= OnDeath;
+            }
         }
 
         public override void OnNetworkSpawn()
