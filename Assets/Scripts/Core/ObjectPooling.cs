@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPooling : MonoBehaviour
+namespace FPS
 {
+    public class ObjectPooling : MonoBehaviour
+    {
     [SerializeField] private GameObject objectPrefab;
     [SerializeField] private int poolSize = 100;
 
@@ -48,4 +50,6 @@ public class ObjectPooling : MonoBehaviour
             Debug.LogWarning("Attempted to return a null object to the pool.");
         }
     }
+}
+
 }
