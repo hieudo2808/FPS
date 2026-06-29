@@ -383,9 +383,6 @@ namespace FPS
 
             if (deathSound != null)
                 PlaySoundClientRpc(false);
-
-            if (RubberBandingSystem.HasInstance)
-                RubberBandingSystem.Instance.UnregisterZombie(this);
         }
 
         public virtual void ResetAI()

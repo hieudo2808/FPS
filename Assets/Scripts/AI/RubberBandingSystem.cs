@@ -17,6 +17,9 @@ namespace FPS
         [SerializeField] private float behindPlayerDotThreshold = -0.5f;
         [SerializeField] private float maxSpeedBoost = 1.5f;
 
+        [Header("Feature Flags")]
+        public bool isEnabled = true;
+
         private Dictionary<EnemyAI, ZombieTrackingData> trackedZombies = new Dictionary<EnemyAI, ZombieTrackingData>();
         private float lastTeleportCheck;
 
@@ -29,6 +32,7 @@ namespace FPS
 
         private void Update()
         {
+            if (!isEnabled) return;
             if (Time.time - lastTeleportCheck >= teleportCheckInterval)
             {
                 lastTeleportCheck = Time.time;
@@ -67,6 +71,12 @@ namespace FPS
                 originalSpeed = agent != null ? agent.speed : 5f,
                 isSpeedBoosted = false
             };
+
+            var health = zombie.GetComponent<EnemyHealth>();
+            if (health != null)
+            {
+                health.OnDeathServer += () => UnregisterZombie(zombie);
+            }
         }
 
         public void UnregisterZombie(EnemyAI zombie)
@@ -153,6 +163,7 @@ namespace FPS
 
         private void UpdateCatchUpSpeed()
         {
+            if (!isEnabled) return;
             Transform nearestPlayer = GetNearestPlayerToCenter();
             if (nearestPlayer == null) return;
 
