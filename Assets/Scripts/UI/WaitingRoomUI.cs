@@ -24,6 +24,9 @@ namespace FPS
         [SerializeField] private Button startGameButton;
         [SerializeField] private Button leaveButton;
 
+        [Header("Settings")]
+        [SerializeField] private TMP_Dropdown difficultyDropdown;
+
         [Header("Info")]
         [SerializeField] private TextMeshProUGUI playerCountText;
         [SerializeField] private TextMeshProUGUI statusText;
@@ -53,9 +56,30 @@ namespace FPS
             if (startGameButton != null)
                 startGameButton.gameObject.SetActive(NetworkGameManager.Instance != null && NetworkGameManager.Instance.IsHosting);
 
+            // Difficulty Dropdown
+            if (difficultyDropdown != null)
+            {
+                // Chỉ Host mới được phép đổi độ khó
+                bool isHost = NetworkGameManager.Instance != null && NetworkGameManager.Instance.IsHosting;
+                difficultyDropdown.interactable = isHost;
+
+                if (isHost)
+                {
+                    difficultyDropdown.onValueChanged.AddListener(OnDifficultyDropdownChanged);
+                }
+            }
+
             UpdateReadyButtonText();
             UpdateStartButton(false);
             UpdateStatus("Waiting for players...");
+        }
+
+        private void OnDifficultyDropdownChanged(int value)
+        {
+            if (WaitingRoomManager.Instance != null)
+            {
+                WaitingRoomManager.Instance.SetDifficultyServerRpc((DifficultyLevel)value);
+            }
         }
 
         private void OnEnable()
@@ -79,6 +103,7 @@ namespace FPS
 
             WaitingRoomManager.Instance.OnPlayerListChanged += RefreshPlayerList;
             WaitingRoomManager.Instance.OnAllReadyChanged += UpdateStartButton;
+            WaitingRoomManager.Instance.LobbyDifficulty.OnValueChanged += HandleDifficultyChanged;
 
             CancelInvoke(nameof(TrySubscribe));
 
@@ -92,6 +117,7 @@ namespace FPS
             {
                 WaitingRoomManager.Instance.OnPlayerListChanged -= RefreshPlayerList;
                 WaitingRoomManager.Instance.OnAllReadyChanged -= UpdateStartButton;
+                WaitingRoomManager.Instance.LobbyDifficulty.OnValueChanged -= HandleDifficultyChanged;
             }
         }
 
@@ -138,6 +164,15 @@ namespace FPS
             // Update join code (có thể chưa set lúc Start)
             if (joinCodeText != null && NetworkGameManager.HasInstance)
                 joinCodeText.text = NetworkGameManager.Instance.CurrentJoinCode;
+        }
+
+        private void HandleDifficultyChanged(DifficultyLevel previousValue, DifficultyLevel newValue)
+        {
+            if (difficultyDropdown != null)
+            {
+                // Cập nhật UI Dropdown cho tất cả mọi người khi có thay đổi từ Host
+                difficultyDropdown.SetValueWithoutNotify((int)newValue);
+            }
         }
 
         // ==========================================
