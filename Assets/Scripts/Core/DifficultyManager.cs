@@ -18,6 +18,10 @@ namespace FPS
         public float hpMultiplier;
         public float damageMultiplier;
         public float speedMultiplier;
+        public int maxConcurrentAttackers;
+        public float spawnIntervalMultiplier;
+        public float maxAliveMultiplier;
+        public float specialSpawnChance;
         public bool enableRubberBanding;
     }
 
@@ -39,6 +43,13 @@ namespace FPS
                 return;
             }
             Instance = this;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            if (Instance == this)
+                Instance = null;
         }
 
         public override void OnNetworkSpawn()
@@ -96,14 +107,54 @@ namespace FPS
             switch (level)
             {
                 case DifficultyLevel.Easy:
-                    return new DifficultyStats { hpMultiplier = 0.5f, damageMultiplier = 0.5f, speedMultiplier = 0.8f, enableRubberBanding = false };
+                    return new DifficultyStats
+                    {
+                        hpMultiplier = 0.5f,
+                        damageMultiplier = 0.5f,
+                        speedMultiplier = 0.8f,
+                        maxConcurrentAttackers = 2,
+                        spawnIntervalMultiplier = 1.25f,
+                        maxAliveMultiplier = 0.7f,
+                        specialSpawnChance = 0.05f,
+                        enableRubberBanding = false
+                    };
                 case DifficultyLevel.Hard:
-                    return new DifficultyStats { hpMultiplier = 1.5f, damageMultiplier = 1.5f, speedMultiplier = 1.2f, enableRubberBanding = true };
+                    return new DifficultyStats
+                    {
+                        hpMultiplier = 1.5f,
+                        damageMultiplier = 1.5f,
+                        speedMultiplier = 1.2f,
+                        maxConcurrentAttackers = 4,
+                        spawnIntervalMultiplier = 0.75f,
+                        maxAliveMultiplier = 1.25f,
+                        specialSpawnChance = 0.2f,
+                        enableRubberBanding = true
+                    };
                 case DifficultyLevel.Pandemonium:
-                    return new DifficultyStats { hpMultiplier = 3.0f, damageMultiplier = 2.0f, speedMultiplier = 1.5f, enableRubberBanding = true };
+                    return new DifficultyStats
+                    {
+                        hpMultiplier = 3.0f,
+                        damageMultiplier = 2.0f,
+                        speedMultiplier = 1.5f,
+                        maxConcurrentAttackers = 6,
+                        spawnIntervalMultiplier = 0.5f,
+                        maxAliveMultiplier = 1.75f,
+                        specialSpawnChance = 0.35f,
+                        enableRubberBanding = true
+                    };
                 case DifficultyLevel.Medium:
                 default:
-                    return new DifficultyStats { hpMultiplier = 1.0f, damageMultiplier = 1.0f, speedMultiplier = 1.0f, enableRubberBanding = false };
+                    return new DifficultyStats
+                    {
+                        hpMultiplier = 1.0f,
+                        damageMultiplier = 1.0f,
+                        speedMultiplier = 1.0f,
+                        maxConcurrentAttackers = 3,
+                        spawnIntervalMultiplier = 1.0f,
+                        maxAliveMultiplier = 1.0f,
+                        specialSpawnChance = 0.15f,
+                        enableRubberBanding = false
+                    };
             }
         }
     }

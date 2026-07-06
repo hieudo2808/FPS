@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FPS
 {
-    public class EnemyHealth : NetworkBehaviour, IPoolResettable, IDamageable
+    public class EnemyHealth : NetworkBehaviour, IPoolResettable, IAttributedDamageable
     {
         public void ResetForPool() => ResetHealth();
         [Header("Health Settings")]
@@ -31,6 +31,7 @@ namespace FPS
 
         private EnemyAI enemyAI;
         private float originalMaxHealth;
+        private DamageInfo lastDamageInfo;
 
         // Properties
         public float CurrentHealth => currentHealth.Value;
@@ -104,31 +105,22 @@ namespace FPS
         }
 
         // ==========================================
-        // DAMAGE — FIX 1: Chỉ server được gọi TakeDamage
-        // Client KHÔNG được trực tiếp truyền damage value lên server
-        // Thay vào đó, PlayerShoot gửi hit info, server tự tính damage
+        // DAMAGE: Only server-authoritative gameplay code may call TakeDamage.
+        // WeaponFireHandler.RequestFireServerRpc validates the shot and looks up damage from WeaponData.
         // ==========================================
 
         // Gọi trực tiếp từ server-side code (EnemyAI, trap, explosion, v.v.)
         public void TakeDamage(float damage)
         {
             if (!IsServer) return; // Guard cứng — chỉ server
-            TakeDamageInternal(damage);
+            TakeDamage(new DamageInfo(damage));
         }
 
-        // Client báo hit lên server — server tự tính damage từ weapon data
-        // KHÔNG nhận damage value từ client để tránh cheat
-        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        public void ReportHitServerRpc(ulong attackerClientId, Vector3 hitPoint, float weaponBaseDamage)
+        public void TakeDamage(DamageInfo damageInfo)
         {
-            // Server validate: attackerClientId có tồn tại không
-            if (!NetworkManager.ConnectedClients.ContainsKey(attackerClientId))
-                return;
-
-            // Server có thể validate thêm: hitPoint có hợp lý không (anti-cheat)
-            // Ở đây dùng weaponBaseDamage từ server-side weapon config thay vì tin client
-            // Nếu muốn strict hơn, lookup weapon stats từ server theo attackerClientId
-            TakeDamageInternal(weaponBaseDamage);
+            if (!IsServer) return; // Guard cứng — chỉ server
+            lastDamageInfo = damageInfo;
+            TakeDamageInternal(damageInfo.amount);
         }
 
         private void TakeDamageInternal(float damage)
@@ -168,6 +160,8 @@ namespace FPS
             Debug.Log($"[EnemyHealth] {gameObject.name} died!");
 
             OnDeathServer?.Invoke();
+            AIDirector.Instance?.OnZombieDied();
+            PlayerProfiler.Instance?.ReportKill(lastDamageInfo, transform.position);
 
             NetworkObject netObj = GetComponent<NetworkObject>();
             if (netObj != null && netObj.IsSpawned)

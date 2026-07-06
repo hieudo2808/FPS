@@ -9,81 +9,156 @@ namespace FPS.Tests
 {
     public class WeaponSecurityTests
     {
+        private readonly List<Object> objectsToDestroy = new List<Object>();
+
+        [TearDown]
+        public void TearDown()
+        {
+            foreach (Object obj in objectsToDestroy)
+            {
+                if (obj != null)
+                    Object.DestroyImmediate(obj);
+            }
+
+            objectsToDestroy.Clear();
+        }
+
+        [Test]
+        public void EnemyHealth_DoesNotAcceptClientSuppliedDamageRpc()
+        {
+            var legacyRpc = typeof(EnemyHealth).GetMethod(
+                "ReportHitServerRpc",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null,
+                new[] { typeof(ulong), typeof(Vector3), typeof(float) },
+                null);
+
+            Assert.IsNull(legacyRpc,
+                "EnemyHealth must not expose a hit RPC that accepts client-supplied damage. " +
+                "WeaponFireHandler.RequestFireServerRpc is the server-authoritative fire path.");
+        }
+
         [Test]
         public void TestWeaponManager_RequestFire_RejectsDistantShootPosition()
         {
-            // 1. Setup NetworkManager
-            var nmGo = new GameObject("NetworkManager");
-            var networkManager = nmGo.AddComponent<NetworkManager>();
-            
-            var singletonProp = typeof(NetworkManager).GetProperty("Singleton", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            singletonProp.SetValue(null, networkManager);
+            var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
+            data.magazineSize = 2;
+            data.totalAmmo = 2;
+            data.fireRate = 0f;
 
-            var connectionManagerField = typeof(NetworkManager).GetField("ConnectionManager", BindingFlags.Instance | BindingFlags.NonPublic);
-            var connectionManager = connectionManagerField.GetValue(networkManager);
+            fireHandler.InitializeServerWeaponStateForTests(2, 0);
 
-            var localClientField = connectionManager.GetType().GetField("LocalClient", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            var localClient = localClientField.GetValue(connectionManager);
+            Assert.IsTrue(fireHandler.ProcessFireServerForTests(new Vector3(0, 0, 2f), Vector3.forward));
 
-            var isServerProp = localClient.GetType().GetProperty("IsServer", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            isServerProp.SetValue(localClient, true);
+            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("Rejecting fire request"));
+            Assert.IsFalse(fireHandler.ProcessFireServerForTests(new Vector3(0, 0, 10f), Vector3.forward));
+            Assert.AreEqual(1, fireHandler.ServerMagazineAmmo,
+                "Rejected distant fire must not consume authoritative server ammo.");
+        }
 
-            var isListeningProp = connectionManager.GetType().GetProperty("IsListening", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            isListeningProp.SetValue(connectionManager, true);
+        [Test]
+        public void RequestFireServerRpc_RejectsRapidFireBeforeFireRate()
+        {
+            var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
+            data.magazineSize = 3;
+            data.totalAmmo = 3;
+            data.fireRate = 10f;
 
-            // 2. Setup Player and WeaponManager
-            var playerGo = new GameObject("Player");
-            playerGo.transform.position = Vector3.zero; // Player is at (0, 0, 0)
-            
-            var netObj = playerGo.AddComponent<NetworkObject>();
-            typeof(NetworkObject).GetProperty("NetworkObjectId", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).SetValue(netObj, 2222UL);
-            var isSpawnedProp = typeof(NetworkObject).GetProperty("IsSpawned", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            isSpawnedProp.SetValue(netObj, true);
-            var ownerField = typeof(NetworkObject).GetField("NetworkManagerOwner", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            ownerField.SetValue(netObj, networkManager);
+            fireHandler.InitializeServerWeaponStateForTests(3, 0);
 
-            var wm = playerGo.AddComponent<WeaponManager>();
+            Assert.IsTrue(fireHandler.ProcessFireServerForTests(Vector3.zero, Vector3.forward));
+            Assert.IsFalse(fireHandler.ProcessFireServerForTests(Vector3.zero, Vector3.forward));
+
+            Assert.AreEqual(2, fireHandler.ServerMagazineAmmo,
+                "Server must consume ammo only for the first shot when the second shot violates fire-rate.");
+        }
+
+        [Test]
+        public void RequestFireServerRpc_RejectsWhenServerMagazineEmpty()
+        {
+            var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
+            data.magazineSize = 1;
+            data.totalAmmo = 1;
+
+            fireHandler.InitializeServerWeaponStateForTests(0, 0);
+
+            Assert.IsFalse(fireHandler.ProcessFireServerForTests(Vector3.zero, Vector3.forward));
+            Assert.AreEqual(0, fireHandler.ServerMagazineAmmo,
+                "Server must reject fire when its authoritative magazine is empty.");
+        }
+
+        [Test]
+        public void RequestReloadServerRpc_ServerRestoresAmmoAfterReloadTime()
+        {
+            var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
+            data.magazineSize = 5;
+            data.totalAmmo = 20;
+            data.reloadTime = 0f;
+
+            fireHandler.InitializeServerWeaponStateForTests(1, 10);
+
+            Assert.IsTrue(fireHandler.BeginServerReloadForTests());
+            fireHandler.CompleteServerReloadIfReadyForTests();
+
+            Assert.AreEqual(5, fireHandler.ServerMagazineAmmo);
+            Assert.AreEqual(6, fireHandler.ServerReserveAmmo);
+        }
+
+        [Test]
+        public void PickupAmmo_GrantsReserveAmmoOnServerState()
+        {
+            var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
+            data.magazineSize = 5;
+            data.totalAmmo = 20;
+
+            fireHandler.InitializeServerWeaponStateForTests(5, 0);
+            fireHandler.AddReserveAmmoServer(12);
+
+            Assert.AreEqual(12, fireHandler.ServerReserveAmmo,
+                "Pickup ammo must update server-side reserve ammo, not only client-local weapon ammo.");
+        }
+
+        [Test]
+        public void Weapon_StartWithoutWeaponData_DoesNotThrow()
+        {
+            var weaponGo = new GameObject("UnconfiguredWeapon");
+            objectsToDestroy.Add(weaponGo);
+            var weapon = weaponGo.AddComponent<Weapon>();
+
+            Assert.DoesNotThrow(() =>
+                typeof(Weapon)
+                    .GetMethod("Start", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(weapon, null),
+                "Weapon.Start should tolerate prefab placeholders with no WeaponData instead of throwing NullReferenceException.");
+            Assert.AreEqual(0, weapon.CurrentAmmo);
+            Assert.AreEqual(0, weapon.ReservedAmmo);
+            Assert.IsNull(weapon.WeaponIcon);
+        }
+
+        private WeaponFireHandler CreateServerFireHandler(out WeaponManager weaponManager, out WeaponData weaponData)
+        {
+            var playerGo = new GameObject("ServerPlayer");
+            objectsToDestroy.Add(playerGo);
+            playerGo.AddComponent<NetworkObject>();
+
+            weaponManager = playerGo.AddComponent<WeaponManager>();
             var fireHandler = playerGo.AddComponent<WeaponFireHandler>();
+
+            var weaponGo = new GameObject("ServerWeapon");
+            objectsToDestroy.Add(weaponGo);
+            var weapon = weaponGo.AddComponent<Weapon>();
+
+            weaponData = ScriptableObject.CreateInstance<WeaponData>();
+            objectsToDestroy.Add(weaponData);
+            typeof(Weapon).GetField("weaponData", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(weapon, weaponData);
+            typeof(WeaponManager).GetField("weapons", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(weaponManager, new List<GameObject> { weaponGo });
+
             var nbIsServerProp = typeof(NetworkBehaviour).GetProperty("IsServer", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            nbIsServerProp.SetValue(wm, true);
+            nbIsServerProp.SetValue(weaponManager, true);
             nbIsServerProp.SetValue(fireHandler, true);
 
-            // Set __rpc_exec_stage to Execute (1) để chạy thân hàm RPC thay vì gửi qua mạng
-            var execStageField = typeof(NetworkBehaviour).GetField("__rpc_exec_stage", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            Assert.NotNull(execStageField, "Không tìm thấy trường __rpc_exec_stage trong NetworkBehaviour");
-            execStageField.SetValue(fireHandler, 1); // 1 = Execute
-
-            // Setup a mock weapon list to prevent null reference in RequestFireServerRpc
-            var weaponsField = typeof(WeaponManager).GetField("weapons", BindingFlags.Instance | BindingFlags.NonPublic);
-            var mockWeapons = new List<GameObject>();
-            
-            var weaponGo = new GameObject("MockWeapon");
-            var weapon = weaponGo.AddComponent<Weapon>();
-            
-            // Create WeaponData and assign to weapon
-            var weaponData = ScriptableObject.CreateInstance<WeaponData>();
-            weaponData.damage = 10f;
-            typeof(Weapon).GetField("weaponData", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(weapon, weaponData);
-            
-            mockWeapons.Add(weaponGo);
-            weaponsField.SetValue(wm, mockWeapons);
-
-            // 3. Test Fire within limits (e.g. 2 meters away)
-            // It should not log any "Rejecting fire request" warning
-            fireHandler.RequestFireServerRpc(new Vector3(0, 0, 2f), Vector3.forward);
-
-            // 4. Test Fire outside limits (e.g. 10 meters away)
-            // It should log a "Rejecting fire request" warning
-            LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex("Rejecting fire request"));
-            execStageField.SetValue(fireHandler, 1); // 1 = Execute
-            fireHandler.RequestFireServerRpc(new Vector3(0, 0, 10f), Vector3.forward);
-
-            // Clean up
-            singletonProp.SetValue(null, null);
-            Object.DestroyImmediate(nmGo);
-            Object.DestroyImmediate(playerGo);
-            Object.DestroyImmediate(weaponGo);
-            Object.DestroyImmediate(weaponData);
+            return fireHandler;
         }
     }
 }

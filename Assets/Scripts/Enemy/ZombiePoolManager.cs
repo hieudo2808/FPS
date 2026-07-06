@@ -55,15 +55,18 @@ namespace FPS
             handlers[key] = handler;
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
-            if (NetworkManager.Singleton == null) return;
-
-            foreach (var kvp in handlers)
+            if (NetworkManager.Singleton != null)
             {
-                if (prefabLookup.TryGetValue(kvp.Key, out var prefab))
-                    NetworkManager.Singleton.PrefabHandler.RemoveHandler(prefab);
+                foreach (var kvp in handlers)
+                {
+                    if (prefabLookup.TryGetValue(kvp.Key, out var prefab))
+                        NetworkManager.Singleton.PrefabHandler.RemoveHandler(prefab);
+                }
             }
+
+            base.OnDestroy();
         }
 
         private GameObject CreatePooledObject(GameObject prefab)

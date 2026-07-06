@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using UniBT;
 
 namespace FPS
 {
@@ -25,10 +26,13 @@ namespace FPS
             base.Start();
             specialType = SpecialType.Screamer;
             allowedInSoloMode = true;
+            DisableBehaviorTreeBrain();
         }
 
         public override void UseAbility()
         {
+            if (!CanRunServerLogic()) return;
+
             if (!isScreaming)
             {
                 StartCoroutine(ScreamRoutine());
@@ -55,13 +59,13 @@ namespace FPS
             {
                 for (int i = 0; i < zombiesToSpawn; i++)
                 {
-                    Vector3 offset = Random.insideUnitSphere * 8f;
+                    Vector3 offset = UnityEngine.Random.insideUnitSphere * 8f;
                     offset.y = 0;
                     Vector3 spawnPos = transform.position + offset;
-                    
+
                     if (NavMesh.SamplePosition(spawnPos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
                     {
-                        ZombieFactory.Instance.SpawnZombie(hit.position, Quaternion.identity);
+                        ZombieFactory.Instance.SpawnZombieAtFairPressurePosition(hit.position, Quaternion.identity);
                     }
                 }
             }
@@ -70,6 +74,13 @@ namespace FPS
                 agent.isStopped = false;
             
             isScreaming = false;
+        }
+
+        private void DisableBehaviorTreeBrain()
+        {
+            BehaviorTree behaviorTree = GetComponent<BehaviorTree>();
+            if (behaviorTree != null)
+                behaviorTree.enabled = false;
         }
     }
 }

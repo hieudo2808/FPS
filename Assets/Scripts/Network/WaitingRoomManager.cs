@@ -87,8 +87,9 @@ namespace FPS
             }
         }
 
-        private void OnDestroy()
+        public override void OnDestroy()
         {
+            base.OnDestroy();
             if (Instance == this) Instance = null;
         }
 
@@ -150,8 +151,8 @@ namespace FPS
             SubmitPlayerNameServerRpc(new FixedString64Bytes(name));
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        private void SubmitPlayerNameServerRpc(FixedString64Bytes name, ServerRpcParams rpcParams = default)
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+        private void SubmitPlayerNameServerRpc(FixedString64Bytes name, RpcParams rpcParams = default)
         {
             ulong senderId = rpcParams.Receive.SenderClientId;
 
@@ -171,8 +172,8 @@ namespace FPS
         // READY SYSTEM
         // ==========================================
 
-        [ServerRpc(RequireOwnership = false)]
-        public void ToggleReadyServerRpc(ServerRpcParams rpcParams = default)
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+        public void ToggleReadyServerRpc(RpcParams rpcParams = default)
         {
             ulong senderId = rpcParams.Receive.SenderClientId;
 
@@ -202,8 +203,8 @@ namespace FPS
         // SET DIFFICULTY — Host only
         // ==========================================
 
-        [ServerRpc(RequireOwnership = false)]
-        public void SetDifficultyServerRpc(DifficultyLevel level, ServerRpcParams rpcParams = default)
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+        public void SetDifficultyServerRpc(DifficultyLevel level, RpcParams rpcParams = default)
         {
             // Only host can change difficulty (Assuming Host is LocalClientId 0 or just check if sender is Host)
             if (rpcParams.Receive.SenderClientId != NetworkManager.Singleton.LocalClientId) return; 

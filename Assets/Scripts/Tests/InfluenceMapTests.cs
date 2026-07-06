@@ -46,11 +46,11 @@ namespace FPS.Tests
         }
 
         // -------------------------------------------------------
-        // Test 3: GetBestSpawnPosition tra ve Vector3.zero khi cache rong
-        //         (khong NavMesh trong EditMode => cache rong => fallback dung)
+        // Test 3: TryGetBestSpawnPosition bao loi ro khi cache rong
+        //         (khong NavMesh trong EditMode => cache rong => caller phai skip/fallback co y thuc)
         // -------------------------------------------------------
         [Test]
-        public void TestInfluenceMap_GetBestSpawnPosition_ReturnsFallbackWhenCacheEmpty()
+        public void TestInfluenceMap_TryGetBestSpawnPosition_ReturnsFalseWhenCacheEmpty()
         {
             var go = new GameObject("InfluenceMapManager");
             var mgr = go.AddComponent<InfluenceMapManager>();
@@ -69,12 +69,95 @@ namespace FPS.Tests
             Assert.IsNotNull(bakeMethod, "BakeNavMeshCache phai ton tai");
             bakeMethod.Invoke(mgr, null);
 
-            // GetBestSpawnPosition phai tra ve Vector3.zero khi cache rong
-            Vector3 result = mgr.GetBestSpawnPosition();
-            Assert.AreEqual(Vector3.zero, result,
-                "GetBestSpawnPosition phai tra ve Vector3.zero khi cachedNavMeshPoints rong");
+            bool found = mgr.TryGetBestSpawnPosition(out Vector3 result);
+            Assert.False(found, "TryGetBestSpawnPosition phai tra ve false khi cachedNavMeshPoints rong");
+            Assert.AreEqual(Vector3.zero, result, "Failed TryGetBestSpawnPosition must not leak a fallback position.");
 
             Object.DestroyImmediate(go);
+        }
+
+        [Test]
+        public void TryGetFairPressurePositionNearPlayer_UsesFairDistanceBand()
+        {
+            var player = new GameObject("Player");
+            player.tag = "Player";
+            player.transform.position = Vector3.zero;
+            player.transform.forward = Vector3.forward;
+
+            var profilerGo = new GameObject("PlayerProfiler");
+            var profiler = profilerGo.AddComponent<PlayerProfiler>();
+            typeof(PlayerProfiler)
+                .GetMethod("Awake", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(profiler, null);
+
+            var profilesField = typeof(PlayerProfiler).GetField("playerProfiles", BindingFlags.Instance | BindingFlags.NonPublic);
+            profilesField.SetValue(profiler, new List<PlayerProfile>
+            {
+                new PlayerProfile
+                {
+                    playerTransform = player.transform,
+                    playerIndex = 0,
+                    lookDirection = Vector3.forward,
+                    currentHealth = 100f
+                }
+            });
+
+            var go = new GameObject("InfluenceMapManager");
+            var mgr = go.AddComponent<InfluenceMapManager>();
+            typeof(InfluenceMapManager)
+                .GetMethod("Awake", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(mgr, null);
+
+            typeof(InfluenceMapManager)
+                .GetField("cachedNavMeshPoints", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(mgr, new List<Vector3>
+                {
+                    new Vector3(0f, 0f, -20f),
+                    new Vector3(0f, 0f, -35f),
+                    new Vector3(0f, 0f, -80f)
+                });
+
+            var method = typeof(InfluenceMapManager).GetMethod(
+                "TryGetFairPressurePositionNearPlayer",
+                BindingFlags.Instance | BindingFlags.Public);
+            Assert.NotNull(method, "InfluenceMapManager should expose a fair pressure API without behindOnly.");
+
+            object[] args = { 0, Vector3.zero };
+            bool found = (bool)method.Invoke(mgr, args);
+            Vector3 position = (Vector3)args[1];
+
+            Assert.True(found, "A fair near-player pressure point should be selected from cached candidates.");
+            float distance = Vector3.Distance(Vector3.zero, position);
+            Assert.GreaterOrEqual(distance, 30f, "Pressure spawn must be outside the minimum fair distance plus margin.");
+            Assert.LessOrEqual(distance, 50f, "Pressure spawn should stay near enough to apply pressure instead of falling back globally.");
+
+            var instanceProp = typeof(PlayerProfiler).GetProperty("Instance", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            instanceProp.SetValue(null, null);
+            var mapInstanceProp = typeof(InfluenceMapManager).GetProperty("Instance", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            mapInstanceProp.SetValue(null, null);
+            Object.DestroyImmediate(go);
+            Object.DestroyImmediate(profilerGo);
+            Object.DestroyImmediate(player);
+        }
+
+        [Test]
+        public void InfluenceMap_DoesNotExposeBehindOnlySpawnApi()
+        {
+            Assert.Null(typeof(InfluenceMapManager).GetMethod(
+                    "GetSpawnPositionNearPlayer",
+                    BindingFlags.Instance | BindingFlags.Public,
+                    null,
+                    new[] { typeof(int), typeof(bool) },
+                    null),
+                "Behind-only near-player spawning must not remain as a public live API.");
+
+            Assert.Null(typeof(InfluenceMapManager).GetMethod(
+                    "TryGetSpawnPositionNearPlayer",
+                    BindingFlags.Instance | BindingFlags.Public,
+                    null,
+                    new[] { typeof(int), typeof(bool), typeof(Vector3).MakeByRefType() },
+                    null),
+                "Callers should use TryGetFairPressurePositionNearPlayer instead of behindOnly APIs.");
         }
     }
 }

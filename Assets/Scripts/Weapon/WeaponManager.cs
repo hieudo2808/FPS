@@ -16,8 +16,13 @@ namespace FPS
 
         public static WeaponManager LocalInstance { get; private set; }
 
-        public GameObject CurrentWeapon  => weapons[networkedWeaponIndex.Value];
-        public GameObject UnusedWeapon   => weapons[(networkedWeaponIndex.Value + 1) % weapons.Count];
+        public int WeaponCount => weapons != null ? weapons.Count : 0;
+        public GameObject CurrentWeapon => WeaponCount > 0
+            ? weapons[Mathf.Clamp(networkedWeaponIndex.Value, 0, WeaponCount - 1)]
+            : null;
+        public GameObject UnusedWeapon => WeaponCount > 0
+            ? weapons[(networkedWeaponIndex.Value + 1) % WeaponCount]
+            : null;
         public Animator CharacterAnimation => characterAnimation;
 
         public override void OnNetworkSpawn()
@@ -28,12 +33,17 @@ namespace FPS
             UpdateWeaponVisibility(networkedWeaponIndex.Value);
 
             // Set owner flag sau khi IsOwner đã chính xác
+            if (weapons == null)
+                return;
+
             foreach (var weaponObj in weapons)
             {
                 var weapon = weaponObj.GetComponent<Weapon>();
                 if (weapon != null)
                     weapon.SetOwner(IsOwner);
             }
+
+            ReportCurrentWeaponTelemetry();
         }
 
         public override void OnNetworkDespawn()
@@ -49,16 +59,19 @@ namespace FPS
         [ServerRpc]
         public void RequestSwitchWeaponServerRpc()
         {
+            if (WeaponCount == 0) return;
             networkedWeaponIndex.Value = (networkedWeaponIndex.Value + 1) % weapons.Count;
         }
 
         private void OnWeaponChanged(int oldIndex, int newIndex)
         {
             UpdateWeaponVisibility(newIndex);
+            ReportCurrentWeaponTelemetry();
         }
 
         private void UpdateWeaponVisibility(int index)
         {
+            if (weapons == null) return;
             for (int i = 0; i < weapons.Count; i++)
                 weapons[i].SetActive(i == index);
 
@@ -78,8 +91,22 @@ namespace FPS
         /// </summary>
         public void AddAmmoToCurrentWeapon(int amount)
         {
+            if (IsServer)
+                GetComponent<WeaponFireHandler>()?.AddReserveAmmoServer(amount);
+
+            AddAmmoToCurrentWeaponLocalOnly(amount);
+        }
+
+        public void AddAmmoToCurrentWeaponLocalOnly(int amount)
+        {
             var weapon = CurrentWeapon?.GetComponent<Weapon>();
             weapon?.AddReserveAmmo(amount);
+        }
+
+        public void ReportCurrentWeaponTelemetry()
+        {
+            var weapon = CurrentWeapon?.GetComponent<Weapon>();
+            weapon?.ReportCombatTelemetry();
         }
 
         /// <summary>

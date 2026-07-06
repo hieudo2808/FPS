@@ -10,12 +10,14 @@ namespace FPS.Tests
         public void Setup()
         {
             PlayerPrefs.DeleteAll();
+            DestroyExistingSettingsManager();
         }
 
         [TearDown]
         public void Teardown()
         {
             PlayerPrefs.DeleteAll();
+            DestroyExistingSettingsManager();
         }
 
         [Test]
@@ -45,6 +47,15 @@ namespace FPS.Tests
             
             Assert.AreEqual(1, PlayerPrefs.GetInt("GraphicsQuality"), "PlayerPrefs should store graphics quality");
             Assert.AreEqual(1, SettingsManager.Instance.GraphicsQuality, "Property should return updated graphics quality");
+        }
+
+        private static void DestroyExistingSettingsManager()
+        {
+            var managers = Object.FindObjectsByType<SettingsManager>(FindObjectsSortMode.None);
+            foreach (var manager in managers)
+            {
+                Object.DestroyImmediate(manager.gameObject);
+            }
         }
     }
 }

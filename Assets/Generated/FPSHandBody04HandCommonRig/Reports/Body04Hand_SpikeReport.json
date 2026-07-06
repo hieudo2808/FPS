@@ -1,0 +1,5590 @@
+[
+  {
+    "animation": "E:\\Unity\\Project\\FPS\\Assets\\Art\\Animations\\AKAnimation\\FP_Vandal.fbx",
+    "action": "FP_Core_NewFemale_Skelmesh.ao.001|FP_Core_NewFemale_Skelmesh.ao|FP_Core_AK_S0_Equip",
+    "frames": [
+      1,
+      4,
+      7,
+      10,
+      13,
+      16,
+      19,
+      22,
+      25,
+      28,
+      31,
+      34,
+      38,
+      41,
+      44,
+      47,
+      50,
+      53,
+      56,
+      59,
+      62,
+      65,
+      68,
+      71
+    ],
+    "warning_count": 432,
+    "hand_warning_count": 327,
+    "thresholds": {
+      "max_deformed_edge_warn": 0.16,
+      "max_edge_ratio_warn": 2.4,
+      "max_triangle_aspect_warn": 14.0
+    },
+    "worst_deformed_faces": [
+      {
+        "frame": 19,
+        "face": 448,
+        "deformed_edge": 0.09687,
+        "rest_edge": 0.01964,
+        "edge_ratio": 4.932,
+        "deformed_aspect": 103.497,
+        "rest_aspect": 2.562,
+        "aspect_ratio": 40.402,
+        "edge_pair": [
+          469,
+          462
+        ],
+        "verts": [
+          463,
+          465,
+          469,
+          462
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.3416278064250946
+          ],
+          [
+            "L_Index3",
+            1.2553699314594269
+          ],
+          [
+            "L_Index2",
+            0.744630110450089
+          ],
+          [
+            "L_Middle3",
+            0.6570183299481869
+          ],
+          [
+            "L_Middle1",
+            0.0013539157807826996
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 47,
+        "face": 691,
+        "deformed_edge": 0.03463,
+        "rest_edge": 0.00975,
+        "edge_ratio": 3.552,
+        "deformed_aspect": 57.794,
+        "rest_aspect": 1.42,
+        "aspect_ratio": 40.702,
+        "edge_pair": [
+          729,
+          717
+        ],
+        "verts": [
+          729,
+          717,
+          716
+        ],
+        "chains": [
+          [
+            "R_Index3",
+            2.0
+          ],
+          [
+            "R_Middle3",
+            1.0
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 44,
+        "face": 557,
+        "deformed_edge": 0.03212,
+        "rest_edge": 0.04632,
+        "edge_ratio": 0.694,
+        "deformed_aspect": 56.468,
+        "rest_aspect": 2.988,
+        "aspect_ratio": 18.897,
+        "edge_pair": [
+          553,
+          551
+        ],
+        "verts": [
+          553,
+          551,
+          479,
+          481
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.663621500134468
+          ],
+          [
+            "L_Hand",
+            1.1200764775276184
+          ],
+          [
+            "L_Pinky0",
+            0.6468855142593384
+          ],
+          [
+            "L_Pinky",
+            0.3390308991074562
+          ],
+          [
+            "L_Twist1",
+            0.17840249836444855
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 22,
+        "face": 448,
+        "deformed_edge": 0.0973,
+        "rest_edge": 0.01964,
+        "edge_ratio": 4.954,
+        "deformed_aspect": 46.381,
+        "rest_aspect": 2.562,
+        "aspect_ratio": 18.106,
+        "edge_pair": [
+          469,
+          462
+        ],
+        "verts": [
+          463,
+          465,
+          469,
+          462
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.3416278064250946
+          ],
+          [
+            "L_Index3",
+            1.2553699314594269
+          ],
+          [
+            "L_Index2",
+            0.744630110450089
+          ],
+          [
+            "L_Middle3",
+            0.6570183299481869
+          ],
+          [
+            "L_Middle1",
+            0.0013539157807826996
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 19,
+        "face": 496,
+        "deformed_edge": 0.08493,
+        "rest_edge": 0.01942,
+        "edge_ratio": 4.373,
+        "deformed_aspect": 44.875,
+        "rest_aspect": 2.347,
+        "aspect_ratio": 19.121,
+        "edge_pair": [
+          466,
+          470
+        ],
+        "verts": [
+          470,
+          468,
+          471,
+          466
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.6932235956192017
+          ],
+          [
+            "L_Middle3",
+            1.2987569719552994
+          ],
+          [
+            "L_Index2",
+            1.0
+          ],
+          [
+            "L_Middle1",
+            0.008019443601369858
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 50,
+        "face": 355,
+        "deformed_edge": 0.16573,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.403,
+        "deformed_aspect": 44.819,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.864,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 53,
+        "face": 355,
+        "deformed_edge": 0.16501,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.388,
+        "deformed_aspect": 44.751,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.845,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 62,
+        "face": 355,
+        "deformed_edge": 0.16356,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.358,
+        "deformed_aspect": 43.739,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.554,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 59,
+        "face": 355,
+        "deformed_edge": 0.16314,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.35,
+        "deformed_aspect": 43.654,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.53,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 65,
+        "face": 355,
+        "deformed_edge": 0.16355,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.358,
+        "deformed_aspect": 43.599,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.514,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 68,
+        "face": 355,
+        "deformed_edge": 0.16354,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.358,
+        "deformed_aspect": 43.462,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.475,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 71,
+        "face": 355,
+        "deformed_edge": 0.16353,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.357,
+        "deformed_aspect": 43.324,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.435,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 56,
+        "face": 355,
+        "deformed_edge": 0.16324,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.352,
+        "deformed_aspect": 42.89,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.311,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 28,
+        "face": 496,
+        "deformed_edge": 0.11206,
+        "rest_edge": 0.01942,
+        "edge_ratio": 5.771,
+        "deformed_aspect": 42.303,
+        "rest_aspect": 2.347,
+        "aspect_ratio": 18.025,
+        "edge_pair": [
+          466,
+          470
+        ],
+        "verts": [
+          470,
+          468,
+          471,
+          466
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.6932235956192017
+          ],
+          [
+            "L_Middle3",
+            1.2987569719552994
+          ],
+          [
+            "L_Index2",
+            1.0
+          ],
+          [
+            "L_Middle1",
+            0.008019443601369858
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 47,
+        "face": 355,
+        "deformed_edge": 0.15847,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.254,
+        "deformed_aspect": 40.896,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 11.738,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 38,
+        "face": 496,
+        "deformed_edge": 0.04757,
+        "rest_edge": 0.01942,
+        "edge_ratio": 2.45,
+        "deformed_aspect": 38.909,
+        "rest_aspect": 2.347,
+        "aspect_ratio": 16.579,
+        "edge_pair": [
+          470,
+          468
+        ],
+        "verts": [
+          470,
+          468,
+          471,
+          466
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.6932235956192017
+          ],
+          [
+            "L_Middle3",
+            1.2987569719552994
+          ],
+          [
+            "L_Index2",
+            1.0
+          ],
+          [
+            "L_Middle1",
+            0.008019443601369858
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 22,
+        "face": 496,
+        "deformed_edge": 0.0856,
+        "rest_edge": 0.01942,
+        "edge_ratio": 4.408,
+        "deformed_aspect": 38.707,
+        "rest_aspect": 2.347,
+        "aspect_ratio": 16.493,
+        "edge_pair": [
+          466,
+          470
+        ],
+        "verts": [
+          470,
+          468,
+          471,
+          466
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.6932235956192017
+          ],
+          [
+            "L_Middle3",
+            1.2987569719552994
+          ],
+          [
+            "L_Index2",
+            1.0
+          ],
+          [
+            "L_Middle1",
+            0.008019443601369858
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 38,
+        "face": 355,
+        "deformed_edge": 0.15246,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.13,
+        "deformed_aspect": 38.195,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 10.963,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 28,
+        "face": 565,
+        "deformed_edge": 0.14143,
+        "rest_edge": 0.01402,
+        "edge_ratio": 10.088,
+        "deformed_aspect": 38.042,
+        "rest_aspect": 2.514,
+        "aspect_ratio": 15.133,
+        "edge_pair": [
+          467,
+          464
+        ],
+        "verts": [
+          466,
+          467,
+          464,
+          452
+        ],
+        "chains": [
+          [
+            "L_Index3",
+            2.0
+          ],
+          [
+            "L_Middle3",
+            1.6385921835899353
+          ],
+          [
+            "L_Middle2",
+            0.3614078164100647
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 44,
+        "face": 355,
+        "deformed_edge": 0.15859,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.256,
+        "deformed_aspect": 36.725,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 10.541,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 25,
+        "face": 448,
+        "deformed_edge": 0.09702,
+        "rest_edge": 0.01964,
+        "edge_ratio": 4.939,
+        "deformed_aspect": 35.914,
+        "rest_aspect": 2.562,
+        "aspect_ratio": 14.019,
+        "edge_pair": [
+          469,
+          462
+        ],
+        "verts": [
+          463,
+          465,
+          469,
+          462
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.3416278064250946
+          ],
+          [
+            "L_Index3",
+            1.2553699314594269
+          ],
+          [
+            "L_Index2",
+            0.744630110450089
+          ],
+          [
+            "L_Middle3",
+            0.6570183299481869
+          ],
+          [
+            "L_Middle1",
+            0.0013539157807826996
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 56,
+        "face": 448,
+        "deformed_edge": 0.02004,
+        "rest_edge": 0.01964,
+        "edge_ratio": 1.02,
+        "deformed_aspect": 35.854,
+        "rest_aspect": 2.562,
+        "aspect_ratio": 13.996,
+        "edge_pair": [
+          462,
+          463
+        ],
+        "verts": [
+          463,
+          465,
+          469,
+          462
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.3416278064250946
+          ],
+          [
+            "L_Index3",
+            1.2553699314594269
+          ],
+          [
+            "L_Index2",
+            0.744630110450089
+          ],
+          [
+            "L_Middle3",
+            0.6570183299481869
+          ],
+          [
+            "L_Middle1",
+            0.0013539157807826996
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 53,
+        "face": 448,
+        "deformed_edge": 0.02004,
+        "rest_edge": 0.01964,
+        "edge_ratio": 1.02,
+        "deformed_aspect": 35.728,
+        "rest_aspect": 2.562,
+        "aspect_ratio": 13.947,
+        "edge_pair": [
+          462,
+          463
+        ],
+        "verts": [
+          463,
+          465,
+          469,
+          462
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.3416278064250946
+          ],
+          [
+            "L_Index3",
+            1.2553699314594269
+          ],
+          [
+            "L_Index2",
+            0.744630110450089
+          ],
+          [
+            "L_Middle3",
+            0.6570183299481869
+          ],
+          [
+            "L_Middle1",
+            0.0013539157807826996
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 59,
+        "face": 448,
+        "deformed_edge": 0.02004,
+        "rest_edge": 0.01964,
+        "edge_ratio": 1.02,
+        "deformed_aspect": 35.537,
+        "rest_aspect": 2.562,
+        "aspect_ratio": 13.873,
+        "edge_pair": [
+          462,
+          463
+        ],
+        "verts": [
+          463,
+          465,
+          469,
+          462
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.3416278064250946
+          ],
+          [
+            "L_Index3",
+            1.2553699314594269
+          ],
+          [
+            "L_Index2",
+            0.744630110450089
+          ],
+          [
+            "L_Middle3",
+            0.6570183299481869
+          ],
+          [
+            "L_Middle1",
+            0.0013539157807826996
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      }
+    ],
+    "worst_rest_faces": [
+      {
+        "face": 256,
+        "rest_edge": 0.06142,
+        "rest_aspect": 15.994,
+        "rest_pair": [
+          191,
+          211
+        ],
+        "verts": [
+          211,
+          320,
+          315,
+          191
+        ],
+        "chains": [
+          [
+            "L_Shoulder",
+            4.0
+          ]
+        ]
+      },
+      {
+        "face": 130,
+        "rest_edge": 0.08822,
+        "rest_aspect": 15.27,
+        "rest_pair": [
+          108,
+          11
+        ],
+        "verts": [
+          108,
+          11,
+          146,
+          148
+        ],
+        "chains": [
+          [
+            "R_Shoulder",
+            3.9770478010177612
+          ],
+          [
+            "R_Clavicle",
+            0.011476106010377407
+          ],
+          [
+            "R_ShoulderPad",
+            0.011476106010377407
+          ]
+        ]
+      },
+      {
+        "face": 296,
+        "rest_edge": 0.0883,
+        "rest_aspect": 15.268,
+        "rest_pair": [
+          186,
+          283
+        ],
+        "verts": [
+          283,
+          323,
+          321,
+          186
+        ],
+        "chains": [
+          [
+            "L_Shoulder",
+            3.940410792827606
+          ],
+          [
+            "L_Clavicle",
+            0.029794588685035706
+          ],
+          [
+            "L_ShoulderPad",
+            0.029794588685035706
+          ]
+        ]
+      },
+      {
+        "face": 90,
+        "rest_edge": 0.06142,
+        "rest_aspect": 15.209,
+        "rest_pair": [
+          36,
+          16
+        ],
+        "verts": [
+          36,
+          16,
+          140,
+          145
+        ],
+        "chains": [
+          [
+            "R_Shoulder",
+            4.0
+          ]
+        ]
+      },
+      {
+        "face": 214,
+        "rest_edge": 0.06439,
+        "rest_aspect": 13.057,
+        "rest_pair": [
+          266,
+          264
+        ],
+        "verts": [
+          264,
+          262,
+          255,
+          266
+        ],
+        "chains": [
+          [
+            "L_Twist1",
+            2.7895581126213074
+          ],
+          [
+            "L_Twist2",
+            0.5777808204293251
+          ],
+          [
+            "L_Elbow",
+            0.5133113972842693
+          ],
+          [
+            "L_Shoulder",
+            0.11934965022373945
+          ]
+        ]
+      },
+      {
+        "face": 48,
+        "rest_edge": 0.0631,
+        "rest_aspect": 12.497,
+        "rest_pair": [
+          89,
+          91
+        ],
+        "verts": [
+          89,
+          91,
+          80,
+          87
+        ],
+        "chains": [
+          [
+            "R_Twist1",
+            2.7889508605003357
+          ],
+          [
+            "R_Twist2",
+            0.5838435851037502
+          ],
+          [
+            "R_Elbow",
+            0.5236252062022686
+          ],
+          [
+            "R_Shoulder",
+            0.10358037427067757
+          ]
+        ]
+      },
+      {
+        "face": 821,
+        "rest_edge": 0.04236,
+        "rest_aspect": 8.673,
+        "rest_pair": [
+          748,
+          705
+        ],
+        "verts": [
+          748,
+          705,
+          704,
+          750
+        ],
+        "chains": [
+          [
+            "R_Index0",
+            2.0835533440113068
+          ],
+          [
+            "R_Hand",
+            0.7988685891032219
+          ],
+          [
+            "R_Index",
+            0.37914950400590897
+          ],
+          [
+            "R_Thumb1",
+            0.3022409677505493
+          ],
+          [
+            "R_Thenar",
+            0.12433801591396332
+          ]
+        ]
+      },
+      {
+        "face": 528,
+        "rest_edge": 0.04267,
+        "rest_aspect": 8.667,
+        "rest_pair": [
+          440,
+          483
+        ],
+        "verts": [
+          483,
+          485,
+          439,
+          440
+        ],
+        "chains": [
+          [
+            "L_Index0",
+            2.593472719192505
+          ],
+          [
+            "L_Index",
+            0.5175131559371948
+          ],
+          [
+            "L_Hand",
+            0.3096002731472254
+          ],
+          [
+            "L_Thumb1",
+            0.30802121758461
+          ],
+          [
+            "L_Thenar",
+            0.13573364913463593
+          ]
+        ]
+      },
+      {
+        "face": 350,
+        "rest_edge": 0.04918,
+        "rest_aspect": 8.096,
+        "rest_pair": [
+          353,
+          382
+        ],
+        "verts": [
+          353,
+          382,
+          383,
+          352
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            2.331932157278061
+          ],
+          [
+            "L_Twist1",
+            1.4944468587636948
+          ],
+          [
+            "L_Hand",
+            0.15341351926326752
+          ],
+          [
+            "L_Wrist",
+            0.01986107206903398
+          ],
+          [
+            "L_Elbow",
+            0.00034639585646800697
+          ]
+        ]
+      },
+      {
+        "face": 643,
+        "rest_edge": 0.04824,
+        "rest_aspect": 7.876,
+        "rest_pair": [
+          647,
+          618
+        ],
+        "verts": [
+          618,
+          617,
+          648,
+          647
+        ],
+        "chains": [
+          [
+            "R_Twist2",
+            2.371699333190918
+          ],
+          [
+            "R_Twist1",
+            1.3873573392629623
+          ],
+          [
+            "R_Hand",
+            0.17961445893161
+          ],
+          [
+            "R_Wrist",
+            0.03167621232569218
+          ],
+          [
+            "R_Elbow",
+            0.029652655590325594
+          ]
+        ]
+      },
+      {
+        "face": 649,
+        "rest_edge": 0.04961,
+        "rest_aspect": 7.548,
+        "rest_pair": [
+          634,
+          657
+        ],
+        "verts": [
+          632,
+          634,
+          657,
+          654
+        ],
+        "chains": [
+          [
+            "R_Bracelet",
+            2.0
+          ],
+          [
+            "R_Twist2",
+            1.0823773741722107
+          ],
+          [
+            "R_Twist1",
+            0.9176226854324341
+          ]
+        ]
+      },
+      {
+        "face": 825,
+        "rest_edge": 0.0286,
+        "rest_aspect": 7.399,
+        "rest_pair": [
+          691,
+          698
+        ],
+        "verts": [
+          691,
+          698,
+          693,
+          686
+        ],
+        "chains": [
+          [
+            "R_Index0",
+            2.7423055171966553
+          ],
+          [
+            "R_Thumb1",
+            0.5669456273317337
+          ],
+          [
+            "R_Sleeve",
+            0.2906225696206093
+          ],
+          [
+            "R_Thenar",
+            0.1785489171743393
+          ],
+          [
+            "R_Thumb",
+            0.16691523045301437
+          ]
+        ]
+      },
+      {
+        "face": 532,
+        "rest_edge": 0.0286,
+        "rest_aspect": 7.394,
+        "rest_pair": [
+          433,
+          426
+        ],
+        "verts": [
+          426,
+          421,
+          428,
+          433
+        ],
+        "chains": [
+          [
+            "L_Index0",
+            2.1876720786094666
+          ],
+          [
+            "L_Thumb1",
+            1.1004721820354462
+          ],
+          [
+            "L_Sleeve",
+            0.4751579836010933
+          ],
+          [
+            "L_Thumb2",
+            0.23669778183102608
+          ]
+        ]
+      },
+      {
+        "face": 356,
+        "rest_edge": 0.05033,
+        "rest_aspect": 7.002,
+        "rest_pair": [
+          367,
+          389
+        ],
+        "verts": [
+          367,
+          389,
+          392,
+          369
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            2.6215222477912903
+          ],
+          [
+            "L_Twist1",
+            1.2285053730010986
+          ],
+          [
+            "L_Hand",
+            0.14997246116399765
+          ]
+        ]
+      },
+      {
+        "face": 364,
+        "rest_edge": 0.05053,
+        "rest_aspect": 6.748,
+        "rest_pair": [
+          370,
+          393
+        ],
+        "verts": [
+          370,
+          393,
+          397,
+          380
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            2.6487072110176086
+          ],
+          [
+            "L_Twist1",
+            1.2237540930509567
+          ],
+          [
+            "L_Hand",
+            0.12753869965672493
+          ]
+        ]
+      },
+      {
+        "face": 210,
+        "rest_edge": 0.06773,
+        "rest_aspect": 6.597,
+        "rest_pair": [
+          256,
+          235
+        ],
+        "verts": [
+          235,
+          264,
+          266,
+          256
+        ],
+        "chains": [
+          [
+            "L_Twist1",
+            2.7772619128227234
+          ],
+          [
+            "L_Twist2",
+            0.559700220823288
+          ],
+          [
+            "L_Elbow",
+            0.5306401066482067
+          ],
+          [
+            "L_Shoulder",
+            0.1323976853163913
+          ]
+        ]
+      },
+      {
+        "face": 657,
+        "rest_edge": 0.05045,
+        "rest_aspect": 6.572,
+        "rest_pair": [
+          658,
+          635
+        ],
+        "verts": [
+          635,
+          645,
+          662,
+          658
+        ],
+        "chains": [
+          [
+            "R_Bracelet",
+            2.0
+          ],
+          [
+            "R_Twist2",
+            1.0998914241790771
+          ],
+          [
+            "R_Twist1",
+            0.9001085460186005
+          ]
+        ]
+      },
+      {
+        "face": 46,
+        "rest_edge": 0.03856,
+        "rest_aspect": 6.528,
+        "rest_pair": [
+          87,
+          73
+        ],
+        "verts": [
+          73,
+          88,
+          89,
+          87
+        ],
+        "chains": [
+          [
+            "R_Twist1",
+            2.565958261489868
+          ],
+          [
+            "R_Elbow",
+            1.016815586015582
+          ],
+          [
+            "R_Shoulder",
+            0.30894238874316216
+          ],
+          [
+            "R_Twist2",
+            0.10828376933932304
+          ]
+        ]
+      },
+      {
+        "face": 342,
+        "rest_edge": 0.04461,
+        "rest_aspect": 6.505,
+        "rest_pair": [
+          355,
+          350
+        ],
+        "verts": [
+          356,
+          355,
+          350,
+          351
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            2.7913929224014282
+          ],
+          [
+            "L_Twist1",
+            0.4194953739643097
+          ],
+          [
+            "L_Hand",
+            0.29075756669044495
+          ],
+          [
+            "L_Thumb1",
+            0.23855499923229218
+          ],
+          [
+            "L_Thumb",
+            0.16717861592769623
+          ]
+        ]
+      },
+      {
+        "face": 635,
+        "rest_edge": 0.04415,
+        "rest_aspect": 6.403,
+        "rest_pair": [
+          615,
+          620
+        ],
+        "verts": [
+          621,
+          616,
+          615,
+          620
+        ],
+        "chains": [
+          [
+            "R_Twist2",
+            2.6205896735191345
+          ],
+          [
+            "R_Thumb1",
+            0.3599960654973984
+          ],
+          [
+            "R_Hand",
+            0.35437601804733276
+          ],
+          [
+            "R_Twist1",
+            0.3357512354850769
+          ],
+          [
+            "R_Thumb",
+            0.20804327726364136
+          ]
+        ]
+      },
+      {
+        "face": 212,
+        "rest_edge": 0.03819,
+        "rest_aspect": 6.373,
+        "rest_pair": [
+          248,
+          262
+        ],
+        "verts": [
+          248,
+          262,
+          264,
+          263
+        ],
+        "chains": [
+          [
+            "L_Twist1",
+            2.607792854309082
+          ],
+          [
+            "L_Elbow",
+            0.9415058046579361
+          ],
+          [
+            "L_Shoulder",
+            0.34874047338962555
+          ],
+          [
+            "L_Twist2",
+            0.10196078568696976
+          ]
+        ]
+      },
+      {
+        "face": 642,
+        "rest_edge": 0.05188,
+        "rest_aspect": 6.248,
+        "rest_pair": [
+          646,
+          615
+        ],
+        "verts": [
+          615,
+          618,
+          647,
+          646
+        ],
+        "chains": [
+          [
+            "R_Twist2",
+            2.4104910790920258
+          ],
+          [
+            "R_Twist1",
+            1.1690571680665016
+          ],
+          [
+            "R_Hand",
+            0.27174136554822326
+          ],
+          [
+            "R_Elbow",
+            0.07608255930244923
+          ],
+          [
+            "R_Palm",
+            0.053231023252010345
+          ]
+        ]
+      },
+      {
+        "face": 44,
+        "rest_edge": 0.06763,
+        "rest_aspect": 6.218,
+        "rest_pair": [
+          60,
+          81
+        ],
+        "verts": [
+          60,
+          81,
+          91,
+          89
+        ],
+        "chains": [
+          [
+            "R_Twist1",
+            2.769059956073761
+          ],
+          [
+            "R_Twist2",
+            0.5676103457808495
+          ],
+          [
+            "R_Elbow",
+            0.5502215698361397
+          ],
+          [
+            "R_Shoulder",
+            0.1131081433268264
+          ]
+        ]
+      },
+      {
+        "face": 550,
+        "rest_edge": 0.02522,
+        "rest_aspect": 6.151,
+        "rest_pair": [
+          438,
+          434
+        ],
+        "verts": [
+          438,
+          434,
+          429,
+          435
+        ],
+        "chains": [
+          [
+            "L_Thumb1",
+            1.3579542636871338
+          ],
+          [
+            "L_Index0",
+            1.0124114453792572
+          ],
+          [
+            "L_Thenar",
+            0.6287968158721924
+          ],
+          [
+            "L_Thumb2",
+            0.5698530524969101
+          ],
+          [
+            "L_Sleeve",
+            0.24821795523166656
+          ]
+        ]
+      }
+    ],
+    "worst_hand_deformed_faces": [
+      {
+        "frame": 19,
+        "face": 448,
+        "deformed_edge": 0.09687,
+        "rest_edge": 0.01964,
+        "edge_ratio": 4.932,
+        "deformed_aspect": 103.497,
+        "rest_aspect": 2.562,
+        "aspect_ratio": 40.402,
+        "edge_pair": [
+          469,
+          462
+        ],
+        "verts": [
+          463,
+          465,
+          469,
+          462
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.3416278064250946
+          ],
+          [
+            "L_Index3",
+            1.2553699314594269
+          ],
+          [
+            "L_Index2",
+            0.744630110450089
+          ],
+          [
+            "L_Middle3",
+            0.6570183299481869
+          ],
+          [
+            "L_Middle1",
+            0.0013539157807826996
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 47,
+        "face": 691,
+        "deformed_edge": 0.03463,
+        "rest_edge": 0.00975,
+        "edge_ratio": 3.552,
+        "deformed_aspect": 57.794,
+        "rest_aspect": 1.42,
+        "aspect_ratio": 40.702,
+        "edge_pair": [
+          729,
+          717
+        ],
+        "verts": [
+          729,
+          717,
+          716
+        ],
+        "chains": [
+          [
+            "R_Index3",
+            2.0
+          ],
+          [
+            "R_Middle3",
+            1.0
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 44,
+        "face": 557,
+        "deformed_edge": 0.03212,
+        "rest_edge": 0.04632,
+        "edge_ratio": 0.694,
+        "deformed_aspect": 56.468,
+        "rest_aspect": 2.988,
+        "aspect_ratio": 18.897,
+        "edge_pair": [
+          553,
+          551
+        ],
+        "verts": [
+          553,
+          551,
+          479,
+          481
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.663621500134468
+          ],
+          [
+            "L_Hand",
+            1.1200764775276184
+          ],
+          [
+            "L_Pinky0",
+            0.6468855142593384
+          ],
+          [
+            "L_Pinky",
+            0.3390308991074562
+          ],
+          [
+            "L_Twist1",
+            0.17840249836444855
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 22,
+        "face": 448,
+        "deformed_edge": 0.0973,
+        "rest_edge": 0.01964,
+        "edge_ratio": 4.954,
+        "deformed_aspect": 46.381,
+        "rest_aspect": 2.562,
+        "aspect_ratio": 18.106,
+        "edge_pair": [
+          469,
+          462
+        ],
+        "verts": [
+          463,
+          465,
+          469,
+          462
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.3416278064250946
+          ],
+          [
+            "L_Index3",
+            1.2553699314594269
+          ],
+          [
+            "L_Index2",
+            0.744630110450089
+          ],
+          [
+            "L_Middle3",
+            0.6570183299481869
+          ],
+          [
+            "L_Middle1",
+            0.0013539157807826996
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 19,
+        "face": 496,
+        "deformed_edge": 0.08493,
+        "rest_edge": 0.01942,
+        "edge_ratio": 4.373,
+        "deformed_aspect": 44.875,
+        "rest_aspect": 2.347,
+        "aspect_ratio": 19.121,
+        "edge_pair": [
+          466,
+          470
+        ],
+        "verts": [
+          470,
+          468,
+          471,
+          466
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.6932235956192017
+          ],
+          [
+            "L_Middle3",
+            1.2987569719552994
+          ],
+          [
+            "L_Index2",
+            1.0
+          ],
+          [
+            "L_Middle1",
+            0.008019443601369858
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 50,
+        "face": 355,
+        "deformed_edge": 0.16573,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.403,
+        "deformed_aspect": 44.819,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.864,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 53,
+        "face": 355,
+        "deformed_edge": 0.16501,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.388,
+        "deformed_aspect": 44.751,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.845,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 62,
+        "face": 355,
+        "deformed_edge": 0.16356,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.358,
+        "deformed_aspect": 43.739,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.554,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 59,
+        "face": 355,
+        "deformed_edge": 0.16314,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.35,
+        "deformed_aspect": 43.654,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.53,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 65,
+        "face": 355,
+        "deformed_edge": 0.16355,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.358,
+        "deformed_aspect": 43.599,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.514,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 68,
+        "face": 355,
+        "deformed_edge": 0.16354,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.358,
+        "deformed_aspect": 43.462,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.475,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 71,
+        "face": 355,
+        "deformed_edge": 0.16353,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.357,
+        "deformed_aspect": 43.324,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.435,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 56,
+        "face": 355,
+        "deformed_edge": 0.16324,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.352,
+        "deformed_aspect": 42.89,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 12.311,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 28,
+        "face": 496,
+        "deformed_edge": 0.11206,
+        "rest_edge": 0.01942,
+        "edge_ratio": 5.771,
+        "deformed_aspect": 42.303,
+        "rest_aspect": 2.347,
+        "aspect_ratio": 18.025,
+        "edge_pair": [
+          466,
+          470
+        ],
+        "verts": [
+          470,
+          468,
+          471,
+          466
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.6932235956192017
+          ],
+          [
+            "L_Middle3",
+            1.2987569719552994
+          ],
+          [
+            "L_Index2",
+            1.0
+          ],
+          [
+            "L_Middle1",
+            0.008019443601369858
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 47,
+        "face": 355,
+        "deformed_edge": 0.15847,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.254,
+        "deformed_aspect": 40.896,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 11.738,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 38,
+        "face": 496,
+        "deformed_edge": 0.04757,
+        "rest_edge": 0.01942,
+        "edge_ratio": 2.45,
+        "deformed_aspect": 38.909,
+        "rest_aspect": 2.347,
+        "aspect_ratio": 16.579,
+        "edge_pair": [
+          470,
+          468
+        ],
+        "verts": [
+          470,
+          468,
+          471,
+          466
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.6932235956192017
+          ],
+          [
+            "L_Middle3",
+            1.2987569719552994
+          ],
+          [
+            "L_Index2",
+            1.0
+          ],
+          [
+            "L_Middle1",
+            0.008019443601369858
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 22,
+        "face": 496,
+        "deformed_edge": 0.0856,
+        "rest_edge": 0.01942,
+        "edge_ratio": 4.408,
+        "deformed_aspect": 38.707,
+        "rest_aspect": 2.347,
+        "aspect_ratio": 16.493,
+        "edge_pair": [
+          466,
+          470
+        ],
+        "verts": [
+          470,
+          468,
+          471,
+          466
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.6932235956192017
+          ],
+          [
+            "L_Middle3",
+            1.2987569719552994
+          ],
+          [
+            "L_Index2",
+            1.0
+          ],
+          [
+            "L_Middle1",
+            0.008019443601369858
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 38,
+        "face": 355,
+        "deformed_edge": 0.15246,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.13,
+        "deformed_aspect": 38.195,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 10.963,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 28,
+        "face": 565,
+        "deformed_edge": 0.14143,
+        "rest_edge": 0.01402,
+        "edge_ratio": 10.088,
+        "deformed_aspect": 38.042,
+        "rest_aspect": 2.514,
+        "aspect_ratio": 15.133,
+        "edge_pair": [
+          467,
+          464
+        ],
+        "verts": [
+          466,
+          467,
+          464,
+          452
+        ],
+        "chains": [
+          [
+            "L_Index3",
+            2.0
+          ],
+          [
+            "L_Middle3",
+            1.6385921835899353
+          ],
+          [
+            "L_Middle2",
+            0.3614078164100647
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 44,
+        "face": 355,
+        "deformed_edge": 0.15859,
+        "rest_edge": 0.04871,
+        "edge_ratio": 3.256,
+        "deformed_aspect": 36.725,
+        "rest_aspect": 3.484,
+        "aspect_ratio": 10.541,
+        "edge_pair": [
+          357,
+          390
+        ],
+        "verts": [
+          357,
+          390,
+          391,
+          365
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            1.6298297345638275
+          ],
+          [
+            "L_Twist1",
+            1.0937153026461601
+          ],
+          [
+            "L_Thumb1",
+            0.7629010024247691
+          ],
+          [
+            "L_Thumb",
+            0.36333727836608887
+          ],
+          [
+            "L_Elbow",
+            0.07069628313183784
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 25,
+        "face": 448,
+        "deformed_edge": 0.09702,
+        "rest_edge": 0.01964,
+        "edge_ratio": 4.939,
+        "deformed_aspect": 35.914,
+        "rest_aspect": 2.562,
+        "aspect_ratio": 14.019,
+        "edge_pair": [
+          469,
+          462
+        ],
+        "verts": [
+          463,
+          465,
+          469,
+          462
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.3416278064250946
+          ],
+          [
+            "L_Index3",
+            1.2553699314594269
+          ],
+          [
+            "L_Index2",
+            0.744630110450089
+          ],
+          [
+            "L_Middle3",
+            0.6570183299481869
+          ],
+          [
+            "L_Middle1",
+            0.0013539157807826996
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 56,
+        "face": 448,
+        "deformed_edge": 0.02004,
+        "rest_edge": 0.01964,
+        "edge_ratio": 1.02,
+        "deformed_aspect": 35.854,
+        "rest_aspect": 2.562,
+        "aspect_ratio": 13.996,
+        "edge_pair": [
+          462,
+          463
+        ],
+        "verts": [
+          463,
+          465,
+          469,
+          462
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.3416278064250946
+          ],
+          [
+            "L_Index3",
+            1.2553699314594269
+          ],
+          [
+            "L_Index2",
+            0.744630110450089
+          ],
+          [
+            "L_Middle3",
+            0.6570183299481869
+          ],
+          [
+            "L_Middle1",
+            0.0013539157807826996
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 53,
+        "face": 448,
+        "deformed_edge": 0.02004,
+        "rest_edge": 0.01964,
+        "edge_ratio": 1.02,
+        "deformed_aspect": 35.728,
+        "rest_aspect": 2.562,
+        "aspect_ratio": 13.947,
+        "edge_pair": [
+          462,
+          463
+        ],
+        "verts": [
+          463,
+          465,
+          469,
+          462
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.3416278064250946
+          ],
+          [
+            "L_Index3",
+            1.2553699314594269
+          ],
+          [
+            "L_Index2",
+            0.744630110450089
+          ],
+          [
+            "L_Middle3",
+            0.6570183299481869
+          ],
+          [
+            "L_Middle1",
+            0.0013539157807826996
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 59,
+        "face": 448,
+        "deformed_edge": 0.02004,
+        "rest_edge": 0.01964,
+        "edge_ratio": 1.02,
+        "deformed_aspect": 35.537,
+        "rest_aspect": 2.562,
+        "aspect_ratio": 13.873,
+        "edge_pair": [
+          462,
+          463
+        ],
+        "verts": [
+          463,
+          465,
+          469,
+          462
+        ],
+        "chains": [
+          [
+            "L_Middle2",
+            1.3416278064250946
+          ],
+          [
+            "L_Index3",
+            1.2553699314594269
+          ],
+          [
+            "L_Index2",
+            0.744630110450089
+          ],
+          [
+            "L_Middle3",
+            0.6570183299481869
+          ],
+          [
+            "L_Middle1",
+            0.0013539157807826996
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      }
+    ]
+  },
+  {
+    "animation": "E:\\Unity\\Project\\FPS\\Assets\\Art\\Animations\\AKAnimation\\FP_Classic.fbx",
+    "action": "FP_Core_NewFemale_Skelmesh.ao.001|FP_Core_NewFemale_Skelmesh.ao|FP_Core_BasePistol_S0_Equip",
+    "frames": [
+      1,
+      3,
+      4,
+      6,
+      7,
+      9,
+      11,
+      12,
+      14,
+      15,
+      17,
+      19,
+      20,
+      22,
+      24,
+      25,
+      27,
+      28,
+      30,
+      32,
+      33,
+      35,
+      36,
+      38
+    ],
+    "warning_count": 269,
+    "hand_warning_count": 174,
+    "thresholds": {
+      "max_deformed_edge_warn": 0.16,
+      "max_edge_ratio_warn": 2.4,
+      "max_triangle_aspect_warn": 14.0
+    },
+    "worst_deformed_faces": [
+      {
+        "frame": 24,
+        "face": 456,
+        "deformed_edge": 0.02854,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.057,
+        "deformed_aspect": 153.546,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 38.291,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 28,
+        "face": 456,
+        "deformed_edge": 0.02864,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.06,
+        "deformed_aspect": 115.638,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 28.838,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 27,
+        "face": 456,
+        "deformed_edge": 0.02859,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.059,
+        "deformed_aspect": 72.471,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 18.073,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 27,
+        "face": 616,
+        "deformed_edge": 0.02075,
+        "rest_edge": 0.01534,
+        "edge_ratio": 1.353,
+        "deformed_aspect": 43.069,
+        "rest_aspect": 2.65,
+        "aspect_ratio": 16.253,
+        "edge_pair": [
+          611,
+          614
+        ],
+        "verts": [
+          611,
+          614,
+          613,
+          612
+        ],
+        "chains": [
+          [
+            "L_Ring1",
+            1.9719126224517822
+          ],
+          [
+            "L_Pinky1",
+            1.6072795987129211
+          ],
+          [
+            "L_Pinky2",
+            0.3927204292267561
+          ],
+          [
+            "L_Ring2",
+            0.02808738499879837
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 25,
+        "face": 484,
+        "deformed_edge": 0.04956,
+        "rest_edge": 0.04725,
+        "edge_ratio": 1.049,
+        "deformed_aspect": 41.97,
+        "rest_aspect": 5.692,
+        "aspect_ratio": 7.373,
+        "edge_pair": [
+          504,
+          497
+        ],
+        "verts": [
+          497,
+          499,
+          521,
+          504
+        ],
+        "chains": [
+          [
+            "L_Middle1",
+            1.9040112346410751
+          ],
+          [
+            "L_Middle0",
+            0.9659643359482288
+          ],
+          [
+            "L_Middle",
+            0.4897540807723999
+          ],
+          [
+            "L_Index0",
+            0.40881380438804626
+          ],
+          [
+            "L_Ring1",
+            0.14336399734020233
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 25,
+        "face": 456,
+        "deformed_edge": 0.02851,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.056,
+        "deformed_aspect": 39.343,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 9.811,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 24,
+        "face": 846,
+        "deformed_edge": 0.04331,
+        "rest_edge": 0.04332,
+        "edge_ratio": 1.0,
+        "deformed_aspect": 38.844,
+        "rest_aspect": 4.453,
+        "aspect_ratio": 8.723,
+        "edge_pair": [
+          671,
+          677
+        ],
+        "verts": [
+          671,
+          677,
+          676,
+          674
+        ],
+        "chains": [
+          [
+            "R_Thumb3",
+            1.979835331439972
+          ],
+          [
+            "R_Index1",
+            1.0721973851323128
+          ],
+          [
+            "R_Index0",
+            0.5901031494140625
+          ],
+          [
+            "R_Index",
+            0.31417006999254227
+          ],
+          [
+            "R_Index2",
+            0.0235294122248888
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 30,
+        "face": 456,
+        "deformed_edge": 0.02864,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.061,
+        "deformed_aspect": 37.067,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 9.244,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 28,
+        "face": 471,
+        "deformed_edge": 0.04514,
+        "rest_edge": 0.01141,
+        "edge_ratio": 3.957,
+        "deformed_aspect": 34.403,
+        "rest_aspect": 2.812,
+        "aspect_ratio": 12.236,
+        "edge_pair": [
+          574,
+          577
+        ],
+        "verts": [
+          578,
+          576,
+          574,
+          577
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.8075600266456604
+          ],
+          [
+            "L_Pinky3",
+            1.4666666984558105
+          ],
+          [
+            "L_Pinky2",
+            0.533333346247673
+          ],
+          [
+            "L_Ring3",
+            0.1684785783290863
+          ],
+          [
+            "L_Ring1",
+            0.02396140992641449
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 27,
+        "face": 484,
+        "deformed_edge": 0.04995,
+        "rest_edge": 0.04725,
+        "edge_ratio": 1.057,
+        "deformed_aspect": 28.984,
+        "rest_aspect": 5.692,
+        "aspect_ratio": 5.092,
+        "edge_pair": [
+          504,
+          497
+        ],
+        "verts": [
+          497,
+          499,
+          521,
+          504
+        ],
+        "chains": [
+          [
+            "L_Middle1",
+            1.9040112346410751
+          ],
+          [
+            "L_Middle0",
+            0.9659643359482288
+          ],
+          [
+            "L_Middle",
+            0.4897540807723999
+          ],
+          [
+            "L_Index0",
+            0.40881380438804626
+          ],
+          [
+            "L_Ring1",
+            0.14336399734020233
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 32,
+        "face": 456,
+        "deformed_edge": 0.02866,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.061,
+        "deformed_aspect": 26.822,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 6.689,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 35,
+        "face": 456,
+        "deformed_edge": 0.02866,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.061,
+        "deformed_aspect": 26.479,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 6.603,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 33,
+        "face": 456,
+        "deformed_edge": 0.02866,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.061,
+        "deformed_aspect": 26.478,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 6.603,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 36,
+        "face": 456,
+        "deformed_edge": 0.02866,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.061,
+        "deformed_aspect": 26.478,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 6.603,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 38,
+        "face": 456,
+        "deformed_edge": 0.02866,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.061,
+        "deformed_aspect": 26.478,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 6.603,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 28,
+        "face": 616,
+        "deformed_edge": 0.01915,
+        "rest_edge": 0.01534,
+        "edge_ratio": 1.248,
+        "deformed_aspect": 26.375,
+        "rest_aspect": 2.65,
+        "aspect_ratio": 9.954,
+        "edge_pair": [
+          611,
+          614
+        ],
+        "verts": [
+          611,
+          614,
+          613,
+          612
+        ],
+        "chains": [
+          [
+            "L_Ring1",
+            1.9719126224517822
+          ],
+          [
+            "L_Pinky1",
+            1.6072795987129211
+          ],
+          [
+            "L_Pinky2",
+            0.3927204292267561
+          ],
+          [
+            "L_Ring2",
+            0.02808738499879837
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 24,
+        "face": 616,
+        "deformed_edge": 0.0224,
+        "rest_edge": 0.01534,
+        "edge_ratio": 1.46,
+        "deformed_aspect": 26.207,
+        "rest_aspect": 2.65,
+        "aspect_ratio": 9.89,
+        "edge_pair": [
+          611,
+          614
+        ],
+        "verts": [
+          611,
+          614,
+          613,
+          612
+        ],
+        "chains": [
+          [
+            "L_Ring1",
+            1.9719126224517822
+          ],
+          [
+            "L_Pinky1",
+            1.6072795987129211
+          ],
+          [
+            "L_Pinky2",
+            0.3927204292267561
+          ],
+          [
+            "L_Ring2",
+            0.02808738499879837
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 24,
+        "face": 484,
+        "deformed_edge": 0.04977,
+        "rest_edge": 0.04725,
+        "edge_ratio": 1.053,
+        "deformed_aspect": 25.467,
+        "rest_aspect": 5.692,
+        "aspect_ratio": 4.474,
+        "edge_pair": [
+          504,
+          497
+        ],
+        "verts": [
+          497,
+          499,
+          521,
+          504
+        ],
+        "chains": [
+          [
+            "L_Middle1",
+            1.9040112346410751
+          ],
+          [
+            "L_Middle0",
+            0.9659643359482288
+          ],
+          [
+            "L_Middle",
+            0.4897540807723999
+          ],
+          [
+            "L_Index0",
+            0.40881380438804626
+          ],
+          [
+            "L_Ring1",
+            0.14336399734020233
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 25,
+        "face": 616,
+        "deformed_edge": 0.02568,
+        "rest_edge": 0.01534,
+        "edge_ratio": 1.674,
+        "deformed_aspect": 24.086,
+        "rest_aspect": 2.65,
+        "aspect_ratio": 9.089,
+        "edge_pair": [
+          611,
+          614
+        ],
+        "verts": [
+          611,
+          614,
+          613,
+          612
+        ],
+        "chains": [
+          [
+            "L_Ring1",
+            1.9719126224517822
+          ],
+          [
+            "L_Pinky1",
+            1.6072795987129211
+          ],
+          [
+            "L_Pinky2",
+            0.3927204292267561
+          ],
+          [
+            "L_Ring2",
+            0.02808738499879837
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 22,
+        "face": 471,
+        "deformed_edge": 0.02367,
+        "rest_edge": 0.01141,
+        "edge_ratio": 2.075,
+        "deformed_aspect": 23.872,
+        "rest_aspect": 2.812,
+        "aspect_ratio": 8.49,
+        "edge_pair": [
+          578,
+          576
+        ],
+        "verts": [
+          578,
+          576,
+          574,
+          577
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.8075600266456604
+          ],
+          [
+            "L_Pinky3",
+            1.4666666984558105
+          ],
+          [
+            "L_Pinky2",
+            0.533333346247673
+          ],
+          [
+            "L_Ring3",
+            0.1684785783290863
+          ],
+          [
+            "L_Ring1",
+            0.02396140992641449
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 28,
+        "face": 819,
+        "deformed_edge": 0.02526,
+        "rest_edge": 0.02203,
+        "edge_ratio": 1.146,
+        "deformed_aspect": 23.669,
+        "rest_aspect": 2.115,
+        "aspect_ratio": 11.19,
+        "edge_pair": [
+          735,
+          715
+        ],
+        "verts": [
+          715,
+          717,
+          731,
+          735
+        ],
+        "chains": [
+          [
+            "R_Index3",
+            1.8539944291114807
+          ],
+          [
+            "R_Middle3",
+            1.0703081786632538
+          ],
+          [
+            "R_Middle2",
+            0.9296918087638915
+          ],
+          [
+            "R_Index2",
+            0.14600558578968048
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 30,
+        "face": 819,
+        "deformed_edge": 0.05723,
+        "rest_edge": 0.02203,
+        "edge_ratio": 2.598,
+        "deformed_aspect": 22.338,
+        "rest_aspect": 2.115,
+        "aspect_ratio": 10.561,
+        "edge_pair": [
+          717,
+          731
+        ],
+        "verts": [
+          715,
+          717,
+          731,
+          735
+        ],
+        "chains": [
+          [
+            "R_Index3",
+            1.8539944291114807
+          ],
+          [
+            "R_Middle3",
+            1.0703081786632538
+          ],
+          [
+            "R_Middle2",
+            0.9296918087638915
+          ],
+          [
+            "R_Index2",
+            0.14600558578968048
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 27,
+        "face": 471,
+        "deformed_edge": 0.05181,
+        "rest_edge": 0.01141,
+        "edge_ratio": 4.542,
+        "deformed_aspect": 19.853,
+        "rest_aspect": 2.812,
+        "aspect_ratio": 7.061,
+        "edge_pair": [
+          574,
+          577
+        ],
+        "verts": [
+          578,
+          576,
+          574,
+          577
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.8075600266456604
+          ],
+          [
+            "L_Pinky3",
+            1.4666666984558105
+          ],
+          [
+            "L_Pinky2",
+            0.533333346247673
+          ],
+          [
+            "L_Ring3",
+            0.1684785783290863
+          ],
+          [
+            "L_Ring1",
+            0.02396140992641449
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 25,
+        "face": 846,
+        "deformed_edge": 0.04331,
+        "rest_edge": 0.04332,
+        "edge_ratio": 1.0,
+        "deformed_aspect": 19.549,
+        "rest_aspect": 4.453,
+        "aspect_ratio": 4.39,
+        "edge_pair": [
+          671,
+          677
+        ],
+        "verts": [
+          671,
+          677,
+          676,
+          674
+        ],
+        "chains": [
+          [
+            "R_Thumb3",
+            1.979835331439972
+          ],
+          [
+            "R_Index1",
+            1.0721973851323128
+          ],
+          [
+            "R_Index0",
+            0.5901031494140625
+          ],
+          [
+            "R_Index",
+            0.31417006999254227
+          ],
+          [
+            "R_Index2",
+            0.0235294122248888
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      }
+    ],
+    "worst_rest_faces": [
+      {
+        "face": 256,
+        "rest_edge": 0.06142,
+        "rest_aspect": 15.994,
+        "rest_pair": [
+          191,
+          211
+        ],
+        "verts": [
+          211,
+          320,
+          315,
+          191
+        ],
+        "chains": [
+          [
+            "L_Shoulder",
+            4.0
+          ]
+        ]
+      },
+      {
+        "face": 130,
+        "rest_edge": 0.08822,
+        "rest_aspect": 15.27,
+        "rest_pair": [
+          108,
+          11
+        ],
+        "verts": [
+          108,
+          11,
+          146,
+          148
+        ],
+        "chains": [
+          [
+            "R_Shoulder",
+            3.9770478010177612
+          ],
+          [
+            "R_Clavicle",
+            0.011476106010377407
+          ],
+          [
+            "R_ShoulderPad",
+            0.011476106010377407
+          ]
+        ]
+      },
+      {
+        "face": 296,
+        "rest_edge": 0.0883,
+        "rest_aspect": 15.268,
+        "rest_pair": [
+          186,
+          283
+        ],
+        "verts": [
+          283,
+          323,
+          321,
+          186
+        ],
+        "chains": [
+          [
+            "L_Shoulder",
+            3.940410792827606
+          ],
+          [
+            "L_Clavicle",
+            0.029794588685035706
+          ],
+          [
+            "L_ShoulderPad",
+            0.029794588685035706
+          ]
+        ]
+      },
+      {
+        "face": 90,
+        "rest_edge": 0.06142,
+        "rest_aspect": 15.209,
+        "rest_pair": [
+          36,
+          16
+        ],
+        "verts": [
+          36,
+          16,
+          140,
+          145
+        ],
+        "chains": [
+          [
+            "R_Shoulder",
+            4.0
+          ]
+        ]
+      },
+      {
+        "face": 214,
+        "rest_edge": 0.06439,
+        "rest_aspect": 13.057,
+        "rest_pair": [
+          266,
+          264
+        ],
+        "verts": [
+          264,
+          262,
+          255,
+          266
+        ],
+        "chains": [
+          [
+            "L_Twist1",
+            2.7895581126213074
+          ],
+          [
+            "L_Twist2",
+            0.5777808204293251
+          ],
+          [
+            "L_Elbow",
+            0.5133113972842693
+          ],
+          [
+            "L_Shoulder",
+            0.11934965022373945
+          ]
+        ]
+      },
+      {
+        "face": 48,
+        "rest_edge": 0.0631,
+        "rest_aspect": 12.497,
+        "rest_pair": [
+          89,
+          91
+        ],
+        "verts": [
+          89,
+          91,
+          80,
+          87
+        ],
+        "chains": [
+          [
+            "R_Twist1",
+            2.7889508605003357
+          ],
+          [
+            "R_Twist2",
+            0.5838435851037502
+          ],
+          [
+            "R_Elbow",
+            0.5236252062022686
+          ],
+          [
+            "R_Shoulder",
+            0.10358037427067757
+          ]
+        ]
+      },
+      {
+        "face": 821,
+        "rest_edge": 0.04236,
+        "rest_aspect": 8.673,
+        "rest_pair": [
+          748,
+          705
+        ],
+        "verts": [
+          748,
+          705,
+          704,
+          750
+        ],
+        "chains": [
+          [
+            "R_Index0",
+            2.0835533440113068
+          ],
+          [
+            "R_Hand",
+            0.7988685891032219
+          ],
+          [
+            "R_Index",
+            0.37914950400590897
+          ],
+          [
+            "R_Thumb1",
+            0.3022409677505493
+          ],
+          [
+            "R_Thenar",
+            0.12433801591396332
+          ]
+        ]
+      },
+      {
+        "face": 528,
+        "rest_edge": 0.04267,
+        "rest_aspect": 8.667,
+        "rest_pair": [
+          440,
+          483
+        ],
+        "verts": [
+          483,
+          485,
+          439,
+          440
+        ],
+        "chains": [
+          [
+            "L_Index0",
+            2.593472719192505
+          ],
+          [
+            "L_Index",
+            0.5175131559371948
+          ],
+          [
+            "L_Hand",
+            0.3096002731472254
+          ],
+          [
+            "L_Thumb1",
+            0.30802121758461
+          ],
+          [
+            "L_Thenar",
+            0.13573364913463593
+          ]
+        ]
+      },
+      {
+        "face": 350,
+        "rest_edge": 0.04918,
+        "rest_aspect": 8.096,
+        "rest_pair": [
+          353,
+          382
+        ],
+        "verts": [
+          353,
+          382,
+          383,
+          352
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            2.331932157278061
+          ],
+          [
+            "L_Twist1",
+            1.4944468587636948
+          ],
+          [
+            "L_Hand",
+            0.15341351926326752
+          ],
+          [
+            "L_Wrist",
+            0.01986107206903398
+          ],
+          [
+            "L_Elbow",
+            0.00034639585646800697
+          ]
+        ]
+      },
+      {
+        "face": 643,
+        "rest_edge": 0.04824,
+        "rest_aspect": 7.876,
+        "rest_pair": [
+          647,
+          618
+        ],
+        "verts": [
+          618,
+          617,
+          648,
+          647
+        ],
+        "chains": [
+          [
+            "R_Twist2",
+            2.371699333190918
+          ],
+          [
+            "R_Twist1",
+            1.3873573392629623
+          ],
+          [
+            "R_Hand",
+            0.17961445893161
+          ],
+          [
+            "R_Wrist",
+            0.03167621232569218
+          ],
+          [
+            "R_Elbow",
+            0.029652655590325594
+          ]
+        ]
+      },
+      {
+        "face": 649,
+        "rest_edge": 0.04961,
+        "rest_aspect": 7.548,
+        "rest_pair": [
+          634,
+          657
+        ],
+        "verts": [
+          632,
+          634,
+          657,
+          654
+        ],
+        "chains": [
+          [
+            "R_Bracelet",
+            2.0
+          ],
+          [
+            "R_Twist2",
+            1.0823773741722107
+          ],
+          [
+            "R_Twist1",
+            0.9176226854324341
+          ]
+        ]
+      },
+      {
+        "face": 825,
+        "rest_edge": 0.0286,
+        "rest_aspect": 7.399,
+        "rest_pair": [
+          691,
+          698
+        ],
+        "verts": [
+          691,
+          698,
+          693,
+          686
+        ],
+        "chains": [
+          [
+            "R_Index0",
+            2.7423055171966553
+          ],
+          [
+            "R_Thumb1",
+            0.5669456273317337
+          ],
+          [
+            "R_Sleeve",
+            0.2906225696206093
+          ],
+          [
+            "R_Thenar",
+            0.1785489171743393
+          ],
+          [
+            "R_Thumb",
+            0.16691523045301437
+          ]
+        ]
+      },
+      {
+        "face": 532,
+        "rest_edge": 0.0286,
+        "rest_aspect": 7.394,
+        "rest_pair": [
+          433,
+          426
+        ],
+        "verts": [
+          426,
+          421,
+          428,
+          433
+        ],
+        "chains": [
+          [
+            "L_Index0",
+            2.1876720786094666
+          ],
+          [
+            "L_Thumb1",
+            1.1004721820354462
+          ],
+          [
+            "L_Sleeve",
+            0.4751579836010933
+          ],
+          [
+            "L_Thumb2",
+            0.23669778183102608
+          ]
+        ]
+      },
+      {
+        "face": 356,
+        "rest_edge": 0.05033,
+        "rest_aspect": 7.002,
+        "rest_pair": [
+          367,
+          389
+        ],
+        "verts": [
+          367,
+          389,
+          392,
+          369
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            2.6215222477912903
+          ],
+          [
+            "L_Twist1",
+            1.2285053730010986
+          ],
+          [
+            "L_Hand",
+            0.14997246116399765
+          ]
+        ]
+      },
+      {
+        "face": 364,
+        "rest_edge": 0.05053,
+        "rest_aspect": 6.748,
+        "rest_pair": [
+          370,
+          393
+        ],
+        "verts": [
+          370,
+          393,
+          397,
+          380
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            2.6487072110176086
+          ],
+          [
+            "L_Twist1",
+            1.2237540930509567
+          ],
+          [
+            "L_Hand",
+            0.12753869965672493
+          ]
+        ]
+      },
+      {
+        "face": 210,
+        "rest_edge": 0.06773,
+        "rest_aspect": 6.597,
+        "rest_pair": [
+          256,
+          235
+        ],
+        "verts": [
+          235,
+          264,
+          266,
+          256
+        ],
+        "chains": [
+          [
+            "L_Twist1",
+            2.7772619128227234
+          ],
+          [
+            "L_Twist2",
+            0.559700220823288
+          ],
+          [
+            "L_Elbow",
+            0.5306401066482067
+          ],
+          [
+            "L_Shoulder",
+            0.1323976853163913
+          ]
+        ]
+      },
+      {
+        "face": 657,
+        "rest_edge": 0.05045,
+        "rest_aspect": 6.572,
+        "rest_pair": [
+          658,
+          635
+        ],
+        "verts": [
+          635,
+          645,
+          662,
+          658
+        ],
+        "chains": [
+          [
+            "R_Bracelet",
+            2.0
+          ],
+          [
+            "R_Twist2",
+            1.0998914241790771
+          ],
+          [
+            "R_Twist1",
+            0.9001085460186005
+          ]
+        ]
+      },
+      {
+        "face": 46,
+        "rest_edge": 0.03856,
+        "rest_aspect": 6.528,
+        "rest_pair": [
+          87,
+          73
+        ],
+        "verts": [
+          73,
+          88,
+          89,
+          87
+        ],
+        "chains": [
+          [
+            "R_Twist1",
+            2.565958261489868
+          ],
+          [
+            "R_Elbow",
+            1.016815586015582
+          ],
+          [
+            "R_Shoulder",
+            0.30894238874316216
+          ],
+          [
+            "R_Twist2",
+            0.10828376933932304
+          ]
+        ]
+      },
+      {
+        "face": 342,
+        "rest_edge": 0.04461,
+        "rest_aspect": 6.505,
+        "rest_pair": [
+          355,
+          350
+        ],
+        "verts": [
+          356,
+          355,
+          350,
+          351
+        ],
+        "chains": [
+          [
+            "L_Twist2",
+            2.7913929224014282
+          ],
+          [
+            "L_Twist1",
+            0.4194953739643097
+          ],
+          [
+            "L_Hand",
+            0.29075756669044495
+          ],
+          [
+            "L_Thumb1",
+            0.23855499923229218
+          ],
+          [
+            "L_Thumb",
+            0.16717861592769623
+          ]
+        ]
+      },
+      {
+        "face": 635,
+        "rest_edge": 0.04415,
+        "rest_aspect": 6.403,
+        "rest_pair": [
+          615,
+          620
+        ],
+        "verts": [
+          621,
+          616,
+          615,
+          620
+        ],
+        "chains": [
+          [
+            "R_Twist2",
+            2.6205896735191345
+          ],
+          [
+            "R_Thumb1",
+            0.3599960654973984
+          ],
+          [
+            "R_Hand",
+            0.35437601804733276
+          ],
+          [
+            "R_Twist1",
+            0.3357512354850769
+          ],
+          [
+            "R_Thumb",
+            0.20804327726364136
+          ]
+        ]
+      },
+      {
+        "face": 212,
+        "rest_edge": 0.03819,
+        "rest_aspect": 6.373,
+        "rest_pair": [
+          248,
+          262
+        ],
+        "verts": [
+          248,
+          262,
+          264,
+          263
+        ],
+        "chains": [
+          [
+            "L_Twist1",
+            2.607792854309082
+          ],
+          [
+            "L_Elbow",
+            0.9415058046579361
+          ],
+          [
+            "L_Shoulder",
+            0.34874047338962555
+          ],
+          [
+            "L_Twist2",
+            0.10196078568696976
+          ]
+        ]
+      },
+      {
+        "face": 642,
+        "rest_edge": 0.05188,
+        "rest_aspect": 6.248,
+        "rest_pair": [
+          646,
+          615
+        ],
+        "verts": [
+          615,
+          618,
+          647,
+          646
+        ],
+        "chains": [
+          [
+            "R_Twist2",
+            2.4104910790920258
+          ],
+          [
+            "R_Twist1",
+            1.1690571680665016
+          ],
+          [
+            "R_Hand",
+            0.27174136554822326
+          ],
+          [
+            "R_Elbow",
+            0.07608255930244923
+          ],
+          [
+            "R_Palm",
+            0.053231023252010345
+          ]
+        ]
+      },
+      {
+        "face": 44,
+        "rest_edge": 0.06763,
+        "rest_aspect": 6.218,
+        "rest_pair": [
+          60,
+          81
+        ],
+        "verts": [
+          60,
+          81,
+          91,
+          89
+        ],
+        "chains": [
+          [
+            "R_Twist1",
+            2.769059956073761
+          ],
+          [
+            "R_Twist2",
+            0.5676103457808495
+          ],
+          [
+            "R_Elbow",
+            0.5502215698361397
+          ],
+          [
+            "R_Shoulder",
+            0.1131081433268264
+          ]
+        ]
+      },
+      {
+        "face": 550,
+        "rest_edge": 0.02522,
+        "rest_aspect": 6.151,
+        "rest_pair": [
+          438,
+          434
+        ],
+        "verts": [
+          438,
+          434,
+          429,
+          435
+        ],
+        "chains": [
+          [
+            "L_Thumb1",
+            1.3579542636871338
+          ],
+          [
+            "L_Index0",
+            1.0124114453792572
+          ],
+          [
+            "L_Thenar",
+            0.6287968158721924
+          ],
+          [
+            "L_Thumb2",
+            0.5698530524969101
+          ],
+          [
+            "L_Sleeve",
+            0.24821795523166656
+          ]
+        ]
+      }
+    ],
+    "worst_hand_deformed_faces": [
+      {
+        "frame": 24,
+        "face": 456,
+        "deformed_edge": 0.02854,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.057,
+        "deformed_aspect": 153.546,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 38.291,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 28,
+        "face": 456,
+        "deformed_edge": 0.02864,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.06,
+        "deformed_aspect": 115.638,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 28.838,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 27,
+        "face": 456,
+        "deformed_edge": 0.02859,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.059,
+        "deformed_aspect": 72.471,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 18.073,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 27,
+        "face": 616,
+        "deformed_edge": 0.02075,
+        "rest_edge": 0.01534,
+        "edge_ratio": 1.353,
+        "deformed_aspect": 43.069,
+        "rest_aspect": 2.65,
+        "aspect_ratio": 16.253,
+        "edge_pair": [
+          611,
+          614
+        ],
+        "verts": [
+          611,
+          614,
+          613,
+          612
+        ],
+        "chains": [
+          [
+            "L_Ring1",
+            1.9719126224517822
+          ],
+          [
+            "L_Pinky1",
+            1.6072795987129211
+          ],
+          [
+            "L_Pinky2",
+            0.3927204292267561
+          ],
+          [
+            "L_Ring2",
+            0.02808738499879837
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 25,
+        "face": 484,
+        "deformed_edge": 0.04956,
+        "rest_edge": 0.04725,
+        "edge_ratio": 1.049,
+        "deformed_aspect": 41.97,
+        "rest_aspect": 5.692,
+        "aspect_ratio": 7.373,
+        "edge_pair": [
+          504,
+          497
+        ],
+        "verts": [
+          497,
+          499,
+          521,
+          504
+        ],
+        "chains": [
+          [
+            "L_Middle1",
+            1.9040112346410751
+          ],
+          [
+            "L_Middle0",
+            0.9659643359482288
+          ],
+          [
+            "L_Middle",
+            0.4897540807723999
+          ],
+          [
+            "L_Index0",
+            0.40881380438804626
+          ],
+          [
+            "L_Ring1",
+            0.14336399734020233
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 25,
+        "face": 456,
+        "deformed_edge": 0.02851,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.056,
+        "deformed_aspect": 39.343,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 9.811,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 24,
+        "face": 846,
+        "deformed_edge": 0.04331,
+        "rest_edge": 0.04332,
+        "edge_ratio": 1.0,
+        "deformed_aspect": 38.844,
+        "rest_aspect": 4.453,
+        "aspect_ratio": 8.723,
+        "edge_pair": [
+          671,
+          677
+        ],
+        "verts": [
+          671,
+          677,
+          676,
+          674
+        ],
+        "chains": [
+          [
+            "R_Thumb3",
+            1.979835331439972
+          ],
+          [
+            "R_Index1",
+            1.0721973851323128
+          ],
+          [
+            "R_Index0",
+            0.5901031494140625
+          ],
+          [
+            "R_Index",
+            0.31417006999254227
+          ],
+          [
+            "R_Index2",
+            0.0235294122248888
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 30,
+        "face": 456,
+        "deformed_edge": 0.02864,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.061,
+        "deformed_aspect": 37.067,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 9.244,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 28,
+        "face": 471,
+        "deformed_edge": 0.04514,
+        "rest_edge": 0.01141,
+        "edge_ratio": 3.957,
+        "deformed_aspect": 34.403,
+        "rest_aspect": 2.812,
+        "aspect_ratio": 12.236,
+        "edge_pair": [
+          574,
+          577
+        ],
+        "verts": [
+          578,
+          576,
+          574,
+          577
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.8075600266456604
+          ],
+          [
+            "L_Pinky3",
+            1.4666666984558105
+          ],
+          [
+            "L_Pinky2",
+            0.533333346247673
+          ],
+          [
+            "L_Ring3",
+            0.1684785783290863
+          ],
+          [
+            "L_Ring1",
+            0.02396140992641449
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 27,
+        "face": 484,
+        "deformed_edge": 0.04995,
+        "rest_edge": 0.04725,
+        "edge_ratio": 1.057,
+        "deformed_aspect": 28.984,
+        "rest_aspect": 5.692,
+        "aspect_ratio": 5.092,
+        "edge_pair": [
+          504,
+          497
+        ],
+        "verts": [
+          497,
+          499,
+          521,
+          504
+        ],
+        "chains": [
+          [
+            "L_Middle1",
+            1.9040112346410751
+          ],
+          [
+            "L_Middle0",
+            0.9659643359482288
+          ],
+          [
+            "L_Middle",
+            0.4897540807723999
+          ],
+          [
+            "L_Index0",
+            0.40881380438804626
+          ],
+          [
+            "L_Ring1",
+            0.14336399734020233
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 32,
+        "face": 456,
+        "deformed_edge": 0.02866,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.061,
+        "deformed_aspect": 26.822,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 6.689,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 35,
+        "face": 456,
+        "deformed_edge": 0.02866,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.061,
+        "deformed_aspect": 26.479,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 6.603,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 33,
+        "face": 456,
+        "deformed_edge": 0.02866,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.061,
+        "deformed_aspect": 26.478,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 6.603,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 36,
+        "face": 456,
+        "deformed_edge": 0.02866,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.061,
+        "deformed_aspect": 26.478,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 6.603,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 38,
+        "face": 456,
+        "deformed_edge": 0.02866,
+        "rest_edge": 0.02701,
+        "edge_ratio": 1.061,
+        "deformed_aspect": 26.478,
+        "rest_aspect": 4.01,
+        "aspect_ratio": 6.603,
+        "edge_pair": [
+          572,
+          565
+        ],
+        "verts": [
+          565,
+          610,
+          535,
+          572
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.9893791750073433
+          ],
+          [
+            "L_Ring1",
+            1.951879844069481
+          ],
+          [
+            "L_Ring3",
+            0.05874093249440193
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 28,
+        "face": 616,
+        "deformed_edge": 0.01915,
+        "rest_edge": 0.01534,
+        "edge_ratio": 1.248,
+        "deformed_aspect": 26.375,
+        "rest_aspect": 2.65,
+        "aspect_ratio": 9.954,
+        "edge_pair": [
+          611,
+          614
+        ],
+        "verts": [
+          611,
+          614,
+          613,
+          612
+        ],
+        "chains": [
+          [
+            "L_Ring1",
+            1.9719126224517822
+          ],
+          [
+            "L_Pinky1",
+            1.6072795987129211
+          ],
+          [
+            "L_Pinky2",
+            0.3927204292267561
+          ],
+          [
+            "L_Ring2",
+            0.02808738499879837
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 24,
+        "face": 616,
+        "deformed_edge": 0.0224,
+        "rest_edge": 0.01534,
+        "edge_ratio": 1.46,
+        "deformed_aspect": 26.207,
+        "rest_aspect": 2.65,
+        "aspect_ratio": 9.89,
+        "edge_pair": [
+          611,
+          614
+        ],
+        "verts": [
+          611,
+          614,
+          613,
+          612
+        ],
+        "chains": [
+          [
+            "L_Ring1",
+            1.9719126224517822
+          ],
+          [
+            "L_Pinky1",
+            1.6072795987129211
+          ],
+          [
+            "L_Pinky2",
+            0.3927204292267561
+          ],
+          [
+            "L_Ring2",
+            0.02808738499879837
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 24,
+        "face": 484,
+        "deformed_edge": 0.04977,
+        "rest_edge": 0.04725,
+        "edge_ratio": 1.053,
+        "deformed_aspect": 25.467,
+        "rest_aspect": 5.692,
+        "aspect_ratio": 4.474,
+        "edge_pair": [
+          504,
+          497
+        ],
+        "verts": [
+          497,
+          499,
+          521,
+          504
+        ],
+        "chains": [
+          [
+            "L_Middle1",
+            1.9040112346410751
+          ],
+          [
+            "L_Middle0",
+            0.9659643359482288
+          ],
+          [
+            "L_Middle",
+            0.4897540807723999
+          ],
+          [
+            "L_Index0",
+            0.40881380438804626
+          ],
+          [
+            "L_Ring1",
+            0.14336399734020233
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 25,
+        "face": 616,
+        "deformed_edge": 0.02568,
+        "rest_edge": 0.01534,
+        "edge_ratio": 1.674,
+        "deformed_aspect": 24.086,
+        "rest_aspect": 2.65,
+        "aspect_ratio": 9.089,
+        "edge_pair": [
+          611,
+          614
+        ],
+        "verts": [
+          611,
+          614,
+          613,
+          612
+        ],
+        "chains": [
+          [
+            "L_Ring1",
+            1.9719126224517822
+          ],
+          [
+            "L_Pinky1",
+            1.6072795987129211
+          ],
+          [
+            "L_Pinky2",
+            0.3927204292267561
+          ],
+          [
+            "L_Ring2",
+            0.02808738499879837
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 22,
+        "face": 471,
+        "deformed_edge": 0.02367,
+        "rest_edge": 0.01141,
+        "edge_ratio": 2.075,
+        "deformed_aspect": 23.872,
+        "rest_aspect": 2.812,
+        "aspect_ratio": 8.49,
+        "edge_pair": [
+          578,
+          576
+        ],
+        "verts": [
+          578,
+          576,
+          574,
+          577
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.8075600266456604
+          ],
+          [
+            "L_Pinky3",
+            1.4666666984558105
+          ],
+          [
+            "L_Pinky2",
+            0.533333346247673
+          ],
+          [
+            "L_Ring3",
+            0.1684785783290863
+          ],
+          [
+            "L_Ring1",
+            0.02396140992641449
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 28,
+        "face": 819,
+        "deformed_edge": 0.02526,
+        "rest_edge": 0.02203,
+        "edge_ratio": 1.146,
+        "deformed_aspect": 23.669,
+        "rest_aspect": 2.115,
+        "aspect_ratio": 11.19,
+        "edge_pair": [
+          735,
+          715
+        ],
+        "verts": [
+          715,
+          717,
+          731,
+          735
+        ],
+        "chains": [
+          [
+            "R_Index3",
+            1.8539944291114807
+          ],
+          [
+            "R_Middle3",
+            1.0703081786632538
+          ],
+          [
+            "R_Middle2",
+            0.9296918087638915
+          ],
+          [
+            "R_Index2",
+            0.14600558578968048
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 30,
+        "face": 819,
+        "deformed_edge": 0.05723,
+        "rest_edge": 0.02203,
+        "edge_ratio": 2.598,
+        "deformed_aspect": 22.338,
+        "rest_aspect": 2.115,
+        "aspect_ratio": 10.561,
+        "edge_pair": [
+          717,
+          731
+        ],
+        "verts": [
+          715,
+          717,
+          731,
+          735
+        ],
+        "chains": [
+          [
+            "R_Index3",
+            1.8539944291114807
+          ],
+          [
+            "R_Middle3",
+            1.0703081786632538
+          ],
+          [
+            "R_Middle2",
+            0.9296918087638915
+          ],
+          [
+            "R_Index2",
+            0.14600558578968048
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 27,
+        "face": 471,
+        "deformed_edge": 0.05181,
+        "rest_edge": 0.01141,
+        "edge_ratio": 4.542,
+        "deformed_aspect": 19.853,
+        "rest_aspect": 2.812,
+        "aspect_ratio": 7.061,
+        "edge_pair": [
+          574,
+          577
+        ],
+        "verts": [
+          578,
+          576,
+          574,
+          577
+        ],
+        "chains": [
+          [
+            "L_Ring2",
+            1.8075600266456604
+          ],
+          [
+            "L_Pinky3",
+            1.4666666984558105
+          ],
+          [
+            "L_Pinky2",
+            0.533333346247673
+          ],
+          [
+            "L_Ring3",
+            0.1684785783290863
+          ],
+          [
+            "L_Ring1",
+            0.02396140992641449
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      },
+      {
+        "frame": 25,
+        "face": 846,
+        "deformed_edge": 0.04331,
+        "rest_edge": 0.04332,
+        "edge_ratio": 1.0,
+        "deformed_aspect": 19.549,
+        "rest_aspect": 4.453,
+        "aspect_ratio": 4.39,
+        "edge_pair": [
+          671,
+          677
+        ],
+        "verts": [
+          671,
+          677,
+          676,
+          674
+        ],
+        "chains": [
+          [
+            "R_Thumb3",
+            1.979835331439972
+          ],
+          [
+            "R_Index1",
+            1.0721973851323128
+          ],
+          [
+            "R_Index0",
+            0.5901031494140625
+          ],
+          [
+            "R_Index",
+            0.31417006999254227
+          ],
+          [
+            "R_Index2",
+            0.0235294122248888
+          ]
+        ],
+        "warning": true,
+        "hand_warning": true
+      }
+    ]
+  }
+]

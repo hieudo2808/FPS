@@ -39,6 +39,8 @@ namespace FPS
         private const int BUFFER_SIZE = 2048;
         private const int STATE_SEND_EVERY_N_TICKS = 1;
         private const int SERVER_INPUT_BUFFER_TICKS = 3;
+        private const int MAX_INPUT_TICKS_BEHIND = 120;
+        private const int MAX_INPUT_TICKS_AHEAD = 30;
         private NetworkTimer networkTimer;
         private Vector2 cachedMove;
         private bool jumpQueued;
@@ -119,6 +121,9 @@ namespace FPS
 
         private void Update()
         {
+            if (networkTimer == null)
+                return;
+
             if (IsOwner)
                 CaptureFrameInput();
 
@@ -159,6 +164,17 @@ namespace FPS
 
         private void CaptureFrameInput()
         {
+            if (InputManager.GameplayInputBlocked)
+            {
+                cachedMove = Vector2.zero;
+                sprintHeld = false;
+                jumpQueued = false;
+                cachedYaw = mouseMovement != null
+                    ? mouseMovement.YRotation
+                    : transform.eulerAngles.y;
+                return;
+            }
+
             cachedMove = new Vector2(
                 Input.GetAxisRaw("Horizontal"),
                 Input.GetAxisRaw("Vertical")
@@ -172,8 +188,12 @@ namespace FPS
                 ? mouseMovement.YRotation
                 : transform.eulerAngles.y;
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (InputManager.Instance != null
+                ? InputManager.Instance.GetJumpInputDown()
+                : Input.GetKeyDown(KeyCode.Space))
+            {
                 jumpQueued = true;
+            }
         }
 
         private PlayerInputPayload BuildInputForTick(int tick)
@@ -231,9 +251,48 @@ namespace FPS
             if (pendingInputs == null)
                 pendingInputs = new Dictionary<int, PlayerInputPayload>();
 
-            pendingInputs[input.tick] = input;
+            if (!TrySanitizeInput(input, nextServerTick, out PlayerInputPayload sanitized))
+                return;
+
+            if (hasStartedServerTicking && sanitized.tick < nextServerTick)
+                return;
+
+            pendingInputs[sanitized.tick] = sanitized;
 
             CleanupOldInputs();
+        }
+
+        public static bool TrySanitizeInput(PlayerInputPayload input, int nextExpectedTick, out PlayerInputPayload sanitized)
+        {
+            sanitized = input;
+
+            if (!IsFinite(input.move.x) || !IsFinite(input.move.y) || !IsFinite(input.yaw))
+                return false;
+
+            if (input.tick < nextExpectedTick - MAX_INPUT_TICKS_BEHIND)
+                return false;
+
+            if (input.tick > nextExpectedTick + MAX_INPUT_TICKS_AHEAD)
+                return false;
+
+            sanitized.move = Vector2.ClampMagnitude(input.move, 1f);
+            sanitized.yaw = Mathf.Repeat(input.yaw, 360f);
+            return true;
+        }
+
+        public bool SimulateInputForTests(PlayerInputPayload input, float dt, int nextExpectedTick = 0)
+        {
+            if (!TrySanitizeInput(input, nextExpectedTick, out PlayerInputPayload sanitized))
+                return false;
+
+            transform.rotation = Quaternion.Euler(0f, sanitized.yaw, 0f);
+            SimulateTick(sanitized, dt);
+            return true;
+        }
+
+        private static bool IsFinite(float value)
+        {
+            return !float.IsNaN(value) && !float.IsInfinity(value);
         }
 
         // ==========================================
@@ -535,8 +594,7 @@ namespace FPS
             if (controller == null || !controller.enabled)
                 return;
 
-            if (groundCheck != null)
-                isGrounded = Physics.CheckSphere(groundCheck.position, 0.4f, groundMask);
+            isGrounded = CheckGrounded();
 
             if (isGrounded && verticalVelocity < 0f)
                 verticalVelocity = -2f;
@@ -557,6 +615,27 @@ namespace FPS
             totalMove.y = verticalVelocity;
 
             controller.Move(totalMove * dt);
+        }
+
+        private bool CheckGrounded()
+        {
+            if (controller != null && controller.isGrounded)
+            {
+                return true;
+            }
+
+            if (groundCheck == null)
+            {
+                return false;
+            }
+
+            if (groundMask.value != 0
+                && Physics.CheckSphere(groundCheck.position, 0.4f, groundMask, QueryTriggerInteraction.Ignore))
+            {
+                return true;
+            }
+
+            return Physics.CheckSphere(groundCheck.position, 0.4f, ~0, QueryTriggerInteraction.Ignore);
         }
 
         // ==========================================

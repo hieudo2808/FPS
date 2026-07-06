@@ -6,6 +6,7 @@ namespace FPS
     public class InputManager : MonoBehaviour
     {
         public static InputManager Instance { get; private set; }
+        public static bool GameplayInputBlocked { get; set; }
 
         private Dictionary<string, KeyCode> keyBindings;
 
@@ -30,7 +31,10 @@ namespace FPS
                 { "Reload", LoadKey("Reload", KeyCode.R) },
                 { "Aim", LoadKey("Aim", KeyCode.Mouse1) },
                 { "Weapon1", LoadKey("Weapon1", KeyCode.Alpha1) },
-                { "Weapon2", LoadKey("Weapon2", KeyCode.Alpha2) }
+                { "Weapon2", LoadKey("Weapon2", KeyCode.Alpha2) },
+                { "Jump", LoadKey("Jump", KeyCode.Space) },
+                { "Interact", LoadKey("Interact", KeyCode.F) },
+                { "Grenade", LoadKey("Grenade", KeyCode.G) }
             };
         }
 
@@ -46,6 +50,7 @@ namespace FPS
                 return parsedKey;
             }
             return defaultKey;
+        }
 
         public KeyCode GetKeyForAction(string action)
         {
@@ -77,37 +82,62 @@ namespace FPS
 
         public bool GetFireInput()
         {
+            if (GameplayInputBlocked) return false;
             return Input.GetKey(GetKeyForAction("Fire"));
         }
 
         public bool GetFireInputDown()
         {
+            if (GameplayInputBlocked) return false;
             return Input.GetKeyDown(GetKeyForAction("Fire"));
         }
 
         public bool GetReloadInputDown()
         {
+            if (GameplayInputBlocked) return false;
             return Input.GetKeyDown(GetKeyForAction("Reload"));
         }
 
         public bool GetReloadInput()
         {
+            if (GameplayInputBlocked) return false;
             return Input.GetKey(GetKeyForAction("Reload"));
         }
 
         public bool GetAimInput()
         {
+            if (GameplayInputBlocked) return false;
             return Input.GetKey(GetKeyForAction("Aim"));
         }
 
         public bool GetWeapon1InputDown()
         {
+            if (GameplayInputBlocked) return false;
             return Input.GetKeyDown(GetKeyForAction("Weapon1"));
         }
 
         public bool GetWeapon2InputDown()
         {
+            if (GameplayInputBlocked) return false;
             return Input.GetKeyDown(GetKeyForAction("Weapon2"));
+        }
+
+        public bool GetInteractInputDown()
+        {
+            if (GameplayInputBlocked) return false;
+            return Input.GetKeyDown(GetKeyForAction("Interact"));
+        }
+
+        public bool GetJumpInputDown()
+        {
+            if (GameplayInputBlocked) return false;
+            return Input.GetKeyDown(GetKeyForAction("Jump"));
+        }
+
+        public bool GetGrenadeInputDown()
+        {
+            if (GameplayInputBlocked) return false;
+            return Input.GetKeyDown(GetKeyForAction("Grenade"));
         }
     }
 }

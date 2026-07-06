@@ -14,6 +14,7 @@ namespace FPS
 
         public Transform cameraTransform;
         public PlayerHealth cachedHealth;
+        public PlayerCombatTelemetry combatTelemetry;
 
         public List<Vector3> positionHistory = new List<Vector3>();
         public Vector3 mostFrequentPosition;
@@ -27,7 +28,7 @@ namespace FPS
         public float avgReactionTime;
 
         public float currentHealth;
-        public float currentAmmoPercent;
+        public float currentAmmoPercent = 1f;
         public bool isReloading;
         public bool isMoving;
         public Vector3 lookDirection;
@@ -89,6 +90,9 @@ namespace FPS
                 NetworkManager.Singleton.OnClientConnectedCallback -= OnClientChanged;
                 NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientChanged;
             }
+
+            if (Instance == this)
+                Instance = null;
         }
 
         private void OnClientChanged(ulong clientId) => RefreshPlayers();
@@ -152,6 +156,7 @@ namespace FPS
                 profile.cachedHealth = playerObject.GetComponent<PlayerHealth>();
                 profile.playerIndex = index++;
                 profile.cameraTransform = FindCameraTransform(playerObject.gameObject);
+                profile.combatTelemetry = playerObject.GetComponent<PlayerCombatTelemetry>();
 
                 nextProfiles.Add(profile);
             }
@@ -181,7 +186,8 @@ namespace FPS
                     playerTransform = player.transform,
                     playerIndex = index++,
                     cameraTransform = FindCameraTransform(player),
-                    cachedHealth = player.GetComponent<PlayerHealth>()
+                    cachedHealth = player.GetComponent<PlayerHealth>(),
+                    combatTelemetry = player.GetComponent<PlayerCombatTelemetry>()
                 };
 
                 playerProfiles.Add(profile);
@@ -250,17 +256,19 @@ namespace FPS
                 maxDeviation = Mathf.Max(maxDeviation, dist);
             }
 
-            bool wasCamping = profile.isCamping;
-            profile.isCamping = maxDeviation < campingRadius;
+            bool positionStable = maxDeviation < campingRadius;
 
-            if (profile.isCamping)
+            if (positionStable)
             {
                 profile.campingDuration += positionUpdateInterval;
-                profile.mostFrequentPosition = avgPosition;
+                profile.isCamping = profile.campingDuration >= campingTimeThreshold;
+                if (profile.isCamping)
+                    profile.mostFrequentPosition = avgPosition;
             }
             else
             {
                 profile.campingDuration = 0f;
+                profile.isCamping = false;
             }
         }
 
@@ -280,6 +288,8 @@ namespace FPS
 
                 if (profile.cachedHealth != null)
                     profile.currentHealth = profile.cachedHealth.CurrentHealth;
+
+                UpdateCombatTelemetry(profile);
 
                 if (profile.cameraTransform != null)
                 {
@@ -344,10 +354,40 @@ namespace FPS
 
         }
 
+        public void ReportKill(DamageInfo damageInfo, Vector3 zombiePosition)
+        {
+            if (!damageInfo.HasAttacker) return;
+
+            int playerIndex = damageInfo.attackerPlayerIndex;
+            if (playerIndex < 0 && damageInfo.attackerClientId != ulong.MaxValue)
+            {
+                PlayerProfile profile = GetProfileByClientId(damageInfo.attackerClientId);
+                playerIndex = profile != null ? profile.playerIndex : -1;
+            }
+
+            if (playerIndex < 0) return;
+
+            ReportKill(playerIndex, zombiePosition, damageInfo.isHeadshot, damageInfo.reactionTime);
+        }
+
         public PlayerProfile GetProfile(int index)
         {
             if (index >= 0 && index < playerProfiles.Count)
                 return playerProfiles[index];
+            return null;
+        }
+
+        public PlayerProfile GetProfileByClientId(ulong clientId)
+        {
+            if (profilesByClientId.TryGetValue(clientId, out PlayerProfile profile))
+                return profile;
+
+            foreach (var p in playerProfiles)
+            {
+                if (p.clientId == clientId)
+                    return p;
+            }
+
             return null;
         }
 
@@ -383,8 +423,7 @@ namespace FPS
                 if (!IsProfileValid(profile)) continue;
 
                 float threat = profile.totalKills * 0.4f
-                             + profile.headshotRatio * 30f
-                             + (profile.avgReactionTime > 0 ? (1f / profile.avgReactionTime) * 10f : 0f);
+                             + profile.headshotRatio * 30f;
                 if (threat > highestThreat)
                 {
                     highestThreat = threat;
@@ -449,6 +488,26 @@ namespace FPS
             foreach (var p in playerProfiles)
                 if (p.playerTransform == t) return p;
             return null;
+        }
+
+        private void UpdateCombatTelemetry(PlayerProfile profile)
+        {
+            if (profile.combatTelemetry == null)
+            {
+                profile.isReloading = false;
+                profile.currentAmmoPercent = 1f;
+                return;
+            }
+
+            if (!profile.combatTelemetry.IsFresh())
+            {
+                profile.isReloading = false;
+                profile.currentAmmoPercent = 1f;
+                return;
+            }
+
+            profile.isReloading = profile.combatTelemetry.IsReloading;
+            profile.currentAmmoPercent = profile.combatTelemetry.AmmoPercent;
         }
     }
 }

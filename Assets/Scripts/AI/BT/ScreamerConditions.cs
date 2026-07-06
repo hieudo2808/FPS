@@ -1,120 +1,32 @@
-using UnityEngine;
 using UniBT;
 
 namespace FPS.BT
 {
-
-
+    [System.Obsolete("Legacy authoring only. Runtime Screamer behavior is owned by FPS.SI_Screamer.")]
     [System.Serializable]
-    public class IsPlayerInRange : Conditional
+    public class IsHealthLow : Action
     {
-        [SerializeField] private float range = 30f;
-        
-        private Transform player;
-
-        protected override void OnAwake()
-        {
-            player = null;
-        }
-
-        private Transform GetTargetPlayer()
-        {
-            if (PlayerProfiler.Instance != null)
-            {
-                var profile = PlayerProfiler.Instance.GetNearest(gameObject.transform.position);
-                return profile?.playerTransform;
-            }
-            return GameObject.FindGameObjectWithTag("Player")?.transform;
-        }
-
-        protected override bool IsUpdatable()
-        {
-            player = GetTargetPlayer();
-            if (player == null) return false;
-            float dist = Vector3.Distance(gameObject.transform.position, player.position);
-            return dist <= range;
-        }
+        protected override Status OnUpdate() => Status.Failure;
     }
 
+    [System.Obsolete("Legacy authoring only. Runtime Screamer behavior is owned by FPS.SI_Screamer.")]
     [System.Serializable]
-    public class IsAbilityReady : Conditional
+    public class IsPlayerInAttackRange : Action
     {
-        private SI_Screamer screamer;
-
-        protected override void OnAwake()
-        {
-            screamer = gameObject.GetComponent<SI_Screamer>();
-        }
-
-        protected override bool IsUpdatable()
-        {
-            return screamer != null && screamer.IsAbilityReady;
-        }
+        protected override Status OnUpdate() => Status.Failure;
     }
 
+    [System.Obsolete("Legacy authoring only. Runtime Screamer behavior is owned by FPS.SI_Screamer.")]
     [System.Serializable]
-    public class IsNotScreaming : Conditional
+    public class IsAbilityReady : Action
     {
-        private SI_Screamer screamer;
-
-        protected override void OnAwake()
-        {
-            screamer = gameObject.GetComponent<SI_Screamer>();
-        }
-
-        protected override bool IsUpdatable()
-        {
-            return screamer != null && !screamer.IsScreaming;
-        }
+        protected override Status OnUpdate() => Status.Failure;
     }
 
+    [System.Obsolete("Legacy authoring only. Runtime Screamer behavior is owned by FPS.SI_Screamer.")]
     [System.Serializable]
-    public class IsHealthLow : Conditional
+    public class IsPlayerInRange : Action
     {
-        [SerializeField] private float threshold = 0.3f;
-        
-        private EnemyHealth health;
-
-        protected override void OnAwake()
-        {
-            health = gameObject.GetComponent<EnemyHealth>();
-        }
-
-        protected override bool IsUpdatable()
-        {
-            if (health == null) return false;
-            return health.CurrentHealth / health.MaxHealth < threshold;
-        }
-    }
-
-    [System.Serializable]
-    public class IsPlayerInAttackRange : Conditional
-    {
-        [SerializeField] private float attackRange = 2f;
-        
-        private Transform player;
-
-        protected override void OnAwake()
-        {
-            player = null;
-        }
-
-        private Transform GetTargetPlayer()
-        {
-            if (PlayerProfiler.Instance != null)
-            {
-                var profile = PlayerProfiler.Instance.GetNearest(gameObject.transform.position);
-                return profile?.playerTransform;
-            }
-            return GameObject.FindGameObjectWithTag("Player")?.transform;
-        }
-
-        protected override bool IsUpdatable()
-        {
-            player = GetTargetPlayer();
-            if (player == null) return false;
-            float dist = Vector3.Distance(gameObject.transform.position, player.position);
-            return dist <= attackRange;
-        }
+        protected override Status OnUpdate() => Status.Failure;
     }
 }

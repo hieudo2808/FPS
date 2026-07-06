@@ -81,9 +81,11 @@ namespace FPS.Tests
                 // CASE 3: Kiểm tra tính bảo mật: không được tồn tại các hàm RPC mạng cho phép client gọi Heal/Reset
                 var healRpc = typeof(PlayerHealth).GetMethod("HealServerRpc", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 var resetHealthRpc = typeof(PlayerHealth).GetMethod("ResetHealthServerRpc", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                var damageRpc = typeof(PlayerHealth).GetMethod("TakeDamageServerRpc", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 
                 Assert.Null(healRpc, "Hàm HealServerRpc phải bị xóa bỏ để chống hack");
                 Assert.Null(resetHealthRpc, "Hàm ResetHealthServerRpc phải bị xóa bỏ để chống hack");
+                Assert.Null(damageRpc, "PlayerHealth must not expose a client-callable damage RPC accepting arbitrary damage.");
             }
             finally
             {
@@ -91,6 +93,29 @@ namespace FPS.Tests
                 Object.DestroyImmediate(nmGo);
                 Object.DestroyImmediate(playerGo);
             }
+        }
+
+        [Test]
+        public void PlayerHealth_ClientTakeDamage_DoesNotMutateHealth()
+        {
+            var playerGo = new GameObject("Player");
+            playerGo.AddComponent<NetworkObject>();
+            var health = playerGo.AddComponent<PlayerHealth>();
+
+            var networkHealthField = typeof(PlayerHealth).GetField("networkHealth", BindingFlags.Instance | BindingFlags.NonPublic);
+            var networkIsDeadField = typeof(PlayerHealth).GetField("networkIsDead", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.NotNull(networkHealthField);
+            Assert.NotNull(networkIsDeadField);
+
+            var nbIsServerProp = typeof(NetworkBehaviour).GetProperty("IsServer", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            Assert.NotNull(nbIsServerProp);
+            nbIsServerProp.SetValue(health, false);
+
+            float healthBeforeDamage = health.CurrentHealth;
+            health.TakeDamage(40f);
+
+            Assert.AreEqual(healthBeforeDamage, health.CurrentHealth, "Client-side TakeDamage must not mutate authoritative health.");
+            Object.DestroyImmediate(playerGo);
         }
     }
 }

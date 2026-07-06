@@ -5,6 +5,8 @@ namespace FPS
 {
     public class ZombieFactory : SceneSingleton<ZombieFactory>
     {
+        public event System.Action<GameObject> OnZombieSpawned;
+
         [Header("Pooling")]
         [SerializeField] private bool usePooling = true;
 
@@ -58,6 +60,7 @@ namespace FPS
             }
 
             ApplyStats(zombie, data, finalHpMod, finalSpeedMod, finalDamageMod);
+            OnZombieSpawned?.Invoke(zombie);
 
             if (showDebugLogs)
             {
@@ -72,38 +75,80 @@ namespace FPS
 
         public GameObject SpawnZombieAtRandomPoint(float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
         {
-            Vector3 pos = ZombieRegistry.Instance.GetSpawnPosition();
-            return SpawnZombie(pos, Quaternion.identity, hpMod, speedMod, damageMod);
+            if (TryGetFairRegistrySpawnPosition(out Vector3 pos))
+                return SpawnZombie(pos, Quaternion.identity, hpMod, speedMod, damageMod);
+
+            return null;
         }
 
         public GameObject SpawnZombieAtSmartPosition(float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
         {
-            Vector3 pos = Vector3.zero;
-
             if (InfluenceMapManager.Instance != null)
             {
-                pos = InfluenceMapManager.Instance.GetBestSpawnPosition();
-                if (pos == Vector3.zero)
-                    pos = ZombieRegistry.Instance.GetSpawnPosition();
-            }
-            else
-            {
-                pos = ZombieRegistry.Instance.GetSpawnPosition();
+                if (InfluenceMapManager.Instance.TryGetBestSpawnPosition(out Vector3 smartPos))
+                    return SpawnZombie(smartPos, Quaternion.identity, hpMod, speedMod, damageMod);
             }
 
-            return SpawnZombie(pos, Quaternion.identity, hpMod, speedMod, damageMod);
+            if (ZombieRegistry.Instance != null)
+            {
+                if (TryGetFairRegistrySpawnPosition(out Vector3 registryPos))
+                    return SpawnZombie(registryPos, Quaternion.identity, hpMod, speedMod, damageMod);
+            }
+
+            return null;
         }
 
-        public GameObject SpawnZombieBehindPlayer(int playerIndex, float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
+        public GameObject SpawnZombieAtFairPressurePosition(float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
         {
-            Vector3 pos;
+            return SpawnZombieAtSmartPosition(hpMod, speedMod, damageMod);
+        }
 
-            if (InfluenceMapManager.Instance != null)
-                pos = InfluenceMapManager.Instance.GetSpawnPositionNearPlayer(playerIndex, behindOnly: true);
-            else
-                pos = ZombieRegistry.Instance.GetSpawnPosition();
+        public GameObject SpawnZombieAtFairPressurePosition(Vector3 preferredPosition, Quaternion rotation,
+            float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
+        {
+            if (IsFairPosition(preferredPosition))
+                return SpawnZombie(preferredPosition, rotation, hpMod, speedMod, damageMod);
 
-            return SpawnZombie(pos, Quaternion.identity, hpMod, speedMod, damageMod);
+            return SpawnZombieAtSmartPosition(hpMod, speedMod, damageMod);
+        }
+
+        public GameObject SpawnZombieAtFairPressurePosition(int playerIndex, float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
+        {
+            if (InfluenceMapManager.Instance != null &&
+                InfluenceMapManager.Instance.TryGetFairPressurePositionNearPlayer(playerIndex, out Vector3 pos))
+            {
+                return SpawnZombie(pos, Quaternion.identity, hpMod, speedMod, damageMod);
+            }
+
+            return SpawnZombieAtSmartPosition(hpMod, speedMod, damageMod);
+        }
+
+        private bool TryGetFairRegistrySpawnPosition(out Vector3 position)
+        {
+            position = Vector3.zero;
+            if (ZombieRegistry.Instance == null) return false;
+
+            System.Func<Vector3, bool> validator = null;
+            if (PlayerProfiler.Instance != null && PlayerProfiler.Instance.PlayerCount > 0)
+            {
+                if (InfluenceMapManager.Instance == null)
+                    return false;
+
+                validator = InfluenceMapManager.Instance.IsFairSpawnPoint;
+            }
+
+            return ZombieRegistry.Instance.TryGetSpawnPosition(out position, validator);
+        }
+
+        private bool IsFairPosition(Vector3 position)
+        {
+            if (position == Vector3.zero)
+                return PlayerProfiler.Instance == null || PlayerProfiler.Instance.PlayerCount == 0;
+
+            if (PlayerProfiler.Instance == null || PlayerProfiler.Instance.PlayerCount == 0)
+                return true;
+
+            return InfluenceMapManager.Instance != null && InfluenceMapManager.Instance.IsFairSpawnPoint(position);
         }
 
         private GameObject SpawnDirect(GameObject prefab, Vector3 position, Quaternion rotation)

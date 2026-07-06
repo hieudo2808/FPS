@@ -87,6 +87,24 @@ namespace FPS
             return spawnPoint.position + offset;
         }
 
+        public bool TryGetSpawnPosition(out Vector3 position, System.Func<Vector3, bool> validator = null, int maxAttempts = 16)
+        {
+            position = Vector3.zero;
+            if (spawnPoints.Count == 0) return false;
+
+            for (int i = 0; i < maxAttempts; i++)
+            {
+                Vector3 candidate = GetSpawnPosition();
+                if (validator == null || validator(candidate))
+                {
+                    position = candidate;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public int ZombieTypeCount => zombieTypes.Count;
         public int SpawnPointCount => spawnPoints.Count;
         

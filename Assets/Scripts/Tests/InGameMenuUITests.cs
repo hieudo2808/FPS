@@ -9,8 +9,7 @@ namespace FPS.Tests
         [Test]
         public void InGameMenuUI_ExistsInNamespace()
         {
-            var type = System.Type.GetType("FPS.InGameMenuUI, Assembly-CSharp");
-            Assert.IsNotNull(type, "InGameMenuUI script should exist in FPS namespace.");
+            Assert.AreEqual("FPS", typeof(InGameMenuUI).Namespace);
         }
     }
 }

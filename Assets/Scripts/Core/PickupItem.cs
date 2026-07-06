@@ -21,11 +21,36 @@ namespace FPS
 
         public string GetInteractText()
         {
+            string interactKey = FormatKeyName(InputManager.Instance != null
+                ? InputManager.Instance.GetKeyForAction("Interact")
+                : KeyCode.F);
+
             return pickupType switch
             {
-                PickupType.Ammo   => $"[F] Pick up {displayName} (+{ammoAmount} ammo)",
-                PickupType.Health => $"[F] Pick up {displayName} (+{healthAmount} HP)",
-                _                 => $"[F] Pick up {displayName}"
+                PickupType.Ammo   => $"[{interactKey}] Pick up {displayName} (+{ammoAmount} ammo)",
+                PickupType.Health => $"[{interactKey}] Pick up {displayName} (+{healthAmount} HP)",
+                _                 => $"[{interactKey}] Pick up {displayName}"
+            };
+        }
+
+        private static string FormatKeyName(KeyCode key)
+        {
+            return key switch
+            {
+                KeyCode.Mouse0 => "Left Mouse",
+                KeyCode.Mouse1 => "Right Mouse",
+                KeyCode.Mouse2 => "Middle Mouse",
+                KeyCode.Alpha0 => "0",
+                KeyCode.Alpha1 => "1",
+                KeyCode.Alpha2 => "2",
+                KeyCode.Alpha3 => "3",
+                KeyCode.Alpha4 => "4",
+                KeyCode.Alpha5 => "5",
+                KeyCode.Alpha6 => "6",
+                KeyCode.Alpha7 => "7",
+                KeyCode.Alpha8 => "8",
+                KeyCode.Alpha9 => "9",
+                _ => key.ToString().Replace("Keypad", "Numpad ")
             };
         }
 
@@ -34,9 +59,9 @@ namespace FPS
             if (!IsServer) return;
             if (!canInteract) return;
 
-            canInteract = false;
-
             if (interactorObject == null) return;
+
+            canInteract = false;
 
             switch (pickupType)
             {
@@ -69,6 +94,8 @@ namespace FPS
             Weapon weapon = weaponManager.CurrentWeapon?.GetComponent<Weapon>();
             if (weapon != null)
             {
+                weaponManager.GetComponent<WeaponFireHandler>()?.AddReserveAmmoServer(ammoAmount);
+
                 AddAmmoClientRpc(ammoAmount, new ClientRpcParams
                 {
                     Send = new ClientRpcSendParams
@@ -91,7 +118,7 @@ namespace FPS
         {
             if (WeaponManager.LocalInstance == null) return;
 
-            WeaponManager.LocalInstance.AddAmmoToCurrentWeapon(amount);
+            WeaponManager.LocalInstance.AddAmmoToCurrentWeaponLocalOnly(amount);
 
             if (HUDManager.HasInstance)
                 HUDManager.Instance.UpdateAmmoInfo();

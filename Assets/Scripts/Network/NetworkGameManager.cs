@@ -293,7 +293,12 @@ namespace FPS
             // Spawn player cho tất cả connected clients
             foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
-                var playerObj = Instantiate(playerPrefabCache);
+                Vector3 spawnPosition = Vector3.zero;
+                Quaternion spawnRotation = Quaternion.identity;
+                if (NetworkSpawnManager.Instance != null)
+                    NetworkSpawnManager.Instance.TryGetNextSpawnPose(out spawnPosition, out spawnRotation);
+
+                var playerObj = Instantiate(playerPrefabCache, spawnPosition, spawnRotation);
                 var netObj = playerObj.GetComponent<NetworkObject>();
                 netObj.SpawnAsPlayerObject(clientId, true);
             }

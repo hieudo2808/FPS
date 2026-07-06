@@ -51,6 +51,8 @@ namespace FPS
             if (playerNameInput != null)
             {
                 playerNameInput.text = PlayerPrefs.GetString("PlayerName", "Player" + Random.Range(1000, 9999));
+                playerNameInput.onEndEdit.AddListener(_ => PersistPlayerName(showStatus: false));
+                playerNameInput.onValueChanged.AddListener(_ => PersistPlayerName(showStatus: false));
             }
 
             // Đăng ký callback MỘT LẦN DUY NHẤT
@@ -123,17 +125,38 @@ namespace FPS
 
         private void SavePlayerName()
         {
+            PersistPlayerName(showStatus: true);
+        }
+
+        private string PersistPlayerName(bool showStatus)
+        {
             if (playerNameInput != null && !string.IsNullOrEmpty(playerNameInput.text))
             {
-                string newName = playerNameInput.text;
+                string newName = SanitizePlayerName(playerNameInput.text);
+                playerNameInput.SetTextWithoutNotify(newName);
                 PlayerPrefs.SetString("PlayerName", newName);
                 PlayerPrefs.Save();
-                UpdateStatus($"Name saved as {newName}");
+                if (showStatus)
+                {
+                    UpdateStatus($"Name saved as {newName}");
+                }
+
+                return newName;
             }
+
+            return PlayerPrefs.GetString("PlayerName", "Player" + Random.Range(1000, 9999));
+        }
+
+        private static string SanitizePlayerName(string rawName)
+        {
+            string name = string.IsNullOrWhiteSpace(rawName) ? "Player" : rawName.Trim();
+            return name.Length > 24 ? name.Substring(0, 24) : name;
         }
 
         private void OnHostClicked()
         {
+            PersistPlayerName(showStatus: false);
+
             if (NetworkGameManager.Instance == null)
             {
                 UpdateStatus("Error: NetworkGameManager not found!");
@@ -147,6 +170,8 @@ namespace FPS
 
         private void OnJoinClicked()
         {
+            PersistPlayerName(showStatus: false);
+
             if (NetworkGameManager.Instance == null)
             {
                 UpdateStatus("Error: NetworkGameManager not found!");
@@ -180,4 +205,3 @@ namespace FPS
         }
     }
 }
-

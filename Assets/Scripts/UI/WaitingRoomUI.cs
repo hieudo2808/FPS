@@ -1,13 +1,9 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 namespace FPS
 {
-    /// <summary>
-    /// UI cho Waiting Room (LobbyScene).
-    /// Gắn vào Canvas trong LobbyScene.
-    /// </summary>
     public class WaitingRoomUI : MonoBehaviour
     {
         [Header("Join Code")]
@@ -35,7 +31,6 @@ namespace FPS
 
         private void Start()
         {
-            // Button listeners
             if (copyCodeButton != null)
                 copyCodeButton.onClick.AddListener(CopyJoinCode);
 
@@ -48,19 +43,17 @@ namespace FPS
             if (leaveButton != null)
                 leaveButton.onClick.AddListener(OnLeaveClicked);
 
-            // Join Code
             if (joinCodeText != null && NetworkGameManager.HasInstance)
                 joinCodeText.text = NetworkGameManager.Instance.CurrentJoinCode;
 
-            // Start button chỉ Host thấy
-            if (startGameButton != null)
-                startGameButton.gameObject.SetActive(NetworkGameManager.Instance != null && NetworkGameManager.Instance.IsHosting);
+            bool isHost = NetworkGameManager.Instance != null && NetworkGameManager.Instance.IsHosting;
 
-            // Difficulty Dropdown
+            if (startGameButton != null)
+                startGameButton.gameObject.SetActive(isHost);
+
             if (difficultyDropdown != null)
             {
-                // Chỉ Host mới được phép đổi độ khó
-                bool isHost = NetworkGameManager.Instance != null && NetworkGameManager.Instance.IsHosting;
+                DropdownTemplateUtility.Normalize(difficultyDropdown);
                 difficultyDropdown.interactable = isHost;
 
                 if (isHost)
@@ -74,17 +67,8 @@ namespace FPS
             UpdateStatus("Waiting for players...");
         }
 
-        private void OnDifficultyDropdownChanged(int value)
-        {
-            if (WaitingRoomManager.Instance != null)
-            {
-                WaitingRoomManager.Instance.SetDifficultyServerRpc((DifficultyLevel)value);
-            }
-        }
-
         private void OnEnable()
         {
-            // Đợi WaitingRoomManager spawn (có thể chậm hơn UI)
             InvokeRepeating(nameof(TrySubscribe), 0.1f, 0.5f);
         }
 
@@ -98,7 +82,6 @@ namespace FPS
         {
             if (WaitingRoomManager.Instance == null) return;
 
-            // Unsubscribe trước để tránh duplicate
             Unsubscribe();
 
             WaitingRoomManager.Instance.OnPlayerListChanged += RefreshPlayerList;
@@ -106,8 +89,6 @@ namespace FPS
             WaitingRoomManager.Instance.LobbyDifficulty.OnValueChanged += HandleDifficultyChanged;
 
             CancelInvoke(nameof(TrySubscribe));
-
-            // Refresh ngay lần đầu
             RefreshPlayerList();
         }
 
@@ -121,15 +102,18 @@ namespace FPS
             }
         }
 
-        // ==========================================
-        // PLAYER LIST
-        // ==========================================
+        private void OnDifficultyDropdownChanged(int value)
+        {
+            if (WaitingRoomManager.Instance != null)
+            {
+                WaitingRoomManager.Instance.SetDifficultyServerRpc((DifficultyLevel)value);
+            }
+        }
 
         private void RefreshPlayerList()
         {
             if (WaitingRoomManager.Instance == null) return;
 
-            // Xóa entries cũ
             if (playerListContainer != null)
             {
                 for (int i = playerListContainer.childCount - 1; i >= 0; i--)
@@ -142,42 +126,54 @@ namespace FPS
             for (int i = 0; i < count; i++)
             {
                 var data = players[i];
-
-                if (playerEntryPrefab != null && playerListContainer != null)
-                {
-                    GameObject entry = Instantiate(playerEntryPrefab, playerListContainer);
-                    var nameText = entry.GetComponentInChildren<TextMeshProUGUI>();
-                    if (nameText != null)
-                    {
-                        string readyMark = data.isReady ? " ✓" : "";
-                        string hostMark = (i == 0) ? " [HOST]" : "";
-                        nameText.text = $"{data.playerName}{hostMark}{readyMark}";
-                        nameText.color = data.isReady ? Color.green : Color.white;
-                    }
-                }
+                CreatePlayerEntry(data.playerName.ToString(), i == 0, data.isReady);
             }
 
-            // Player count
+            for (int i = count; i < 4; i++)
+            {
+                CreateEmptyEntry(i + 1);
+            }
+
             if (playerCountText != null)
                 playerCountText.text = $"{count}/4 Players";
 
-            // Update join code (có thể chưa set lúc Start)
             if (joinCodeText != null && NetworkGameManager.HasInstance)
                 joinCodeText.text = NetworkGameManager.Instance.CurrentJoinCode;
+        }
+
+        private void CreatePlayerEntry(string playerName, bool isHost, bool ready)
+        {
+            if (playerEntryPrefab == null || playerListContainer == null) return;
+
+            GameObject entry = Instantiate(playerEntryPrefab, playerListContainer);
+            TextMeshProUGUI nameText = entry.GetComponentInChildren<TextMeshProUGUI>();
+            if (nameText == null) return;
+
+            string hostMark = isHost ? " [HOST]" : "";
+            string readyMark = ready ? " [READY]" : " [NOT READY]";
+            nameText.text = $"{playerName}{hostMark}{readyMark}";
+            nameText.color = ready ? new Color(0.54f, 1.0f, 0.72f, 1.0f) : Color.white;
+        }
+
+        private void CreateEmptyEntry(int slotNumber)
+        {
+            if (playerEntryPrefab == null || playerListContainer == null) return;
+
+            GameObject entry = Instantiate(playerEntryPrefab, playerListContainer);
+            TextMeshProUGUI nameText = entry.GetComponentInChildren<TextMeshProUGUI>();
+            if (nameText == null) return;
+
+            nameText.text = $"EMPTY SLOT {slotNumber}";
+            nameText.color = new Color(0.48f, 0.56f, 0.62f, 1.0f);
         }
 
         private void HandleDifficultyChanged(DifficultyLevel previousValue, DifficultyLevel newValue)
         {
             if (difficultyDropdown != null)
             {
-                // Cập nhật UI Dropdown cho tất cả mọi người khi có thay đổi từ Host
                 difficultyDropdown.SetValueWithoutNotify((int)newValue);
             }
         }
-
-        // ==========================================
-        // ACTIONS
-        // ==========================================
 
         private void OnReadyClicked()
         {
@@ -212,10 +208,6 @@ namespace FPS
                 UpdateStatus("Join code copied!");
             }
         }
-
-        // ==========================================
-        // UI HELPERS
-        // ==========================================
 
         private void UpdateReadyButtonText()
         {

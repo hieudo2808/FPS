@@ -5,6 +5,8 @@ namespace FPS
 {
     public class MouseMovement : NetworkBehaviour
     {
+        private const string MouseSensitivityKey = "MouseSensitivity";
+
         [Header("Sensitivity")]
         [SerializeField] private float mouseSensitivity = 100f;
         [SerializeField] private float minSensitivity = 10f;
@@ -20,6 +22,7 @@ namespace FPS
 
         private float xRotation = 0f;
         private float yRotation = 0f;
+        private bool subscribedToSettings;
 
         public static MouseMovement LocalInstance { get; private set; }
 
@@ -36,9 +39,15 @@ namespace FPS
             {
                 LocalInstance = this;
 
-                if (PlayerPrefs.HasKey("MouseSensitivity"))
+                if (SettingsManager.Instance != null)
                 {
-                    mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity");
+                    ApplySettingsSensitivity(SettingsManager.Instance.MouseSensitivity);
+                    SettingsManager.Instance.OnSensitivityChanged += ApplySettingsSensitivity;
+                    subscribedToSettings = true;
+                }
+                else if (PlayerPrefs.HasKey(MouseSensitivityKey))
+                {
+                    ApplySettingsSensitivity(PlayerPrefs.GetFloat(MouseSensitivityKey));
                 }
 
                 // Enable camera only for local player
@@ -76,6 +85,12 @@ namespace FPS
         {
             if (IsOwner && LocalInstance == this)
             {
+                if (subscribedToSettings && SettingsManager.Instance != null)
+                {
+                    SettingsManager.Instance.OnSensitivityChanged -= ApplySettingsSensitivity;
+                    subscribedToSettings = false;
+                }
+
                 LocalInstance = null;
             }
         }
@@ -83,6 +98,13 @@ namespace FPS
         private void Update()
         {
             if (!IsOwner) return;
+
+            if (InputManager.GameplayInputBlocked)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                return;
+            }
 
             if (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
             {
@@ -118,8 +140,13 @@ namespace FPS
         public void SetSensitivity(float newSensitivity)
         {
             mouseSensitivity = Mathf.Clamp(newSensitivity, minSensitivity, maxSensitivity);
-            PlayerPrefs.SetFloat("MouseSensitivity", mouseSensitivity);
+            PlayerPrefs.SetFloat(MouseSensitivityKey, mouseSensitivity);
             PlayerPrefs.Save();
+        }
+
+        private void ApplySettingsSensitivity(float newSensitivity)
+        {
+            mouseSensitivity = Mathf.Max(0.01f, newSensitivity);
         }
 
         public void SetSensitivityNormalized(float normalized01)

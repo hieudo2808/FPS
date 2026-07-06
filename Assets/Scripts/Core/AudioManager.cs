@@ -17,6 +17,9 @@ namespace FPS
         private const float DEFAULT_VOLUME = 0.5f;
         private const float VOLUME_ADJUST_DELAY = 0.1f;
         private float lastVolumeAdjustTime = 0f;
+        private float masterVolume = DEFAULT_VOLUME;
+        private float musicVolume = DEFAULT_VOLUME;
+        private float sfxVolume = DEFAULT_VOLUME;
 
         private void Start()
         {
@@ -28,15 +31,9 @@ namespace FPS
                 Debug.LogWarning("[AudioManager] SFX AudioSource was not assigned — auto-created one.");
             }
 
-            if (audioMixer != null)
-            {
-                float sfxVolume = PlayerPrefs.GetFloat(SFX_VOLUME_PARAM, DEFAULT_VOLUME);
-                SetSFXVolume(sfxVolume);
-            }
-            else
-            {
-                Debug.LogWarning("[AudioManager] AudioMixer is not assigned. Volume controls will be disabled.");
-            }
+            SetMasterVolume(PlayerPrefs.GetFloat(MASTER_VOLUME_PARAM, DEFAULT_VOLUME));
+            SetMusicVolume(PlayerPrefs.GetFloat(MUSIC_VOLUME_PARAM, DEFAULT_VOLUME));
+            SetSFXVolume(PlayerPrefs.GetFloat(SFX_VOLUME_PARAM, DEFAULT_VOLUME));
         }
 
         public void PlaySFXSound(AudioClip clip, float volume = 1f)
@@ -47,46 +44,53 @@ namespace FPS
                 return;
             }
 
-            sfxSource.PlayOneShot(clip, volume);
+            sfxSource.PlayOneShot(clip, Mathf.Clamp01(volume) * sfxVolume);
         }
 
         private bool ValidateAudioMixer()
         {
-            if (audioMixer == null)
-            {
-                Debug.LogError("AudioMixer is not assigned in AudioManager!");
-                return false;
-            }
-            return true;
+            return audioMixer != null;
         }
 
         public void SetSFXVolume(float volume)
         {
-            if (!ValidateAudioMixer()) return;
-
             volume = Mathf.Clamp01(volume);
+            sfxVolume = volume;
+            if (sfxSource != null)
+            {
+                sfxSource.volume = 1f;
+            }
+
             float dB = ConvertVolumeToDecibels(volume);
-            audioMixer.SetFloat(SFX_VOLUME_PARAM, dB);
+            if (ValidateAudioMixer())
+            {
+                audioMixer.SetFloat(SFX_VOLUME_PARAM, dB);
+            }
             PlayerPrefs.SetFloat(SFX_VOLUME_PARAM, volume);
         }
 
         public void SetMusicVolume(float volume)
         {
-            if (!ValidateAudioMixer()) return;
-
             volume = Mathf.Clamp01(volume);
+            musicVolume = volume;
             float dB = ConvertVolumeToDecibels(volume);
-            audioMixer.SetFloat(MUSIC_VOLUME_PARAM, dB);
+            if (ValidateAudioMixer())
+            {
+                audioMixer.SetFloat(MUSIC_VOLUME_PARAM, dB);
+            }
             PlayerPrefs.SetFloat(MUSIC_VOLUME_PARAM, volume);
         }
 
         public void SetMasterVolume(float volume)
         {
-            if (!ValidateAudioMixer()) return;
-
             volume = Mathf.Clamp01(volume);
+            masterVolume = volume;
+            AudioListener.volume = volume;
             float dB = ConvertVolumeToDecibels(volume);
-            audioMixer.SetFloat(MASTER_VOLUME_PARAM, dB);
+            if (ValidateAudioMixer())
+            {
+                audioMixer.SetFloat(MASTER_VOLUME_PARAM, dB);
+            }
             PlayerPrefs.SetFloat(MASTER_VOLUME_PARAM, volume);
         }
 
@@ -102,26 +106,17 @@ namespace FPS
 
         public float GetSFXVolume()
         {
-            if (!ValidateAudioMixer()) return DEFAULT_VOLUME;
-
-            audioMixer.GetFloat(SFX_VOLUME_PARAM, out float dB);
-            return ConvertDecibelsToVolume(dB);
+            return PlayerPrefs.GetFloat(SFX_VOLUME_PARAM, sfxVolume);
         }
 
         public float GetMusicVolume()
         {
-            if (!ValidateAudioMixer()) return DEFAULT_VOLUME;
-
-            audioMixer.GetFloat(MUSIC_VOLUME_PARAM, out float dB);
-            return ConvertDecibelsToVolume(dB);
+            return PlayerPrefs.GetFloat(MUSIC_VOLUME_PARAM, musicVolume);
         }
 
         public float GetMasterVolume()
         {
-            if (!ValidateAudioMixer()) return DEFAULT_VOLUME;
-
-            audioMixer.GetFloat(MASTER_VOLUME_PARAM, out float dB);
-            return ConvertDecibelsToVolume(dB);
+            return PlayerPrefs.GetFloat(MASTER_VOLUME_PARAM, masterVolume);
         }
 
         private void AdjustVolume(System.Action<float> setVolumeAction, System.Func<float> getVolumeFunc, float adjustment)

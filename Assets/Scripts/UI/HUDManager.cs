@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,137 +7,385 @@ namespace FPS
 {
     public class HUDManager : SceneSingleton<HUDManager>
     {
-        [Header("In-Game Menu")]
+        [Header("Legacy Disconnect")]
         [SerializeField] private Button disconnectButton;
+
+        [Header("Health")]
+        [SerializeField] private TextMeshProUGUI healthText;
+        [SerializeField] private TextMeshProUGUI healthStateText;
+        [SerializeField] private Image healthFill;
+        [SerializeField] private Image healthDangerBackground;
+
         [Header("Ammo")]
         [SerializeField] private TextMeshProUGUI currentAmmo;
         [SerializeField] private TextMeshProUGUI reservedAmmo;
+        [SerializeField] private TextMeshProUGUI ammoStatusText;
         [SerializeField] private Image ammoTypeUI;
 
         [Header("Weapon")]
         [SerializeField] private Image weaponIcon;
         [SerializeField] private Image unusedWeaponIcon;
+        [SerializeField] private TextMeshProUGUI weaponNameText;
+        [SerializeField] private TextMeshProUGUI unusedWeaponNameText;
 
         [Header("Throwables")]
+        [SerializeField] private TextMeshProUGUI grenadeKeyText;
         [SerializeField] private TextMeshProUGUI grenadeCount;
-        
-        [Header("Kill Counter")]
-        [SerializeField] private TextMeshProUGUI killCountText;
 
-        [Header("Network Info")]
+        [Header("Combat Info")]
+        [SerializeField] private TextMeshProUGUI killCountText;
+        [SerializeField] private TextMeshProUGUI zombieCountText;
+        [SerializeField] private TextMeshProUGUI phaseText;
+        [SerializeField] private TextMeshProUGUI difficultyText;
         [SerializeField] private TextMeshProUGUI playerCountText;
 
-        private WeaponManager weaponManager;
-        private Weapon currentWeapon, unusedWeapon;
+        [Header("Prompts")]
+        [SerializeField] private TextMeshProUGUI interactionPromptText;
+        [SerializeField] private GameObject waveAnnouncementPanel;
+        [SerializeField] private TextMeshProUGUI waveAnnouncementText;
 
-        void Start()
+        private static readonly Color TextColor = new Color(0.92f, 0.96f, 0.97f, 1f);
+        private static readonly Color MutedColor = new Color(0.55f, 0.65f, 0.70f, 1f);
+        private static readonly Color AccentColor = new Color(0.12f, 0.82f, 0.75f, 1f);
+        private static readonly Color WarningColor = new Color(0.94f, 0.68f, 0.23f, 1f);
+        private static readonly Color CriticalColor = new Color(0.95f, 0.24f, 0.24f, 1f);
+
+        private WeaponManager weaponManager;
+        private Weapon currentWeapon;
+        private Weapon unusedWeapon;
+        private PlayerHealth playerHealth;
+
+        private void Start()
         {
-            // Try to get local player's WeaponManager
             weaponManager = WeaponManager.LocalInstance;
             if (weaponManager != null)
+            {
                 UpdateWeaponUI();
+            }
 
-            // Disconnect button
             if (disconnectButton != null)
+            {
                 disconnectButton.onClick.AddListener(OnDisconnectClicked);
+            }
+
+            if (interactionPromptText != null)
+            {
+                interactionPromptText.gameObject.SetActive(false);
+            }
+
+            if (waveAnnouncementPanel != null)
+            {
+                waveAnnouncementPanel.SetActive(false);
+            }
+
+            if (waveAnnouncementText != null && string.IsNullOrEmpty(waveAnnouncementText.text))
+            {
+                waveAnnouncementText.text = "INCOMING HORDE";
+            }
+
+            if (ammoTypeUI != null)
+            {
+                ammoTypeUI.enabled = false;
+            }
+
+            UpdateHealthUI(100f, 100f);
+            UpdateAmmoInfo();
+            UpdateCombatInfo();
         }
 
         private void Update()
         {
-            // Escape key → disconnect
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                OnDisconnectClicked();
-                return;
-            }
-
-            // Re-acquire if not found yet (player may spawn later)
-            if (weaponManager == null)
-            {
-                weaponManager = WeaponManager.LocalInstance;
-                if (weaponManager != null)
-                    UpdateWeaponUI();
-            }
+            TryAcquireLocalPlayerHealth();
+            TryAcquireWeaponManager();
 
             if (weaponManager != null)
             {
                 UpdateAmmoInfo();
             }
+        }
 
-            UpdateKillCount();
-            UpdatePlayerCount();
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            if (disconnectButton != null)
+            {
+                disconnectButton.onClick.RemoveListener(OnDisconnectClicked);
+            }
+
+            UnsubscribeHealth();
+        }
+
+        private void TryAcquireWeaponManager()
+        {
+            if (weaponManager != null) return;
+
+            weaponManager = WeaponManager.LocalInstance;
+            if (weaponManager != null)
+            {
+                UpdateWeaponUI();
+            }
+        }
+
+        private void TryAcquireLocalPlayerHealth()
+        {
+            if (playerHealth != null) return;
+            if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsConnectedClient) return;
+
+            NetworkClient localClient = NetworkManager.Singleton.LocalClient;
+            if (localClient == null || localClient.PlayerObject == null) return;
+
+            playerHealth = localClient.PlayerObject.GetComponent<PlayerHealth>();
+            if (playerHealth == null) return;
+
+            playerHealth.HealthChangedEvent += UpdateHealthUI;
+            UpdateHealthUI(playerHealth.CurrentHealth, playerHealth.MaxHealth);
+        }
+
+        private void UnsubscribeHealth()
+        {
+            if (playerHealth != null)
+            {
+                playerHealth.HealthChangedEvent -= UpdateHealthUI;
+                playerHealth = null;
+            }
         }
 
         private void OnDisconnectClicked()
         {
-            if (NetworkGameManager.Instance != null)
-                NetworkGameManager.Instance.Disconnect();
+            NetworkGameManager.Instance?.Disconnect();
         }
 
         public void UpdateWeaponUI()
         {
             if (WeaponManager.LocalInstance == null) return;
 
-            var currentObj = WeaponManager.LocalInstance.CurrentWeapon;
-            var unusedObj = WeaponManager.LocalInstance.UnusedWeapon;
+            GameObject currentObj = WeaponManager.LocalInstance.CurrentWeapon;
+            GameObject unusedObj = WeaponManager.LocalInstance.UnusedWeapon;
 
-            if (currentObj != null) 
-                currentWeapon = currentObj.GetComponent<Weapon>();
-            else 
-                currentWeapon = null;
+            currentWeapon = currentObj != null ? currentObj.GetComponent<Weapon>() : null;
+            unusedWeapon = unusedObj != null && unusedObj != currentObj ? unusedObj.GetComponent<Weapon>() : null;
 
-            // Only set unused weapon if it's different from current
-            if (unusedObj != null && unusedObj != currentObj) 
-                unusedWeapon = unusedObj.GetComponent<Weapon>();
-            else 
-                unusedWeapon = null;
+            UpdateWeaponVisuals();
+            UpdateAmmoInfo();
         }
 
         public void UpdateAmmoInfo()
         {
-            if (currentWeapon != null)
+            if (currentWeapon == null)
             {
-                if (currentAmmo != null) currentAmmo.text = currentWeapon.CurrentAmmo.ToString();
-                if (reservedAmmo != null) reservedAmmo.text = currentWeapon.ReservedAmmo.ToString();
-                if (weaponIcon != null && currentWeapon.Data != null && currentWeapon.Data.weaponIcon != null) 
+                SetAmmoUnavailable();
+                return;
+            }
+
+            int magazine = currentWeapon.Data != null ? currentWeapon.Data.magazineSize : Mathf.Max(currentWeapon.CurrentAmmo, 1);
+            float ammoPercent = magazine > 0 ? currentWeapon.CurrentAmmo / (float)magazine : 0f;
+            Color ammoColor = ammoPercent <= 0f ? CriticalColor : ammoPercent <= 0.25f ? WarningColor : TextColor;
+
+            if (currentAmmo != null)
+            {
+                currentAmmo.text = currentWeapon.CurrentAmmo.ToString();
+                currentAmmo.color = ammoColor;
+            }
+
+            if (reservedAmmo != null)
+            {
+                reservedAmmo.text = $"/ {currentWeapon.ReservedAmmo}";
+                reservedAmmo.color = currentWeapon.ReservedAmmo <= 0 ? WarningColor : MutedColor;
+            }
+
+            if (ammoStatusText != null)
+            {
+                if (currentWeapon.CurrentAmmo <= 0 && currentWeapon.ReservedAmmo <= 0)
                 {
-                    weaponIcon.sprite = currentWeapon.Data.weaponIcon;
-                    weaponIcon.enabled = true;
+                    ammoStatusText.text = "DRY";
+                    ammoStatusText.color = CriticalColor;
                 }
+                else if (ammoPercent <= 0.25f)
+                {
+                    ammoStatusText.text = "LOW AMMO";
+                    ammoStatusText.color = WarningColor;
+                }
+                else
+                {
+                    ammoStatusText.text = "READY";
+                    ammoStatusText.color = AccentColor;
+                }
+            }
+
+            UpdateWeaponVisuals();
+        }
+
+        private void SetAmmoUnavailable()
+        {
+            if (currentAmmo != null)
+            {
+                currentAmmo.text = "--";
+                currentAmmo.color = MutedColor;
+            }
+
+            if (reservedAmmo != null)
+            {
+                reservedAmmo.text = "/ --";
+                reservedAmmo.color = MutedColor;
+            }
+
+            if (ammoStatusText != null)
+            {
+                ammoStatusText.text = "NO WEAPON";
+                ammoStatusText.color = MutedColor;
+            }
+
+            if (weaponNameText != null)
+            {
+                weaponNameText.text = "UNARMED";
+                weaponNameText.color = MutedColor;
+            }
+
+            if (weaponIcon != null)
+            {
+                weaponIcon.enabled = false;
+            }
+        }
+
+        private void UpdateWeaponVisuals()
+        {
+            SetWeaponIcon(weaponIcon, currentWeapon);
+            SetWeaponIcon(unusedWeaponIcon, unusedWeapon);
+
+            if (weaponNameText != null)
+            {
+                weaponNameText.text = GetWeaponName(currentWeapon, "WEAPON");
+                weaponNameText.color = currentWeapon != null ? TextColor : MutedColor;
+            }
+
+            if (unusedWeaponNameText != null)
+            {
+                unusedWeaponNameText.text = GetWeaponName(unusedWeapon, "EMPTY");
+                unusedWeaponNameText.color = unusedWeapon != null ? MutedColor : new Color(0.35f, 0.43f, 0.48f, 1f);
+            }
+        }
+
+        private void SetWeaponIcon(Image target, Weapon weapon)
+        {
+            if (target == null) return;
+
+            Sprite icon = weapon != null && weapon.Data != null ? weapon.Data.weaponIcon : null;
+            target.sprite = icon;
+            target.enabled = icon != null;
+        }
+
+        private string GetWeaponName(Weapon weapon, string fallback)
+        {
+            if (weapon == null || weapon.Data == null || string.IsNullOrWhiteSpace(weapon.Data.weaponName))
+            {
+                return fallback;
+            }
+
+            return weapon.Data.weaponName.ToUpperInvariant();
+        }
+
+        private void UpdateHealthUI(float current, float max)
+        {
+            max = Mathf.Max(1f, max);
+            float percent = Mathf.Clamp01(current / max);
+            int currentRounded = Mathf.CeilToInt(current);
+            Color healthColor = percent <= 0.25f ? CriticalColor : percent <= 0.5f ? WarningColor : TextColor;
+
+            if (healthText != null)
+            {
+                int maxRounded = Mathf.CeilToInt(max);
+                healthText.text = $"{currentRounded}/{maxRounded}";
+                healthText.color = healthColor;
+            }
+
+            if (healthStateText != null)
+            {
+                healthStateText.gameObject.SetActive(false);
+            }
+
+            if (healthFill != null)
+            {
+                healthFill.enabled = false;
+            }
+
+            if (healthDangerBackground != null)
+            {
+                bool showDanger = percent <= 0.45f;
+                healthDangerBackground.enabled = showDanger;
+                healthDangerBackground.color = percent <= 0.25f
+                    ? new Color(0.78f, 0.05f, 0.05f, 0.42f)
+                    : new Color(0.78f, 0.18f, 0.05f, 0.30f);
+            }
+        }
+
+        private void UpdateCombatInfo()
+        {
+            if (AIDirector.Instance != null)
+            {
+                if (killCountText != null)
+                    killCountText.text = $"Kills: {AIDirector.Instance.TotalKills}";
+
+                if (zombieCountText != null)
+                    zombieCountText.text = $"Zombies Left: {AIDirector.Instance.ZombiesAlive}";
+
+                if (phaseText != null)
+                    phaseText.text = $"{AIDirector.Instance.CurrentPhase.ToString().ToUpperInvariant()} PHASE";
             }
             else
             {
-                if (weaponIcon != null) weaponIcon.enabled = false;
+                if (killCountText != null) killCountText.text = "Kills: --";
+                if (zombieCountText != null) zombieCountText.text = "Zombies Left: --";
+                if (phaseText != null) phaseText.text = "-- PHASE";
             }
 
-            if (unusedWeapon != null)
+            if (playerCountText != null)
             {
-                if (unusedWeaponIcon != null && unusedWeapon.Data != null && unusedWeapon.Data.weaponIcon != null)
-                {
-                    unusedWeaponIcon.sprite = unusedWeapon.Data.weaponIcon;
-                    unusedWeaponIcon.enabled = true;
-                }
+                playerCountText.text = NetworkGameManager.HasInstance
+                    ? $"Squad: {NetworkGameManager.Instance.ConnectedPlayerCount}/4"
+                    : "Squad: --";
             }
-            else
+
+            if (difficultyText != null)
             {
-                if (unusedWeaponIcon != null) unusedWeaponIcon.enabled = false;
+                difficultyText.text = DifficultyManager.Instance != null
+                    ? $"Difficulty: {DifficultyManager.Instance.CurrentDifficulty.Value}"
+                    : "Difficulty: --";
             }
-        }
-        
-        private void UpdateKillCount()
-        {
-            if (killCountText != null && AIDirector.Instance != null)
+
+            if (grenadeCount != null)
             {
-                killCountText.text = $"Kills: {AIDirector.Instance.TotalKills}";
+                // Placeholder until grenade inventory exists.
+                grenadeCount.text = "2";
+            }
+
+            if (grenadeKeyText != null)
+            {
+                grenadeKeyText.text = InputManager.Instance != null
+                    ? FormatKeyName(InputManager.Instance.GetKeyForAction("Grenade"))
+                    : "G";
             }
         }
 
-        private void UpdatePlayerCount()
+        private static string FormatKeyName(KeyCode key)
         {
-            if (playerCountText != null && NetworkGameManager.HasInstance)
+            return key switch
             {
-                playerCountText.text = $"Players: {NetworkGameManager.Instance.ConnectedPlayerCount}";
-            }
+                KeyCode.Mouse0 => "M0",
+                KeyCode.Mouse1 => "M1",
+                KeyCode.Mouse2 => "M2",
+                KeyCode.Alpha0 => "0",
+                KeyCode.Alpha1 => "1",
+                KeyCode.Alpha2 => "2",
+                KeyCode.Alpha3 => "3",
+                KeyCode.Alpha4 => "4",
+                KeyCode.Alpha5 => "5",
+                KeyCode.Alpha6 => "6",
+                KeyCode.Alpha7 => "7",
+                KeyCode.Alpha8 => "8",
+                KeyCode.Alpha9 => "9",
+                _ => key.ToString().Replace("Keypad", "N")
+            };
         }
     }
 }

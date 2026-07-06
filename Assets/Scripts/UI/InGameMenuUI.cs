@@ -18,6 +18,7 @@ namespace FPS
         private bool isPaused = false;
         private bool wasCursorVisible = false;
         private CursorLockMode previousCursorLockMode;
+        public static bool IsMenuOpen { get; private set; }
 
         private void Start()
         {
@@ -29,6 +30,7 @@ namespace FPS
             if (settingsButton != null) settingsButton.onClick.AddListener(OpenSettings);
             if (leaveMatchButton != null) leaveMatchButton.onClick.AddListener(LeaveMatch);
             if (closeSettingsButton != null) closeSettingsButton.onClick.AddListener(CloseSettings);
+            SetGameplayInputBlocked(false);
         }
 
         private void Update()
@@ -64,12 +66,14 @@ namespace FPS
                 // Mở khóa chuột để click UI
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
+                SetGameplayInputBlocked(true);
             }
             else
             {
                 // Khôi phục trạng thái chuột
                 Cursor.visible = wasCursorVisible;
                 Cursor.lockState = previousCursorLockMode;
+                SetGameplayInputBlocked(false);
             }
         }
 
@@ -85,12 +89,29 @@ namespace FPS
         {
             if (pausePanel != null) pausePanel.SetActive(false);
             if (settingsPanel != null) settingsPanel.SetActive(true);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            SetGameplayInputBlocked(true);
         }
 
         private void CloseSettings()
         {
             if (settingsPanel != null) settingsPanel.SetActive(false);
             if (pausePanel != null) pausePanel.SetActive(true);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            SetGameplayInputBlocked(true);
+        }
+
+        private void OnDestroy()
+        {
+            SetGameplayInputBlocked(false);
+        }
+
+        private static void SetGameplayInputBlocked(bool blocked)
+        {
+            IsMenuOpen = blocked;
+            InputManager.GameplayInputBlocked = blocked;
         }
 
         private void LeaveMatch()

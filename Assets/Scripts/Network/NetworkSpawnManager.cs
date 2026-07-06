@@ -10,7 +10,7 @@ namespace FPS
         [Header("Spawn Points")]
         [SerializeField] private Transform[] spawnPoints;
 
-        private int nextSpawnIndex = 0;
+        private int nextSpawnIndex;
 
         private void Awake()
         {
@@ -18,57 +18,21 @@ namespace FPS
             else Destroy(gameObject);
         }
 
-        public override void OnNetworkSpawn()
+        public bool TryGetNextSpawnPose(out Vector3 position, out Quaternion rotation)
         {
-            if (!IsServer) return;
+            position = Vector3.zero;
+            rotation = Quaternion.identity;
 
-            NetworkManager.Singleton.SceneManager.OnSceneEvent += HandleSceneEvent;
-
-            foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
-            {
-                TeleportPlayerToSpawnPoint(client.PlayerObject);
-            }
-        }
-
-        public override void OnNetworkDespawn()
-        {
-            if (IsServer && NetworkManager.Singleton != null && NetworkManager.Singleton.SceneManager != null)
-            {
-                NetworkManager.Singleton.SceneManager.OnSceneEvent -= HandleSceneEvent;
-            }
-        }
-
-        private void HandleSceneEvent(SceneEvent sceneEvent)
-        {
-            if (sceneEvent.SceneEventType == SceneEventType.LoadComplete)
-            {
-                ulong clientId = sceneEvent.ClientId;
-                
-                if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
-                {
-                    TeleportPlayerToSpawnPoint(client.PlayerObject);
-                }
-            }
-        }
-
-        private void TeleportPlayerToSpawnPoint(NetworkObject playerObj)
-        {
-            if (playerObj == null || spawnPoints.Length == 0) return;
+            if (spawnPoints == null || spawnPoints.Length == 0)
+                return false;
 
             int index = nextSpawnIndex % spawnPoints.Length;
             nextSpawnIndex++;
 
             Transform selectedSpawn = spawnPoints[index];
-
-            var characterController = playerObj.GetComponent<CharacterController>();
-            if (characterController != null) characterController.enabled = false;
-
-            playerObj.transform.position = selectedSpawn.position;
-            playerObj.transform.rotation = selectedSpawn.rotation;
-
-            if (characterController != null) characterController.enabled = true;
-
-            Debug.Log($"[SpawnManager] Đã đưa Player {playerObj.OwnerClientId} tới vị trí {selectedSpawn.name}");
+            position = selectedSpawn.position;
+            rotation = selectedSpawn.rotation;
+            return true;
         }
     }
 }

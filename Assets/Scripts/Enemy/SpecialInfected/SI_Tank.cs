@@ -4,10 +4,6 @@ namespace FPS
 {
     public class SI_Tank : SpecialInfectedBase
     {
-        [Header("Tank Settings")]
-        [SerializeField] private float chargeSpeed = 10f;
-        [SerializeField] private float chargeDamage = 50f;
-        
         protected override void Start()
         {
             base.Start();
@@ -18,8 +14,10 @@ namespace FPS
 
         public override void UseAbility()
         {
-            Debug.Log("[Tank] Ground slam!");
+            // Framework-only until a tested slam/charge ability is promoted to playable.
         }
+
+        protected override bool CanUseAbility() => false;
 
         public override bool ShouldSpawn(PlayerProfile profile)
         {

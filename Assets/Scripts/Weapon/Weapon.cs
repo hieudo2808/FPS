@@ -9,22 +9,23 @@ namespace FPS
         [Header("Instance References")]
         [SerializeField] private Transform bulletSpawnPoint;
         [SerializeField] private GameObject muzzleEffect;
-        [Tooltip("Animator của FPS Arms (FirstPersonArms)")]
+        [Tooltip("Animator for FPS arms (FirstPersonArms).")]
         [SerializeField] private Animator fpsArmsAnimator;
 
         [Header("Weapon Data")]
         [SerializeField] private WeaponData weaponData;
 
         private RecoilController recoilController;
+        private PlayerCombatTelemetry combatTelemetry;
 
         [Header("Bullet Pooling")]
-        [Tooltip("Gan ObjectPooling tuong ung voi bulletPrefab. Neu bo trong, dan se dung Instantiate/Destroy.]")]
+        [Tooltip("Optional pool for bulletPrefab. Empty uses Instantiate/Destroy fallback.")]
         [SerializeField] private ObjectPooling bulletPool;
 
         [Header("Magazine Visuals")]
-        [Tooltip("Băng đạn đang gắn trên súng")]
+        [Tooltip("Magazine currently attached to the gun.")]
         [SerializeField] private GameObject magazineOnGun;
-        [Tooltip("Băng đạn trong tay (khi rút ra)")]
+        [Tooltip("Magazine shown in hand during reload.")]
         [SerializeField] private GameObject magazineInHand;
 
         private int currentAmmo;
@@ -37,17 +38,27 @@ namespace FPS
 
         public int CurrentAmmo => currentAmmo;
         public int ReservedAmmo => reservedAmmo;
-        public Sprite WeaponIcon => weaponData.weaponIcon;
+        public Sprite WeaponIcon => weaponData != null ? weaponData.weaponIcon : null;
         public WeaponData Data => weaponData;
 
         private void Start()
         {
+            if (weaponData == null)
+            {
+                currentAmmo = 0;
+                reservedAmmo = 0;
+                canShoot = false;
+                ReportCombatTelemetry();
+                return;
+            }
+
             currentAmmo  = weaponData.magazineSize;
             reservedAmmo = weaponData.totalAmmo - currentAmmo;
+            ReportCombatTelemetry();
         }
 
         /// <summary>
-        /// Gọi bởi WeaponManager.OnNetworkSpawn() — tránh race condition Start() chạy trước OnNetworkSpawn().
+        /// Called by WeaponManager.OnNetworkSpawn() to avoid Start()/OnNetworkSpawn race conditions.
         /// </summary>
         public void SetOwner(bool owner)
         {
@@ -57,12 +68,15 @@ namespace FPS
                 recoilController = GetComponentInParent<RecoilController>();
                 if (recoilController == null)
                     recoilController = FindFirstObjectByType<RecoilController>();
+
+                combatTelemetry = GetComponentInParent<PlayerCombatTelemetry>();
+                ReportCombatTelemetry();
             }
         }
 
         private void OnEnable()
         {
-            canShoot    = true;
+            canShoot    = weaponData != null;
             isReloading = false;
             burstCoroutine = null;
         }
@@ -72,11 +86,13 @@ namespace FPS
             StopAllCoroutines();
             isReloading = false;
             canShoot    = true;
+            ReportCombatTelemetry();
         }
 
         private void Update()
         {
             if (!isOwner) return;
+            if (weaponData == null) return;
 
             if (canShoot && !isReloading)
             {
@@ -89,6 +105,7 @@ namespace FPS
 
         private void HandleFire()
         {
+            if (weaponData == null) return;
             if (isReloading) return;
 
             if (currentAmmo == 0 && reservedAmmo == 0)
@@ -124,6 +141,9 @@ namespace FPS
 
         private IEnumerator ShootCooldown()
         {
+            if (weaponData == null)
+                yield break;
+
             canShoot = false;
             FireBullet();
             yield return new WaitForSeconds(weaponData.fireRate);
@@ -132,6 +152,9 @@ namespace FPS
 
         private IEnumerator FireBurst()
         {
+            if (weaponData == null)
+                yield break;
+
             canShoot = false;
             int bulletsLeft = weaponData.burstCount;
 
@@ -151,9 +174,11 @@ namespace FPS
 
         private void FireBullet()
         {
+            if (weaponData == null) return;
             if (currentAmmo <= 0) return;
 
             currentAmmo--;
+            ReportCombatTelemetry();
 
             if (recoilController != null && weaponData.recoilPattern != null)
                 recoilController.Fire(weaponData.recoilPattern);
@@ -184,9 +209,9 @@ namespace FPS
 
             if (bulletPool != null)
             {
-                // Su dung pool: lay dan tu pool, dat vi tri/huong/velocity
+                // Use pool when available; otherwise fall back to Instantiate/Destroy.
                 GameObject bulletInstance = bulletPool.GetObject();
-                if (bulletInstance == null) return; // pool rong, bo qua
+                if (bulletInstance == null) return;
 
                 bulletInstance.transform.SetPositionAndRotation(position, Quaternion.LookRotation(direction));
                 Rigidbody rb = bulletInstance.GetComponent<Rigidbody>();
@@ -200,7 +225,6 @@ namespace FPS
             }
             else
             {
-                // Fallback: hanh vi cu Instantiate/Destroy (backward compatible)
                 GameObject bulletInstance = Instantiate(weaponData.bulletPrefab, position, Quaternion.LookRotation(direction));
                 Rigidbody rb = bulletInstance.GetComponent<Rigidbody>();
                 if (rb != null)
@@ -228,22 +252,30 @@ namespace FPS
 
         public void PlayShootSound()
         {
+            if (weaponData == null) return;
             if (weaponData.shootSound != null && AudioManager.Instance != null)
                 AudioManager.Instance.PlaySFXSound(weaponData.shootSound);
         }
 
         private void ReloadWeapon()
         {
+            if (weaponData == null) return;
             if (isReloading) return;
+
+            GetComponentInParent<WeaponFireHandler>()?.RequestReloadServerRpc();
 
             canShoot    = false;
             isReloading = true;
+            ReportCombatTelemetry();
 
             StartCoroutine(ReloadCoroutine());
         }
 
         private IEnumerator ReloadCoroutine()
         {
+            if (weaponData == null)
+                yield break;
+
             if (weaponData.reloadSound != null && AudioManager.Instance != null)
                 AudioManager.Instance.PlaySFXSound(weaponData.reloadSound);
 
@@ -276,6 +308,8 @@ namespace FPS
 
         private void ReloadCompleted()
         {
+            if (weaponData == null) return;
+
             int bulletsNeeded   = weaponData.magazineSize - currentAmmo;
             int bulletsToReload = Mathf.Min(bulletsNeeded, reservedAmmo);
 
@@ -284,6 +318,7 @@ namespace FPS
 
             isReloading = false;
             canShoot    = true;
+            ReportCombatTelemetry();
 
             InsertMagazine();
         }
@@ -303,6 +338,18 @@ namespace FPS
         public void AddReserveAmmo(int amount)
         {
             reservedAmmo += amount;
+            ReportCombatTelemetry();
+        }
+
+        public void ReportCombatTelemetry()
+        {
+            if (!isOwner) return;
+            if (weaponData == null) return;
+
+            if (combatTelemetry == null)
+                combatTelemetry = GetComponentInParent<PlayerCombatTelemetry>();
+
+            combatTelemetry?.ReportWeaponState(isReloading, currentAmmo, weaponData.magazineSize);
         }
     }
 }

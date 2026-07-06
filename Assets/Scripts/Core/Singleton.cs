@@ -28,7 +28,7 @@ namespace FPS
                         {
                             Setup();
                         }
-                        else
+                        else if (Application.isPlaying)
                         {
                             DontDestroyOnLoad(instance.gameObject);
                         }
@@ -42,7 +42,8 @@ namespace FPS
         {
             GameObject singletonObject = new GameObject($"{typeof(T).Name} (Singleton)");
             instance = singletonObject.AddComponent<T>();
-            DontDestroyOnLoad(singletonObject);
+            if (Application.isPlaying)
+                DontDestroyOnLoad(singletonObject);
 
             Debug.Log($"[Singleton] Created new instance of {typeof(T).Name}");
         }
@@ -56,7 +57,8 @@ namespace FPS
                 if (transform.parent != null)
                     transform.SetParent(null);
                     
-                DontDestroyOnLoad(gameObject);
+                if (Application.isPlaying)
+                    DontDestroyOnLoad(gameObject);
             }
             else if (instance != this)
             {

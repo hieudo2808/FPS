@@ -62,6 +62,10 @@ namespace FPS
         private float hpModifier = 1f;
         private float speedModifier = 1f;
         private float damageModifier = 1f;
+        private ZombieFactory subscribedZombieFactory;
+        private SpecialInfectedRegistry subscribedSpecialRegistry;
+        private GameObject lastCountedSpawnedEnemy;
+        private int lastCountedSpawnFrame = -1;
 
         public GamePhase CurrentPhase => networkPhase.Value;
         public float Intensity => intensity;
@@ -77,16 +81,29 @@ namespace FPS
             else Destroy(gameObject);
         }
 
+        private void OnEnable()
+        {
+            EnsureSpawnEventSubscriptions();
+        }
+
+        private void OnDisable()
+        {
+            UnsubscribeSpawnEvents();
+            lastCountedSpawnedEnemy = null;
+            lastCountedSpawnFrame = -1;
+        }
+
         public override void OnNetworkSpawn()
         {
             networkPhase.OnValueChanged += OnPhaseChanged;
             networkZombiesAlive.OnValueChanged += UpdateZombieCountUI;
             networkTotalKills.OnValueChanged += UpdateZombieCountUI;
+            EnsureSpawnEventSubscriptions();
 
             UpdatePhaseUI(networkPhase.Value);
             UpdateZombieCountUI(0, 0);
 
-            if (IsServer)
+            if (CanRunServerLogic())
                 StartCoroutine(StartFirstWave());
         }
 
@@ -99,8 +116,9 @@ namespace FPS
 
         private void Update()
         {
-            if (!IsServer) return;
+            if (!CanRunServerLogic()) return;
 
+            EnsureSpawnEventSubscriptions();
             UpdatePacing();
             UpdateSpawning();
 
@@ -149,7 +167,7 @@ namespace FPS
         private void UpdateSpawning()
         {
             if (networkPhase.Value == GamePhase.RELAX) return;
-            if (networkZombiesAlive.Value >= maxZombiesAlive) return;
+            if (networkZombiesAlive.Value >= GetMaxZombiesAlive()) return;
 
             spawnTimer += Time.deltaTime;
             float interval = GetSpawnInterval();
@@ -165,6 +183,7 @@ namespace FPS
         {
             float interval = baseSpawnInterval;
             if (networkPhase.Value == GamePhase.PEAK) interval *= 0.5f;
+            interval *= GetDifficultyStats().spawnIntervalMultiplier;
 
             int playerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
             interval /= (1f + (playerCount - 1) * 0.3f);
@@ -174,20 +193,16 @@ namespace FPS
 
         private void SpawnZombie()
         {
-            if (networkPhase.Value == GamePhase.PEAK && enableSpecialInfected && Random.value < specialSpawnChance)
+            if (networkPhase.Value == GamePhase.PEAK && enableSpecialInfected && Random.value < GetSpecialSpawnChance())
             {
                 if (TrySpawnSpecial()) return;
             }
 
             GameObject zombie = null;
 
-            if (useSmartSpawning && TeamAnalyzer.Instance != null)
+            if (useSmartSpawning)
             {
-                var isolated = TeamAnalyzer.Instance.GetMostIsolatedPlayer();
-                if (isolated != null && Random.value < 0.4f)
-                    zombie = ZombieFactory.Instance.SpawnZombieBehindPlayer(isolated.playerIndex, hpModifier, speedModifier, damageModifier);
-                else
-                    zombie = ZombieFactory.Instance.SpawnZombieAtSmartPosition(hpModifier, speedModifier, damageModifier);
+                zombie = ZombieFactory.Instance.SpawnZombieAtSmartPosition(hpModifier, speedModifier, damageModifier);
             }
             else
             {
@@ -196,7 +211,6 @@ namespace FPS
 
             if (zombie != null)
             {
-                networkZombiesAlive.Value++;
                 intensity += 5f;
             }
         }
@@ -206,9 +220,8 @@ namespace FPS
             if (SpecialInfectedRegistry.Instance == null || !SpecialInfectedRegistry.Instance.CanSpawnSpecial())
                 return false;
 
-            Vector3 pos = InfluenceMapManager.Instance != null
-                ? InfluenceMapManager.Instance.GetBestSpawnPosition()
-                : ZombieRegistry.Instance.GetSpawnPosition();
+            if (!TryGetSpecialSpawnPosition(out Vector3 pos))
+                return false;
 
             GameObject special = SpecialInfectedRegistry.Instance.SpawnSpecial(pos);
 
@@ -218,7 +231,6 @@ namespace FPS
                 if (netObj != null && !netObj.IsSpawned)
                     netObj.Spawn(true);
 
-                networkZombiesAlive.Value++;
                 intensity += 15f;
 
                 ShowAnnouncementClientRpc("SPECIAL INCOMING!");
@@ -228,15 +240,41 @@ namespace FPS
             return false;
         }
 
+        private bool TryGetSpecialSpawnPosition(out Vector3 position)
+        {
+            position = Vector3.zero;
+
+            if (InfluenceMapManager.Instance != null)
+                return InfluenceMapManager.Instance.TryGetBestSpawnPosition(out position);
+
+            bool hasProfiledPlayers = PlayerProfiler.Instance != null && PlayerProfiler.Instance.PlayerCount > 0;
+            if (hasProfiledPlayers || ZombieRegistry.Instance == null)
+                return false;
+
+            return ZombieRegistry.Instance.TryGetSpawnPosition(out position);
+        }
+
         public void OnZombieDied()
         {
-            if (!IsServer) return;
+            if (!CanRunServerLogic()) return;
 
             networkZombiesAlive.Value = Mathf.Max(0, networkZombiesAlive.Value - 1);
             networkTotalKills.Value++;
             intensity -= 3f;
 
             UpdateLearningModifiers();
+        }
+
+        public void RegisterSpawnedEnemy(GameObject enemy)
+        {
+            if (!CanRunServerLogic()) return;
+            if (enemy == null) return;
+            if (enemy == lastCountedSpawnedEnemy && Time.frameCount == lastCountedSpawnFrame)
+                return;
+
+            lastCountedSpawnedEnemy = enemy;
+            lastCountedSpawnFrame = Time.frameCount;
+            networkZombiesAlive.Value++;
         }
 
         private void UpdateLearningModifiers()
@@ -248,8 +286,7 @@ namespace FPS
 
             float performanceScore =
                 carry.headshotRatio * 0.4f
-                + Mathf.Min(carry.totalKills / 100f, 1f) * 0.3f
-                + (carry.avgReactionTime > 0 ? Mathf.Min(1f / carry.avgReactionTime, 1f) * 0.3f : 0f);
+                + Mathf.Min(carry.totalKills / 100f, 1f) * 0.3f;
 
             if (performanceScore > 0.3f)
             {
@@ -263,6 +300,71 @@ namespace FPS
 
             if (carry.headshotRatio > 0.5f)
                 hpModifier = Mathf.Min(hpModifier + learningRate * 2f, maxHPModifier);
+        }
+
+        private void EnsureSpawnEventSubscriptions()
+        {
+            if (subscribedZombieFactory == null && ZombieFactory.HasInstance)
+            {
+                subscribedZombieFactory = ZombieFactory.Instance;
+                subscribedZombieFactory.OnZombieSpawned += RegisterSpawnedEnemy;
+            }
+
+            if (subscribedSpecialRegistry == null && SpecialInfectedRegistry.Instance != null)
+            {
+                subscribedSpecialRegistry = SpecialInfectedRegistry.Instance;
+                subscribedSpecialRegistry.OnSpecialSpawned += RegisterSpawnedEnemy;
+            }
+        }
+
+        private void UnsubscribeSpawnEvents()
+        {
+            if (subscribedZombieFactory != null)
+            {
+                subscribedZombieFactory.OnZombieSpawned -= RegisterSpawnedEnemy;
+                subscribedZombieFactory = null;
+            }
+
+            if (subscribedSpecialRegistry != null)
+            {
+                subscribedSpecialRegistry.OnSpecialSpawned -= RegisterSpawnedEnemy;
+                subscribedSpecialRegistry = null;
+            }
+        }
+
+        private int GetMaxZombiesAlive()
+        {
+            return Mathf.Max(1, Mathf.RoundToInt(maxZombiesAlive * GetDifficultyStats().maxAliveMultiplier));
+        }
+
+        private float GetSpecialSpawnChance()
+        {
+            if (DifficultyManager.Instance == null)
+                return specialSpawnChance;
+
+            return DifficultyManager.Instance.GetCurrentStats().specialSpawnChance;
+        }
+
+        private DifficultyStats GetDifficultyStats()
+        {
+            return DifficultyManager.Instance != null
+                ? DifficultyManager.Instance.GetCurrentStats()
+                : new DifficultyStats
+                {
+                    hpMultiplier = 1f,
+                    damageMultiplier = 1f,
+                    speedMultiplier = 1f,
+                    maxConcurrentAttackers = 3,
+                    spawnIntervalMultiplier = 1f,
+                    maxAliveMultiplier = 1f,
+                    specialSpawnChance = specialSpawnChance,
+                    enableRubberBanding = false
+                };
+        }
+
+        private bool CanRunServerLogic()
+        {
+            return IsServer || NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening;
         }
 
         private void OnPhaseChanged(GamePhase oldPhase, GamePhase newPhase)

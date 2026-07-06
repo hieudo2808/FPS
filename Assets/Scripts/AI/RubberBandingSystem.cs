@@ -148,15 +148,21 @@ namespace FPS
         private Vector3 GetTeleportPosition()
         {
             if (InfluenceMapManager.Instance != null)
-                return InfluenceMapManager.Instance.GetBestSpawnPosition();
+            {
+                return InfluenceMapManager.Instance.TryGetBestSpawnPosition(out Vector3 smartPosition)
+                    ? smartPosition
+                    : Vector3.zero;
+            }
 
-            Transform player = GetNearestPlayerToCenter();
-            if (player == null) return Vector3.zero;
+            bool hasProfiledPlayers = PlayerProfiler.Instance != null && PlayerProfiler.Instance.PlayerCount > 0;
+            if (hasProfiledPlayers)
+                return Vector3.zero;
 
-            Vector3 behindPlayer = player.position - player.forward * 15f;
-
-            if (NavMesh.SamplePosition(behindPlayer, out NavMeshHit hit, 10f, NavMesh.AllAreas))
-                return hit.position;
+            if (ZombieRegistry.Instance != null &&
+                ZombieRegistry.Instance.TryGetSpawnPosition(out Vector3 registryPosition))
+            {
+                return registryPosition;
+            }
 
             return Vector3.zero;
         }
@@ -185,7 +191,7 @@ namespace FPS
                     if (!data.isSpeedBoosted)
                     {
                         float distance = Vector3.Distance(zombie.transform.position, nearestPlayer.position);
-                        float speedMultiplier = Mathf.Min(1f + (distance / 100f), maxSpeedBoost);
+                        float speedMultiplier = Mathf.Min((1f + distance / 100f) * catchUpSpeedMultiplier, maxSpeedBoost);
 
                         agent.speed = data.originalSpeed * speedMultiplier;
                         data.isSpeedBoosted = true;
@@ -254,5 +260,22 @@ namespace FPS
             var profile = PlayerProfiler.Instance?.GetNearest(position);
             return profile?.playerTransform;
         }
+
+#if UNITY_INCLUDE_TESTS
+        public readonly struct TestSnapshot
+        {
+            public readonly int trackedZombieCount;
+
+            public TestSnapshot(int trackedZombieCount)
+            {
+                this.trackedZombieCount = trackedZombieCount;
+            }
+        }
+
+        public TestSnapshot CaptureTestSnapshot()
+        {
+            return new TestSnapshot(trackedZombies.Count);
+        }
+#endif
     }
 }

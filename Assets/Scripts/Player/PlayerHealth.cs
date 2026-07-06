@@ -65,39 +65,17 @@ namespace FPS
             }
         }
 
-        /// <summary>
-        /// Ai cũng có thể gọi (enemy, traps, etc.) — chạy trên server
-        /// </summary>
-        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-        public void TakeDamageServerRpc(float damage)
+        public void TakeDamage(float damage)
         {
+            if (!IsServer) return;
             if (networkIsDead.Value) return;
 
-            networkHealth.Value -= damage;
-            networkHealth.Value = Mathf.Max(0, networkHealth.Value);
+            networkHealth.Value = Mathf.Max(0, networkHealth.Value - Mathf.Max(0f, damage));
 
             Debug.Log($"Player took {damage} damage. HP: {networkHealth.Value}/{maxHealth}");
 
             if (networkHealth.Value <= 0)
-            {
                 Die();
-            }
-        }
-
-        /// <summary>
-        /// Backward-compatible local call — routes to ServerRpc
-        /// </summary>
-        public void TakeDamage(float damage)
-        {
-            if (IsServer)
-            {
-                // Server can apply directly
-                TakeDamageServerRpc(damage);
-            }
-            else
-            {
-                TakeDamageServerRpc(damage);
-            }
         }
 
         private void Die()

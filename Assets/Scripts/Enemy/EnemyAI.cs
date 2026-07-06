@@ -20,6 +20,9 @@ namespace FPS
         [SerializeField] private float attackDamage = 10f;
         [SerializeField] private float attackCooldown = 1.5f;
         [SerializeField] private float attackDelay = 0.5f;
+        [SerializeField] private float minimumAttackImpactDelay = 0.65f;
+        [SerializeField] private float attackActionLockDuration = 0.9f;
+        [SerializeField] private float attackHitArcDegrees = 130f;
 
         [Header("Movement Settings")]
         [SerializeField] private float runSpeed = 5f;
@@ -41,11 +44,18 @@ namespace FPS
         private enum State { Idle, Chase, Attack, Dead }
         private State currentState = State.Idle;
 
+        private readonly EnemyMeleeAttack meleeAttack = new EnemyMeleeAttack();
         private Transform player;
-        private float lastAttackTime;
-        private bool hasSlot;
         private float lastTargetSwitchTime;
         private int currentTargetIndex = -1;
+        private int brainTickCount;
+        private float lastBrainTickTime;
+        private Vector3 lastDesiredDestination;
+        private float lastDestinationRequestTime;
+        private Vector3 lastFramePosition;
+        private bool hasLastFramePosition;
+        private float lastAnimatorSpeed;
+        private bool hasDesiredDestination;
 
         public float AttackDamage => attackDamage;
 
@@ -53,6 +63,7 @@ namespace FPS
         {
             if (agent == null) agent = GetComponent<NavMeshAgent>();
             if (animator == null) animator = GetComponent<Animator>();
+            ConfigureMeleeAttack();
 
             if (agent != null)
             {
@@ -66,15 +77,22 @@ namespace FPS
             {
                 health.OnDeathServer += OnDeath;
             }
+
+            RegisterWithRubberBandingIfAuthority();
         }
 
-        protected virtual void OnDestroy()
+        public override void OnDestroy()
         {
+            base.OnDestroy();
+
             EnemyHealth health = GetComponent<EnemyHealth>();
             if (health != null)
             {
                 health.OnDeathServer -= OnDeath;
             }
+
+            if (RubberBandingSystem.HasInstance)
+                RubberBandingSystem.Instance.UnregisterZombie(this);
         }
 
         public override void OnNetworkSpawn()
@@ -85,7 +103,7 @@ namespace FPS
                     agent.enabled = true;
 
                 FindPlayer(forceRefresh: true);
-                RubberBandingSystem.Instance?.RegisterZombie(this);
+                RegisterWithRubberBandingIfAuthority();
             }
             else
             {
@@ -102,24 +120,31 @@ namespace FPS
                 animator.Update(0f);
             }
 
-            CancelInvoke(nameof(DealDamage));
+            meleeAttack.Reset();
+            lastFramePosition = transform.position;
+            hasLastFramePosition = true;
         }
 
         protected virtual void Update()
         {
-            if (!IsServer) return;
+            if (!CanRunServerLogic()) return;
             if (currentState == State.Dead) return;
+
+            brainTickCount++;
+            lastBrainTickTime = Time.time;
 
             if (!IsValidTarget(player))
             {
                 FindPlayer(forceRefresh: true);
-                if (player == null) {
+                if (player == null)
+                {
                     Debug.Log("[EnemyAI] No player found");
                     return;
                 }
             }
 
             UpdateTarget();
+            ProcessPendingAttackDamage();
 
             float distToPlayer = Vector3.Distance(transform.position, player.position);
 
@@ -138,8 +163,11 @@ namespace FPS
                     break;
 
                 case State.Attack:
-                    if (distToPlayer > attackRange * 1.2f)
+                    if (distToPlayer > attackRange)
                     {
+                        if (IsAttackMovementLocked())
+                            break;
+
                         SwitchState(State.Chase);
                         ChaseBehavior();
                     }
@@ -151,11 +179,17 @@ namespace FPS
             }
 
             UpdateAnimation();
-            SmoothLookAtPlayer();
+            SmoothLookAtMovementOrTarget();
         }
 
         private void SwitchState(State newState)
         {
+            if (currentState == State.Attack && newState != State.Attack)
+            {
+                meleeAttack.CancelPendingDamage();
+                meleeAttack.ClearActionLock();
+            }
+
             currentState = newState;
 
             if (!IsAgentReady()) return;
@@ -164,7 +198,7 @@ namespace FPS
             {
                 case State.Idle:
                 case State.Attack:
-                    agent.isStopped = true;
+                    StopAgentMotion();
                     break;
 
                 case State.Chase:
@@ -175,58 +209,44 @@ namespace FPS
 
         private void ChaseBehavior()
         {
-            if (!IsAgentReady() || player == null) return;
+            if (player == null) return;
 
+            Vector3 destination;
             if (AttackSlotManager.Instance != null && currentTargetIndex >= 0)
             {
-                if (!hasSlot)
-                    hasSlot = AttackSlotManager.Instance.RequestSlot(this, currentTargetIndex);
-
-                if (hasSlot)
-                {
-                    if (!AttackSlotManager.Instance.IsAttacker(this))
-                    {
-                        hasSlot = false;
-                        agent.SetDestination(player.position);
-                        return;
-                    }
-
-                    agent.SetDestination(AttackSlotManager.Instance.GetSlotWorldPosition(this, player));
-                    return;
-                }
+                destination = AttackSlotManager.Instance.GetDestinationFor(this, currentTargetIndex, player);
+            }
+            else
+            {
+                destination = player.position;
             }
 
-            agent.SetDestination(player.position);
+            lastDesiredDestination = destination;
+            lastDestinationRequestTime = Time.time;
+            hasDesiredDestination = true;
+
+            if (!IsAgentReady()) return;
+
+            agent.SetDestination(destination);
         }
 
         private void AttackBehavior()
         {
             if (player == null) return;
-            if (Time.time - lastAttackTime < attackCooldown) return;
+            if (!meleeAttack.TryBegin(transform, player, Time.time)) return;
 
-            lastAttackTime = Time.time;
+            StopAgentMotion();
 
             if (animator != null)
                 animator.SetTrigger(AnimAttack);
 
             if (attackSound != null)
                 PlaySoundClientRpc(true);
-
-            CancelInvoke(nameof(DealDamage));
-            Invoke(nameof(DealDamage), attackDelay);
         }
 
-        private void DealDamage()
+        public void ApplyAttackHit()
         {
-            if (!IsServer) return;
-            if (!IsValidTarget(player)) return;
-
-            float dist = Vector3.Distance(transform.position, player.position);
-            if (dist > attackRange * 1.2f) return;
-
-            PlayerHealth health = player.GetComponent<PlayerHealth>();
-            if (health != null)
-                health.TakeDamage(attackDamage);
+            ProcessPendingAttackDamage(forceImpact: true);
         }
 
         private void FindPlayer(bool forceRefresh = false)
@@ -297,24 +317,12 @@ namespace FPS
                 if (profile?.playerTransform == null || !IsValidTarget(profile.playerTransform))
                     continue;
 
-                float dist = Vector3.Distance(transform.position, profile.playerTransform.position);
-
-                if (dist > maxTargetDistance)
+                float sqrDist = (transform.position - profile.playerTransform.position).sqrMagnitude;
+                float maxTargetDistanceSqr = maxTargetDistance * maxTargetDistance;
+                if (sqrDist > maxTargetDistanceSqr)
                     continue;
 
-                float score = (maxTargetDistance - dist) * 2f;
-
-                if (profile.currentHealth < 30f)
-                    score += 30f;
-
-                if (profile.isIsolated)
-                    score += 40f;
-
-                if (profile.isReloading)
-                    score += 35f;
-
-                if (profile.playerTransform == player)
-                    score += 20f;
+                float score = ScoreTarget(profile, i, Mathf.Sqrt(sqrDist));
 
                 if (score > bestScore)
                 {
@@ -328,30 +336,66 @@ namespace FPS
             {
                 AttackSlotManager.Instance?.ReleaseSlot(this);
 
-                hasSlot = false;
                 player = bestTarget;
                 currentTargetIndex = bestIndex;
                 lastTargetSwitchTime = Time.time;
             }
         }
 
-        private void UpdateAnimation()
+        private float ScoreTarget(PlayerProfile profile, int profileIndex, float distance)
         {
-            if (animator == null || !IsAgentReady()) return;
+            float score = (maxTargetDistance - distance) * 2f;
 
-            animator.SetFloat(AnimSpeed, agent.velocity.magnitude, 0.1f, Time.deltaTime);
+            if (profile.currentHealth < 30f)
+                score += 30f;
+
+            if (profile.isIsolated)
+                score += 40f;
+
+            if (profile.isReloading)
+                score += 35f;
+
+            if (profile.currentAmmoPercent < 0.2f)
+                score += 15f;
+
+            if (AttackSlotManager.Instance != null)
+                score -= AttackSlotManager.Instance.GetZombiesTargeting(profileIndex) * 12f;
+
+            if (TeamAnalyzer.Instance != null)
+            {
+                PlayerRole role = TeamAnalyzer.Instance.GetPlayerRole(profileIndex);
+                if (role == PlayerRole.CARRY)
+                    score += 10f;
+                else if (role == PlayerRole.LONE_WOLF)
+                    score += 15f;
+            }
+
+            if (profile.playerTransform == player)
+                score += 20f;
+
+            return score;
         }
 
-        private void SmoothLookAtPlayer()
+        private void UpdateAnimation()
         {
-            if (currentState == State.Idle || player == null) return;
+            float speed = CalculateVisualMoveSpeed();
+            lastAnimatorSpeed = speed;
 
-            Vector3 dir = (player.position - transform.position).normalized;
+            if (animator == null) return;
+
+            animator.SetFloat(AnimSpeed, speed, 0.08f, Time.deltaTime);
+        }
+
+        private void SmoothLookAtMovementOrTarget()
+        {
+            if (currentState == State.Idle) return;
+
+            Vector3 dir = GetLookDirection();
             dir.y = 0f;
 
-            if (dir != Vector3.zero)
+            if (dir.sqrMagnitude > 0.0001f)
             {
-                Quaternion lookRot = Quaternion.LookRotation(dir);
+                Quaternion lookRot = Quaternion.LookRotation(dir.normalized);
 
                 transform.rotation = Quaternion.Slerp(
                     transform.rotation,
@@ -367,10 +411,10 @@ namespace FPS
 
             currentState = State.Dead;
 
-            CancelInvoke(nameof(DealDamage));
+            meleeAttack.CancelPendingDamage();
+            meleeAttack.ClearActionLock();
 
             AttackSlotManager.Instance?.ReleaseSlot(this);
-            hasSlot = false;
 
             if (IsAgentReady())
                 agent.isStopped = true;
@@ -388,13 +432,18 @@ namespace FPS
         public virtual void ResetAI()
         {
             currentState = State.Idle;
-            lastAttackTime = 0f;
-            hasSlot = false;
             lastTargetSwitchTime = 0f;
             currentTargetIndex = -1;
             player = null;
-
-            CancelInvoke(nameof(DealDamage));
+            meleeAttack.Reset();
+            brainTickCount = 0;
+            lastBrainTickTime = 0f;
+            lastDesiredDestination = Vector3.zero;
+            lastDestinationRequestTime = 0f;
+            hasDesiredDestination = false;
+            lastAnimatorSpeed = 0f;
+            lastFramePosition = transform.position;
+            hasLastFramePosition = true;
 
             if (agent != null)
             {
@@ -414,6 +463,7 @@ namespace FPS
             runSpeed = speed;
             attackDamage = damage;
             attackCooldown = cooldown;
+            ConfigureMeleeAttack();
 
             if (agent != null && agent.enabled)
                 agent.speed = runSpeed;
@@ -435,6 +485,119 @@ namespace FPS
             return agent != null && agent.enabled && agent.isOnNavMesh;
         }
 
+        private void ConfigureMeleeAttack()
+        {
+            meleeAttack.Configure(
+                attackRange,
+                attackDamage,
+                attackCooldown,
+                attackDelay,
+                minimumAttackImpactDelay,
+                attackActionLockDuration,
+                attackHitArcDegrees);
+        }
+
+        private void ProcessPendingAttackDamage(bool forceImpact = false)
+        {
+            if (!meleeAttack.TryConsumeImpact(transform, player, Time.time, forceImpact, out Transform target, out float damage))
+                return;
+
+            if (!CanRunServerLogic()) return;
+            if (!IsValidTarget(target)) return;
+
+            IDamageable damageable = GetDamageable(target);
+            damageable?.TakeDamage(damage);
+        }
+
+        private bool IsAttackMovementLocked()
+        {
+            return currentState == State.Attack && meleeAttack.IsActionLocked(Time.time);
+        }
+
+        private Vector3 GetLookDirection()
+        {
+            if (currentState == State.Attack && meleeAttack.TryGetLockedFacing(Time.time, out Vector3 attackFacing))
+                return attackFacing;
+
+            if (currentState == State.Chase)
+            {
+                if (IsAgentReady())
+                {
+                    Vector3 agentDirection = agent.velocity.sqrMagnitude > 0.04f
+                        ? agent.velocity
+                        : agent.desiredVelocity;
+
+                    agentDirection.y = 0f;
+                    if (agentDirection.sqrMagnitude > 0.04f)
+                        return agentDirection;
+
+                    if (agent.hasPath)
+                    {
+                        Vector3 steeringDirection = agent.steeringTarget - transform.position;
+                        steeringDirection.y = 0f;
+                        if (steeringDirection.sqrMagnitude > 0.04f)
+                            return steeringDirection;
+                    }
+                }
+
+                if (hasDesiredDestination)
+                {
+                    Vector3 destinationDirection = lastDesiredDestination - transform.position;
+                    destinationDirection.y = 0f;
+                    if (destinationDirection.sqrMagnitude > 0.04f)
+                        return destinationDirection;
+                }
+            }
+
+            if (player == null)
+                return Vector3.zero;
+
+            Vector3 targetDirection = player.position - transform.position;
+            targetDirection.y = 0f;
+            return targetDirection;
+        }
+
+        private void StopAgentMotion()
+        {
+            if (!IsAgentReady())
+                return;
+
+            agent.isStopped = true;
+            agent.ResetPath();
+            agent.velocity = Vector3.zero;
+            agent.nextPosition = transform.position;
+        }
+
+        private bool CanHitTarget(Transform target)
+        {
+            return meleeAttack.CanHit(transform, target);
+        }
+
+        private float CalculateVisualMoveSpeed()
+        {
+            float speed = 0f;
+            if (currentState == State.Chase && IsAgentReady())
+            {
+                speed = Mathf.Max(agent.velocity.magnitude, agent.desiredVelocity.magnitude);
+                if (agent.isStopped)
+                    speed = 0f;
+            }
+
+            if (hasLastFramePosition && Time.deltaTime > 0.0001f)
+            {
+                Vector3 delta = transform.position - lastFramePosition;
+                delta.y = 0f;
+                float displacementSpeed = delta.magnitude / Time.deltaTime;
+                if (currentState == State.Chase)
+                    speed = Mathf.Max(speed, displacementSpeed);
+            }
+
+            lastFramePosition = transform.position;
+            hasLastFramePosition = true;
+
+            return currentState == State.Chase ? speed : 0f;
+        }
+
         private bool IsValidTarget(Transform target)
         {
             if (target == null) return false;
@@ -448,9 +611,144 @@ namespace FPS
                     return profile.cachedHealth != null && !profile.cachedHealth.IsDead;
             }
 
-            // Fallback
+            IDamageable damageable = GetDamageable(target);
+            if (damageable != null)
+                return !damageable.IsDead;
+
             PlayerHealth health = target.GetComponent<PlayerHealth>();
             return health != null && !health.IsDead;
         }
+
+        private static IDamageable GetDamageable(Transform target)
+        {
+            if (target == null)
+                return null;
+
+            return target.TryGetComponent<IDamageable>(out var damageable) ? damageable : null;
+        }
+
+        protected bool CanRunServerLogic()
+        {
+            return IsServer || NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening;
+        }
+
+        private void RegisterWithRubberBandingIfAuthority()
+        {
+            if (!CanRunServerLogic()) return;
+            if (!RubberBandingSystem.HasInstance) return;
+
+            RubberBandingSystem.Instance.RegisterZombie(this);
+        }
+
+#if UNITY_INCLUDE_TESTS
+        public readonly struct TestSnapshot
+        {
+            public readonly int brainTickCount;
+            public readonly float lastBrainTickTime;
+            public readonly Transform currentTarget;
+            public readonly int currentTargetIndex;
+            public readonly string currentState;
+            public readonly Vector3 lastDesiredDestination;
+            public readonly float lastDestinationRequestTime;
+            public readonly float lastAnimatorSpeed;
+            public readonly bool hasPendingAttackDamage;
+
+            public TestSnapshot(
+                int brainTickCount,
+                float lastBrainTickTime,
+                Transform currentTarget,
+                int currentTargetIndex,
+                string currentState,
+                Vector3 lastDesiredDestination,
+                float lastDestinationRequestTime,
+                float lastAnimatorSpeed,
+                bool hasPendingAttackDamage)
+            {
+                this.brainTickCount = brainTickCount;
+                this.lastBrainTickTime = lastBrainTickTime;
+                this.currentTarget = currentTarget;
+                this.currentTargetIndex = currentTargetIndex;
+                this.currentState = currentState;
+                this.lastDesiredDestination = lastDesiredDestination;
+                this.lastDestinationRequestTime = lastDestinationRequestTime;
+                this.lastAnimatorSpeed = lastAnimatorSpeed;
+                this.hasPendingAttackDamage = hasPendingAttackDamage;
+            }
+        }
+
+        public TestSnapshot CaptureTestSnapshot()
+        {
+            return new TestSnapshot(
+                brainTickCount,
+                lastBrainTickTime,
+                player,
+                currentTargetIndex,
+                currentState.ToString(),
+                lastDesiredDestination,
+                lastDestinationRequestTime,
+                lastAnimatorSpeed,
+                meleeAttack.HasPendingDamage);
+        }
+
+        public void DebugConfigureCombatForTests(float range, float damage, float cooldown, float impactDelay)
+        {
+            attackRange = range;
+            attackDamage = damage;
+            attackCooldown = cooldown;
+            attackDelay = impactDelay;
+            minimumAttackImpactDelay = impactDelay;
+            ConfigureMeleeAttack();
+        }
+
+        public void DebugForceTargetForTests(Transform target, int targetIndex = 0)
+        {
+            player = target;
+            currentTargetIndex = targetIndex;
+        }
+
+        public void DebugBeginAttackForTests()
+        {
+            SwitchState(State.Attack);
+            meleeAttack.Reset();
+            AttackBehavior();
+        }
+
+        public void DebugProcessPendingAttackForTests(bool forceImpact = false)
+        {
+            ProcessPendingAttackDamage(forceImpact);
+        }
+
+        public bool DebugIsTargetValidForTests(Transform target)
+        {
+            return IsValidTarget(target);
+        }
+
+        public bool DebugCanHitTargetForTests(Transform target)
+        {
+            return CanHitTarget(target);
+        }
+
+        public void DebugSetStateForTests(string stateName)
+        {
+            if (System.Enum.TryParse(stateName, out State parsed))
+                SwitchState(parsed);
+        }
+
+        public void DebugUpdateAnimationForTests()
+        {
+            UpdateAnimation();
+        }
+
+        public void DebugSetDesiredDestinationForTests(Vector3 destination)
+        {
+            lastDesiredDestination = destination;
+            hasDesiredDestination = true;
+        }
+
+        public void DebugSmoothLookForTests()
+        {
+            SmoothLookAtMovementOrTarget();
+        }
+#endif
     }
 }

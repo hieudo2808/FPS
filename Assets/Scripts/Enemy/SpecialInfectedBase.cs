@@ -55,6 +55,8 @@ namespace FPS
         protected override void Update()
         {
             base.Update();
+            if (!CanRunServerLogic()) return;
+
             if (abilityReady && CanUseAbility())
             {
                 UseAbility();

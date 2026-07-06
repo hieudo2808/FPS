@@ -3,46 +3,68 @@ using System;
 
 namespace FPS
 {
-    public class SettingsManager : MonoBehaviour
+    public class SettingsManager : Singleton<SettingsManager>
     {
-        public static SettingsManager Instance { get; private set; }
-
         private const string MOUSE_SENSITIVITY_KEY = "MouseSensitivity";
         private const string GRAPHICS_QUALITY_KEY = "GraphicsQuality";
 
-        public float MouseSensitivity { get; private set; }
-        public int GraphicsQuality { get; private set; }
+        private bool settingsLoaded;
+        private float mouseSensitivity;
+        private int graphicsQuality;
+
+        public float MouseSensitivity
+        {
+            get
+            {
+                EnsureSettingsLoaded();
+                return mouseSensitivity;
+            }
+            private set => mouseSensitivity = value;
+        }
+
+        public int GraphicsQuality
+        {
+            get
+            {
+                EnsureSettingsLoaded();
+                return graphicsQuality;
+            }
+            private set => graphicsQuality = value;
+        }
 
         public event Action<float> OnSensitivityChanged;
         public event Action<int> OnGraphicsQualityChanged;
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            base.Awake();
 
+            if (Instance == this)
+                EnsureSettingsLoaded();
+        }
+
+        private void EnsureSettingsLoaded()
+        {
+            if (settingsLoaded) return;
             LoadSettings();
         }
 
         private void LoadSettings()
         {
-            MouseSensitivity = PlayerPrefs.GetFloat(MOUSE_SENSITIVITY_KEY, 2.0f);
+            mouseSensitivity = PlayerPrefs.GetFloat(MOUSE_SENSITIVITY_KEY, 2.0f);
             
             // Default quality is the current one in Unity settings if not saved
             int defaultQuality = QualitySettings.GetQualityLevel();
-            GraphicsQuality = PlayerPrefs.GetInt(GRAPHICS_QUALITY_KEY, defaultQuality);
+            graphicsQuality = PlayerPrefs.GetInt(GRAPHICS_QUALITY_KEY, defaultQuality);
+            settingsLoaded = true;
             
             ApplyGraphicsQuality();
         }
 
         public void SetMouseSensitivity(float sensitivity)
         {
-            MouseSensitivity = sensitivity;
+            EnsureSettingsLoaded();
+            mouseSensitivity = sensitivity;
             PlayerPrefs.SetFloat(MOUSE_SENSITIVITY_KEY, sensitivity);
             PlayerPrefs.Save();
             OnSensitivityChanged?.Invoke(sensitivity);
@@ -50,7 +72,8 @@ namespace FPS
 
         public void SetGraphicsQuality(int qualityIndex)
         {
-            GraphicsQuality = qualityIndex;
+            EnsureSettingsLoaded();
+            graphicsQuality = qualityIndex;
             PlayerPrefs.SetInt(GRAPHICS_QUALITY_KEY, qualityIndex);
             PlayerPrefs.Save();
             ApplyGraphicsQuality();
@@ -59,9 +82,9 @@ namespace FPS
 
         private void ApplyGraphicsQuality()
         {
-            if (QualitySettings.GetQualityLevel() != GraphicsQuality)
+            if (QualitySettings.GetQualityLevel() != graphicsQuality)
             {
-                QualitySettings.SetQualityLevel(GraphicsQuality, true);
+                QualitySettings.SetQualityLevel(graphicsQuality, true);
             }
         }
     }

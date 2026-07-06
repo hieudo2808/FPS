@@ -45,10 +45,17 @@ namespace FPS
 
             if (currentInteractable != null
                 && currentInteractable.CanInteract
-                && Input.GetKeyDown(interactKey))
+                && GetInteractInputDown())
             {
                 TryInteract();
             }
+        }
+
+        private bool GetInteractInputDown()
+        {
+            return InputManager.Instance != null
+                ? InputManager.Instance.GetInteractInputDown()
+                : Input.GetKeyDown(interactKey);
         }
 
         private void ScanForInteractable()

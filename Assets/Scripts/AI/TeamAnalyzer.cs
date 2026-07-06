@@ -163,7 +163,7 @@ namespace FPS
             
             foreach (var profile in profiles)
             {
-                if (profile.isIsolated)
+                if (profile.isIsolated || profile.distanceToNearestAlly > isolationDistance)
                 {
                     isolatedPlayers.Add(profile);
                 }
