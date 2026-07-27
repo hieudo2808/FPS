@@ -128,7 +128,7 @@ namespace FPS
             if (isDead.Value) return;
 
             currentHealth.Value = Mathf.Max(0f, currentHealth.Value - damage);
-            Debug.Log($"[EnemyHealth] {gameObject.name} took {damage} damage. HP: {currentHealth.Value}/{maxHealth}");
+            GameLog.Info(() => $"[EnemyHealth] {gameObject.name} took {damage} damage. HP: {currentHealth.Value}/{maxHealth}");
 
             if (currentHealth.Value <= 0f)
                 Die();
@@ -144,7 +144,7 @@ namespace FPS
 
             maxHealth = newMaxHealth;
             currentHealth.Value = maxHealth;
-            Debug.Log($"[EnemyHealth] {gameObject.name} maxHealth scaled to {maxHealth}");
+            GameLog.Info(() => $"[EnemyHealth] {gameObject.name} maxHealth scaled to {maxHealth}");
         }
 
         // ==========================================
@@ -157,7 +157,7 @@ namespace FPS
 
             isDead.Value = true; // sync đến tất cả client qua NetworkVariable
             currentHealth.Value = 0f;
-            Debug.Log($"[EnemyHealth] {gameObject.name} died!");
+            GameLog.Info(() => $"[EnemyHealth] {gameObject.name} died!");
 
             OnDeathServer?.Invoke();
             AIDirector.Instance?.OnZombieDied();

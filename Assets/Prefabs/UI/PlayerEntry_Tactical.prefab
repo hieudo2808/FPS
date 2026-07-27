@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: EMPTY SLOT
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d0f0bf716f26dd144ada58ec2fbc7a45, type: 2}
-  m_sharedMaterial: {fileID: 24202990792880216, guid: d0f0bf716f26dd144ada58ec2fbc7a45, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: bab69fdf2b9c9a64abf8c29b84642038, type: 2}
+  m_sharedMaterial: {fileID: -1231762661638654769, guid: bab69fdf2b9c9a64abf8c29b84642038, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -95,9 +95,9 @@ MonoBehaviour:
   m_fontSize: 19
   m_fontSizeBase: 19
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 10
+  m_fontSizeMax: 19
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 4096
@@ -273,14 +273,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.02, g: 0.04, b: 0.045, a: 0.85}
+  m_Color: {r: 0.45, g: 0.75, b: 0.85, a: 0.85}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 304872cdee5c5a744b9c1baa9c665b2a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4f631c7b1ffb24949aa787ded850c866, type: 2}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

@@ -39,6 +39,14 @@ namespace FPS
         [SerializeField] private TextMeshProUGUI difficultyText;
         [SerializeField] private TextMeshProUGUI playerCountText;
 
+        [Header("Match Flow")]
+        [SerializeField] private TextMeshProUGUI matchStateText;
+        [SerializeField] private TextMeshProUGUI respawnCountdownText;
+
+        [Header("Hit Feedback")]
+        [SerializeField] private TextMeshProUGUI hitMarkerText;
+        [SerializeField] private float hitMarkerDuration = 0.18f;
+
         [Header("Prompts")]
         [SerializeField] private TextMeshProUGUI interactionPromptText;
         [SerializeField] private GameObject waveAnnouncementPanel;
@@ -54,6 +62,7 @@ namespace FPS
         private Weapon currentWeapon;
         private Weapon unusedWeapon;
         private PlayerHealth playerHealth;
+        private float hitMarkerTimer;
 
         private void Start()
         {
@@ -88,9 +97,20 @@ namespace FPS
                 ammoTypeUI.enabled = false;
             }
 
+            if (hitMarkerText != null)
+            {
+                hitMarkerText.gameObject.SetActive(false);
+            }
+
+            if (respawnCountdownText != null)
+            {
+                respawnCountdownText.gameObject.SetActive(false);
+            }
+
             UpdateHealthUI(100f, 100f);
             UpdateAmmoInfo();
             UpdateCombatInfo();
+            UpdateMatchFlowInfo();
         }
 
         private void Update()
@@ -102,6 +122,10 @@ namespace FPS
             {
                 UpdateAmmoInfo();
             }
+
+            UpdateCombatInfo();
+            UpdateMatchFlowInfo();
+            UpdateHitMarkerTimer();
         }
 
         protected override void OnDestroy()
@@ -321,6 +345,17 @@ namespace FPS
 
         private void UpdateCombatInfo()
         {
+            if (NetworkMatchStateManager.HasInstance && NetworkMatchStateManager.Instance.State != NetworkMatchState.Playing)
+            {
+                if (phaseText != null)
+                    phaseText.text = FormatMatchState(NetworkMatchStateManager.Instance);
+            }
+            else if (AIDirector.Instance != null)
+            {
+                if (phaseText != null)
+                    phaseText.text = $"{AIDirector.Instance.CurrentPhase.ToString().ToUpperInvariant()} PHASE";
+            }
+
             if (AIDirector.Instance != null)
             {
                 if (killCountText != null)
@@ -328,15 +363,12 @@ namespace FPS
 
                 if (zombieCountText != null)
                     zombieCountText.text = $"Zombies Left: {AIDirector.Instance.ZombiesAlive}";
-
-                if (phaseText != null)
-                    phaseText.text = $"{AIDirector.Instance.CurrentPhase.ToString().ToUpperInvariant()} PHASE";
             }
             else
             {
                 if (killCountText != null) killCountText.text = "Kills: --";
                 if (zombieCountText != null) zombieCountText.text = "Zombies Left: --";
-                if (phaseText != null) phaseText.text = "-- PHASE";
+                if (phaseText != null && !NetworkMatchStateManager.HasInstance) phaseText.text = "-- PHASE";
             }
 
             if (playerCountText != null)
@@ -365,6 +397,77 @@ namespace FPS
                     ? FormatKeyName(InputManager.Instance.GetKeyForAction("Grenade"))
                     : "G";
             }
+        }
+
+        private void UpdateMatchFlowInfo()
+        {
+            NetworkMatchStateManager matchManager = NetworkMatchStateManager.Instance;
+            if (matchManager != null && matchStateText != null)
+            {
+                // Gameplay sạch như game thật: chỉ hiện banner khi GAME OVER.
+                bool showState = matchManager.State == NetworkMatchState.GameOver;
+                if (showState)
+                    matchStateText.text = FormatMatchState(matchManager);
+                matchStateText.gameObject.SetActive(showState);
+            }
+
+            bool showRespawn = playerHealth != null && playerHealth.IsDead;
+            float remaining = matchManager != null ? matchManager.LocalRespawnRemainingSeconds : 0f;
+            string respawnText = remaining > 0f
+                ? $"RESPAWN IN {Mathf.CeilToInt(remaining)}"
+                : "DOWN";
+
+            if (respawnCountdownText != null)
+            {
+                respawnCountdownText.gameObject.SetActive(showRespawn);
+                if (showRespawn)
+                    respawnCountdownText.text = respawnText;
+            }
+
+            if (healthStateText != null)
+            {
+                healthStateText.gameObject.SetActive(showRespawn);
+                if (showRespawn)
+                {
+                    healthStateText.text = respawnText;
+                    healthStateText.color = WarningColor;
+                }
+            }
+        }
+
+        private static string FormatMatchState(NetworkMatchStateManager matchManager)
+        {
+            return matchManager.State switch
+            {
+                NetworkMatchState.Warmup => $"WARMUP {Mathf.CeilToInt(matchManager.WarmupRemainingSeconds)}",
+                NetworkMatchState.Playing => "PLAYING",
+                NetworkMatchState.GameOver => "GAME OVER",
+                NetworkMatchState.Loading => "LOADING",
+                _ => "LOBBY"
+            };
+        }
+
+        public void ShowHitConfirmed(HitboxZone zone, float finalDamage)
+        {
+            if (hitMarkerText == null)
+                return;
+
+            hitMarkerText.text = zone == HitboxZone.Head
+                ? $"HEADSHOT {Mathf.CeilToInt(finalDamage)}"
+                : $"+{Mathf.CeilToInt(finalDamage)}";
+            hitMarkerText.color = zone == HitboxZone.Head ? WarningColor : AccentColor;
+            hitMarkerText.gameObject.SetActive(true);
+            hitMarkerTimer = hitMarkerDuration;
+        }
+
+        private void UpdateHitMarkerTimer()
+        {
+            if (hitMarkerText == null || hitMarkerTimer <= 0f)
+                return;
+
+            hitMarkerTimer -= Time.deltaTime;
+            if (hitMarkerTimer <= 0f)
+                hitMarkerText.gameObject.SetActive(false);
         }
 
         private static string FormatKeyName(KeyCode key)

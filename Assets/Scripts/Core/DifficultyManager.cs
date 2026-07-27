@@ -84,14 +84,14 @@ namespace FPS
                 RubberBandingSystem.Instance.isEnabled = stats.enableRubberBanding;
             }
             
-            Debug.Log($"[DifficultyManager] Difficulty set to {level}. HP: x{stats.hpMultiplier}, Damage: x{stats.damageMultiplier}, Speed: x{stats.speedMultiplier}, RubberBanding: {stats.enableRubberBanding}");
+            GameLog.Info(() => $"[DifficultyManager] Difficulty set to {level}. HP: x{stats.hpMultiplier}, Damage: x{stats.damageMultiplier}, Speed: x{stats.speedMultiplier}, RubberBanding: {stats.enableRubberBanding}");
         }
 
         public void SetDifficulty(DifficultyLevel level)
         {
             if (!IsServer)
             {
-                Debug.LogWarning("[DifficultyManager] Only server can change difficulty.");
+                GameLog.Warning("[DifficultyManager] Only server can change difficulty.");
                 return;
             }
             CurrentDifficulty.Value = level;

@@ -44,10 +44,12 @@ namespace FPS
         [SerializeField] private int maxSpecialsAlive = 2;
 
         [Header("Debug")]
-        [SerializeField] private bool showDebugLogs = true;
+        [SerializeField] private bool showDebugLogs = false;
 
         private float lastSpecialSpawnTime;
         private List<GameObject> aliveSpecials = new List<GameObject>();
+        private float lastAliveCleanupTime = -999f;
+        [SerializeField] private float aliveCleanupInterval = 0.5f;
 
         private void Awake()
         {
@@ -116,6 +118,10 @@ namespace FPS
 
         private void Update()
         {
+            if (Time.time - lastAliveCleanupTime < aliveCleanupInterval)
+                return;
+
+            lastAliveCleanupTime = Time.time;
             aliveSpecials.RemoveAll(s => s == null);
         }
 
@@ -195,7 +201,7 @@ namespace FPS
             if (data == null)
             {
                 if (showDebugLogs)
-                    Debug.Log("[SpecialRegistry] No special available to spawn");
+                    GameLog.Info("[SpecialRegistry] No special available to spawn");
                 return null;
             }
             
@@ -207,7 +213,7 @@ namespace FPS
             OnSpecialSpawned?.Invoke(special);
             
             if (showDebugLogs)
-                Debug.Log($"[SpecialRegistry] Spawned {data.displayName} at {position}");
+                GameLog.Info(() => $"[SpecialRegistry] Spawned {data.displayName} at {position}");
             
             return special;
         }
@@ -250,7 +256,7 @@ namespace FPS
                     special.prefab = prefab;
                     special.implementationState = SpecialImplementationState.FrameworkOnly;
                     special.isImplemented = false;
-                    Debug.Log($"[SpecialRegistry] Registered {type} prefab");
+                    GameLog.Info(() => $"[SpecialRegistry] Registered {type} prefab");
                     return;
                 }
             }
@@ -268,7 +274,7 @@ namespace FPS
                     special.prefab = prefab;
                     special.implementationState = SpecialImplementationState.Playable;
                     special.isImplemented = true;
-                    Debug.Log($"[SpecialRegistry] Registered playable {type} prefab");
+                    GameLog.Info(() => $"[SpecialRegistry] Registered playable {type} prefab");
                     return true;
                 }
             }

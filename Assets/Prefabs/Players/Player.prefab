@@ -18583,8 +18583,8 @@ MonoBehaviour:
   controller: {fileID: 8138005202596557545}
   characterAnimation: {fileID: 8173901843347256094}
   mouseMovement: {fileID: 3398006519943495899}
-  visualRoot: {fileID: 0}
-  groundCheck: {fileID: 0}
+  visualRoot: {fileID: 8173901843347256081}
+  groundCheck: {fileID: 3219884493669091377}
   speed: 7
   walkMultiplier: 2
   jumpHeight: 2
@@ -18640,6 +18640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d16f1ac50f24fb4a9c4b8f2e3d715a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FPS::FPS.PlayerCombatTelemetry
+  ShowTopMostFoldoutHeaderGroup: 1
   telemetryFreshnessSeconds: 2
 --- !u!114 &413663195698374649
 MonoBehaviour:
@@ -19885,9 +19886,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletSpawnPoint: {fileID: 5444810759460814513}
   muzzleEffect: {fileID: 7742325741107199489}
-  fpsArmsAnimator: {fileID: 0}
-  weaponData: {fileID: 0}
-  bulletPool: {fileID: 0}
+  fpsArmsAnimator: {fileID: 7077308633954883202}
+  weaponData: {fileID: 11400000, guid: 197c4c944bb5de644b74cbae96e3c034, type: 2}
+  bulletPool: {fileID: 2675511559088990890}
   magazineOnGun: {fileID: 0}
   magazineInHand: {fileID: 0}
 --- !u!4 &7657375064289370685 stripped
@@ -20477,6 +20478,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd3a85eb8b82943419c56e4c2dedd8e4, type: 3}
+--- !u!114 &2675511559088990890 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5953364291533151039, guid: bd3a85eb8b82943419c56e4c2dedd8e4, type: 3}
+  m_PrefabInstance: {fileID: 8628838412220592533}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98990c40ce0ec0644b5692d2fd5d6ce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::ObjectPooling
 --- !u!4 &5191183488439771132 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4590578906057420393, guid: bd3a85eb8b82943419c56e4c2dedd8e4, type: 3}

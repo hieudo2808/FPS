@@ -1,5 +1,145 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4327641589705256997
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4081175205530331265}
+  - component: {fileID: 4429465600742328172}
+  - component: {fileID: 8967987385117724268}
+  m_Layer: 0
+  m_Name: Hitbox_Head
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4081175205530331265
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4327641589705256997}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.00000013837285, y: 0.0573194, z: -0.0099455025}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5395417744967636203}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &4429465600742328172
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4327641589705256997}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.17
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8967987385117724268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4327641589705256997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0074dbcac867b384491042730e67a14a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.HitboxSegment
+  zone: 1
+  damageMultiplier: 2
+  ownerNetworkObject: {fileID: -806609876786628716}
+  damageTarget: {fileID: 1990169024061482776}
+--- !u!1 &5898210804226588233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3309782245309930901}
+  - component: {fileID: 284363881921400048}
+  - component: {fileID: 8105909109162768780}
+  m_Layer: 0
+  m_Name: Hitbox_Chest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3309782245309930901
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5898210804226588233}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.009179934, y: 5.9374347e-14, z: 2.2613342e-13, w: 0.99995786}
+  m_LocalPosition: {x: 0.00000013837298, y: 0.09998287, z: 0.0018358915}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 840442796786450823}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &284363881921400048
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5898210804226588233}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.4, y: 0.45, z: 0.3}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8105909109162768780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5898210804226588233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0074dbcac867b384491042730e67a14a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.HitboxSegment
+  zone: 2
+  damageMultiplier: 1
+  ownerNetworkObject: {fileID: -806609876786628716}
+  damageTarget: {fileID: 1990169024061482776}
 --- !u!1001 &1947371776805364099
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -682,7 +822,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8021001004253913084, guid: 9774105e61b5ca741a71a7246dd47fb8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3309782245309930901}
+    - targetCorrespondingSourceObject: {fileID: -3321919801592875672, guid: 9774105e61b5ca741a71a7246dd47fb8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4081175205530331265}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9774105e61b5ca741a71a7246dd47fb8, type: 3}
       insertIndex: -1
@@ -708,7 +854,18 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9774105e61b5ca741a71a7246dd47fb8, type: 3}
       insertIndex: -1
       addedObject: {fileID: -2767774537105823660}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9774105e61b5ca741a71a7246dd47fb8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7442428938224939429}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9774105e61b5ca741a71a7246dd47fb8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6302600639615227988}
   m_SourcePrefab: {fileID: 100100000, guid: 9774105e61b5ca741a71a7246dd47fb8, type: 3}
+--- !u!4 &840442796786450823 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8021001004253913084, guid: 9774105e61b5ca741a71a7246dd47fb8, type: 3}
+  m_PrefabInstance: {fileID: 1947371776805364099}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1713370626851855570 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9774105e61b5ca741a71a7246dd47fb8, type: 3}
@@ -733,7 +890,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: -0.09
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &-806609876786628716
@@ -782,9 +939,12 @@ MonoBehaviour:
   attackCooldown: 1.5
   attackDelay: 0.5
   minimumAttackImpactDelay: 0.65
+  attackActionLockDuration: 0.9
   attackHitArcDegrees: 130
   runSpeed: 5
   rotationSpeed: 5
+  pathRefreshInterval: 0.15
+  destinationRepathDistance: 0.75
   attackSound: {fileID: 0}
   deathSound: {fileID: 0}
   soundVolume: 1
@@ -832,9 +992,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2.107737
+  m_Height: 1.6984367
   m_Direction: 1
-  m_Center: {x: 0, y: 1.0654318, z: 0}
+  m_Center: {x: 0, y: 0.86078167, z: 0}
 --- !u!114 &1990169024061482776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -929,3 +1089,41 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &7442428938224939429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713370626851855570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0074dbcac867b384491042730e67a14a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.HitboxSegment
+  zone: 0
+  damageMultiplier: 1
+  ownerNetworkObject: {fileID: -806609876786628716}
+  damageTarget: {fileID: 1990169024061482776}
+--- !u!114 &6302600639615227988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713370626851855570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0f27d9702d2b3947ad6ddff06dc844c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.LagCompensatedTarget
+  hitboxSegments:
+  - {fileID: 7442428938224939429}
+  - {fileID: 8967987385117724268}
+  - {fileID: 8105909109162768780}
+  autoRefreshSegments: 1
+--- !u!4 &5395417744967636203 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3321919801592875672, guid: 9774105e61b5ca741a71a7246dd47fb8, type: 3}
+  m_PrefabInstance: {fileID: 1947371776805364099}
+  m_PrefabAsset: {fileID: 0}

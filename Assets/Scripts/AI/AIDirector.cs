@@ -103,7 +103,7 @@ namespace FPS
             UpdatePhaseUI(networkPhase.Value);
             UpdateZombieCountUI(0, 0);
 
-            if (CanRunServerLogic())
+            if (CanRunServerLogic() && NetworkMatchStateManager.IsGameplayActive)
                 StartCoroutine(StartFirstWave());
         }
 
@@ -117,6 +117,7 @@ namespace FPS
         private void Update()
         {
             if (!CanRunServerLogic()) return;
+            if (!NetworkMatchStateManager.IsGameplayActive) return;
 
             EnsureSpawnEventSubscriptions();
             UpdatePacing();
@@ -155,7 +156,7 @@ namespace FPS
             phaseTimer = 0f;
 
             if (showDebugLogs)
-                Debug.Log($"[AIDirector] Phase → {newPhase}");
+                GameLog.Info(() => $"[AIDirector] Phase -> {newPhase}");
         }
 
         private IEnumerator StartFirstWave()
@@ -166,6 +167,7 @@ namespace FPS
 
         private void UpdateSpawning()
         {
+            if (!NetworkMatchStateManager.IsGameplayActive) return;
             if (networkPhase.Value == GamePhase.RELAX) return;
             if (networkZombiesAlive.Value >= GetMaxZombiesAlive()) return;
 

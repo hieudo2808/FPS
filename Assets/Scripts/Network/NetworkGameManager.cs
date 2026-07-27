@@ -244,6 +244,7 @@ namespace FPS
                 IsInLobby = false;
 
                 // Đăng ký callback spawn player khi GameScene load xong
+                NetworkMatchStateManager.Instance?.EnterLoading();
                 NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += HandleGameSceneLoaded;
                 NetworkManager.Singleton.SceneManager.LoadScene(gameScene, LoadSceneMode.Single);
             }
@@ -296,11 +297,23 @@ namespace FPS
                 Vector3 spawnPosition = Vector3.zero;
                 Quaternion spawnRotation = Quaternion.identity;
                 if (NetworkSpawnManager.Instance != null)
-                    NetworkSpawnManager.Instance.TryGetNextSpawnPose(out spawnPosition, out spawnRotation);
+                    NetworkSpawnManager.Instance.TryGetSpawnPose(
+                        out spawnPosition,
+                        out spawnRotation,
+                        new SpawnRequest(clientId));
 
                 var playerObj = Instantiate(playerPrefabCache, spawnPosition, spawnRotation);
                 var netObj = playerObj.GetComponent<NetworkObject>();
                 netObj.SpawnAsPlayerObject(clientId, true);
+            }
+
+            if (NetworkMatchStateManager.Instance != null)
+            {
+                NetworkMatchStateManager.Instance.EnterWarmup();
+            }
+            else
+            {
+                GameLog.Warning("[NetworkGameManager] GameScene has no NetworkMatchStateManager. Match flow will run in legacy mode.");
             }
         }
 

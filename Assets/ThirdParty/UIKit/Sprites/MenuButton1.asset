@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!213 &21300000
+Sprite:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: MenuButton1
+  m_Rect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 606
+    height: 72
+  m_Offset: {x: 0, y: 0}
+  m_Border: {x: 0, y: 0, z: 0, w: 0}
+  m_PixelsToUnits: 100
+  m_Pivot: {x: 0.5, y: 0.5}
+  m_Extrude: 1
+  m_IsPolygon: 0
+  m_AtlasName:
+  m_PackingTag:
+  m_RD:
+    texture: {fileID: 2800000, guid: 18ed5bad6c103e24a866858fd3b2fe16, type: 3}
+    alphaTexture: {fileID: 0}
+    vertices:
+    - serializedVersion: 2
+      pos: {x: -2.91, y: 0.36, z: 0}
+    - serializedVersion: 2
+      pos: {x: 3.03, y: -0.36, z: 0}
+    - serializedVersion: 2
+      pos: {x: 3.03, y: 0.36, z: 0}
+    - serializedVersion: 2
+      pos: {x: -2.95, y: 0.2, z: 0}
+    - serializedVersion: 2
+      pos: {x: -2.96, y: 0.15, z: 0}
+    - serializedVersion: 2
+      pos: {x: -2.98, y: 0.07, z: 0}
+    - serializedVersion: 2
+      pos: {x: -2.99, y: 0.01, z: 0}
+    - serializedVersion: 2
+      pos: {x: -3, y: -0.04, z: 0}
+    - serializedVersion: 2
+      pos: {x: -3.01, y: -0.14, z: 0}
+    - serializedVersion: 2
+      pos: {x: -3.02, y: -0.15, z: 0}
+    - serializedVersion: 2
+      pos: {x: -3.03, y: -0.21, z: 0}
+    - serializedVersion: 2
+      pos: {x: -3.03, y: -0.36, z: 0}
+    indices: 0b000a000100090001000a00080001000900070001000800060001000700050001000600040001000500030001000400000001000300020001000000
+    textureRect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 606
+      height: 72
+    textureRectOffset: {x: 0, y: 0}
+    settingsRaw: 64
+    uvTransform: {x: 100, y: 303, z: 100, w: 36}

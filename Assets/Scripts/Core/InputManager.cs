@@ -6,7 +6,15 @@ namespace FPS
     public class InputManager : MonoBehaviour
     {
         public static InputManager Instance { get; private set; }
-        public static bool GameplayInputBlocked { get; set; }
+        private static bool menuInputBlocked;
+
+        public static bool MatchInputBlocked { get; set; }
+
+        public static bool GameplayInputBlocked
+        {
+            get => menuInputBlocked || MatchInputBlocked;
+            set => menuInputBlocked = value;
+        }
 
         private Dictionary<string, KeyCode> keyBindings;
 

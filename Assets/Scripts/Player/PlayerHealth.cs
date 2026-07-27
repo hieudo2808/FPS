@@ -5,6 +5,10 @@ namespace FPS
 {
     public class PlayerHealth : NetworkBehaviour, IDamageable
     {
+        public static event System.Action<PlayerHealth, ulong> PlayerDiedServer;
+        public static event System.Action<PlayerHealth> PlayerSpawnedServer;
+        public static event System.Action<PlayerHealth> PlayerDespawnedServer;
+
         [Header("Health Settings")]
         [SerializeField] private float maxHealth = 100f;
 
@@ -36,6 +40,7 @@ namespace FPS
             {
                 networkHealth.Value = maxHealth;
                 networkIsDead.Value = false;
+                PlayerSpawnedServer?.Invoke(this);
             }
 
             // Subscribe to network variable changes for UI updates
@@ -50,6 +55,9 @@ namespace FPS
         {
             networkHealth.OnValueChanged -= OnHealthValueChanged;
             networkIsDead.OnValueChanged -= OnDeadValueChanged;
+
+            if (IsServer)
+                PlayerDespawnedServer?.Invoke(this);
         }
 
         private void OnHealthValueChanged(float oldValue, float newValue)
@@ -72,7 +80,7 @@ namespace FPS
 
             networkHealth.Value = Mathf.Max(0, networkHealth.Value - Mathf.Max(0f, damage));
 
-            Debug.Log($"Player took {damage} damage. HP: {networkHealth.Value}/{maxHealth}");
+            GameLog.Info(() => $"Player took {damage} damage. HP: {networkHealth.Value}/{maxHealth}");
 
             if (networkHealth.Value <= 0)
                 Die();
@@ -83,7 +91,8 @@ namespace FPS
             if (networkIsDead.Value) return;
 
             networkIsDead.Value = true;
-            Debug.Log($"Player {OwnerClientId} died!");
+            GameLog.Info(() => $"Player {OwnerClientId} died!");
+            PlayerDiedServer?.Invoke(this, OwnerClientId);
 
             // Notify all clients
             OnPlayerDiedClientRpc();
@@ -108,6 +117,34 @@ namespace FPS
             if (!IsServer) return;
             networkIsDead.Value = false;
             networkHealth.Value = maxHealth;
+        }
+
+        public void Respawn(Vector3 position, Quaternion rotation)
+        {
+            if (!IsServer) return;
+
+            ApplyRespawnPose(position, rotation);
+            networkIsDead.Value = false;
+            networkHealth.Value = maxHealth;
+            RespawnClientRpc(position, rotation);
+        }
+
+        [ClientRpc]
+        private void RespawnClientRpc(Vector3 position, Quaternion rotation)
+        {
+            ApplyRespawnPose(position, rotation);
+        }
+
+        private void ApplyRespawnPose(Vector3 position, Quaternion rotation)
+        {
+            PlayerMovement movement = GetComponent<PlayerMovement>();
+            if (movement != null)
+            {
+                movement.TeleportForRespawn(position, rotation);
+                return;
+            }
+
+            transform.SetPositionAndRotation(position, rotation);
         }
     }
 }

@@ -17,10 +17,16 @@ namespace FPS
 
         private RecoilController recoilController;
         private PlayerCombatTelemetry combatTelemetry;
+        private WeaponFireHandler cachedFireHandler;
+        private WeaponManager cachedWeaponManager;
+        private Camera cachedCamera;
+        private PlayerMovement cachedPlayerMovement;
+        private ushort fireSequence;
 
         [Header("Bullet Pooling")]
         [Tooltip("Optional pool for bulletPrefab. Empty uses Instantiate/Destroy fallback.")]
         [SerializeField] private ObjectPooling bulletPool;
+        [SerializeField] private bool allowInstantiateFallbackInDevelopment = true;
 
         [Header("Magazine Visuals")]
         [Tooltip("Magazine currently attached to the gun.")]
@@ -65,11 +71,7 @@ namespace FPS
             isOwner = owner;
             if (isOwner)
             {
-                recoilController = GetComponentInParent<RecoilController>();
-                if (recoilController == null)
-                    recoilController = FindFirstObjectByType<RecoilController>();
-
-                combatTelemetry = GetComponentInParent<PlayerCombatTelemetry>();
+                CacheOwnerDependencies();
                 ReportCombatTelemetry();
             }
         }
@@ -79,6 +81,9 @@ namespace FPS
             canShoot    = weaponData != null;
             isReloading = false;
             burstCoroutine = null;
+
+            if (isOwner)
+                CacheOwnerDependencies();
         }
 
         private void OnDisable()
@@ -107,6 +112,7 @@ namespace FPS
         {
             if (weaponData == null) return;
             if (isReloading) return;
+            if (!NetworkMatchStateManager.IsGameplayActive) return;
 
             if (currentAmmo == 0 && reservedAmmo == 0)
             {
@@ -183,7 +189,7 @@ namespace FPS
             if (recoilController != null && weaponData.recoilPattern != null)
                 recoilController.Fire(weaponData.recoilPattern);
 
-            Camera cam = Camera.main;
+            Camera cam = ResolveAimCamera();
             if (cam == null) return;
 
             PlayMuzzleEffect();
@@ -191,16 +197,23 @@ namespace FPS
                 AudioManager.Instance.PlaySFXSound(weaponData.shootSound);
 
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-            Vector3 targetPoint = Physics.Raycast(ray, out RaycastHit hit, 500f)
+            Vector3 targetPoint = Physics.Raycast(
+                    ray,
+                    out RaycastHit hit,
+                    500f,
+                    GetVisualHitMask(),
+                    QueryTriggerInteraction.Ignore)
                 ? hit.point
                 : ray.GetPoint(500f);
 
-            Vector3 spawnPos        = bulletSpawnPoint.position;
+            Vector3 spawnPos        = bulletSpawnPoint != null ? bulletSpawnPoint.position : transform.position;
             Vector3 shootDirection  = (targetPoint - spawnPos).normalized;
+            int clientShotTick = cachedPlayerMovement != null ? cachedPlayerMovement.CurrentSimulationTick : Time.frameCount;
+            double clientShotLocalTime = GetClientShotLocalTime();
+            ushort sequence = unchecked(++fireSequence);
 
             SpawnVisualBullet(spawnPos, shootDirection);
-            var fireHandler = GetComponentInParent<WeaponFireHandler>();
-            fireHandler?.RequestFireServerRpc(spawnPos, shootDirection);
+            cachedFireHandler?.RequestFireServerRpc(spawnPos, shootDirection, clientShotTick, clientShotLocalTime, sequence);
         }
 
         public void SpawnVisualBullet(Vector3 position, Vector3 direction)
@@ -223,14 +236,19 @@ namespace FPS
 
                 StartCoroutine(ReturnBulletToPool(bulletInstance, weaponData.bulletLiveTime));
             }
-            else
+            else if (CanUseInstantiateFallback())
             {
+                GameLog.Warning(() => $"[Weapon] Bullet pool is missing for {name}; using editor/development Instantiate fallback.");
                 GameObject bulletInstance = Instantiate(weaponData.bulletPrefab, position, Quaternion.LookRotation(direction));
                 Rigidbody rb = bulletInstance.GetComponent<Rigidbody>();
                 if (rb != null)
                     rb.linearVelocity = direction * weaponData.bulletSpeed;
 
                 Destroy(bulletInstance, weaponData.bulletLiveTime);
+            }
+            else
+            {
+                GameLog.Warning(() => $"[Weapon] Bullet pool is missing for {name}; visual bullet skipped in release path.");
             }
         }
 
@@ -262,7 +280,7 @@ namespace FPS
             if (weaponData == null) return;
             if (isReloading) return;
 
-            GetComponentInParent<WeaponFireHandler>()?.RequestReloadServerRpc();
+            cachedFireHandler?.RequestReloadServerRpc();
 
             canShoot    = false;
             isReloading = true;
@@ -279,8 +297,7 @@ namespace FPS
             if (weaponData.reloadSound != null && AudioManager.Instance != null)
                 AudioManager.Instance.PlaySFXSound(weaponData.reloadSound);
 
-            var weaponManager = GetComponentInParent<WeaponManager>();
-            weaponManager?.TriggerAnimation("Reload");
+            cachedWeaponManager?.TriggerAnimation("Reload");
 
             if (fpsArmsAnimator != null)
             {
@@ -350,6 +367,49 @@ namespace FPS
                 combatTelemetry = GetComponentInParent<PlayerCombatTelemetry>();
 
             combatTelemetry?.ReportWeaponState(isReloading, currentAmmo, weaponData.magazineSize);
+        }
+
+        private void CacheOwnerDependencies()
+        {
+            recoilController = GetComponentInParent<RecoilController>();
+            if (recoilController == null)
+                recoilController = FindFirstObjectByType<RecoilController>();
+
+            cachedFireHandler = GetComponentInParent<WeaponFireHandler>();
+            cachedWeaponManager = GetComponentInParent<WeaponManager>();
+            cachedPlayerMovement = GetComponentInParent<PlayerMovement>();
+            cachedCamera = Camera.main;
+            combatTelemetry = GetComponentInParent<PlayerCombatTelemetry>();
+        }
+
+        private Camera ResolveAimCamera()
+        {
+            if (cachedCamera != null && cachedCamera.isActiveAndEnabled)
+                return cachedCamera;
+
+            cachedCamera = Camera.main;
+            return cachedCamera;
+        }
+
+        private int GetVisualHitMask()
+        {
+            if (weaponData != null && weaponData.hitMask.value != 0)
+                return weaponData.hitMask.value;
+
+            return Physics.DefaultRaycastLayers;
+        }
+
+        private bool CanUseInstantiateFallback()
+        {
+            return allowInstantiateFallbackInDevelopment && (Application.isEditor || Debug.isDebugBuild);
+        }
+
+        private static double GetClientShotLocalTime()
+        {
+            if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsListening)
+                return Unity.Netcode.NetworkManager.Singleton.LocalTime.Time;
+
+            return Time.timeAsDouble;
         }
     }
 }

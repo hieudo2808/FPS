@@ -113,7 +113,7 @@ namespace FPS
             }
             
             if (showDebugLogs)
-                Debug.Log($"[TeamAnalyzer] Formation: {currentFormation}, Spread: {teamSpread:F1}m");
+                GameLog.Info(() => $"[TeamAnalyzer] Formation: {currentFormation}, Spread: {teamSpread:F1}m");
         }
 
         private bool HasTwoPairs(List<PlayerProfile> profiles)

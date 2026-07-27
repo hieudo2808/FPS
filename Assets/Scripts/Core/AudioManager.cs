@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 namespace FPS
 {
@@ -7,6 +8,8 @@ namespace FPS
     {
         [SerializeField] private AudioMixer audioMixer;
         [SerializeField] private AudioSource sfxSource;
+        [SerializeField] private AudioSource musicSource;
+        [SerializeField] private AudioClip menuMusic;
 
         private const string SFX_VOLUME_PARAM = "sfx";
         private const string MUSIC_VOLUME_PARAM = "music";
@@ -31,9 +34,53 @@ namespace FPS
                 Debug.LogWarning("[AudioManager] SFX AudioSource was not assigned — auto-created one.");
             }
 
+            if (musicSource == null)
+            {
+                musicSource = gameObject.AddComponent<AudioSource>();
+                musicSource.playOnAwake = false;
+            }
+            musicSource.loop = true;
+            musicSource.spatialBlend = 0f;
+
             SetMasterVolume(PlayerPrefs.GetFloat(MASTER_VOLUME_PARAM, DEFAULT_VOLUME));
             SetMusicVolume(PlayerPrefs.GetFloat(MUSIC_VOLUME_PARAM, DEFAULT_VOLUME));
             SetSFXVolume(PlayerPrefs.GetFloat(SFX_VOLUME_PARAM, DEFAULT_VOLUME));
+
+            SceneManager.sceneLoaded += HandleSceneLoaded;
+            UpdateMusicForScene(SceneManager.GetActiveScene().name);
+        }
+
+        protected override void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= HandleSceneLoaded;
+            base.OnDestroy();
+        }
+
+        private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (mode == LoadSceneMode.Single)
+                UpdateMusicForScene(scene.name);
+        }
+
+        // Nhạc nền chỉ chạy ở menu/lobby; vào gameplay thì dừng để nhường ambience/SFX.
+        private void UpdateMusicForScene(string sceneName)
+        {
+            if (musicSource == null) return;
+
+            bool wantsMusic = sceneName == "MainMenu" || sceneName == "LobbyScene";
+            if (wantsMusic && menuMusic != null)
+            {
+                if (musicSource.clip != menuMusic || !musicSource.isPlaying)
+                {
+                    musicSource.clip = menuMusic;
+                    musicSource.volume = musicVolume;
+                    musicSource.Play();
+                }
+            }
+            else if (musicSource.isPlaying)
+            {
+                musicSource.Stop();
+            }
         }
 
         public void PlaySFXSound(AudioClip clip, float volume = 1f)
@@ -73,6 +120,11 @@ namespace FPS
         {
             volume = Mathf.Clamp01(volume);
             musicVolume = volume;
+            if (musicSource != null)
+            {
+                musicSource.volume = volume;
+            }
+
             float dB = ConvertVolumeToDecibels(volume);
             if (ValidateAudioMixer())
             {

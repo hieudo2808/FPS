@@ -18,14 +18,14 @@ namespace FPS
         {
             if (IsClientOnly())
             {
-                Debug.LogWarning("[ZombieFactory] Client tried to spawn zombie. Ignored — server-authoritative only.");
+                GameLog.Warning("[ZombieFactory] Client tried to spawn zombie. Ignored - server-authoritative only.");
                 return null;
             }
 
             ZombieData data = ZombieRegistry.Instance?.GetRandomZombie();
             if (data == null || data.prefab == null)
             {
-                Debug.LogError("[ZombieFactory] No zombie prefab available!");
+                GameLog.Error("[ZombieFactory] No zombie prefab available!");
                 return null;
             }
 
@@ -42,7 +42,6 @@ namespace FPS
                 var netObj = zombie.GetComponent<NetworkObject>();
                 if (netObj != null && !netObj.IsSpawned)
                 {
-                    EnsureNetworkTransform(zombie);
                     netObj.Spawn(true);
                 }
             }
@@ -64,7 +63,7 @@ namespace FPS
 
             if (showDebugLogs)
             {
-                Debug.Log($"[ZombieFactory] Spawned {data.displayName} at {position}. " +
+                GameLog.Info(() => $"[ZombieFactory] Spawned {data.displayName} at {position}. " +
                     $"HP: {data.baseHP * hpModifier:F0}, " +
                     $"Speed: {data.baseSpeed * speedModifier:F1}, " +
                     $"Pooled: {canUsePooling}, Networked: {IsNetworkSession()}");
@@ -175,15 +174,6 @@ namespace FPS
 
                 RubberBandingSystem.Instance?.RegisterZombie(ai);
             }
-        }
-
-        private void EnsureNetworkTransform(GameObject zombie)
-        {
-            if (zombie.GetComponent<Unity.Netcode.Components.NetworkTransform>() != null) return;
-
-            zombie.AddComponent<Unity.Netcode.Components.NetworkTransform>();
-            Debug.LogWarning($"[ZombieFactory] '{zombie.name}' missing NetworkTransform — added at runtime. " +
-                "Please add it to the prefab in Inspector.");
         }
 
         private float GetPlayerCountMultiplier()

@@ -74,6 +74,86 @@ namespace FPS.Tests
         }
 
         [Test]
+        public void RequestFireServerRpc_RejectsNonOwnerSenderBeforeConsumingAmmo()
+        {
+            var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
+            data.magazineSize = 2;
+            data.totalAmmo = 2;
+            data.fireRate = 0f;
+
+            fireHandler.InitializeServerWeaponStateForTests(2, 0);
+
+            Assert.IsFalse(fireHandler.ProcessFireServerForTests(
+                Vector3.zero,
+                Vector3.forward,
+                senderClientId: 123,
+                validateSender: true));
+            Assert.AreEqual(2, fireHandler.ServerMagazineAmmo,
+                "Rejected non-owner fire must not consume authoritative server ammo.");
+        }
+
+        [Test]
+        public void RequestFireServerRpc_UsesWeaponHitMaskAndDamageType()
+        {
+            var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
+            data.magazineSize = 2;
+            data.totalAmmo = 2;
+            data.fireRate = 0f;
+            data.damage = 7f;
+            data.damageType = DamageType.Bullet;
+            data.hitMask = 1 << 0;
+
+            fireHandler.InitializeServerWeaponStateForTests(2, 0);
+
+            var target = CreateDamageTarget("LayerMaskedTarget", new Vector3(0f, 0f, 2f));
+            target.gameObject.layer = 2;
+            Physics.SyncTransforms();
+
+            Assert.IsTrue(fireHandler.ProcessFireServerForTests(Vector3.zero, Vector3.forward));
+            Assert.AreEqual(0, target.HitCount,
+                "Target on a layer outside WeaponData.hitMask must not receive damage.");
+
+            target.gameObject.layer = 0;
+            Physics.SyncTransforms();
+
+            Assert.IsTrue(fireHandler.ProcessFireServerForTests(Vector3.zero, Vector3.forward));
+            Assert.AreEqual(1, target.HitCount);
+            Assert.AreEqual(DamageType.Bullet, target.LastDamage.damageType);
+        }
+
+        [Test]
+        public void RequestFireServerRpc_RespectsDamageFilter()
+        {
+            var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
+            data.magazineSize = 2;
+            data.totalAmmo = 2;
+            data.fireRate = 0f;
+            data.hitMask = Physics.DefaultRaycastLayers;
+
+            fireHandler.InitializeServerWeaponStateForTests(2, 0);
+
+            var target = CreateDamageTarget("ExplosionOnlyTarget", new Vector3(0f, 0f, 2f));
+            var filter = target.gameObject.AddComponent<DamageFilter>();
+            typeof(DamageFilter)
+                .GetField("acceptedTypes", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(filter, DamageType.Explosion);
+            typeof(DamageFilter)
+                .GetField("acceptUnspecified", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(filter, false);
+            Physics.SyncTransforms();
+
+            data.damageType = DamageType.Bullet;
+            Assert.IsTrue(fireHandler.ProcessFireServerForTests(Vector3.zero, Vector3.forward));
+            Assert.AreEqual(0, target.HitCount,
+                "Bullet damage must be blocked by an Explosion-only DamageFilter.");
+
+            data.damageType = DamageType.Explosion;
+            Assert.IsTrue(fireHandler.ProcessFireServerForTests(Vector3.zero, Vector3.forward));
+            Assert.AreEqual(1, target.HitCount,
+                "Explosion damage must pass an Explosion-only DamageFilter.");
+        }
+
+        [Test]
         public void RequestFireServerRpc_RejectsWhenServerMagazineEmpty()
         {
             var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
@@ -85,6 +165,55 @@ namespace FPS.Tests
             Assert.IsFalse(fireHandler.ProcessFireServerForTests(Vector3.zero, Vector3.forward));
             Assert.AreEqual(0, fireHandler.ServerMagazineAmmo,
                 "Server must reject fire when its authoritative magazine is empty.");
+        }
+
+        [Test]
+        public void RequestFireServerRpc_RejectsBeforeMatchIsPlaying()
+        {
+            var matchGo = new GameObject("NetworkMatchStateManager");
+            objectsToDestroy.Add(matchGo);
+            matchGo.AddComponent<NetworkObject>();
+            var matchManager = matchGo.AddComponent<NetworkMatchStateManager>();
+            matchManager.SetStateForTests(NetworkMatchState.Warmup, Time.timeAsDouble);
+
+            var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
+            data.magazineSize = 2;
+            data.totalAmmo = 2;
+            data.fireRate = 0f;
+
+            fireHandler.InitializeServerWeaponStateForTests(2, 0);
+
+            Assert.IsFalse(fireHandler.ProcessFireServerForTests(Vector3.zero, Vector3.forward));
+            Assert.AreEqual(2, fireHandler.ServerMagazineAmmo,
+                "Warmup fire must be rejected before consuming authoritative ammo.");
+        }
+
+        [Test]
+        public void RequestFireServerRpc_AppliesHitboxSegmentMultiplier()
+        {
+            var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
+            data.magazineSize = 1;
+            data.totalAmmo = 1;
+            data.fireRate = 0f;
+            data.damage = 10f;
+            data.damageType = DamageType.Bullet;
+            data.hitMask = Physics.DefaultRaycastLayers;
+
+            fireHandler.InitializeServerWeaponStateForTests(1, 0);
+
+            var target = CreateDamageTarget("HeadSegmentTarget", new Vector3(0f, 0f, 2f));
+            var segment = target.gameObject.AddComponent<HitboxSegment>();
+            typeof(HitboxSegment)
+                .GetField("zone", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(segment, HitboxZone.Head);
+            Physics.SyncTransforms();
+
+            Assert.IsTrue(fireHandler.ProcessFireServerForTests(Vector3.zero, Vector3.forward));
+            Assert.AreEqual(1, target.HitCount);
+            Assert.AreEqual(20f, target.LastDamage.amount);
+            Assert.AreEqual(HitboxZone.Head, target.LastDamage.hitZone);
+            Assert.AreEqual(2f, target.LastDamage.damageMultiplier);
+            Assert.True(target.LastDamage.isHeadshot);
         }
 
         [Test]
@@ -116,6 +245,29 @@ namespace FPS.Tests
 
             Assert.AreEqual(12, fireHandler.ServerReserveAmmo,
                 "Pickup ammo must update server-side reserve ammo, not only client-local weapon ammo.");
+        }
+
+        [Test]
+        public void WeaponServerState_HandlesFireRateAndReloadRules()
+        {
+            var data = ScriptableObject.CreateInstance<WeaponData>();
+            objectsToDestroy.Add(data);
+            data.magazineSize = 5;
+            data.totalAmmo = 10;
+            data.fireRate = 1f;
+            data.reloadTime = 0f;
+
+            var state = new WeaponServerState();
+            state.EnsureInitialized(10, data);
+
+            Assert.IsTrue(state.TryConsumeFire(data, 0.0));
+            Assert.IsFalse(state.TryConsumeFire(data, 0.5));
+            Assert.AreEqual(4, state.MagazineAmmo);
+
+            state.InitializeForTests(10, 1, 4);
+            Assert.IsTrue(state.TryBeginReload(data, 0.0));
+            Assert.AreEqual(5, state.MagazineAmmo);
+            Assert.AreEqual(0, state.ReserveAmmo);
         }
 
         [Test]
@@ -159,6 +311,34 @@ namespace FPS.Tests
             nbIsServerProp.SetValue(fireHandler, true);
 
             return fireHandler;
+        }
+
+        private TestDamageReceiver CreateDamageTarget(string name, Vector3 position)
+        {
+            var targetGo = new GameObject(name);
+            objectsToDestroy.Add(targetGo);
+            targetGo.transform.position = position;
+            targetGo.AddComponent<BoxCollider>();
+            return targetGo.AddComponent<TestDamageReceiver>();
+        }
+
+        private sealed class TestDamageReceiver : MonoBehaviour, IAttributedDamageable
+        {
+            public int HitCount { get; private set; }
+            public DamageInfo LastDamage { get; private set; }
+            public bool IsDead => false;
+
+            public void TakeDamage(float amount)
+            {
+                HitCount++;
+                LastDamage = new DamageInfo(amount);
+            }
+
+            public void TakeDamage(DamageInfo damageInfo)
+            {
+                HitCount++;
+                LastDamage = damageInfo;
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -47,11 +46,19 @@ namespace FPS
         [SerializeField] private float campingRadius = 5f;
         [SerializeField] private float campingTimeThreshold = 10f;
         [SerializeField] private float isolationDistance = 15f;
+        [SerializeField] private float stateUpdateInterval = 0.1f;
+        [SerializeField] private float teamMetricsUpdateInterval = 0.2f;
 
         private readonly List<PlayerProfile> playerProfiles = new List<PlayerProfile>();
         private readonly Dictionary<ulong, PlayerProfile> profilesByClientId = new Dictionary<ulong, PlayerProfile>();
+        private readonly List<PlayerProfile> nextProfiles = new List<PlayerProfile>();
+        private readonly List<NetworkClient> connectedClientCache = new List<NetworkClient>();
+        private readonly HashSet<ulong> activeClientIds = new HashSet<ulong>();
+        private readonly List<ulong> staleClientIds = new List<ulong>();
         private float lastPositionUpdate;
         private float lastPlayerCheck;
+        private float lastStateUpdate;
+        private float lastTeamMetricsUpdate;
         private int lastIsMovingHistoryCount;
 
         public List<PlayerProfile> AllProfiles => playerProfiles;
@@ -112,11 +119,16 @@ namespace FPS
                 lastPositionUpdate = Time.time;
             }
 
-            UpdateCurrentState();
+            if (Time.time - lastStateUpdate >= Mathf.Max(0.02f, stateUpdateInterval))
+            {
+                UpdateCurrentState();
+                lastStateUpdate = Time.time;
+            }
 
-            if (playerProfiles.Count > 1)
+            if (playerProfiles.Count > 1 && Time.time - lastTeamMetricsUpdate >= Mathf.Max(0.02f, teamMetricsUpdateInterval))
             {
                 UpdateTeamMetrics();
+                lastTeamMetricsUpdate = Time.time;
             }
         }
 
@@ -133,10 +145,16 @@ namespace FPS
 
         private void RefreshNetworkPlayers()
         {
-            List<PlayerProfile> nextProfiles = new List<PlayerProfile>();
+            nextProfiles.Clear();
+            connectedClientCache.Clear();
+
+            foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+                connectedClientCache.Add(client);
+
+            connectedClientCache.Sort(CompareNetworkClientsById);
 
             int index = 0;
-            foreach (var client in NetworkManager.Singleton.ConnectedClientsList.OrderBy(c => c.ClientId))
+            foreach (var client in connectedClientCache)
             {
                 NetworkObject playerObject = client.PlayerObject;
                 if (playerObject == null || !playerObject.IsSpawned) continue;
@@ -164,7 +182,7 @@ namespace FPS
             playerProfiles.Clear();
             playerProfiles.AddRange(nextProfiles);
 
-            CleanupStaleProfiles(nextProfiles);
+            CleanupStaleProfiles();
         }
 
         private void RefreshTaggedPlayers()
@@ -194,10 +212,13 @@ namespace FPS
             }
         }
 
-        private void CleanupStaleProfiles(List<PlayerProfile> activeProfiles)
+        private void CleanupStaleProfiles()
         {
-            HashSet<ulong> activeClientIds = new HashSet<ulong>(activeProfiles.Select(profile => profile.clientId));
-            List<ulong> staleClientIds = new List<ulong>();
+            activeClientIds.Clear();
+            staleClientIds.Clear();
+
+            for (int i = 0; i < nextProfiles.Count; i++)
+                activeClientIds.Add(nextProfiles[i].clientId);
 
             foreach (ulong clientId in profilesByClientId.Keys)
             {
@@ -211,6 +232,11 @@ namespace FPS
             {
                 profilesByClientId.Remove(clientId);
             }
+        }
+
+        private static int CompareNetworkClientsById(NetworkClient left, NetworkClient right)
+        {
+            return left.ClientId.CompareTo(right.ClientId);
         }
 
         private static Transform FindCameraTransform(GameObject player)

@@ -34,5 +34,56 @@ namespace FPS.Tests
         {
             Assert.IsTrue(typeof(IDamageable).IsAssignableFrom(typeof(PlayerHealth)), "PlayerHealth should implement IDamageable.");
         }
+
+        [Test]
+        public void DamageInfo_DefaultConstructor_KeepsLegacyUnspecifiedType()
+        {
+            var damageInfo = new DamageInfo(10f);
+
+            Assert.AreEqual(10f, damageInfo.amount);
+            Assert.AreEqual(DamageType.Unspecified, damageInfo.damageType);
+            Assert.AreEqual(DamageType.Unspecified, damageInfo.DamageType);
+            Assert.AreEqual(HitboxZone.Body, damageInfo.hitZone);
+            Assert.AreEqual(1f, damageInfo.damageMultiplier);
+        }
+
+        [Test]
+        public void DamageInfo_CarriesHitboxZoneAndMultiplier()
+        {
+            var damageInfo = new DamageInfo(
+                20f,
+                hitPoint: Vector3.one,
+                damageType: DamageType.Bullet,
+                hitZone: HitboxZone.Head,
+                damageMultiplier: 2f);
+
+            Assert.True(damageInfo.isHeadshot);
+            Assert.AreEqual(HitboxZone.Head, damageInfo.HitZone);
+            Assert.AreEqual(2f, damageInfo.DamageMultiplier);
+        }
+
+        [Test]
+        public void DamageFilter_CanRequireExplosionDamage()
+        {
+            var go = new GameObject("ExplosionOnlyDamageFilter");
+            try
+            {
+                var filter = go.AddComponent<DamageFilter>();
+                typeof(DamageFilter)
+                    .GetField("acceptedTypes", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .SetValue(filter, DamageType.Explosion);
+                typeof(DamageFilter)
+                    .GetField("acceptUnspecified", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .SetValue(filter, false);
+
+                Assert.False(filter.Allows(new DamageInfo(10f, damageType: DamageType.Bullet)));
+                Assert.False(filter.Allows(new DamageInfo(10f)));
+                Assert.True(filter.Allows(new DamageInfo(10f, damageType: DamageType.Explosion)));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(go);
+            }
+        }
     }
 }

@@ -8,10 +8,11 @@ namespace FPS
         Head
     }
 
-    public class EnemyHitbox : MonoBehaviour
+    public class EnemyHitbox : HitboxSegment
     {
         [SerializeField] private HitZone hitZone = HitZone.Body;
 
-        public bool IsHeadshot => hitZone == HitZone.Head;
+        public override HitboxZone Zone => hitZone == HitZone.Head ? HitboxZone.Head : HitboxZone.Body;
+        public override float DamageMultiplier => HitboxSegment.GetDefaultMultiplier(Zone);
     }
 }

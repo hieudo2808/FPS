@@ -18,6 +18,9 @@ namespace FPS
         private Dictionary<string, GameObject> prefabLookup = new Dictionary<string, GameObject>();
         private Dictionary<string, ZombieNetworkPoolHandler> handlers = new Dictionary<string, ZombieNetworkPoolHandler>();
 
+        public int ConfiguredPoolSizePerType => poolSizePerType;
+        public bool AutoExpand => autoExpand;
+
         protected override void Awake()
         {
             base.Awake();
@@ -42,7 +45,7 @@ namespace FPS
             RegisterNetworkHandler(prefab, key);
 
             if (showDebugLogs)
-                Debug.Log($"[ZombiePool] Initialized pool '{key}' with {poolSize} objects");
+                GameLog.Info(() => $"[ZombiePool] Initialized pool '{key}' with {poolSize} objects");
         }
 
         private void RegisterNetworkHandler(GameObject prefab, string key)
@@ -100,7 +103,7 @@ namespace FPS
             }
 
             if (showDebugLogs)
-                Debug.Log($"[ZombiePool] Got '{key}' from pool");
+                GameLog.Info(() => $"[ZombiePool] Got '{key}' from pool");
 
             return zombie;
         }
@@ -131,11 +134,11 @@ namespace FPS
             if (autoExpand)
             {
                 if (showDebugLogs)
-                    Debug.Log($"[ZombiePool] Auto-expanded pool '{key}'");
+                    GameLog.Info(() => $"[ZombiePool] Auto-expanded pool '{key}'");
                 return CreatePooledObject(prefabLookup[key]);
             }
 
-            Debug.LogWarning($"[ZombiePool] Pool empty for '{key}' and autoExpand is off");
+            GameLog.Warning(() => $"[ZombiePool] Pool empty for '{key}' and autoExpand is off");
             return null;
         }
 
@@ -180,7 +183,7 @@ namespace FPS
                 pools[key].Enqueue(zombie);
 
                 if (showDebugLogs)
-                    Debug.Log($"[ZombiePool] Returned '{key}' to pool");
+                    GameLog.Info(() => $"[ZombiePool] Returned '{key}' to pool");
             }
         }
 
@@ -238,6 +241,14 @@ namespace FPS
             foreach (var pool in pools.Values)
                 total += pool.Count;
             return total;
+        }
+
+        public bool HasPoolFor(GameObject prefab)
+        {
+            if (prefab == null)
+                return false;
+
+            return pools.ContainsKey(GetPrefabKey(prefab.name));
         }
     }
 }

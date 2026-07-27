@@ -28,8 +28,12 @@ namespace FPS
         private Dictionary<int, AttackSlot[]> playerSlots = new Dictionary<int, AttackSlot[]>();
         private Dictionary<EnemyAI, SlotAssignment> zombieAssignments = new Dictionary<EnemyAI, SlotAssignment>();
         private readonly List<EnemyAI> _deadZombieCache = new List<EnemyAI>();
-        private float _lastTimeoutCheck;
-        [SerializeField] private float timeoutCheckInterval = 1f;
+        private float _lastCleanupCheck = -999f;
+        private float _lastSlotPositionUpdate = -999f;
+        private float _lastTimeoutCheck = -999f;
+        [SerializeField] private float cleanupInterval = 0.5f;
+        [SerializeField] private float slotPositionUpdateInterval = 0.1f;
+        [SerializeField] private float timeoutCheckInterval = 0.25f;
 
         public class AttackSlot
         {
@@ -63,11 +67,23 @@ namespace FPS
 
         private void Update()
         {
-            CleanupDeadZombies();
-            UpdateSlotPositions();
-            if (Time.time - _lastTimeoutCheck >= timeoutCheckInterval)
+            float now = Time.time;
+
+            if (now - _lastCleanupCheck >= cleanupInterval)
             {
-                _lastTimeoutCheck = Time.time;
+                _lastCleanupCheck = now;
+                CleanupDeadZombies();
+            }
+
+            if (now - _lastSlotPositionUpdate >= slotPositionUpdateInterval)
+            {
+                _lastSlotPositionUpdate = now;
+                UpdateSlotPositions();
+            }
+
+            if (now - _lastTimeoutCheck >= timeoutCheckInterval)
+            {
+                _lastTimeoutCheck = now;
                 CheckSlotTimeouts();
             }
         }
@@ -167,6 +183,7 @@ namespace FPS
                     mode = EnemyAssignmentMode.Attacker
                 };
 
+                zombie.NotifyAttackSlotChanged();
                 return true;
             }
 
@@ -179,6 +196,7 @@ namespace FPS
                 mode = GetWaitModeForIndex(waitIndex)
             };
 
+            zombie.NotifyAttackSlotChanged();
             return false;
         }
 
@@ -195,6 +213,7 @@ namespace FPS
             }
 
             zombieAssignments.Remove(zombie);
+            zombie.NotifyAttackSlotChanged();
         }
 
         public Vector3 GetSlotWorldPosition(EnemyAI zombie, Transform fallbackTarget)
@@ -351,6 +370,8 @@ namespace FPS
                         zombieAssignments[zombie].waitIndex = -1;
                         zombieAssignments[zombie].mode = EnemyAssignmentMode.Attacker;
                     }
+
+                    zombie.NotifyAttackSlotChanged();
                     return true;
                 }
             }

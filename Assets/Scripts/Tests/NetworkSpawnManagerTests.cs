@@ -36,5 +36,43 @@ namespace FPS.Tests
 
             Assert.NotNull(method, "NetworkGameManager should depend on NetworkSpawnManager for spawn pose selection.");
         }
+
+        [Test]
+        public void NetworkSpawnManager_FallsBackWhenNoSafeSpawnExists()
+        {
+            var managerGo = new GameObject("NetworkSpawnManager");
+            var manager = managerGo.AddComponent<NetworkSpawnManager>();
+            var spawnGo = new GameObject("SpawnPoint");
+            var blocker = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            blocker.name = "SpawnBlocker";
+            spawnGo.transform.position = Vector3.zero;
+            blocker.transform.position = Vector3.zero;
+
+            typeof(NetworkSpawnManager)
+                .GetField("spawnPoints", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(manager, new[] { spawnGo.transform });
+            typeof(NetworkSpawnManager)
+                .GetField("enemySafetyMask", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(manager, (LayerMask)(1 << blocker.layer));
+
+            Physics.SyncTransforms();
+
+            bool foundWithoutFallback = manager.TryGetSpawnPose(
+                out _,
+                out _,
+                new SpawnRequest(0, avoidEnemiesRadius: 2f, avoidPlayersRadius: 0f, allowFallback: false));
+            bool foundWithFallback = manager.TryGetSpawnPose(
+                out Vector3 fallbackPosition,
+                out _,
+                new SpawnRequest(0, avoidEnemiesRadius: 2f, avoidPlayersRadius: 0f, allowFallback: true));
+
+            Assert.False(foundWithoutFallback);
+            Assert.True(foundWithFallback);
+            Assert.AreEqual(spawnGo.transform.position, fallbackPosition);
+
+            Object.DestroyImmediate(managerGo);
+            Object.DestroyImmediate(spawnGo);
+            Object.DestroyImmediate(blocker);
+        }
     }
 }

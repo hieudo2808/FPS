@@ -2,6 +2,9 @@
 using UnityEngine;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Unity.Netcode;
+using UnityEngine.Rendering;
 
 namespace FPS.Tests
 {
@@ -112,6 +115,182 @@ namespace FPS.Tests
             // Cleanup
             Object.DestroyImmediate(go);
             instanceProp.SetValue(null, null);
+        }
+
+        [Test]
+        public void EnemyAI_PathRefreshPolicy_ExposesThrottleAndAgentSubmitCounters()
+        {
+            Assert.NotNull(typeof(EnemyAI).GetField("pathRefreshInterval", BindingFlags.Instance | BindingFlags.NonPublic),
+                "EnemyAI should expose a serialized pathRefreshInterval so chase pathing is not tied to every Update.");
+            Assert.NotNull(typeof(EnemyAI).GetField("destinationRepathDistance", BindingFlags.Instance | BindingFlags.NonPublic),
+                "EnemyAI should expose a serialized destinationRepathDistance to avoid redundant NavMeshAgent.SetDestination calls.");
+
+            var snapshotType = typeof(EnemyAI).GetNestedType("TestSnapshot", BindingFlags.Public);
+            Assert.NotNull(snapshotType, "EnemyAI should keep a test snapshot for runtime behavior verification.");
+            Assert.NotNull(snapshotType.GetField("agentDestinationRequestCount"),
+                "EnemyAI test snapshot should expose real NavMesh destination submissions separately from intent destination updates.");
+        }
+
+        [Test]
+        public void AttackSlotManager_ExpensiveWorkRunsOnSeparateCadences()
+        {
+            Assert.NotNull(typeof(AttackSlotManager).GetField("cleanupInterval", BindingFlags.Instance | BindingFlags.NonPublic),
+                "AttackSlotManager should not cleanup dead zombies every frame.");
+            Assert.NotNull(typeof(AttackSlotManager).GetField("slotPositionUpdateInterval", BindingFlags.Instance | BindingFlags.NonPublic),
+                "AttackSlotManager waiter promotion/slot position work should run on a short explicit interval.");
+            Assert.NotNull(typeof(AttackSlotManager).GetField("timeoutCheckInterval", BindingFlags.Instance | BindingFlags.NonPublic),
+                "AttackSlotManager timeout checks should remain explicit and configurable.");
+        }
+
+        [Test]
+        public void PlayerProfiler_ReusesNetworkRefreshCollections()
+        {
+            Assert.NotNull(typeof(PlayerProfiler).GetField("nextProfiles", BindingFlags.Instance | BindingFlags.NonPublic),
+                "PlayerProfiler should reuse nextProfiles instead of allocating a new list every refresh.");
+            Assert.NotNull(typeof(PlayerProfiler).GetField("connectedClientCache", BindingFlags.Instance | BindingFlags.NonPublic),
+                "PlayerProfiler should sort connected clients through a reusable cache instead of LINQ OrderBy allocation.");
+            Assert.NotNull(typeof(PlayerProfiler).GetField("activeClientIds", BindingFlags.Instance | BindingFlags.NonPublic),
+                "PlayerProfiler should reuse activeClientIds instead of allocating a HashSet every refresh.");
+            Assert.NotNull(typeof(PlayerProfiler).GetField("staleClientIds", BindingFlags.Instance | BindingFlags.NonPublic),
+                "PlayerProfiler should reuse staleClientIds instead of allocating a list every refresh.");
+        }
+
+        [Test]
+        public void Weapon_CachesOwnerHotPathDependencies()
+        {
+            var cameraGo = new GameObject("Main Camera");
+            cameraGo.tag = "MainCamera";
+            cameraGo.AddComponent<Camera>();
+
+            var playerGo = new GameObject("Player");
+            playerGo.AddComponent<NetworkObject>();
+            var fireHandler = playerGo.AddComponent<WeaponFireHandler>();
+            var weaponManager = playerGo.AddComponent<WeaponManager>();
+
+            var weaponGo = new GameObject("Weapon");
+            weaponGo.transform.SetParent(playerGo.transform);
+            var weapon = weaponGo.AddComponent<Weapon>();
+
+            try
+            {
+                weapon.SetOwner(true);
+
+                Assert.AreSame(fireHandler, GetPrivateField<WeaponFireHandler>(weapon, "cachedFireHandler"),
+                    "Weapon should cache WeaponFireHandler instead of GetComponentInParent during every fire/reload.");
+                Assert.AreSame(weaponManager, GetPrivateField<WeaponManager>(weapon, "cachedWeaponManager"),
+                    "Weapon should cache WeaponManager for reload animation triggers.");
+                Assert.NotNull(GetPrivateField<Camera>(weapon, "cachedCamera"),
+                    "Weapon should cache Camera.main and only refresh when the cached camera becomes invalid.");
+            }
+            finally
+            {
+                Object.DestroyImmediate(weaponGo);
+                Object.DestroyImmediate(playerGo);
+                Object.DestroyImmediate(cameraGo);
+            }
+        }
+
+        [Test]
+        public void DistanceRenderSettings_DefaultBucketsAreOrderedAndStable()
+        {
+            var settings = ScriptableObject.CreateInstance<DistanceRenderSettings>();
+
+            try
+            {
+                Assert.IsTrue(settings.IsValid, "Default distance render settings should be valid out of the box.");
+                Assert.Less(settings.NearDistance, settings.MidDistance);
+                Assert.Less(settings.MidDistance, settings.FarDistance);
+
+                Assert.AreEqual(DistanceRenderBucket.Near,
+                    settings.EvaluateBucket(settings.NearDistance + settings.Hysteresis * 0.5f, DistanceRenderBucket.Near),
+                    "Hysteresis should prevent bucket flicker just outside the near boundary.");
+                Assert.AreEqual(DistanceRenderBucket.Culled,
+                    settings.EvaluateBucket(settings.FarDistance + settings.Hysteresis + 1f, DistanceRenderBucket.Far));
+            }
+            finally
+            {
+                Object.DestroyImmediate(settings);
+            }
+        }
+
+        [Test]
+        public void DistanceRenderTarget_CulledBucketOnlyDisablesVisuals()
+        {
+            var settings = ScriptableObject.CreateInstance<DistanceRenderSettings>();
+            var go = new GameObject("DistanceRenderEnemy");
+            var renderer = go.AddComponent<MeshRenderer>();
+            var collider = go.AddComponent<BoxCollider>();
+            var networkObject = go.AddComponent<NetworkObject>();
+            var target = go.AddComponent<DistanceRenderTarget>();
+
+            try
+            {
+                renderer.shadowCastingMode = ShadowCastingMode.On;
+                target.CacheReferences();
+                target.ApplyBucket(DistanceRenderBucket.Culled, settings);
+
+                Assert.IsFalse(renderer.enabled, "Culled distance bucket should hide renderers.");
+                Assert.IsTrue(collider.enabled, "Distance rendering must not disable gameplay colliders.");
+                Assert.IsTrue(networkObject.enabled, "Distance rendering must not disable NetworkObject/gameplay roots.");
+
+                target.ApplyBucket(DistanceRenderBucket.Near, settings);
+                Assert.IsTrue(renderer.enabled, "Returning to near bucket should re-enable renderers.");
+                Assert.AreEqual(ShadowCastingMode.On, renderer.shadowCastingMode,
+                    "Near bucket should restore the renderer's original shadow policy.");
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+                Object.DestroyImmediate(settings);
+            }
+        }
+
+        [Test]
+        public void RenderDistanceLayers_AreReservedWithoutClobberingExistingGameplayLayers()
+        {
+            Assert.AreEqual(6, LayerMask.NameToLayer("FirstPerson"));
+            Assert.AreEqual(7, LayerMask.NameToLayer("ThirdPerson"));
+            Assert.AreEqual(8, LayerMask.NameToLayer("Weapon"));
+            Assert.AreEqual(9, LayerMask.NameToLayer("SmallProps"));
+            Assert.AreEqual(10, LayerMask.NameToLayer("VFX"));
+            Assert.AreEqual(11, LayerMask.NameToLayer("EnemyVisual"));
+        }
+
+        [Test]
+        public void GameLog_DebugLogsAreConditionallyCompiled()
+        {
+            AssertConditional(nameof(GameLog.Info), typeof(string));
+            AssertConditional(nameof(GameLog.Warning), typeof(string));
+        }
+
+        [Test]
+        public void PoolingTypesExposeCapacityForValidation()
+        {
+            Assert.NotNull(typeof(ObjectPooling).GetProperty("Capacity"),
+                "ObjectPooling should expose Capacity so prefab validation can compare expected active count.");
+            Assert.NotNull(typeof(ZombiePoolManager).GetProperty("ConfiguredPoolSizePerType"),
+                "ZombiePoolManager should expose configured pool size for spawn budget validation.");
+            Assert.NotNull(typeof(ZombiePoolManager).GetMethod("HasPoolFor", new[] { typeof(GameObject) }),
+                "ZombiePoolManager should expose HasPoolFor so tests can catch missing registrations.");
+            Assert.NotNull(typeof(SpecialInfectedRegistry).GetField("aliveCleanupInterval", BindingFlags.Instance | BindingFlags.NonPublic),
+                "SpecialInfectedRegistry should cleanup alive specials on an interval instead of every frame.");
+        }
+
+        private static T GetPrivateField<T>(object instance, string fieldName)
+        {
+            return (T)instance.GetType()
+                .GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetValue(instance);
+        }
+
+        private static void AssertConditional(string methodName, params System.Type[] parameterTypes)
+        {
+            var method = typeof(GameLog).GetMethod(methodName, parameterTypes);
+            Assert.NotNull(method, $"GameLog.{methodName} should exist.");
+
+            var attributes = method.GetCustomAttributes(typeof(ConditionalAttribute), false);
+            Assert.IsNotEmpty(attributes,
+                $"GameLog.{methodName} should use ConditionalAttribute so callsites are stripped outside editor/development builds.");
         }
     }
 }

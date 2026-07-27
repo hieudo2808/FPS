@@ -127,7 +127,7 @@ namespace FPS
         [ClientRpc]
         private void NotifyPickupClientRpc(ClientRpcParams rpcParams = default)
         {
-            Debug.Log($"[Pickup] Picked up {displayName}!");
+            GameLog.Info(() => $"[Pickup] Picked up {displayName}!");
 
             // Example: AudioManager.Instance?.PlaySFXSound(pickupSound);
         }

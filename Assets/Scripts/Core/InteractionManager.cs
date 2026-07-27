@@ -127,21 +127,21 @@ namespace FPS
             if (!NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(
                 targetNetworkObjectId, out NetworkObject targetNetObj))
             {
-                Debug.LogWarning($"[InteractionManager] Object {targetNetworkObjectId} no longer exists.");
+                GameLog.Warning(() => $"[InteractionManager] Object {targetNetworkObjectId} no longer exists.");
                 return;
             }
 
             IInteractable interactable = targetNetObj.GetComponentInChildren<IInteractable>();
             if (interactable == null || !interactable.CanInteract)
             {
-                Debug.LogWarning($"[InteractionManager] Object {targetNetworkObjectId} is no longer interactable.");
+                GameLog.Warning(() => $"[InteractionManager] Object {targetNetworkObjectId} is no longer interactable.");
                 return;
             }
 
             float distance = Vector3.Distance(transform.position, targetNetObj.transform.position);
             if (distance > interactRange * 1.5f)
             {
-                Debug.LogWarning($"[InteractionManager] Interact out of range: {distance:F1}m");
+                GameLog.Warning(() => $"[InteractionManager] Interact out of range: {distance:F1}m");
                 return;
             }
 

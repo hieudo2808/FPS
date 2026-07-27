@@ -12,6 +12,8 @@ namespace FPS
 
         [Header("Combat")]
         public float damage = 25f;
+        public DamageType damageType = DamageType.Bullet;
+        public LayerMask hitMask = Physics.DefaultRaycastLayers;
         public float bulletSpeed = 200f;
         public float fireRate = 0.1f;
         public float bulletLiveTime = 2f;

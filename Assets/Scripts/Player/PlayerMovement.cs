@@ -35,9 +35,11 @@ namespace FPS
         // ==========================================
         // CONSTANTS
         private const float GRAVITY = -9.81f;
-        private const float TICK_DT = 1f / 60f;
+        public const int SimulationHz = NetworkGameplayPolicy.SimulationHz;
+        public const int SnapshotHz = NetworkGameplayPolicy.SnapshotHz;
+        private const float TICK_DT = 1f / SimulationHz;
         private const int BUFFER_SIZE = 2048;
-        private const int STATE_SEND_EVERY_N_TICKS = 1;
+        private const int STATE_SEND_EVERY_N_TICKS = NetworkGameplayPolicy.StateSendEveryNTicks;
         private const int SERVER_INPUT_BUFFER_TICKS = 3;
         private const int MAX_INPUT_TICKS_BEHIND = 120;
         private const int MAX_INPUT_TICKS_AHEAD = 30;
@@ -84,6 +86,9 @@ namespace FPS
         // Offset để smooth visual sau reconcile thay vì snap cứng
         private Vector3 ownerVisualCorrectionOffset;
         private bool hasTickedOnce;
+        private PlayerHealth playerHealth;
+
+        public int CurrentSimulationTick => networkTimer != null ? networkTimer.CurrentTick : 0;
 
         // ==========================================
         // INITIALIZATION
@@ -93,6 +98,7 @@ namespace FPS
         {
             networkTimer = new NetworkTimer(TICK_DT);
             groundMask = LayerMask.GetMask("Ground");
+            playerHealth = GetComponent<PlayerHealth>();
 
             if (IsOwner)
             {
@@ -123,6 +129,14 @@ namespace FPS
         {
             if (networkTimer == null)
                 return;
+
+            if (playerHealth != null && playerHealth.IsDead)
+            {
+                cachedMove = Vector2.zero;
+                jumpQueued = false;
+                UpdateAnimation();
+                return;
+            }
 
             if (IsOwner)
                 CaptureFrameInput();
@@ -245,7 +259,7 @@ namespace FPS
         // SERVER RPC — Nhận input từ client
         // ==========================================
 
-        [ServerRpc]
+        [ServerRpc(Delivery = RpcDelivery.Unreliable)]
         private void SendInputServerRpc(PlayerInputPayload input)
         {
             if (pendingInputs == null)
@@ -370,7 +384,7 @@ namespace FPS
         // CLIENT RPC — Nhận state từ server
         // ==========================================
 
-        [ClientRpc]
+        [ClientRpc(Delivery = RpcDelivery.Unreliable)]
         private void SendStateClientRpc(PlayerStatePayload state)
         {
             if (IsOwner && !IsServer)
@@ -440,6 +454,30 @@ namespace FPS
 
             verticalVelocity = state.verticalVelocity;
             isGrounded = state.grounded;
+        }
+
+        public void TeleportForRespawn(Vector3 position, Quaternion rotation)
+        {
+            bool controllerWasEnabled = controller != null && controller.enabled;
+            if (controller != null)
+                controller.enabled = false;
+
+            transform.SetPositionAndRotation(position, rotation);
+
+            if (controller != null)
+                controller.enabled = controllerWasEnabled;
+
+            verticalVelocity = 0f;
+            isGrounded = false;
+            previousTickPosition = position;
+            currentTickPosition = position;
+            ownerVisualCorrectionOffset = Vector3.zero;
+            stateSnapshots.Clear();
+            interpolationTimer = 0f;
+            remoteInterpolationStarted = false;
+
+            if (visualRoot != null)
+                visualRoot.position = position;
         }
 
         private void ReplayFrom(int startTick)

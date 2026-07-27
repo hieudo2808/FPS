@@ -20,7 +20,7 @@ namespace FPS
 
             if (obj == null)
             {
-                Debug.LogWarning($"[ZombiePoolHandler] Pool returned null for '{prefab.name}', falling back to Instantiate.");
+                GameLog.Warning(() => $"[ZombiePoolHandler] Pool returned null for '{prefab.name}', falling back to Instantiate.");
                 obj = Object.Instantiate(prefab, position, rotation);
             }
 

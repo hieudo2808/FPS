@@ -27,6 +27,8 @@ namespace FPS
         [Header("Movement Settings")]
         [SerializeField] private float runSpeed = 5f;
         [SerializeField] private float rotationSpeed = 10f;
+        [SerializeField] private float pathRefreshInterval = 0.15f;
+        [SerializeField] private float destinationRepathDistance = 0.75f;
 
         [Header("Audio")]
         [SerializeField] private AudioClip attackSound;
@@ -52,10 +54,16 @@ namespace FPS
         private float lastBrainTickTime;
         private Vector3 lastDesiredDestination;
         private float lastDestinationRequestTime;
+        private int intentDestinationRequestCount;
+        private Vector3 lastSubmittedAgentDestination;
+        private float lastAgentDestinationRequestTime;
+        private int agentDestinationRequestCount;
         private Vector3 lastFramePosition;
         private bool hasLastFramePosition;
         private float lastAnimatorSpeed;
         private bool hasDesiredDestination;
+        private bool hasSubmittedAgentDestination;
+        private bool loggedMissingPlayer;
 
         public float AttackDamage => attackDamage;
 
@@ -138,9 +146,18 @@ namespace FPS
                 FindPlayer(forceRefresh: true);
                 if (player == null)
                 {
-                    Debug.Log("[EnemyAI] No player found");
+                    if (!loggedMissingPlayer)
+                    {
+                        GameLog.Info("[EnemyAI] No player found");
+                        loggedMissingPlayer = true;
+                    }
+
                     return;
                 }
+            }
+            else
+            {
+                loggedMissingPlayer = false;
             }
 
             UpdateTarget();
@@ -203,6 +220,7 @@ namespace FPS
 
                 case State.Chase:
                     agent.isStopped = false;
+                    ForcePathRefresh();
                     break;
             }
         }
@@ -210,6 +228,8 @@ namespace FPS
         private void ChaseBehavior()
         {
             if (player == null) return;
+            if (!ShouldRefreshPath())
+                return;
 
             Vector3 destination;
             if (AttackSlotManager.Instance != null && currentTargetIndex >= 0)
@@ -223,11 +243,38 @@ namespace FPS
 
             lastDesiredDestination = destination;
             lastDestinationRequestTime = Time.time;
+            intentDestinationRequestCount++;
             hasDesiredDestination = true;
 
+            TrySubmitAgentDestination(destination);
+        }
+
+        private bool ShouldRefreshPath()
+        {
+            if (!hasDesiredDestination)
+                return true;
+
+            return Time.time - lastDestinationRequestTime >= Mathf.Max(0.02f, pathRefreshInterval);
+        }
+
+        private void TrySubmitAgentDestination(Vector3 destination)
+        {
             if (!IsAgentReady()) return;
 
-            agent.SetDestination(destination);
+            float minRepathDistance = Mathf.Max(0f, destinationRepathDistance);
+            if (hasSubmittedAgentDestination &&
+                (destination - lastSubmittedAgentDestination).sqrMagnitude < minRepathDistance * minRepathDistance)
+            {
+                return;
+            }
+
+            if (agent.SetDestination(destination))
+            {
+                lastSubmittedAgentDestination = destination;
+                hasSubmittedAgentDestination = true;
+                lastAgentDestinationRequestTime = Time.time;
+                agentDestinationRequestCount++;
+            }
         }
 
         private void AttackBehavior()
@@ -339,6 +386,7 @@ namespace FPS
                 player = bestTarget;
                 currentTargetIndex = bestIndex;
                 lastTargetSwitchTime = Time.time;
+                ForcePathRefresh();
             }
         }
 
@@ -440,7 +488,12 @@ namespace FPS
             lastBrainTickTime = 0f;
             lastDesiredDestination = Vector3.zero;
             lastDestinationRequestTime = 0f;
+            intentDestinationRequestCount = 0;
             hasDesiredDestination = false;
+            hasSubmittedAgentDestination = false;
+            lastSubmittedAgentDestination = Vector3.zero;
+            lastAgentDestinationRequestTime = 0f;
+            agentDestinationRequestCount = 0;
             lastAnimatorSpeed = 0f;
             lastFramePosition = transform.position;
             hasLastFramePosition = true;
@@ -573,6 +626,17 @@ namespace FPS
             return meleeAttack.CanHit(transform, target);
         }
 
+        public void NotifyAttackSlotChanged()
+        {
+            ForcePathRefresh();
+        }
+
+        private void ForcePathRefresh()
+        {
+            lastDestinationRequestTime = -Mathf.Infinity;
+            hasSubmittedAgentDestination = false;
+        }
+
         private float CalculateVisualMoveSpeed()
         {
             float speed = 0f;
@@ -650,6 +714,9 @@ namespace FPS
             public readonly string currentState;
             public readonly Vector3 lastDesiredDestination;
             public readonly float lastDestinationRequestTime;
+            public readonly int intentDestinationRequestCount;
+            public readonly float lastAgentDestinationRequestTime;
+            public readonly int agentDestinationRequestCount;
             public readonly float lastAnimatorSpeed;
             public readonly bool hasPendingAttackDamage;
 
@@ -661,6 +728,9 @@ namespace FPS
                 string currentState,
                 Vector3 lastDesiredDestination,
                 float lastDestinationRequestTime,
+                int intentDestinationRequestCount,
+                float lastAgentDestinationRequestTime,
+                int agentDestinationRequestCount,
                 float lastAnimatorSpeed,
                 bool hasPendingAttackDamage)
             {
@@ -671,6 +741,9 @@ namespace FPS
                 this.currentState = currentState;
                 this.lastDesiredDestination = lastDesiredDestination;
                 this.lastDestinationRequestTime = lastDestinationRequestTime;
+                this.intentDestinationRequestCount = intentDestinationRequestCount;
+                this.lastAgentDestinationRequestTime = lastAgentDestinationRequestTime;
+                this.agentDestinationRequestCount = agentDestinationRequestCount;
                 this.lastAnimatorSpeed = lastAnimatorSpeed;
                 this.hasPendingAttackDamage = hasPendingAttackDamage;
             }
@@ -686,6 +759,9 @@ namespace FPS
                 currentState.ToString(),
                 lastDesiredDestination,
                 lastDestinationRequestTime,
+                intentDestinationRequestCount,
+                lastAgentDestinationRequestTime,
+                agentDestinationRequestCount,
                 lastAnimatorSpeed,
                 meleeAttack.HasPendingDamage);
         }
@@ -704,6 +780,9 @@ namespace FPS
         {
             player = target;
             currentTargetIndex = targetIndex;
+            loggedMissingPlayer = target == null;
+            if (target != null)
+                ForcePathRefresh();
         }
 
         public void DebugBeginAttackForTests()
@@ -743,6 +822,11 @@ namespace FPS
         {
             lastDesiredDestination = destination;
             hasDesiredDestination = true;
+        }
+
+        public void DebugForcePathRefreshForTests()
+        {
+            ForcePathRefresh();
         }
 
         public void DebugSmoothLookForTests()

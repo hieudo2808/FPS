@@ -6,50 +6,54 @@ namespace FPS
 {
     public class ObjectPooling : MonoBehaviour
     {
-    [SerializeField] private GameObject objectPrefab;
-    [SerializeField] private int poolSize = 100;
+        [SerializeField] private GameObject objectPrefab;
+        [SerializeField] private int poolSize = 100;
 
-    private Queue<GameObject> objectPool;
+        private Queue<GameObject> objectPool;
 
-    private void Awake()
-    {
-        objectPool = new Queue<GameObject>();
-        for (int i = 0; i < poolSize; i++)
+        public int Capacity => poolSize;
+        public int AvailableCount => objectPool != null ? objectPool.Count : 0;
+
+        private void Awake()
         {
-            GameObject obj = Instantiate(objectPrefab);
-            obj.SetActive(false);
-            obj.name = objectPrefab.name + "_" + (i + 1);
-            objectPool.Enqueue(obj);
+            objectPool = new Queue<GameObject>();
+            for (int i = 0; i < poolSize; i++)
+            {
+                GameObject obj = Instantiate(objectPrefab);
+                obj.SetActive(false);
+                obj.name = objectPrefab.name + "_" + (i + 1);
+                objectPool.Enqueue(obj);
+            }
         }
-    }
 
-    public GameObject GetObject()
-    {
-        if (objectPool.Count > 0)
+        public GameObject GetObject()
         {
-            GameObject obj = objectPool.Dequeue();
-            obj.SetActive(true);
-            return obj;
-        }
-        else
-        {
-            Debug.LogWarning("Object pool is empty, consider increasing pool size.");
+            if (objectPool.Count > 0)
+            {
+                GameObject obj = objectPool.Dequeue();
+                obj.SetActive(true);
+                return obj;
+            }
+
+            GameLog.Warning("[ObjectPooling] Pool is empty, consider increasing pool size.");
             return null;
         }
-    }
 
-    public void ReturnObject(GameObject obj)
-    {
-        if (obj != null)
+        public void ReturnObject(GameObject obj)
         {
-            obj.SetActive(false);
-            objectPool.Enqueue(obj);
+            if (obj != null)
+            {
+                obj.SetActive(false);
+                objectPool.Enqueue(obj);
+                return;
+            }
+
+            GameLog.Warning("[ObjectPooling] Attempted to return a null object to the pool.");
         }
-        else
+
+        public bool HasCapacityFor(int expectedActiveCount)
         {
-            Debug.LogWarning("Attempted to return a null object to the pool.");
+            return poolSize >= expectedActiveCount;
         }
     }
-}
-
 }

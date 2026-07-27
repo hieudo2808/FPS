@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!213 &21300000
+Sprite:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: ScannerBlock1
+  m_Rect:
+    serializedVersion: 2
+    x: 516
+    y: 0
+    width: 251
+    height: 250
+  m_Offset: {x: 0, y: 0}
+  m_Border: {x: 0, y: 0, z: 0, w: 0}
+  m_PixelsToUnits: 100
+  m_Pivot: {x: 0.5, y: 0.5}
+  m_Extrude: 1
+  m_IsPolygon: 0
+  m_AtlasName:
+  m_PackingTag:
+  m_RD:
+    texture: {fileID: 2800000, guid: 14895a299a059ff458fff4a082235b57, type: 3}
+    alphaTexture: {fileID: 0}
+    vertices:
+    - serializedVersion: 2
+      pos: {x: 1.255, y: 0.81, z: 0}
+    - serializedVersion: 2
+      pos: {x: 0.995, y: -0.45, z: 0}
+    - serializedVersion: 2
+      pos: {x: 1.255, y: -1, z: 0}
+    - serializedVersion: 2
+      pos: {x: 0.985, y: 1.25, z: 0}
+    - serializedVersion: 2
+      pos: {x: 0.935, y: 0.54, z: 0}
+    - serializedVersion: 2
+      pos: {x: -0.075, y: 1.06, z: 0}
+    - serializedVersion: 2
+      pos: {x: -0.775, y: 1.25, z: 0}
+    - serializedVersion: 2
+      pos: {x: -0.415, y: -1, z: 0}
+    - serializedVersion: 2
+      pos: {x: 0.645, y: -1.25, z: 0}
+    - serializedVersion: 2
+      pos: {x: -0.905, y: -1.25, z: 0}
+    - serializedVersion: 2
+      pos: {x: -1.255, y: 1.13, z: 0}
+    - serializedVersion: 2
+      pos: {x: -1.255, y: -0.9, z: 0}
+    indices: 0b000a000900060009000a00070009000600080009000700010008000700020008000100030005000600070006000500040005000300010004000300000001000300020001000000
+    textureRect:
+      serializedVersion: 2
+      x: 516
+      y: 0
+      width: 251
+      height: 250
+    textureRectOffset: {x: 0, y: 0}
+    settingsRaw: 67
+    uvTransform: {x: 100, y: 641.5, z: 100, w: 125}
