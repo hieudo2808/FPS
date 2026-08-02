@@ -1,0 +1,284 @@
+fileFormatVersion: 2
+guid: 068fb7aa85ec59b429fbfb7307a544e6
+ModelImporter:
+  serializedVersion: 24501
+  internalIDToNameTable: []
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+    searchTexturesGlobally: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    importUVs: -1
+    importVertexColors: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+    calculateBlendshapeNormalsDeltaFromImportedNormals: 1
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton:
+    - name: GN_Vandal(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Camera
+      parentName: GN_Vandal(Clone)
+      position: {x: -7.3588915, y: 4.958309, z: 6.925791}
+      rotation: {x: 0.09062847, y: 0.89379627, z: -0.20997298, w: 0.3857799}
+      scale: {x: 100, y: 100.00001, z: 99.99999}
+    - name: GN_AK_S0_Skelmesh.ao
+      parentName: GN_Vandal(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.00000009415696, y: 0.7071068, z: 0.7071067, w: 0.00000009415697}
+      scale: {x: 100, y: 100, z: 100}
+    - name: Skeleton
+      parentName: GN_AK_S0_Skelmesh.ao
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.49998474, y: -0.49998477, z: -0.4999848, w: 0.5000457}
+      scale: {x: 1, y: 0.9999999, z: 0.99999994}
+    - name: Root
+      parentName: Skeleton
+      position: {x: 7.770401e-18, y: -0.0000000011920929, z: 5.9752878e-21}
+      rotation: {x: -0.35721737, y: 0.000023901464, z: -0.03671803, w: 0.9332993}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Muzzle
+      parentName: Root
+      position: {x: 0.0000000021891902, y: 0.0008914005, z: 0.008821396}
+      rotation: {x: 0.50048375, y: -0.49948525, z: -0.50048375, w: -0.49954635}
+      scale: {x: 0.99999994, y: 0.99999976, z: 0.99999994}
+    - name: MuzzlePoint
+      parentName: Muzzle
+      position: {x: -0.0000000017473258, y: -2.9806624e-10, z: 1.05134096e-10}
+      rotation: {x: 9.32698e-15, y: -0.0000000069545107, z: 0.00000012616378, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: MuzzlePoint_end
+      parentName: MuzzlePoint
+      position: {x: -0, y: 0.0009883542, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Ejection
+      parentName: Root
+      position: {x: 0.00025909973, y: 0.0010883006, z: 0.0024994996}
+      rotation: {x: -0.2988363, y: 0.6408564, z: 0.704416, w: -0.06162911}
+      scale: {x: 0.9999999, y: 1.0000001, z: 1.0000002}
+    - name: Ejection_Shell
+      parentName: Ejection
+      position: {x: 7.4505804e-11, y: 9.313225e-11, z: -1.2669715e-10}
+      rotation: {x: -0.000000022877888, y: -0.00000004286506, z: 0.000000029802326, w: 1}
+      scale: {x: 0.99999994, y: 0.9999999, z: 0.99999994}
+    - name: Ejection_Shell_end
+      parentName: Ejection_Shell
+      position: {x: -0, y: 0.0009883543, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet
+      parentName: Root
+      position: {x: 0.000019599966, y: 0.00082620035, z: 0.0021969995}
+      rotation: {x: -0.36978564, y: 0.41782075, z: 0.82884634, w: -0.041209824}
+      scale: {x: 1, y: 0.9999999, z: 1}
+    - name: Bullet1
+      parentName: Bullet
+      position: {x: -4.1256398e-10, y: 7.650656e-11, z: 8.6871885e-11}
+      rotation: {x: -8.139434e-15, y: -0.000000049902233, z: -0.000000024603603, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bullet1_end
+      parentName: Bullet1
+      position: {x: -0, y: 0.0009883542, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Magazine_Main
+      parentName: Root
+      position: {x: 8.685629e-10, y: -0.0006462993, z: 0.0028280988}
+      rotation: {x: -0.49999604, y: 0.4999734, z: 0.49999627, w: 0.50003433}
+      scale: {x: 1, y: 0.9999999, z: 1}
+    - name: Magazine
+      parentName: Magazine_Main
+      position: {x: -3.6835704e-10, y: 3.0935253e-14, z: -6.486467e-11}
+      rotation: {x: -2.8716285e-15, y: -0.000000005198742, z: -0.000000024603626, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Magazine_end
+      parentName: Magazine
+      position: {x: -0, y: 0.0009883542, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Charging_Handle
+      parentName: Root
+      position: {x: -0.00030759955, y: 0.0011756, z: 0.002993299}
+      rotation: {x: 0.122933716, y: 0.000000011568773, z: 0.012626961, w: 0.99233454}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Charging_Handle_end
+      parentName: Charging_Handle
+      position: {x: -0, y: 0.0009883542, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Ejection_Button
+      parentName: Root
+      position: {x: 4.3557405e-10, y: 0.000104800165, z: 0.0017063991}
+      rotation: {x: -9.401924e-13, y: 0.000000088530214, z: -2.8033131e-14, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Ejection_Button_end
+      parentName: Ejection_Button
+      position: {x: -0, y: 0.0009883542, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Trigger
+      parentName: Root
+      position: {x: 1.5769729e-10, y: 0.00043759975, z: 0.0008861997}
+      rotation: {x: 0.000000037690583, y: 0.000000007012875, z: 4.5341508e-13, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Trigger_end
+      parentName: Trigger
+      position: {x: -0, y: 0.0009883542, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Gun_Buddy
+      parentName: Root
+      position: {x: -0.0002885997, y: 0.00097010034, z: 0.0024248993}
+      rotation: {x: -0.49999613, y: 0.49997348, z: 0.4999963, w: 0.5000342}
+      scale: {x: 1, y: 0.9999999, z: 1}
+    - name: Gun_Buddy_end
+      parentName: Gun_Buddy
+      position: {x: -0, y: 0.0009883542, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Magazine_Extra
+      parentName: Root
+      position: {x: -0.0000000013206499, y: -0.002028202, z: -0.006322399}
+      rotation: {x: -0.42553997, y: 0.37798086, z: -0.017155556, w: 0.8220413}
+      scale: {x: 0.99999994, y: 0.99999976, z: 0.99999994}
+    - name: Magazine_Extra_end
+      parentName: Magazine_Extra
+      position: {x: -0, y: 0.0009883542, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Reflex
+      parentName: Root
+      position: {x: 0.000001000006, y: 0.0013875999, z: 0.0023021991}
+      rotation: {x: -0.49999607, y: 0.49997342, z: 0.4999963, w: 0.5000342}
+      scale: {x: 1, y: 0.9999999, z: 1}
+    - name: Reflex_end
+      parentName: Reflex
+      position: {x: -0, y: 0.0009883542, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Left_Hand_Target
+      parentName: Root
+      position: {x: 0.0000000011454971, y: 0.00053390046, z: 0.0046612984}
+      rotation: {x: -1.3635759e-12, y: -0.000000014898433, z: -4.5430326e-13, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Left_Hand_TargetSocket
+      parentName: Left_Hand_Target
+      position: {x: 1.8328108e-10, y: 5.6852318e-11, z: 0.000000001312035}
+      rotation: {x: 0.000000044702574, y: 4.567458e-13, z: 4.5263793e-13, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Left_Hand_TargetSocket_end
+      parentName: Left_Hand_TargetSocket
+      position: {x: -0, y: 0.0009883542, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Icosphere
+      parentName: GN_Vandal(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100, z: 100}
+    - name: Light
+      parentName: GN_Vandal(Clone)
+      position: {x: -4.0762453, y: 5.903862, z: -1.005454}
+      rotation: {x: 0.52327543, y: -0.34203392, z: 0.72694236, w: 0.28416622}
+      scale: {x: 100.00001, y: 100, z: 100}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

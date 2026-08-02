@@ -1,0 +1,24 @@
+{
+    "name": "FPS.NetworkSimulation",
+    "rootNamespace": "FPS.NetworkSimulation",
+    "references": [
+        "FPS",
+        "Unity.Netcode.Runtime",
+        "Unity.Multiplayer.Tools.NetworkSimulator.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.multiplayer.tools",
+            "expression": "2.2.9",
+            "define": "FPS_MULTIPLAYER_TOOLS_2_2_9"
+        }
+    ],
+    "noEngineReferences": false
+}

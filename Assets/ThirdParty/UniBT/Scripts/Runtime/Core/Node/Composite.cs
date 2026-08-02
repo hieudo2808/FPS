@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace UniBT
 {
+    [System.Serializable]
     public abstract class Composite : NodeBehavior
     {
         [SerializeReference]

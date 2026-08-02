@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace UniBT
@@ -6,6 +7,7 @@ namespace UniBT
     ///  update the children in order.
     ///  update only one child per frame.
     /// </summary>
+    [Serializable]
     public class Rotator : Composite
     {
         [SerializeField]

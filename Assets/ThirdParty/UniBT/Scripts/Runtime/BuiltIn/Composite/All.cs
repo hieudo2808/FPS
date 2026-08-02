@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace UniBT
 {
+    [Serializable]
     public class All : Composite
     {
 

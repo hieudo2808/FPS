@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace UniBT
 {
+    [Serializable]
     public class Sequence : Composite
     {
         [SerializeField]

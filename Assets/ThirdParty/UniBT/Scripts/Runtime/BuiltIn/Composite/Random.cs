@@ -1,5 +1,8 @@
+using System;
+
 namespace UniBT
 {
+    [Serializable]
     public class Random : Composite
     {
         private NodeBehavior runningNode;
