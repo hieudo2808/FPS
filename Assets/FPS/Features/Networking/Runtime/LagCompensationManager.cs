@@ -118,11 +118,14 @@ namespace FPS
                 return false;
 
             if (ticksOld <= 0)
+            {
+                rewindTime = serverReceiveTime;
                 return true;
+            }
 
             double ageSeconds = ticksOld / (double)tickRate;
             double rttAwareLimit = Math.Max(
-                settings.RewindJitterMarginSeconds,
+                Math.Max(0.15, settings.RewindJitterMarginSeconds),
                 Math.Max(0.0, roundTripSeconds) * 0.5 + settings.RewindJitterMarginSeconds);
             double allowedRewind = Math.Min(settings.MaxRewindSeconds, rttAwareLimit);
             // The configured rewind window is a hard bound.  A whole-tick

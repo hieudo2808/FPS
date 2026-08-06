@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace FPS
 {
@@ -8,9 +9,9 @@ namespace FPS
         private const string MouseSensitivityKey = "MouseSensitivity";
 
         [Header("Sensitivity")]
-        [SerializeField] private float mouseSensitivity = 100f;
-        [SerializeField] private float minSensitivity = 10f;
-        [SerializeField] private float maxSensitivity = 500f;
+        [SerializeField] private float mouseSensitivity = 2f;
+        [SerializeField] private float minSensitivity = 0.1f;
+        [SerializeField] private float maxSensitivity = 10f;
 
         [Header("Rotation Limits")]
         [SerializeField] private float minRotationX = -90f;
@@ -39,17 +40,7 @@ namespace FPS
             if (IsOwner)
             {
                 LocalInstance = this;
-
-                if (SettingsManager.Instance != null)
-                {
-                    ApplySettingsSensitivity(SettingsManager.Instance.MouseSensitivity);
-                    SettingsManager.Instance.OnSensitivityChanged += ApplySettingsSensitivity;
-                    subscribedToSettings = true;
-                }
-                else if (PlayerPrefs.HasKey(MouseSensitivityKey))
-                {
-                    ApplySettingsSensitivity(PlayerPrefs.GetFloat(MouseSensitivityKey));
-                }
+                SubscribeToSettings();
 
                 // Enable camera only for local player
                 if (bodyCam != null)
@@ -89,11 +80,7 @@ namespace FPS
             DisableLocalCameraAndListener();
             if (wasOwner && LocalInstance == this)
             {
-                if (subscribedToSettings && SettingsManager.Instance != null)
-                {
-                    SettingsManager.Instance.OnSensitivityChanged -= ApplySettingsSensitivity;
-                    subscribedToSettings = false;
-                }
+                UnsubscribeFromSettings();
 
                 LocalInstance = null;
                 EnableFallbackAudioListener();
@@ -147,6 +134,12 @@ namespace FPS
         {
             if (!IsOwner) return;
 
+            // SettingsManager may be loaded after the network player (for example
+            // when returning from the lobby). Retry the lifecycle subscription
+            // until it exists so a later settings change is never lost.
+            if (!subscribedToSettings)
+                SubscribeToSettings();
+
             if (InputManager.GameplayInputBlocked)
             {
                 Cursor.visible = true;
@@ -154,17 +147,21 @@ namespace FPS
                 return;
             }
 
-            if (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard != null && (keyboard.leftAltKey.isPressed || keyboard.rightAltKey.isPressed))
             {
                 Cursor.lockState = CursorLockMode.None;
                 return;
             }
             else Cursor.lockState = CursorLockMode.Locked;
 
-            // 1. Remove Time.deltaTime, it makes sensitivity depend on FPS.
-            // 2. Use GetAxisRaw for true un-smoothed raw mouse input.
-            float mouseX = Input.GetAxisRaw("Mouse X") * mouseSensitivity;
-            float mouseY = Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
+            // Input System reports raw mouse delta. Deliberately do not multiply by
+            // Time.deltaTime: sensitivity is a device-space multiplier, not a speed.
+            Vector2 lookDelta = InputManager.Instance != null
+                ? InputManager.Instance.GetLookDelta()
+                : Vector2.zero;
+            float mouseX = lookDelta.x * mouseSensitivity;
+            float mouseY = lookDelta.y * mouseSensitivity;
 
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, minRotationX, maxRotationX);
@@ -194,7 +191,14 @@ namespace FPS
 
         private void ApplySettingsSensitivity(float newSensitivity)
         {
-            mouseSensitivity = Mathf.Max(0.01f, newSensitivity);
+            if (newSensitivity >= 10f && newSensitivity > maxSensitivity)
+            {
+                // Values written by the old 10..500 runtime scale are converted once
+                // instead of being collapsed to the new maximum.
+                newSensitivity = Mathf.Lerp(minSensitivity, maxSensitivity,
+                    Mathf.InverseLerp(10f, 500f, newSensitivity));
+            }
+            mouseSensitivity = Mathf.Clamp(newSensitivity, minSensitivity, maxSensitivity);
         }
 
         public void SetSensitivityNormalized(float normalized01)
@@ -206,6 +210,32 @@ namespace FPS
         public float GetSensitivityNormalized()
         {
             return Mathf.InverseLerp(minSensitivity, maxSensitivity, mouseSensitivity);
+        }
+
+        private void SubscribeToSettings()
+        {
+            if (!IsOwner || subscribedToSettings)
+                return;
+
+            if (SettingsManager.Instance != null)
+            {
+                ApplySettingsSensitivity(SettingsManager.Instance.MouseSensitivity);
+                SettingsManager.Instance.OnSensitivityChanged += ApplySettingsSensitivity;
+                subscribedToSettings = true;
+            }
+            else if (PlayerPrefs.HasKey(MouseSensitivityKey))
+            {
+                ApplySettingsSensitivity(PlayerPrefs.GetFloat(MouseSensitivityKey));
+            }
+        }
+
+        private void UnsubscribeFromSettings()
+        {
+            if (!subscribedToSettings || SettingsManager.Instance == null)
+                return;
+
+            SettingsManager.Instance.OnSensitivityChanged -= ApplySettingsSensitivity;
+            subscribedToSettings = false;
         }
     }
 }

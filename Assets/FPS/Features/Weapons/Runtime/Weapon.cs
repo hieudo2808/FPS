@@ -11,6 +11,8 @@ namespace FPS
         [SerializeField] private GameObject muzzleEffect;
         [Tooltip("Animator for FPS arms (FirstPersonArms).")]
         [SerializeField] private Animator fpsArmsAnimator;
+        [Tooltip("Animator on the weapon model itself.")]
+        [SerializeField] private Animator weaponAnimator;
 
         [Header("Weapon Data")]
         [SerializeField] private WeaponData weaponData;
@@ -41,6 +43,11 @@ namespace FPS
         private bool isReloading = false;
         private bool isOwner = false;
         private Coroutine burstCoroutine;
+        // Fire requests are server-authoritative. Keep a small local reservation
+        // so holding the trigger cannot visually overrun the magazine while the
+        // acknowledgement is in flight, but do not mutate authoritative ammo
+        // until WeaponOwnerState confirms the shot.
+        private int pendingServerShots;
 
         public int CurrentAmmo => currentAmmo;
         public int ReservedAmmo => reservedAmmo;
@@ -81,6 +88,7 @@ namespace FPS
             canShoot    = weaponData != null;
             isReloading = false;
             burstCoroutine = null;
+            pendingServerShots = 0;
 
             if (isOwner)
                 CacheOwnerDependencies();
@@ -91,6 +99,7 @@ namespace FPS
             StopAllCoroutines();
             isReloading = false;
             canShoot    = true;
+            pendingServerShots = 0;
             ReportCombatTelemetry();
         }
 
@@ -101,7 +110,7 @@ namespace FPS
 
             if (canShoot && !isReloading)
             {
-                if (currentAmmo <= 0 && reservedAmmo > 0)
+                if (pendingServerShots == 0 && currentAmmo <= 0 && reservedAmmo > 0)
                     ReloadWeapon();
 
                 HandleFire();
@@ -114,7 +123,7 @@ namespace FPS
             if (isReloading) return;
             if (!NetworkMatchStateManager.IsGameplayActive) return;
 
-            if (currentAmmo == 0 && reservedAmmo == 0)
+            if (currentAmmo - pendingServerShots <= 0 && reservedAmmo == 0)
             {
                 canShoot = false;
                 return;
@@ -147,11 +156,22 @@ namespace FPS
 
         private IEnumerator ShootCooldown()
         {
-            if (weaponData == null)
+            if (weaponData == null || currentAmmo <= 0)
+            {
+                canShoot = true;
                 yield break;
+            }
 
             canShoot = false;
-            FireBullet();
+            try
+            {
+                FireBullet();
+            }
+            catch (System.Exception ex)
+            {
+                GameLog.Error($"[Weapon] Exception during FireBullet: {ex.Message}\n{ex.StackTrace}");
+            }
+
             yield return new WaitForSeconds(weaponData.fireRate);
             canShoot = true;
         }
@@ -166,7 +186,14 @@ namespace FPS
 
             while (bulletsLeft > 0 && currentAmmo > 0)
             {
-                FireBullet();
+                try
+                {
+                    FireBullet();
+                }
+                catch (System.Exception ex)
+                {
+                    GameLog.Error($"[Weapon] Exception during FireBurst bullet: {ex.Message}\n{ex.StackTrace}");
+                }
                 bulletsLeft--;
 
                 if (bulletsLeft > 0)
@@ -181,7 +208,7 @@ namespace FPS
         private void FireBullet()
         {
             if (weaponData == null) return;
-            if (currentAmmo <= 0) return;
+            if (currentAmmo - pendingServerShots <= 0) return;
 
             PlayerMovement movement = cachedFireHandler != null
                 ? cachedFireHandler.GetComponent<PlayerMovement>()
@@ -192,9 +219,6 @@ namespace FPS
                 return;
             }
 
-            currentAmmo--;
-            ReportCombatTelemetry();
-
             if (recoilController != null && weaponData.recoilPattern != null)
                 recoilController.Fire(weaponData.recoilPattern);
 
@@ -202,6 +226,7 @@ namespace FPS
             if (cam == null) return;
 
             PlayMuzzleEffect();
+            TriggerAnimation("Fire");
             if (weaponData.shootSound != null && AudioManager.Instance != null)
                 AudioManager.Instance.PlaySFXSound(weaponData.shootSound);
 
@@ -220,13 +245,30 @@ namespace FPS
             ushort sequence = unchecked(++fireSequence);
 
             SpawnVisualBullet(spawnPos, shootDirection);
-            cachedFireHandler?.RequestFireServerRpc(new FireCommand
+
+            bool networkRequest = cachedFireHandler != null
+                && cachedFireHandler.IsSpawned
+                && cachedFireHandler.NetworkManager != null
+                && cachedFireHandler.NetworkManager.IsListening;
+            if (networkRequest)
             {
-                sequence = sequence,
-                estimatedServerTick = serverTick,
-                inputSequence = inputSequence,
-                weaponSlot = (byte)Mathf.Clamp(cachedWeaponManager != null ? cachedWeaponManager.CurrentWeaponIndex : 0, 0, byte.MaxValue),
-            });
+                pendingServerShots++;
+                cachedFireHandler.RequestFireServerRpc(new FireCommand
+                {
+                    sequence = sequence,
+                    estimatedServerTick = serverTick,
+                    inputSequence = inputSequence,
+                    weaponSlot = (byte)Mathf.Clamp(cachedWeaponManager != null ? cachedWeaponManager.CurrentWeaponIndex : 0, 0, byte.MaxValue),
+                });
+            }
+            else
+            {
+                // Offline/editor fallback has no server to acknowledge the shot.
+                currentAmmo = Mathf.Max(0, currentAmmo - 1);
+                ReportCombatTelemetry();
+                if (HUDManager.HasInstance)
+                    HUDManager.Instance.UpdateAmmoInfo();
+            }
         }
 
         public void SpawnVisualBullet(Vector3 position, Vector3 direction)
@@ -281,9 +323,16 @@ namespace FPS
             if (ps != null) ps.Play();
         }
 
+        private void TriggerAnimation(string triggerName)
+        {
+            weaponAnimator?.SetTrigger(triggerName);
+            fpsArmsAnimator?.SetTrigger(triggerName);
+        }
+
         public void PlayShootSound()
         {
             if (weaponData == null) return;
+            TriggerAnimation("Fire");
             if (weaponData.shootSound != null && AudioManager.Instance != null)
                 AudioManager.Instance.PlaySFXSound(weaponData.shootSound);
         }
@@ -293,7 +342,10 @@ namespace FPS
             if (weaponData == null) return;
             if (isReloading) return;
 
-            cachedFireHandler?.RequestReloadServerRpc();
+            if (cachedFireHandler != null && cachedFireHandler.IsSpawned && cachedFireHandler.NetworkManager != null && cachedFireHandler.NetworkManager.IsListening)
+            {
+                cachedFireHandler.RequestReloadServerRpc();
+            }
 
             canShoot    = false;
             isReloading = true;
@@ -311,11 +363,10 @@ namespace FPS
                 AudioManager.Instance.PlaySFXSound(weaponData.reloadSound);
 
             cachedWeaponManager?.TriggerAnimation("Reload");
+            TriggerAnimation("Reload");
 
             if (fpsArmsAnimator != null)
             {
-                fpsArmsAnimator.SetTrigger("Reload");
-
                 float timeout = 0.5f;
                 float elapsed = 0f;
                 while (elapsed < timeout)
@@ -363,6 +414,7 @@ namespace FPS
         {
             if (magazineOnGun != null)  magazineOnGun.SetActive(true);
             if (magazineInHand != null) magazineInHand.SetActive(false);
+            TriggerAnimation("Equip");
         }
 
         public void AddReserveAmmo(int amount)
@@ -373,11 +425,14 @@ namespace FPS
 
         public void SetLocalAmmoState(int magazineAmmo, int reserveAmmo, bool reloading)
         {
+            pendingServerShots = 0;
             currentAmmo = Mathf.Max(0, magazineAmmo);
             reservedAmmo = Mathf.Max(0, reserveAmmo);
             isReloading = reloading;
-            if (!isReloading)
-                canShoot = currentAmmo > 0 || reservedAmmo > 0;
+            // Network reconciliation owns ammo/reload state only.  The local
+            // fire gate is owned by ShootCooldown/FireBurst; resetting it here
+            // lets every server response bypass weaponData.fireRate.
+            ReportCombatTelemetry();
         }
 
         public void ReportCombatTelemetry()

@@ -49,6 +49,9 @@ namespace FPS
         [SerializeField] private NetworkHardeningConfig hardeningConfig;
         [SerializeField] private LayerMask reconnectHazardLayers;
 
+        [Header("Character Prefabs")]
+        [SerializeField] private PlayerPrefabCatalog playerPrefabCatalog;
+
         public event Action OnHostStarted;
         public event Action OnClientConnected;
         public event Action OnClientDisconnected;
@@ -82,7 +85,6 @@ namespace FPS
         private PlayerSessionRegistry playerRegistry;
         private NetworkHardeningSettings settings;
         private ISession currentSession;
-        private GameObject playerPrefabCache;
         private SessionPlayerId localStablePlayerId;
         private string localReconnectToken = string.Empty;
         private bool callbacksRegistered;
@@ -99,6 +101,7 @@ namespace FPS
         private Coroutine sceneLoadTimeoutRoutine;
         private SessionOperation matchLoadOperation;
         private CancellationTokenSource lifetimeCancellation;
+        private Task cleanupTask;
 
         private async void Awake()
         {
@@ -585,6 +588,7 @@ namespace FPS
 
             // The MPS session deliberately remains unlocked. NGO approval rejects fresh players after
             // this point while still allowing a reserved player to reacquire the Relay allocation.
+            SyncLobbyCharacterSelectionsToRegistry();
             matchStarted = true;
             IsInLobby = false;
             manager.SceneManager.OnLoadEventCompleted -= HandleGameSceneLoaded;
@@ -609,9 +613,6 @@ namespace FPS
             NetworkManager manager = NetworkManager.Singleton;
             if (manager == null)
                 throw new InvalidOperationException("NetworkManager is missing.");
-
-            if (manager.NetworkConfig.PlayerPrefab != null && playerPrefabCache == null)
-                playerPrefabCache = manager.NetworkConfig.PlayerPrefab;
 
             manager.NetworkConfig.ConnectionApproval = true;
             manager.ConnectionApprovalCallback = ApproveConnection;
@@ -1046,7 +1047,7 @@ namespace FPS
         private void SpawnPlayerForClient(ulong clientId, PlayerSessionRecord record, bool isReconnect)
         {
             NetworkManager manager = NetworkManager.Singleton;
-            if (manager == null || !manager.IsServer || playerPrefabCache == null || record == null)
+            if (manager == null || !manager.IsServer || record == null)
                 return;
             if (manager.ConnectedClients.TryGetValue(clientId, out NetworkClient client) && client.PlayerObject != null)
                 return;
@@ -1060,7 +1061,13 @@ namespace FPS
                 rotation = record.Snapshot.rotation;
             }
 
-            GameObject playerObject = Instantiate(playerPrefabCache, position, rotation);
+            if (!TryGetPlayerPrefab(record.CharacterId, out GameObject playerPrefab))
+            {
+                manager.DisconnectClient(clientId, "PlayerCharacterUnavailable");
+                return;
+            }
+
+            GameObject playerObject = Instantiate(playerPrefab, position, rotation);
             NetworkObject networkObject = playerObject.GetComponent<NetworkObject>();
             PlayerHealth health = playerObject.GetComponent<PlayerHealth>();
             if (networkObject == null || health == null)
@@ -1084,6 +1091,65 @@ namespace FPS
 
             capturedDisconnects.Remove(clientId);
             networkObject.SpawnAsPlayerObject(clientId, true);
+        }
+
+        internal bool SetPlayerCharacter(ulong clientId, PlayerCharacterId characterId)
+        {
+            if (!Enum.IsDefined(typeof(PlayerCharacterId), characterId)
+                || playerRegistry == null
+                || !playerRegistry.TryGetByClientId(clientId, out PlayerSessionRecord record))
+            {
+                return false;
+            }
+
+            if (!TryGetPlayerPrefab(characterId, out _))
+                return false;
+
+            record.CharacterId = characterId;
+            SyncLobbyCharacterSelectionsToRegistry();
+            return true;
+        }
+
+        internal bool TryGetPlayerCharacter(ulong clientId, out PlayerCharacterId characterId)
+        {
+            if (playerRegistry != null && playerRegistry.TryGetByClientId(clientId, out PlayerSessionRecord record))
+            {
+                characterId = record.CharacterId;
+                return true;
+            }
+
+            characterId = PlayerCharacterId.Clove;
+            return false;
+        }
+
+        private bool TryGetPlayerPrefab(PlayerCharacterId characterId, out GameObject prefab)
+        {
+            PlayerPrefabCatalog catalog = playerPrefabCatalog != null
+                ? playerPrefabCatalog
+                : Resources.Load<PlayerPrefabCatalog>("PlayerPrefabCatalog");
+            if (catalog != null && catalog.TryGetPrefab(characterId, out prefab))
+                return true;
+
+            // NetworkConfig.PlayerPrefab remains a Clove fallback for old scenes,
+            // but it is never used for a non-Clove character.
+            NetworkManager manager = NetworkManager.Singleton;
+            prefab = characterId == PlayerCharacterId.Clove ? manager?.NetworkConfig.PlayerPrefab : null;
+            return prefab != null;
+        }
+
+        private void SyncLobbyCharacterSelectionsToRegistry()
+        {
+            if (!IsHosting || WaitingRoomManager.Instance == null || playerRegistry == null)
+                return;
+
+            foreach (PlayerLobbyData player in WaitingRoomManager.Instance.Players)
+            {
+                if (!playerRegistry.TryGetByClientId(player.clientId, out PlayerSessionRecord record))
+                    continue;
+
+                if (Enum.IsDefined(typeof(PlayerCharacterId), player.characterId))
+                    record.CharacterId = (PlayerCharacterId)player.characterId;
+            }
         }
 
         private void GetFallbackSpawnPose(ulong clientId, out Vector3 position, out Quaternion rotation)
@@ -1211,6 +1277,25 @@ namespace FPS
 
         private async Task CleanupTransportAsync(bool clearReconnectCredentials)
         {
+            if (cleanupTask != null)
+            {
+                await cleanupTask;
+                return;
+            }
+
+            cleanupTask = CleanupTransportCoreAsync(clearReconnectCredentials);
+            try
+            {
+                await cleanupTask;
+            }
+            finally
+            {
+                cleanupTask = null;
+            }
+        }
+
+        private async Task CleanupTransportCoreAsync(bool clearReconnectCredentials)
+        {
             suppressDisconnectHandling = true;
             if (sceneLoadTimeoutRoutine != null)
             {
@@ -1258,9 +1343,22 @@ namespace FPS
             {
                 await currentSession.LeaveAsync();
             }
+            catch (OperationCanceledException)
+            {
+                // Cancellation during teardown is expected.
+            }
+            catch (ObjectDisposedException)
+            {
+                // The Services SDK may dispose a session while a leave request is
+                // in flight. It is already in the desired terminal state.
+            }
+            catch (Exception exception) when (exception.Message.IndexOf("already left", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                // Idempotent leave: the remote service already removed us.
+            }
             catch (Exception exception)
             {
-                GameLog.Warning(() => $"[Session] Leave failed: {exception.Message}");
+                GameLog.Warning(() => $"[Session] Unexpected leave failure: {exception.Message}");
             }
             finally
             {
@@ -1338,17 +1436,36 @@ namespace FPS
                 return;
 
             lifetimeCancellation?.Cancel();
-            lifetimeCancellation?.Dispose();
             UnregisterCustomMessageHandler();
             UnregisterNetworkCallbacks();
-            if (sessionCoordinator != null)
-            {
-                sessionCoordinator.StateChanged -= HandleSessionStateChanged;
-                sessionCoordinator.Dispose();
-            }
+            Task cleanup = CleanupTransportAsync(clearReconnectCredentials: true);
+            _ = DisposeAfterCleanupAsync(cleanup);
             Instance = null;
             NetworkHardeningRuntime.Reset();
             NetworkDiagnostics.EndSession();
+        }
+
+        private async Task DisposeAfterCleanupAsync(Task cleanup)
+        {
+            try
+            {
+                await cleanup;
+            }
+            catch (Exception exception) when (exception is OperationCanceledException || exception is ObjectDisposedException)
+            {
+                // Expected during application shutdown.
+            }
+            finally
+            {
+                lifetimeCancellation?.Dispose();
+                lifetimeCancellation = null;
+                if (sessionCoordinator != null)
+                {
+                    sessionCoordinator.StateChanged -= HandleSessionStateChanged;
+                    sessionCoordinator.Dispose();
+                    sessionCoordinator = null;
+                }
+            }
         }
 
         public static bool HasInstance => Instance != null;

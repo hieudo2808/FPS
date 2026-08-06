@@ -1,6 +1,9 @@
+using System;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace FPS
 {
@@ -22,26 +25,26 @@ namespace FPS
 
         [Header("Settings")]
         [SerializeField] private TMP_Dropdown difficultyDropdown;
+        [SerializeField] private TMP_Dropdown characterDropdown;
 
         [Header("Info")]
         [SerializeField] private TextMeshProUGUI playerCountText;
         [SerializeField] private TextMeshProUGUI statusText;
 
         private bool isReady;
+        private bool initialized;
+
+        private static readonly PlayerCharacterId[] CharacterOptions =
+        {
+            PlayerCharacterId.Clove,
+            PlayerCharacterId.Brimstone,
+            PlayerCharacterId.Sage,
+            PlayerCharacterId.Gekko
+        };
 
         private void Start()
         {
-            if (copyCodeButton != null)
-                copyCodeButton.onClick.AddListener(CopyJoinCode);
-
-            if (readyButton != null)
-                readyButton.onClick.AddListener(OnReadyClicked);
-
-            if (startGameButton != null)
-                startGameButton.onClick.AddListener(OnStartGameClicked);
-
-            if (leaveButton != null)
-                leaveButton.onClick.AddListener(OnLeaveClicked);
+            AttachButtonResetters();
 
             if (joinCodeText != null && NetworkGameManager.HasInstance)
                 joinCodeText.text = NetworkGameManager.Instance.CurrentJoinCode;
@@ -56,26 +59,74 @@ namespace FPS
                 DropdownTemplateUtility.Normalize(difficultyDropdown);
                 difficultyDropdown.interactable = isHost;
 
-                if (isHost)
-                {
-                    difficultyDropdown.onValueChanged.AddListener(OnDifficultyDropdownChanged);
-                }
             }
+
+            if (characterDropdown != null)
+            {
+                DropdownTemplateUtility.Normalize(characterDropdown);
+                characterDropdown.ClearOptions();
+                var options = new System.Collections.Generic.List<string>();
+                for (int i = 0; i < CharacterOptions.Length; i++)
+                    options.Add(CharacterOptions[i].ToString());
+                characterDropdown.AddOptions(options);
+            }
+
+            RegisterUiListeners();
 
             UpdateReadyButtonText();
             UpdateStartButton(false);
             UpdateStatus("Waiting for players...");
+            initialized = true;
         }
 
         private void OnEnable()
         {
+            if (initialized)
+                RegisterUiListeners();
             InvokeRepeating(nameof(TrySubscribe), 0.1f, 0.5f);
         }
 
         private void OnDisable()
         {
             CancelInvoke(nameof(TrySubscribe));
+            UnregisterUiListeners();
             Unsubscribe();
+        }
+
+        private void RegisterUiListeners()
+        {
+            copyCodeButton?.onClick.AddListener(CopyJoinCode);
+            readyButton?.onClick.AddListener(OnReadyClicked);
+            startGameButton?.onClick.AddListener(OnStartGameClicked);
+            leaveButton?.onClick.AddListener(OnLeaveClicked);
+
+            bool isHost = NetworkGameManager.Instance != null && NetworkGameManager.Instance.IsHosting;
+            if (isHost)
+                difficultyDropdown?.onValueChanged.AddListener(OnDifficultyDropdownChanged);
+            characterDropdown?.onValueChanged.AddListener(OnCharacterDropdownChanged);
+        }
+
+        private void UnregisterUiListeners()
+        {
+            copyCodeButton?.onClick.RemoveListener(CopyJoinCode);
+            readyButton?.onClick.RemoveListener(OnReadyClicked);
+            startGameButton?.onClick.RemoveListener(OnStartGameClicked);
+            leaveButton?.onClick.RemoveListener(OnLeaveClicked);
+            difficultyDropdown?.onValueChanged.RemoveListener(OnDifficultyDropdownChanged);
+            characterDropdown?.onValueChanged.RemoveListener(OnCharacterDropdownChanged);
+        }
+
+        private void OnDestroy()
+        {
+            UnregisterUiListeners();
+        }
+
+        private void AttachButtonResetters()
+        {
+            UiButtonSelectionResetter.Attach(copyCodeButton);
+            UiButtonSelectionResetter.Attach(readyButton);
+            UiButtonSelectionResetter.Attach(startGameButton);
+            UiButtonSelectionResetter.Attach(leaveButton);
         }
 
         private void TrySubscribe()
@@ -110,6 +161,15 @@ namespace FPS
             }
         }
 
+        private void OnCharacterDropdownChanged(int value)
+        {
+            if (value < 0 || value >= CharacterOptions.Length || WaitingRoomManager.Instance == null)
+                return;
+
+            WaitingRoomManager.Instance.SetCharacterServerRpc(CharacterOptions[value]);
+            EventSystem.current?.SetSelectedGameObject(null);
+        }
+
         private void RefreshPlayerList()
         {
             if (WaitingRoomManager.Instance == null) return;
@@ -123,10 +183,40 @@ namespace FPS
             var players = WaitingRoomManager.Instance.Players;
             int count = players.Count;
 
+            if (NetworkManager.Singleton != null)
+            {
+                bool localPlayerFound = false;
+                for (int i = 0; i < count; i++)
+                {
+                    if (players[i].clientId != NetworkManager.Singleton.LocalClientId)
+                        continue;
+
+                    localPlayerFound = true;
+                    isReady = players[i].isReady;
+                    if (characterDropdown != null)
+                    {
+                        int selected = Array.IndexOf(CharacterOptions, (PlayerCharacterId)players[i].characterId);
+                        if (selected >= 0)
+                            characterDropdown.SetValueWithoutNotify(selected);
+                    }
+                    break;
+                }
+
+                if (characterDropdown != null)
+                    characterDropdown.interactable = localPlayerFound;
+            }
+            else if (characterDropdown != null)
+            {
+                characterDropdown.interactable = false;
+            }
+
             for (int i = 0; i < count; i++)
             {
                 var data = players[i];
-                CreatePlayerEntry(data.playerName.ToString(), i == 0, data.isReady);
+                PlayerCharacterId character = Enum.IsDefined(typeof(PlayerCharacterId), data.characterId)
+                    ? (PlayerCharacterId)data.characterId
+                    : PlayerCharacterId.Clove;
+                CreatePlayerEntry(data.playerName.ToString(), i == 0, data.isReady, character);
             }
 
             for (int i = count; i < 4; i++)
@@ -141,7 +231,7 @@ namespace FPS
                 joinCodeText.text = NetworkGameManager.Instance.CurrentJoinCode;
         }
 
-        private void CreatePlayerEntry(string playerName, bool isHost, bool ready)
+        private void CreatePlayerEntry(string playerName, bool isHost, bool ready, PlayerCharacterId character)
         {
             if (playerEntryPrefab == null || playerListContainer == null) return;
 
@@ -151,7 +241,7 @@ namespace FPS
 
             string hostMark = isHost ? " [HOST]" : "";
             string readyMark = ready ? " [READY]" : " [NOT READY]";
-            nameText.text = $"{playerName}{hostMark}{readyMark}";
+            nameText.text = $"{playerName} [{character}]{hostMark}{readyMark}";
             nameText.color = ready ? new Color(0.54f, 1.0f, 0.72f, 1.0f) : Color.white;
         }
 
@@ -180,8 +270,8 @@ namespace FPS
             if (WaitingRoomManager.Instance == null) return;
 
             WaitingRoomManager.Instance.ToggleReadyServerRpc();
-            isReady = !isReady;
-            UpdateReadyButtonText();
+            // The authoritative list refresh updates the button. Never predict
+            // ready state locally, otherwise a rejected RPC leaves the UI stale.
         }
 
         private void OnStartGameClicked()

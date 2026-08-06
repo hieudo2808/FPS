@@ -22,6 +22,7 @@ namespace FPS
         public SessionPlayerId PlayerId { get; internal set; }
         public string UnityPlayerId { get; internal set; }
         public ulong ClientId { get; internal set; }
+        public PlayerCharacterId CharacterId { get; internal set; } = PlayerCharacterId.Clove;
         public bool IsConnected { get; internal set; }
         public double ReservationExpiresAt { get; internal set; }
         public PlayerRuntimeSnapshot Snapshot { get; internal set; }
@@ -84,6 +85,7 @@ namespace FPS
                 PlayerId = new SessionPlayerId(nextStableId++),
                 UnityPlayerId = unityPlayerId,
                 ClientId = clientId,
+                CharacterId = PlayerCharacterId.Clove,
                 IsConnected = true,
                 Snapshot = PlayerRuntimeSnapshot.CreateDefault(default, default, UnityEngine.Quaternion.identity),
                 TokenHash = HashToken(token)

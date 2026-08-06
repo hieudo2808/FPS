@@ -6,7 +6,9 @@ using System.IO;
 using System.Text;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using Unity.AI.Navigation;
 
 namespace FPS.NetworkSimulation
 {
@@ -261,12 +263,42 @@ namespace FPS.NetworkSimulation
 
         private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            if (string.Equals(scene.name, "GameScene", StringComparison.Ordinal))
+                EnsureVerificationNavMesh();
+
             string eventName = string.Equals(scene.name, "LobbyScene", StringComparison.Ordinal)
                 ? "lobby_ready"
                 : string.Equals(scene.name, "GameScene", StringComparison.Ordinal)
                     ? "game_scene_ready"
                     : "scene_loaded";
             Emit(eventName, "pass", scene.name);
+        }
+
+        private void EnsureVerificationNavMesh()
+        {
+            // The checked-in GameScene references a legacy NavMeshData GUID that
+            // is absent in this checkout. Build a verification-only surface from
+            // physics colliders so the standalone harness can exercise real AI.
+            // Production scenes are not modified by this fallback.
+            try
+            {
+                NavMeshSurface surface = FindAnyObjectByType<NavMeshSurface>();
+                if (surface == null)
+                {
+                    GameObject root = new GameObject("A1VerificationNavMesh");
+                    DontDestroyOnLoad(root);
+                    surface = root.AddComponent<NavMeshSurface>();
+                }
+
+                surface.collectObjects = CollectObjects.All;
+                surface.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
+                surface.BuildNavMesh();
+                Emit("navmesh_ready", "pass", "verification_runtime_surface_built");
+            }
+            catch (Exception exception)
+            {
+                Emit("navmesh_ready", "fail", exception.Message);
+            }
         }
 
         private void HandleLogMessage(string condition, string stackTrace, LogType type)

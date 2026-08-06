@@ -1420,7 +1420,9 @@ PrefabInstance:
       value: 15.751
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: -5117700066308340382, guid: 22552785a7c8c8e4c8f3697030daf50b, type: 3}
+    - {fileID: 117214286460000749, guid: 22552785a7c8c8e4c8f3697030daf50b, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 22552785a7c8c8e4c8f3697030daf50b, type: 3}
@@ -1442,7 +1444,7 @@ Animator:
   m_GameObject: {fileID: 8346836095533046642}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 2fcba7f0e95cc9e45b793dedc372c70e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 3c43fef31dc36fa45a283c125e93fa56, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -271,6 +271,43 @@ namespace FPS.Tests
         }
 
         [Test]
+        public void WeaponServerState_DoesNotAcceptFireBeforeConfiguredCooldown()
+        {
+            var data = ScriptableObject.CreateInstance<WeaponData>();
+            objectsToDestroy.Add(data);
+            data.magazineSize = 4;
+            data.totalAmmo = 4;
+            data.fireRate = 0.1f;
+
+            var state = new WeaponServerState();
+            state.EnsureInitialized(10, data);
+
+            Assert.IsTrue(state.TryConsumeFire(data, 0.0));
+            Assert.IsFalse(state.TryConsumeFire(data, 1.0 / 60.0));
+            Assert.IsFalse(state.TryConsumeFire(data, 0.099f));
+            Assert.IsTrue(state.TryConsumeFire(data, 0.1));
+            Assert.AreEqual(2, state.MagazineAmmo);
+        }
+
+        [Test]
+        public void Weapon_AuthoritativeAmmoSync_DoesNotClearLocalFireCooldown()
+        {
+            var weaponObject = new GameObject("WeaponCooldownSync");
+            objectsToDestroy.Add(weaponObject);
+            var weapon = weaponObject.AddComponent<Weapon>();
+            FieldInfo canShootField = typeof(Weapon).GetField(
+                "canShoot", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            Assert.IsNotNull(canShootField);
+            canShootField.SetValue(weapon, false);
+
+            weapon.SetLocalAmmoState(29, 75, reloading: false);
+
+            Assert.IsFalse((bool)canShootField.GetValue(weapon),
+                "Authoritative ammo reconciliation must not bypass the local fire-rate cooldown.");
+        }
+
+        [Test]
         public void Weapon_StartWithoutWeaponData_DoesNotThrow()
         {
             var weaponGo = new GameObject("UnconfiguredWeapon");

@@ -304,7 +304,10 @@ namespace FPS
                 lastFireResult = FireRejectReason.None,
                 authoritativeShotTick = snapshot.serverTick
             });
-            AcknowledgeReconnectRestoreServerRpc(snapshot.revision);
+            if (IsSpawned && NetworkManager != null && NetworkManager.IsListening)
+            {
+                AcknowledgeReconnectRestoreServerRpc(snapshot.revision);
+            }
         }
 
         [ServerRpc]

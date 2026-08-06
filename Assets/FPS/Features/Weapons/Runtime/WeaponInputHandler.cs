@@ -10,11 +10,11 @@ namespace FPS
 
         private void Update()
         {
-            if (!IsOwner) return;
+            if (!IsOwner || !IsSpawned || NetworkManager == null || !NetworkManager.IsListening) return;
 
             if (InputManager.Instance != null && (InputManager.Instance.GetWeapon1InputDown() || InputManager.Instance.GetWeapon2InputDown()))
             {
-                if (weaponManager != null)
+                if (weaponManager != null && weaponManager.IsSpawned)
                 {
                     weaponManager.RequestSwitchWeaponServerRpc();
                 }

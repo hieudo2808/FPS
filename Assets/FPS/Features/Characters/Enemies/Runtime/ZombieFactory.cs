@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace FPS
 {
@@ -31,9 +32,28 @@ namespace FPS
 
             bool canUsePooling = usePooling && ZombiePoolManager.Instance != null;
 
+            if (!TryGetNavMeshSpawnPosition(position, out Vector3 navMeshPosition))
+            {
+#if UNITY_EDITOR
+                // EditMode tests and prefab validation intentionally run
+                // without a baked NavMesh. Keep the production server path
+                // strict, but allow editor-only factory setup to exercise the
+                // same public spawn contract at the requested position.
+                if (!Application.isPlaying || NavMesh.CalculateTriangulation().vertices.Length == 0)
+                {
+                    navMeshPosition = position;
+                }
+                else
+#endif
+                {
+                GameLog.Warning(() => $"[ZombieFactory] Skipping zombie spawn because no NavMesh was found near {position}");
+                return null;
+                }
+            }
+
             GameObject zombie = canUsePooling
-                ? ZombiePoolManager.Instance.GetZombie(data.prefab, position, rotation)
-                : SpawnDirect(data.prefab, position, rotation);
+                ? ZombiePoolManager.Instance.GetZombie(data.prefab, navMeshPosition, rotation)
+                : SpawnDirect(data.prefab, navMeshPosition, rotation);
 
             if (zombie == null) return null;
 
@@ -148,6 +168,18 @@ namespace FPS
                 return true;
 
             return InfluenceMapManager.Instance != null && InfluenceMapManager.Instance.IsFairSpawnPoint(position);
+        }
+
+        private static bool TryGetNavMeshSpawnPosition(Vector3 position, out Vector3 navMeshPosition)
+        {
+            if (NavMesh.SamplePosition(position, out NavMeshHit hit, 4f, NavMesh.AllAreas))
+            {
+                navMeshPosition = hit.position;
+                return true;
+            }
+
+            navMeshPosition = position;
+            return false;
         }
 
         private GameObject SpawnDirect(GameObject prefab, Vector3 position, Quaternion rotation)

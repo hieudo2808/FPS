@@ -258,23 +258,18 @@ namespace FPS
                 return;
             }
 
-            cachedMove = new Vector2(
-                Input.GetAxisRaw("Horizontal"),
-                Input.GetAxisRaw("Vertical")
-            );
-
+            InputManager inputManager = InputManager.Instance;
+            cachedMove = inputManager != null ? inputManager.GetMove() : Vector2.zero;
             cachedMove = Vector2.ClampMagnitude(cachedMove, 1f);
 
-            sprintHeld = Input.GetKey(KeyCode.LeftShift);
+            sprintHeld = inputManager != null && inputManager.GetSprintInput();
 
             cachedYaw = mouseMovement != null
                 ? mouseMovement.YRotation
                 : transform.eulerAngles.y;
             cachedPitch = mouseMovement != null ? mouseMovement.XRotation : 0f;
 
-            if (InputManager.Instance != null
-                ? InputManager.Instance.GetJumpInputDown()
-                : Input.GetKeyDown(KeyCode.Space))
+            if (inputManager != null && inputManager.GetJumpInputDown())
             {
                 jumpQueued = true;
             }
@@ -338,7 +333,10 @@ namespace FPS
                     previous1 = previousSentInput1,
                     previous2 = previousSentInput2
                 };
-                SendInputServerRpc(packet);
+                if (IsSpawned && NetworkManager != null && NetworkManager.IsListening)
+                {
+                    SendInputServerRpc(packet);
+                }
                 previousSentInput2 = previousSentInput1;
                 previousSentInput1 = input;
                 sentInputHistoryCount = (byte)Mathf.Min(2, sentInputHistoryCount + 1);
@@ -433,24 +431,69 @@ namespace FPS
         {
             origin = default;
             direction = default;
-            if (!IsServer || serverAimHistory == null)
+            if (!IsServer)
+            {
+                Debug.LogWarning($"[DIAGNOSTIC][ServerAim] TryBuildServerAim FAILED: IsServer is false!");
                 return false;
+            }
 
-            int index = PositiveModulo(inputTick, BUFFER_SIZE);
-            ServerAimSample sample = serverAimHistory[index];
-            if (!sample.valid || sample.tick != inputTick || sample.inputSequence != inputSequence)
-                return false;
+            // 1. Try exact match in serverAimHistory
+            if (serverAimHistory != null)
+            {
+                int index = PositiveModulo(inputTick, BUFFER_SIZE);
+                ServerAimSample sample = serverAimHistory[index];
+                if (sample.valid && sample.tick == inputTick && sample.inputSequence == inputSequence)
+                {
+                    origin = sample.origin;
+                    direction = Quaternion.Euler(sample.pitch, sample.yaw, 0f) * Vector3.forward;
+                    return direction.sqrMagnitude > 0.999f;
+                }
 
-            origin = sample.origin;
-            direction = Quaternion.Euler(sample.pitch, sample.yaw, 0f) * Vector3.forward;
-            return direction.sqrMagnitude > 0.999f;
+                // 2. Fallback: Search for closest valid sample in history
+                int newestTick = networkTimer != null ? networkTimer.CurrentTick : nextServerTick;
+                int oldestTick = Mathf.Max(0, newestTick - BUFFER_SIZE + 1);
+                for (int t = newestTick; t >= oldestTick; t--)
+                {
+                    ServerAimSample s = serverAimHistory[PositiveModulo(t, BUFFER_SIZE)];
+                    if (s.valid && (s.inputSequence == inputSequence || Mathf.Abs(s.tick - inputTick) <= 10))
+                    {
+                        origin = s.origin;
+                        direction = Quaternion.Euler(s.pitch, s.yaw, 0f) * Vector3.forward;
+                        return direction.sqrMagnitude > 0.999f;
+                    }
+                }
+            }
+
+            // 3. Ultimate Fallback: Use current server transform position and eye height
+            float eyeHeight = controller != null ? Mathf.Max(0.5f, controller.height * 0.8f) : 1.6f;
+            origin = transform.position + Vector3.up * eyeHeight;
+            direction = transform.forward;
+            bool ok = direction.sqrMagnitude > 0.999f;
+            if (!ok)
+            {
+                Debug.LogWarning($"[DIAGNOSTIC][ServerAim] TryBuildServerAim FAILED: direction sqrMagnitude={direction.sqrMagnitude} <= 0.999!");
+            }
+            return ok;
+        }
+
+        public bool TryGetLatestFireReference(out uint inputSequence, out int inputTick)
+        {
+            if (IsOwner)
+            {
+                inputSequence = localCommandSequence;
+                int netTick = NetworkManager != null && NetworkManager.IsListening ? NetworkManager.ServerTime.Tick : 0;
+                inputTick = netTick > 0 ? netTick : (networkTimer != null ? networkTimer.CurrentTick : 0);
+                return true;
+            }
+
+            inputSequence = confirmedFireInputSequence;
+            inputTick = confirmedFireTick;
+            return hasConfirmedFireReference;
         }
 
         public bool TryGetConfirmedFireReference(out uint inputSequence, out int inputTick)
         {
-            inputSequence = confirmedFireInputSequence;
-            inputTick = confirmedFireTick;
-            return hasConfirmedFireReference;
+            return TryGetLatestFireReference(out inputSequence, out inputTick);
         }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -926,13 +969,13 @@ namespace FPS
                 return false;
             }
 
-            if (groundMask.value != 0
-                && Physics.CheckSphere(groundCheck.position, 0.4f, groundMask, QueryTriggerInteraction.Ignore))
+            int maskToUse = groundMask.value != 0 ? groundMask.value : LayerMask.GetMask("Ground");
+            if (maskToUse == 0)
             {
-                return true;
+                maskToUse = 1 << LayerMask.NameToLayer("Default");
             }
 
-            return Physics.CheckSphere(groundCheck.position, 0.4f, ~0, QueryTriggerInteraction.Ignore);
+            return Physics.CheckSphere(groundCheck.position, 0.4f, maskToUse, QueryTriggerInteraction.Ignore);
         }
 
         // ==========================================

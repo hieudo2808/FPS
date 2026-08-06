@@ -15,7 +15,7 @@ namespace FPS
         public const float OwnerHardSnapDistance = 2f;
         public const int MaxFutureInputTicks = 2;
         public const int MaxPastInputTicks = SimulationHz;
-        public const float RewindJitterMarginSeconds = 0.03f;
+        public const float RewindJitterMarginSeconds = 0.15f;
 
         public const int StateSendEveryNTicks = SimulationHz / SnapshotHz;
         public const int MaxRepeatedInputTicks = (int)(SimulationHz * InputSilenceSeconds);

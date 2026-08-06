@@ -14,7 +14,7 @@ namespace FPS.Tests
         [Test]
         public void PlayerPrefab_HasMovementReferencesAndConfiguredWeaponSlots()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/FPS/Features/Characters/Content/Players/Player/Player.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/FPS/Features/Characters/Content/Players/Clove/ClovePlayer.prefab");
             Assert.NotNull(prefab, "Player prefab should be loadable.");
 
             var movement = prefab.GetComponent<PlayerMovement>();

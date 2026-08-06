@@ -1,0 +1,45 @@
+{
+    "name": "FPSInputActions",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "5f1b05f1-33a7-4a5d-8d4f-5e5e6ad7cf01",
+            "actions": [
+                { "name": "Move", "type": "Value", "id": "10000000-0000-0000-0000-000000000001", "expectedControlType": "Vector2" },
+                { "name": "Look", "type": "Value", "id": "10000000-0000-0000-0000-000000000002", "expectedControlType": "Vector2" },
+                { "name": "Fire", "type": "Button", "id": "10000000-0000-0000-0000-000000000003", "expectedControlType": "Button" },
+                { "name": "Reload", "type": "Button", "id": "10000000-0000-0000-0000-000000000004", "expectedControlType": "Button" },
+                { "name": "Aim", "type": "Button", "id": "10000000-0000-0000-0000-000000000005", "expectedControlType": "Button" },
+                { "name": "Weapon1", "type": "Button", "id": "10000000-0000-0000-0000-000000000006", "expectedControlType": "Button" },
+                { "name": "Weapon2", "type": "Button", "id": "10000000-0000-0000-0000-000000000007", "expectedControlType": "Button" },
+                { "name": "Jump", "type": "Button", "id": "10000000-0000-0000-0000-000000000008", "expectedControlType": "Button" },
+                { "name": "Interact", "type": "Button", "id": "10000000-0000-0000-0000-000000000009", "expectedControlType": "Button" },
+                { "name": "Grenade", "type": "Button", "id": "10000000-0000-0000-0000-00000000000a", "expectedControlType": "Button" },
+                { "name": "Sprint", "type": "Button", "id": "10000000-0000-0000-0000-00000000000b", "expectedControlType": "Button" },
+                { "name": "Pause", "type": "Button", "id": "10000000-0000-0000-0000-00000000000c", "expectedControlType": "Button" }
+            ],
+            "bindings": [
+                { "name": "Move", "id": "20000000-0000-0000-0000-000000000001", "path": "2DVector", "interactions": "", "processors": "", "groups": "", "action": "Move", "isComposite": true },
+                { "name": "up", "id": "20000000-0000-0000-0000-000000000002", "path": "<Keyboard>/w", "action": "Move", "isPartOfComposite": true },
+                { "name": "down", "id": "20000000-0000-0000-0000-000000000003", "path": "<Keyboard>/s", "action": "Move", "isPartOfComposite": true },
+                { "name": "left", "id": "20000000-0000-0000-0000-000000000004", "path": "<Keyboard>/a", "action": "Move", "isPartOfComposite": true },
+                { "name": "right", "id": "20000000-0000-0000-0000-000000000005", "path": "<Keyboard>/d", "action": "Move", "isPartOfComposite": true },
+                { "name": "GamepadMove", "id": "20000000-0000-0000-0000-000000000006", "path": "<Gamepad>/leftStick", "action": "Move" },
+                { "name": "MouseLook", "id": "20000000-0000-0000-0000-000000000007", "path": "<Mouse>/delta", "action": "Look" },
+                { "name": "GamepadLook", "id": "20000000-0000-0000-0000-000000000008", "path": "<Gamepad>/rightStick", "action": "Look" },
+                { "name": "MouseFire", "id": "20000000-0000-0000-0000-000000000009", "path": "<Mouse>/leftButton", "action": "Fire" },
+                { "name": "GamepadFire", "id": "20000000-0000-0000-0000-00000000000a", "path": "<Gamepad>/rightTrigger", "action": "Fire" },
+                { "name": "Reload", "id": "20000000-0000-0000-0000-00000000000b", "path": "<Keyboard>/r", "action": "Reload" },
+                { "name": "Aim", "id": "20000000-0000-0000-0000-00000000000c", "path": "<Mouse>/rightButton", "action": "Aim" },
+                { "name": "Weapon1", "id": "20000000-0000-0000-0000-00000000000d", "path": "<Keyboard>/1", "action": "Weapon1" },
+                { "name": "Weapon2", "id": "20000000-0000-0000-0000-00000000000e", "path": "<Keyboard>/2", "action": "Weapon2" },
+                { "name": "Jump", "id": "20000000-0000-0000-0000-00000000000f", "path": "<Keyboard>/space", "action": "Jump" },
+                { "name": "Interact", "id": "20000000-0000-0000-0000-000000000010", "path": "<Keyboard>/f", "action": "Interact" },
+                { "name": "Grenade", "id": "20000000-0000-0000-0000-000000000011", "path": "<Keyboard>/g", "action": "Grenade" },
+                { "name": "Sprint", "id": "20000000-0000-0000-0000-000000000012", "path": "<Keyboard>/leftShift", "action": "Sprint" },
+                { "name": "Pause", "id": "20000000-0000-0000-0000-000000000013", "path": "<Keyboard>/escape", "action": "Pause" }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

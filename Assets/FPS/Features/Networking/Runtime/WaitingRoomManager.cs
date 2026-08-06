@@ -13,19 +13,23 @@ namespace FPS
         public ulong clientId;
         public FixedString64Bytes playerName;
         public bool isReady;
+        // Keep this as a byte on the wire so enum additions remain explicit and bounded.
+        public byte characterId;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref clientId);
             serializer.SerializeValue(ref playerName);
             serializer.SerializeValue(ref isReady);
+            serializer.SerializeValue(ref characterId);
         }
 
         public bool Equals(PlayerLobbyData other)
         {
             return clientId == other.clientId
                 && playerName.Equals(other.playerName)
-                && isReady == other.isReady;
+                && isReady == other.isReady
+                && characterId == other.characterId;
         }
 
         public override int GetHashCode()
@@ -41,6 +45,9 @@ namespace FPS
     public class WaitingRoomManager : NetworkBehaviour
     {
         public static WaitingRoomManager Instance { get; private set; }
+
+        [Header("Character Selection")]
+        [SerializeField] private PlayerPrefabCatalog playerPrefabCatalog;
 
         public NetworkList<PlayerLobbyData> Players { get; private set; }
         public NetworkVariable<DifficultyLevel> LobbyDifficulty { get; private set; } = new NetworkVariable<DifficultyLevel>(DifficultyLevel.Medium);
@@ -129,11 +136,15 @@ namespace FPS
             for (int i = 0; i < Players.Count; i++)
                 if (Players[i].clientId == clientId) return;
 
+            PlayerCharacterId selectedCharacter = PlayerCharacterId.Clove;
+            NetworkGameManager.Instance?.TryGetPlayerCharacter(clientId, out selectedCharacter);
+
             Players.Add(new PlayerLobbyData
             {
                 clientId = clientId,
                 playerName = "Player",
-                isReady = false
+                isReady = false,
+                characterId = (byte)selectedCharacter
             });
 
             ApplyApprovedName(clientId);
@@ -173,6 +184,60 @@ namespace FPS
                     break;
                 }
             }
+        }
+
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+        public void SetCharacterServerRpc(PlayerCharacterId characterId, RpcParams rpcParams = default)
+        {
+            ulong senderId = rpcParams.Receive.SenderClientId;
+            if (!Enum.IsDefined(typeof(PlayerCharacterId), characterId))
+                return;
+
+            PlayerPrefabCatalog catalog = GetCatalog();
+            if (catalog == null || !catalog.TryGetPrefab(characterId, out _))
+                return;
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].clientId != senderId)
+                    continue;
+
+                PlayerLobbyData data = Players[i];
+                data.characterId = (byte)characterId;
+                // A character change invalidates a previous ready vote.
+                data.isReady = false;
+                Players[i] = data;
+                NetworkGameManager.Instance?.SetPlayerCharacter(senderId, characterId);
+                return;
+            }
+        }
+
+        public bool TryGetCharacter(ulong clientId, out PlayerCharacterId characterId)
+        {
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].clientId == clientId
+                    && Enum.IsDefined(typeof(PlayerCharacterId), Players[i].characterId))
+                {
+                    characterId = (PlayerCharacterId)Players[i].characterId;
+                    return true;
+                }
+            }
+
+            characterId = PlayerCharacterId.Clove;
+            return false;
+        }
+
+        public string GetCharacterDisplayName(PlayerCharacterId id)
+        {
+            return GetCatalog()?.GetDisplayName(id) ?? id.ToString();
+        }
+
+        private PlayerPrefabCatalog GetCatalog()
+        {
+            return playerPrefabCatalog != null
+                ? playerPrefabCatalog
+                : Resources.Load<PlayerPrefabCatalog>("PlayerPrefabCatalog");
         }
 
         // ==========================================
@@ -229,6 +294,14 @@ namespace FPS
         {
             if (!IsServer) return;
             if (!AreAllPlayersReady()) return;
+
+            PlayerPrefabCatalog catalog = GetCatalog();
+            string catalogError = catalog == null ? "Catalog asset is missing." : string.Empty;
+            if (catalog == null || !catalog.IsComplete(out catalogError))
+            {
+                GameLog.Warning(() => $"Cannot start match: character catalog is invalid. {catalogError}");
+                return;
+            }
 
             if (NetworkGameManager.Instance != null)
             {

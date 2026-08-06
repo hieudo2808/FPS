@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
 namespace FPS
 {
@@ -28,54 +29,114 @@ namespace FPS
         [SerializeField] private Button saveNameBtn;
         [SerializeField] private TMP_InputField playerNameInput;
 
+        private bool initialized;
+
         private void Start()
         {
+            AttachButtonResetters();
             // Initial Window State
             OpenMainMenu();
 
             // Main Menu Buttons
-            if (openPlayBtn != null) openPlayBtn.onClick.AddListener(OpenPlayPopup);
-            if (openSettingsBtn != null) openSettingsBtn.onClick.AddListener(OpenSettingsPopup);
-            if (quitBtn != null) quitBtn.onClick.AddListener(Application.Quit);
+            RegisterUiListeners();
 
             // Play Popup Buttons
-            if (closePlayPopupBtn != null) closePlayPopupBtn.onClick.AddListener(OpenMainMenu);
-            if (hostButton != null) hostButton.onClick.AddListener(OnHostClicked);
-            if (joinButton != null) joinButton.onClick.AddListener(OnJoinClicked);
 
             // Settings Popup Buttons
-            if (closeSettingsPopupBtn != null) closeSettingsPopupBtn.onClick.AddListener(OpenMainMenu);
-            if (saveNameBtn != null) saveNameBtn.onClick.AddListener(SavePlayerName);
 
             // Load Player Name from Prefs
             if (playerNameInput != null)
             {
                 playerNameInput.text = PlayerPrefs.GetString("PlayerName", "Player" + Random.Range(1000, 9999));
-                playerNameInput.onEndEdit.AddListener(_ => PersistPlayerName(showStatus: false));
-                playerNameInput.onValueChanged.AddListener(_ => PersistPlayerName(showStatus: false));
             }
 
             // Đăng ký callback MỘT LẦN DUY NHẤT
-            if (NetworkGameManager.Instance != null)
-            {
-                NetworkGameManager.Instance.OnHostStarted += HandleHostStarted;
-                NetworkGameManager.Instance.OnClientConnected += HandleClientConnected;
-                NetworkGameManager.Instance.OnClientDisconnected += HandleClientDisconnected;
-                NetworkGameManager.Instance.OnConnectionFailed += HandleConnectionFailed;
-            }
+            SubscribeNetworkCallbacks();
 
             UpdateStatus("MAIN MENU READY");
+            initialized = true;
+        }
+
+        private void OnEnable()
+        {
+            if (initialized)
+            {
+                RegisterUiListeners();
+                SubscribeNetworkCallbacks();
+            }
+        }
+
+        private void OnDisable()
+        {
+            UnregisterUiListeners();
+            UnsubscribeNetworkCallbacks();
+        }
+
+        private void RegisterUiListeners()
+        {
+            openPlayBtn?.onClick.AddListener(OpenPlayPopup);
+            openSettingsBtn?.onClick.AddListener(OpenSettingsPopup);
+            quitBtn?.onClick.AddListener(QuitApplication);
+            closePlayPopupBtn?.onClick.AddListener(OpenMainMenu);
+            hostButton?.onClick.AddListener(OnHostClicked);
+            joinButton?.onClick.AddListener(OnJoinClicked);
+            closeSettingsPopupBtn?.onClick.AddListener(OpenMainMenu);
+            saveNameBtn?.onClick.AddListener(SavePlayerName);
+            playerNameInput?.onEndEdit.AddListener(OnPlayerNameEndEdit);
+            playerNameInput?.onValueChanged.AddListener(OnPlayerNameValueChanged);
+        }
+
+        private void UnregisterUiListeners()
+        {
+            openPlayBtn?.onClick.RemoveListener(OpenPlayPopup);
+            openSettingsBtn?.onClick.RemoveListener(OpenSettingsPopup);
+            quitBtn?.onClick.RemoveListener(QuitApplication);
+            closePlayPopupBtn?.onClick.RemoveListener(OpenMainMenu);
+            hostButton?.onClick.RemoveListener(OnHostClicked);
+            joinButton?.onClick.RemoveListener(OnJoinClicked);
+            closeSettingsPopupBtn?.onClick.RemoveListener(OpenMainMenu);
+            saveNameBtn?.onClick.RemoveListener(SavePlayerName);
+            playerNameInput?.onEndEdit.RemoveListener(OnPlayerNameEndEdit);
+            playerNameInput?.onValueChanged.RemoveListener(OnPlayerNameValueChanged);
+        }
+
+        private void SubscribeNetworkCallbacks()
+        {
+            if (NetworkGameManager.Instance == null)
+                return;
+
+            NetworkGameManager.Instance.OnHostStarted += HandleHostStarted;
+            NetworkGameManager.Instance.OnClientConnected += HandleClientConnected;
+            NetworkGameManager.Instance.OnClientDisconnected += HandleClientDisconnected;
+            NetworkGameManager.Instance.OnConnectionFailed += HandleConnectionFailed;
+        }
+
+        private void UnsubscribeNetworkCallbacks()
+        {
+            if (!NetworkGameManager.HasInstance)
+                return;
+
+            NetworkGameManager.Instance.OnHostStarted -= HandleHostStarted;
+            NetworkGameManager.Instance.OnClientConnected -= HandleClientConnected;
+            NetworkGameManager.Instance.OnClientDisconnected -= HandleClientDisconnected;
+            NetworkGameManager.Instance.OnConnectionFailed -= HandleConnectionFailed;
+        }
+
+        private void AttachButtonResetters()
+        {
+            Button[] buttons =
+            {
+                openPlayBtn, openSettingsBtn, quitBtn, hostButton, joinButton,
+                closePlayPopupBtn, closeSettingsPopupBtn, saveNameBtn
+            };
+            foreach (Button button in buttons)
+                UiButtonSelectionResetter.Attach(button);
         }
 
         private void OnDestroy()
         {
-            if (NetworkGameManager.HasInstance)
-            {
-                NetworkGameManager.Instance.OnHostStarted -= HandleHostStarted;
-                NetworkGameManager.Instance.OnClientConnected -= HandleClientConnected;
-                NetworkGameManager.Instance.OnClientDisconnected -= HandleClientDisconnected;
-                NetworkGameManager.Instance.OnConnectionFailed -= HandleConnectionFailed;
-            }
+            UnregisterUiListeners();
+            UnsubscribeNetworkCallbacks();
         }
 
         private void HandleHostStarted()
@@ -128,6 +189,21 @@ namespace FPS
             PersistPlayerName(showStatus: true);
         }
 
+        private void OnPlayerNameEndEdit(string _)
+        {
+            PersistPlayerName(showStatus: false);
+        }
+
+        private void OnPlayerNameValueChanged(string _)
+        {
+            PersistPlayerName(showStatus: false);
+        }
+
+        private static void QuitApplication()
+        {
+            Application.Quit();
+        }
+
         private string PersistPlayerName(bool showStatus)
         {
             if (playerNameInput != null && !string.IsNullOrEmpty(playerNameInput.text))
@@ -155,6 +231,7 @@ namespace FPS
 
         private void OnHostClicked()
         {
+            EventSystem.current?.SetSelectedGameObject(null);
             PersistPlayerName(showStatus: false);
 
             if (NetworkGameManager.Instance == null)
@@ -170,6 +247,7 @@ namespace FPS
 
         private void OnJoinClicked()
         {
+            EventSystem.current?.SetSelectedGameObject(null);
             PersistPlayerName(showStatus: false);
 
             if (NetworkGameManager.Instance == null)

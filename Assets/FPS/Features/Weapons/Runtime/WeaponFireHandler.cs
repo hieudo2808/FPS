@@ -151,7 +151,14 @@ namespace FPS
         [ServerRpc]
         public void RequestFireServerRpc(FireCommand command, ServerRpcParams serverRpcParams = default)
         {
-            TryProcessRuntimeFire(command, serverRpcParams.Receive.SenderClientId);
+            try
+            {
+                TryProcessRuntimeFire(command, serverRpcParams.Receive.SenderClientId);
+            }
+            catch (System.Exception ex)
+            {
+                GameLog.Error($"[WeaponFireHandler] Exception in RequestFireServerRpc: {ex.Message}");
+            }
         }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -227,15 +234,23 @@ namespace FPS
             if (NetworkManager != null && NetworkManager.IsListening && NetworkManager.NetworkConfig.NetworkTransport != null)
                 rttSeconds = NetworkManager.NetworkConfig.NetworkTransport.GetCurrentRtt(senderClientId) / 1000.0;
 
-            if (!LagCompensationManager.TryResolveRewindTime(
-                    now,
-                    GetServerTick(),
-                    command.estimatedServerTick,
-                    NetworkManager != null ? (int)NetworkManager.NetworkConfig.TickRate : NetworkGameplayPolicy.SnapshotHz,
-                    rttSeconds,
-                    out double rewindTime))
+            int currentServerTick = GetServerTick();
+            int estimatedTick = command.estimatedServerTick > 0 ? command.estimatedServerTick : currentServerTick;
+            if (currentServerTick - estimatedTick > (int)(NetworkGameplayPolicy.SimulationHz * NetworkGameplayPolicy.MaxRewindSeconds))
             {
-                PublishOwnerState(FireRejectReason.InvalidTick, command.sequence, GetServerTick());
+                estimatedTick = currentServerTick;
+            }
+
+            bool okTick = LagCompensationManager.TryResolveRewindTime(
+                    now,
+                    currentServerTick,
+                    estimatedTick,
+                    NetworkManager != null && NetworkManager.NetworkConfig.TickRate > 0 ? (int)NetworkManager.NetworkConfig.TickRate : NetworkGameplayPolicy.SimulationHz,
+                    rttSeconds,
+                    out double rewindTime);
+            if (!okTick)
+            {
+                PublishOwnerState(FireRejectReason.InvalidTick, command.sequence, currentServerTick);
                 return false;
             }
 
@@ -267,9 +282,9 @@ namespace FPS
             }
 
             float interval = weaponData != null ? Mathf.Max(0.001f, weaponData.fireRate) : 0.001f;
-            int burstAllowance = weaponData != null ? Mathf.Max(2, weaponData.burstCount) : 2;
-            int allowedPerSecond = Mathf.Clamp(Mathf.CeilToInt(1f / interval) + burstAllowance,
-                4, recentFireRequests.Length);
+            int burstAllowance = weaponData != null ? Mathf.Max(4, weaponData.burstCount * 2) : 4;
+            int allowedPerSecond = Mathf.Clamp(Mathf.CeilToInt(1.5f / interval) + burstAllowance,
+                15, recentFireRequests.Length);
             if (fireRequestCount >= allowedPerSecond)
                 return false;
 

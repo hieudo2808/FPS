@@ -17,19 +17,28 @@ namespace FPS
             this.tickDelta = tickDelta;
         }
 
+        private const int MAX_TICKS_PER_FRAME = 8;
+        private int ticksThisFrame;
+
         public void Accumulate(float dt)
         {
             accumulator += dt;
+            ticksThisFrame = 0;
+            if (accumulator > tickDelta * MAX_TICKS_PER_FRAME)
+            {
+                accumulator = tickDelta * MAX_TICKS_PER_FRAME;
+            }
         }
 
         public bool CanTick()
         {
-            return accumulator >= tickDelta;
+            return accumulator >= tickDelta && ticksThisFrame < MAX_TICKS_PER_FRAME;
         }
 
         public void ConsumeTick()
         {
             accumulator -= tickDelta;
+            ticksThisFrame++;
         }
 
         public void Reset()

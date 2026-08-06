@@ -9,7 +9,6 @@ namespace FPS
         [Header("Interaction Settings")]
         [SerializeField] private float interactRange = 3f;
         [SerializeField] private LayerMask interactableLayer;
-        [SerializeField] private KeyCode interactKey = KeyCode.F;
         [SerializeField] private bool requireLineOfSight = true;
 
         [Header("UI")]
@@ -55,9 +54,7 @@ namespace FPS
 
         private bool GetInteractInputDown()
         {
-            return InputManager.Instance != null
-                ? InputManager.Instance.GetInteractInputDown()
-                : Input.GetKeyDown(interactKey);
+            return InputManager.Instance != null && InputManager.Instance.GetInteractInputDown();
         }
 
         private void ScanForInteractable()
@@ -119,7 +116,10 @@ namespace FPS
                 return;
             }
 
-            InteractServerRpc(currentNetworkObject.NetworkObjectId, nextRequestSequence++);
+            if (IsSpawned && NetworkManager != null && NetworkManager.IsListening)
+            {
+                InteractServerRpc(currentNetworkObject.NetworkObjectId, nextRequestSequence++);
+            }
             DeselectCurrent();
         }
 
@@ -153,7 +153,7 @@ namespace FPS
                 NetworkGameManager.Instance != null ? NetworkGameManager.Instance.State : SessionState.InMatch,
                 pickupObject != null ? $"verification_request:target={pickupObject.NetworkObjectId}" : "NoTargetAvailable",
                 verificationPlayer != null ? verificationPlayer.StablePlayerId : default);
-            if (pickupObject != null)
+            if (pickupObject != null && IsSpawned && NetworkManager != null && NetworkManager.IsListening)
                 InteractServerRpc(pickupObject.NetworkObjectId, nextRequestSequence++);
         }
 #endif

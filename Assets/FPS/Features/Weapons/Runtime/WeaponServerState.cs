@@ -58,13 +58,33 @@ namespace FPS
 
             CompleteReloadIfReady(weaponData, now);
 
-            if (IsReloading(now)) return false;
-            if (magazineAmmo <= 0) return false;
-            if (now < nextAllowedFireTime) return false;
-            if (enforceSequence && !CanAcceptFireSequence(fireSequence)) return false;
+            if (IsReloading(now))
+            {
+                Debug.LogWarning($"[DIAGNOSTIC][ServerState] REJECTED IsReloading: now={now:F3} reloadCompleteTime={reloadCompleteTime:F3}");
+                return false;
+            }
+            if (magazineAmmo <= 0)
+            {
+                Debug.LogWarning($"[DIAGNOSTIC][ServerState] REJECTED magazineAmmo={magazineAmmo} <= 0");
+                return false;
+            }
+            // Arrival jitter cannot justify accepting a shot before the server's
+            // authoritative cooldown.  The tiny epsilon is only for floating
+            // point precision at the exact cooldown boundary.
+            const double cooldownEpsilonSeconds = 0.0001;
+            if (now + cooldownEpsilonSeconds < nextAllowedFireTime)
+            {
+                return false;
+            }
+            if (enforceSequence && !CanAcceptFireSequence(fireSequence))
+            {
+                Debug.LogWarning($"[DIAGNOSTIC][ServerState] REJECTED Sequence: seq={fireSequence} lastAccepted={lastAcceptedFireSequence}");
+                return false;
+            }
 
             magazineAmmo--;
-            nextAllowedFireTime = now + Mathf.Max(0f, weaponData.fireRate);
+            double baseTime = System.Math.Max(now, nextAllowedFireTime);
+            nextAllowedFireTime = baseTime + Mathf.Max(0f, weaponData.fireRate);
             if (enforceSequence)
             {
                 lastAcceptedFireSequence = fireSequence;

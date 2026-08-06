@@ -75,7 +75,16 @@ namespace FPS
         private GameObject CreatePooledObject(GameObject prefab)
         {
             GameObject obj = Instantiate(prefab);
+            NetworkObject networkObject = obj.GetComponent<NetworkObject>();
+            if (networkObject != null && networkObject.IsSpawned)
+                networkObject.Despawn(false);
             obj.SetActive(false);
+
+            #region agent log
+            NavMeshAgent agent = obj.GetComponent<NavMeshAgent>();
+            GameLog.DebugSession("initial", "N1", "ZombiePoolManager.cs:78", "pooled zombie created", $"{{\"prefab\":\"{prefab.name}\",\"hasAgent\":{(agent != null ? "true" : "false")},\"agentEnabled\":{(agent != null && agent.enabled ? "true" : "false")},\"isOnNavMesh\":{(agent != null && agent.isOnNavMesh ? "true" : "false")}}}");
+            #endregion
+
             return obj;
         }
 
@@ -91,9 +100,12 @@ namespace FPS
             GameObject zombie = DequeueOrExpand(key, prefab);
             if (zombie == null) return null;
 
-            ResetZombie(zombie, position, rotation);
-
             zombie.SetActive(true);
+            if (!ResetZombie(zombie, position, rotation))
+            {
+                ReturnToPoolInternal(zombie);
+                return null;
+            }
 
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer
                 && NetworkManager.Singleton.IsListening
@@ -122,7 +134,13 @@ namespace FPS
             GameObject zombie = DequeueOrExpand(key, prefab);
             if (zombie == null) return null;
 
-            ResetZombie(zombie, position, rotation);
+            zombie.SetActive(true);
+            if (!ResetZombie(zombie, position, rotation))
+            {
+                ReturnToPoolInternal(zombie);
+                return null;
+            }
+
             return zombie;
         }
 
@@ -176,6 +194,23 @@ namespace FPS
         {
             if (zombie == null) return;
 
+            NetworkObject networkObject = zombie.GetComponent<NetworkObject>();
+            if (networkObject != null && networkObject.IsSpawned)
+            {
+                try
+                {
+                    networkObject.Despawn(false);
+                }
+                catch (System.Exception ex)
+                {
+                    // A teardown race or a synthetic editor test object can
+                    // lack the full NGO spawn context. Pooling still owns the
+                    // GameObject, so continue deactivation instead of letting
+                    // a failed network despawn leak the zombie.
+                    GameLog.Warning(() => $"[ZombiePool] Despawn skipped for '{zombie.name}': {ex.GetType().Name}");
+                }
+            }
+
             string key = GetPoolKey(zombie);
             if (string.IsNullOrEmpty(key))
             {
@@ -194,30 +229,48 @@ namespace FPS
             }
         }
 
-        private void ResetZombie(GameObject zombie, Vector3 position, Quaternion rotation)
+        private bool ResetZombie(GameObject zombie, Vector3 position, Quaternion rotation)
         {
-            zombie.transform.SetParent(null);
-            zombie.transform.position = position;
+            NavMeshAgent agent = zombie.GetComponent<NavMeshAgent>();
+            NavMeshHit hit = default;
+
+            if (agent != null && !NavMesh.SamplePosition(position, out hit, 2f, NavMesh.AllAreas))
+            {
+                GameLog.Warning(() => $"[ZombiePool] NavMesh sample failed for '{zombie.name}' at {position}");
+                return false;
+            }
+
+            zombie.transform.position = agent != null ? hit.position : position;
             zombie.transform.rotation = rotation;
 
-            NavMeshAgent agent = zombie.GetComponent<NavMeshAgent>();
             if (agent != null)
             {
+                #region agent log
+                GameLog.DebugSession("initial", "N1", "ZombiePoolManager.cs:218", "resetting pooled zombie nav agent", $"{{\"name\":\"{zombie.name}\",\"x\":{position.x:F3},\"y\":{position.y:F3},\"z\":{position.z:F3},\"beforeEnabled\":{(agent.enabled ? "true" : "false")},\"beforeOnNavMesh\":{(agent.isOnNavMesh ? "true" : "false")}}}");
+                #endregion
+
                 agent.enabled = false;
-                zombie.transform.position = position;
+                zombie.transform.position = hit.position;
                 agent.enabled = true;
 
-                if (agent.isOnNavMesh)
-                    agent.Warp(position);
+                if (!agent.isOnNavMesh)
+                {
+                    GameLog.Warning(() => $"[ZombiePool] Agent could not bind to NavMesh after sample for '{zombie.name}'");
+                    agent.enabled = false;
+                    return false;
+                }
+
+                agent.Warp(hit.position);
             }
 
             Collider col = zombie.GetComponent<Collider>();
             if (col != null)
                 col.enabled = true;
 
-            // Tự động reset mọi component implement IPoolResettable
             foreach (var resettable in zombie.GetComponents<IPoolResettable>())
                 resettable.ResetForPool();
+
+            return true;
         }
 
         private static string GetPrefabKey(string name)

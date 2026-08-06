@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66d1fe3375064b00b0eea83c0d4528d6, type: 3}
+  m_Name: PlayerPrefabCatalog
+  m_EditorClassIdentifier: FPS::FPS.PlayerPrefabCatalog
+  entries:
+  - id: 0
+    displayName: Clove
+    prefab: {fileID: 8769610198087256571, guid: abe51ec4431d45d6a6f82c015e522fcd, type: 3}
+  - id: 1
+    displayName: Brimstone
+    prefab: {fileID: 8769610198087256571, guid: 9c1fe0724c344109be5113c5b5f47e81, type: 3}
+  - id: 2
+    displayName: Sage
+    prefab: {fileID: 8769610198087256571, guid: 8b69726f21ef4b1b808fb489adccf889, type: 3}
+  - id: 3
+    displayName: Gekko
+    prefab: {fileID: 8769610198087256571, guid: a6be224385174523aa98547c0ec650e4, type: 3}

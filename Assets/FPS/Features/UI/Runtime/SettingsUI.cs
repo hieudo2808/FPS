@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System;
 using System.Collections.Generic;
 
@@ -10,8 +11,6 @@ namespace FPS
     {
         private const string MouseSensitivityKey = "MouseSensitivity";
         private const string GraphicsQualityKey = "GraphicsQuality";
-        private static readonly Color ActiveTabColor = new Color(0.0f, 0.58f, 0.5f, 1.0f);
-        private static readonly Color InactiveTabColor = new Color(0.02f, 0.025f, 0.03f, 1.0f);
         private static readonly Color ActiveTabTextColor = Color.white;
         private static readonly Color InactiveTabTextColor = new Color(0.88f, 0.92f, 0.95f, 1.0f);
 
@@ -56,9 +55,24 @@ namespace FPS
         private string actionToRebind = null;
         private Button currentRebindBtn = null;
         private TextMeshProUGUI currentRebindText = null;
+        private bool initialized;
 
         private void Start()
         {
+            InitializeUi();
+            initialized = true;
+        }
+
+        private void OnEnable()
+        {
+            if (initialized)
+                InitializeUi();
+        }
+
+        private void InitializeUi()
+        {
+            UnregisterRuntimeListeners();
+            AttachButtonResetters();
             InitializeTabs();
             InitializeAudioSettings();
             InitializeGraphicsSettings();
@@ -76,14 +90,55 @@ namespace FPS
             }
         }
 
+        private void UnregisterRuntimeListeners()
+        {
+            audioTabButton?.onClick.RemoveAllListeners();
+            graphicsTabButton?.onClick.RemoveAllListeners();
+            inputTabButton?.onClick.RemoveAllListeners();
+            fireKeyBtn?.onClick.RemoveAllListeners();
+            aimKeyBtn?.onClick.RemoveAllListeners();
+            reloadKeyBtn?.onClick.RemoveAllListeners();
+            weapon1KeyBtn?.onClick.RemoveAllListeners();
+            weapon2KeyBtn?.onClick.RemoveAllListeners();
+            interactKeyBtn?.onClick.RemoveAllListeners();
+            grenadeKeyBtn?.onClick.RemoveAllListeners();
+            resetDefaultsButton?.onClick.RemoveAllListeners();
+            masterVolumeSlider?.onValueChanged.RemoveAllListeners();
+            musicVolumeSlider?.onValueChanged.RemoveAllListeners();
+            sfxVolumeSlider?.onValueChanged.RemoveAllListeners();
+            qualityDropdown?.onValueChanged.RemoveAllListeners();
+            sensitivitySlider?.onValueChanged.RemoveAllListeners();
+        }
+
+        private void AttachButtonResetters()
+        {
+            Button[] buttons =
+            {
+                audioTabButton, graphicsTabButton, inputTabButton,
+                fireKeyBtn, aimKeyBtn, reloadKeyBtn, weapon1KeyBtn,
+                weapon2KeyBtn, interactKeyBtn, grenadeKeyBtn, resetDefaultsButton
+            };
+            foreach (Button button in buttons)
+                UiButtonSelectionResetter.Attach(button);
+        }
+
         private void InitializeTabs()
         {
+            ConfigureTabButton(audioTabButton);
+            ConfigureTabButton(graphicsTabButton);
+            ConfigureTabButton(inputTabButton);
             if (audioTabButton != null) audioTabButton.onClick.AddListener(() => SwitchTab(audioPanel));
             if (graphicsTabButton != null) graphicsTabButton.onClick.AddListener(() => SwitchTab(graphicsPanel));
             if (inputTabButton != null) inputTabButton.onClick.AddListener(() => SwitchTab(inputPanel));
 
             // Mở tab Audio mặc định
             SwitchTab(audioPanel);
+        }
+
+        private static void ConfigureTabButton(Button button)
+        {
+            if (button != null)
+                button.transition = Selectable.Transition.None;
         }
 
         private void SwitchTab(GameObject targetPanel)
@@ -101,20 +156,7 @@ namespace FPS
         {
             if (button == null) return;
 
-            Color background = selected ? ActiveTabColor : InactiveTabColor;
             Color textColor = selected ? ActiveTabTextColor : InactiveTabTextColor;
-
-            if (button.targetGraphic != null)
-            {
-                button.targetGraphic.color = background;
-            }
-
-            ColorBlock colors = button.colors;
-            colors.normalColor = background;
-            colors.highlightedColor = selected ? ActiveTabColor : new Color(0.08f, 0.1f, 0.12f, 1.0f);
-            colors.pressedColor = ActiveTabColor;
-            colors.selectedColor = background;
-            button.colors = colors;
 
             TextMeshProUGUI label = button.GetComponentInChildren<TextMeshProUGUI>(true);
             if (label != null)
@@ -276,9 +318,7 @@ namespace FPS
 
             var txt = btn.GetComponentInChildren<TextMeshProUGUI>();
             if (txt != null)
-            {
-                txt.text = FormatKeyName(InputManager.Instance.GetKeyForAction(actionName));
-            }
+                txt.text = InputManager.Instance.GetBindingDisplayName(actionName);
 
             btn.onClick.AddListener(() => StartRebinding(actionName, btn, txt));
         }
@@ -289,9 +329,7 @@ namespace FPS
 
             TextMeshProUGUI txt = btn.GetComponentInChildren<TextMeshProUGUI>();
             if (txt != null)
-            {
-                txt.text = FormatKeyName(InputManager.Instance.GetKeyForAction(actionName));
-            }
+                txt.text = InputManager.Instance.GetBindingDisplayName(actionName);
         }
 
         private void ResetDefaults()
@@ -365,61 +403,39 @@ namespace FPS
 
             if (txt != null) txt.text = "Press a key...";
             if (rebindStatusText != null) rebindStatusText.text = "Press a key. ESC cancels.";
+
+            if (!InputManager.Instance.StartInteractiveRebind(actionName, CompleteRebind))
+                CancelRebind();
         }
 
-        private void Update()
+        private void CompleteRebind(bool accepted)
         {
-            if (actionToRebind != null)
+            if (actionToRebind != null && accepted)
             {
-                if (Input.anyKeyDown)
-                {
-                    foreach (KeyCode keyCode in Enum.GetValues(typeof(KeyCode)))
-                    {
-                        if (Input.GetKeyDown(keyCode))
-                        {
-                            // Bỏ qua phím Esc để có thể cancel
-                            if (keyCode == KeyCode.Escape)
-                            {
-                                CancelRebind();
-                                break;
-                            }
-
-                            // Lưu phím mới
-                            if (InputManager.Instance == null)
-                            {
-                                CancelRebind();
-                                break;
-                            }
-
-                            InputManager.Instance.RebindKey(actionToRebind, keyCode);
-                            
-                            // Cập nhật UI
-                            if (currentRebindText != null)
-                            {
-                                currentRebindText.text = FormatKeyName(keyCode);
-                            }
-
-                            // Reset state
-                            actionToRebind = null;
-                            currentRebindBtn = null;
-                            currentRebindText = null;
-                            if (rebindStatusText != null) rebindStatusText.text = "Changes apply instantly.";
-                            break;
-                        }
-                    }
-                }
+                if (currentRebindText != null && InputManager.Instance != null)
+                    currentRebindText.text = InputManager.Instance.GetBindingDisplayName(actionToRebind);
             }
+
+            actionToRebind = null;
+            currentRebindBtn = null;
+            currentRebindText = null;
+            EventSystem.current?.SetSelectedGameObject(null);
+            if (rebindStatusText != null) rebindStatusText.text = accepted
+                ? "Changes apply instantly."
+                : "Rebind cancelled.";
         }
 
         private void CancelRebind()
         {
             if (actionToRebind != null && currentRebindText != null && InputManager.Instance != null)
             {
-                currentRebindText.text = FormatKeyName(InputManager.Instance.GetKeyForAction(actionToRebind));
+                currentRebindText.text = InputManager.Instance.GetBindingDisplayName(actionToRebind);
             }
+            InputManager.Instance?.CancelInteractiveRebind();
             actionToRebind = null;
             currentRebindBtn = null;
             currentRebindText = null;
+            EventSystem.current?.SetSelectedGameObject(null);
             if (rebindStatusText != null) rebindStatusText.text = "Changes apply instantly.";
         }
 
@@ -462,6 +478,7 @@ namespace FPS
 
         private void OnDisable()
         {
+            UnregisterRuntimeListeners();
             // Lưu thiết lập khi đóng bảng Settings
             if (AudioManager.Instance != null)
             {

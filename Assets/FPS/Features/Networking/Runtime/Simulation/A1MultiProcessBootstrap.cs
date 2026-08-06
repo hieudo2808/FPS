@@ -31,6 +31,7 @@ namespace FPS.NetworkSimulation
         private int verificationSeed;
         private bool adaptiveEnabled;
         private bool adaptiveObserveOnly;
+        private string adaptiveCombatProfile;
         private NetworkSimulator simulator;
         private string lastControlCommand;
         private Task controlledShutdownTask;
@@ -80,6 +81,7 @@ namespace FPS.NetworkSimulation
             UnityEngine.Random.InitState(verificationSeed + (int)role);
             adaptiveEnabled = ParseBool(GetArgument("-a2EnableAdaptive"), false);
             adaptiveObserveOnly = ParseBool(GetArgument("-a2ObserveOnly"), true);
+            adaptiveCombatProfile = GetArgument("-a2CombatProfile") ?? "none";
 
             simulator = gameObject.AddComponent<NetworkSimulator>();
             simulator.ConnectionPreset = CreatePreset(profile);
@@ -278,6 +280,7 @@ namespace FPS.NetworkSimulation
             bool reconnectTriggered = false;
             bool hostLossTriggered = false;
             float nextActivityAt = 1f;
+            float nextAdaptiveTelemetryAt = 5f;
             int activityStep = 0;
             Task<SessionOperationResult> reconnectOperation = null;
             while (Time.realtimeSinceStartup - readyAt < runDurationSeconds)
@@ -341,6 +344,15 @@ namespace FPS.NetworkSimulation
                         localPlayer.GetComponent<InteractionManager>()?.RequestVerificationPickup();
                         activityStep++;
                     }
+                }
+
+                if (role == PeerRole.Host
+                    && adaptiveEnabled
+                    && !string.Equals(adaptiveCombatProfile, "none", StringComparison.OrdinalIgnoreCase)
+                    && elapsed >= nextAdaptiveTelemetryAt)
+                {
+                    nextAdaptiveTelemetryAt = elapsed + 5f;
+                    RecordAdaptiveCombatVerificationTelemetry();
                 }
 #endif
 
@@ -443,6 +455,47 @@ namespace FPS.NetworkSimulation
             probe?.Complete();
             Application.Quit(0);
         }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        private void RecordAdaptiveCombatVerificationTelemetry()
+        {
+            NetworkManager manager = NetworkManager.Singleton;
+            NetworkGameManager gameManager = NetworkGameManager.Instance;
+            if (manager == null || !manager.IsServer || gameManager?.Telemetry == null)
+                return;
+
+            int serverTick = (int)manager.ServerTime.Tick;
+            int playerIndex = 0;
+            foreach (NetworkClient client in manager.ConnectedClientsList)
+            {
+                PlayerHealth health = client.PlayerObject != null
+                    ? client.PlayerObject.GetComponent<PlayerHealth>()
+                    : null;
+                if (health == null || !health.StablePlayerId.IsValid)
+                    continue;
+
+                bool weakPlayer = string.Equals(adaptiveCombatProfile, "weak-team", StringComparison.OrdinalIgnoreCase)
+                    && playerIndex > 0;
+                int shots = 100;
+                int hits = weakPlayer ? 30 : 80;
+                int headshots = weakPlayer ? 2 : 50;
+                int kills = weakPlayer ? 10 : 60;
+                int headshotKills = weakPlayer ? 2 : 40;
+                float damage = weakPlayer ? 180f : 10f;
+                int downed = weakPlayer ? 2 : 0;
+
+                for (int i = 0; i < shots; i++)
+                    gameManager.Telemetry.RecordShot(health.StablePlayerId, serverTick, i < hits, i < headshots);
+                for (int i = 0; i < kills; i++)
+                    gameManager.Telemetry.RecordKill(health.StablePlayerId, serverTick, i < headshotKills);
+                gameManager.Telemetry.RecordHealth(health.StablePlayerId, serverTick, Math.Max(1f, 100f - damage), damage);
+                for (int i = 0; i < downed; i++)
+                    gameManager.Telemetry.RecordDowned(health.StablePlayerId, serverTick);
+
+                playerIndex++;
+            }
+        }
+#endif
 
         private static NetworkSimulatorPreset CreatePreset(string name)
         {

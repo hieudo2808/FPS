@@ -11,7 +11,7 @@ namespace FPS.EditorTools
     {
         private const string BodyguardPath = "Assets/FPS/Features/Characters/Content/Enemies/BodyGuards/Models/SkelMesh_Bodyguard_02.fbx";
         private const string Body02HandPath = "Assets/FPS/Features/Characters/Content/Enemies/BodyGuards/Models/Body02Hand.fbx";
-        private const string FPSHandPath = "Assets/FPS/Features/Weapons/Content/AKM/Animations/FPSHand.fbx";
+        private const string FPSHandPath = "Assets/FPS/Features/Weapons/Content/Vandal/Vandal.fbx";
         private const string GeneratedRoot = "Assets/FPS/Generated/FPSHandBodyguardPrototype";
         private const string Body02HandGeneratedRoot = "Assets/FPS/Generated/FPSHandBody02HandPrototype";
 

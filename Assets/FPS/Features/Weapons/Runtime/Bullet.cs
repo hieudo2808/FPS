@@ -9,10 +9,14 @@ namespace FPS
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (((1 << collision.gameObject.layer) & bulletHoleLayer) != 0)
+            LayerMask effectiveMask = bulletHoleLayer.value != 0 
+                ? bulletHoleLayer 
+                : (LayerMask)(LayerMask.GetMask("Default", "Ground") != 0 ? LayerMask.GetMask("Default", "Ground") : ~0);
+
+            if (((1 << collision.gameObject.layer) & effectiveMask.value) != 0)
                 CreateBulletHole(collision);
 
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         private void CreateBulletHole(Collision objectHit)

@@ -34,12 +34,14 @@ namespace FPS
             if (timeSinceLastShot > currentPattern.resetCooldown)
             {
                 currentShotIndex = 0;
-                // When not firing, slowly return the target to zero
-                targetRecoil = Vector2.Lerp(targetRecoil, Vector2.zero, currentPattern.returnSpeed * Time.deltaTime);
+                // Exponential decay return when not firing (framerate-independent)
+                float returnFactor = 1f - Mathf.Exp(-currentPattern.returnSpeed * Time.deltaTime);
+                targetRecoil = Vector2.Lerp(targetRecoil, Vector2.zero, returnFactor);
             }
 
-            // Smoothly interpolate current recoil towards target recoil
-            Vector2 smoothRecoil = Vector2.Lerp(currentRecoil, targetRecoil, currentPattern.snappiness * Time.deltaTime);
+            // Smoothly interpolate current recoil towards target recoil (framerate-independent)
+            float snapFactor = 1f - Mathf.Exp(-currentPattern.snappiness * Time.deltaTime);
+            Vector2 smoothRecoil = Vector2.Lerp(currentRecoil, targetRecoil, snapFactor);
             
             // The difference between frames is what we apply to the camera physically
             Vector2 deltaRecoil = smoothRecoil - currentRecoil;
@@ -59,11 +61,21 @@ namespace FPS
             
             if (pattern.shots == null || pattern.shots.Length == 0) return;
             
-            // Map the current shot to the pattern array (cap at the last bullet)
-            int index = Mathf.Min(currentShotIndex, pattern.shots.Length - 1);
+            Vector2 shotRecoil;
+            if (currentShotIndex < pattern.shots.Length)
+            {
+                shotRecoil = pattern.shots[currentShotIndex];
+            }
+            else
+            {
+                // After reaching the end of the pattern, oscillate horizontal recoil left/right
+                Vector2 lastRecoil = pattern.shots[pattern.shots.Length - 1];
+                int overflowShots = currentShotIndex - pattern.shots.Length + 1;
+                float sideSign = (overflowShots % 2 == 1) ? -1f : 1f;
+                shotRecoil = new Vector2(Mathf.Abs(lastRecoil.x) * sideSign, lastRecoil.y * 0.3f);
+            }
             
-            // Add the pattern's kick to our target
-            targetRecoil += pattern.shots[index];
+            targetRecoil += shotRecoil;
             
             currentShotIndex++;
             timeSinceLastShot = 0f;
