@@ -24,6 +24,7 @@ namespace FPS
 
         private Camera playerCamera;
         private uint nextRequestSequence;
+        private int effectiveInteractableMask;
 
         public override void OnNetworkSpawn()
         {
@@ -36,6 +37,10 @@ namespace FPS
             playerCamera = GetComponentInChildren<Camera>();
             if (playerCamera == null)
                 playerCamera = Camera.main;
+
+            effectiveInteractableMask = interactableLayer.value != 0
+                ? interactableLayer.value
+                : Physics.DefaultRaycastLayers;
 
             SetPromptVisible(false);
         }
@@ -66,7 +71,10 @@ namespace FPS
             if (showDebugRay)
                 Debug.DrawRay(ray.origin, ray.direction * interactRange, Color.yellow);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactableLayer))
+            int mask = effectiveInteractableMask != 0
+                ? effectiveInteractableMask
+                : Physics.DefaultRaycastLayers;
+            if (Physics.Raycast(ray, out RaycastHit hit, interactRange, mask))
             {
                 IInteractable interactable = hit.collider.GetComponentInParent<IInteractable>();
 
@@ -109,6 +117,13 @@ namespace FPS
 
         private void TryInteract()
         {
+            if (currentInteractable is INetworkInteractable networkInteractable)
+            {
+                networkInteractable.RequestNetworkInteraction(NetworkObject);
+                DeselectCurrent();
+                return;
+            }
+
             if (currentNetworkObject == null)
             {
                 currentInteractable.Interact(null);

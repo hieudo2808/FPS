@@ -10,6 +10,7 @@ namespace FPS
         private const string ResolutionWidthKey = "ResolutionWidth";
         private const string ResolutionHeightKey = "ResolutionHeight";
         private const string FullscreenKey = "Fullscreen";
+        private const string ResolutionConfiguredKey = "ResolutionConfigured";
 
         public const float MinMouseSensitivity = 0.1f;
         public const float MaxMouseSensitivity = 10f;
@@ -98,12 +99,27 @@ namespace FPS
                 : 0;
 
             Resolution current = Screen.currentResolution;
-            resolutionWidth = Mathf.Max(1, PlayerPrefs.GetInt(ResolutionWidthKey, current.width));
-            resolutionHeight = Mathf.Max(1, PlayerPrefs.GetInt(ResolutionHeightKey, current.height));
-            fullscreen = PlayerPrefs.GetInt(FullscreenKey, Screen.fullScreen ? 1 : 0) != 0;
+            bool hasExplicitResolution = PlayerPrefs.GetInt(ResolutionConfiguredKey, 0) != 0;
+            // Older builds persisted a hard-coded 1920x1080 without exposing a
+            // resolution control. Migrate those installs to the monitor's native
+            // mode once; subsequent user choices remain persistent.
+            resolutionWidth = hasExplicitResolution
+                ? Mathf.Max(1, PlayerPrefs.GetInt(ResolutionWidthKey, current.width))
+                : Mathf.Max(1, current.width);
+            resolutionHeight = hasExplicitResolution
+                ? Mathf.Max(1, PlayerPrefs.GetInt(ResolutionHeightKey, current.height))
+                : Mathf.Max(1, current.height);
+            fullscreen = hasExplicitResolution
+                ? PlayerPrefs.GetInt(FullscreenKey, Screen.fullScreen ? 1 : 0) != 0
+                : Screen.fullScreen;
             settingsLoaded = true;
 
             PlayerPrefs.SetFloat(MouseSensitivityKey, mouseSensitivity);
+            PlayerPrefs.SetInt(ResolutionWidthKey, resolutionWidth);
+            PlayerPrefs.SetInt(ResolutionHeightKey, resolutionHeight);
+            PlayerPrefs.SetInt(FullscreenKey, fullscreen ? 1 : 0);
+            PlayerPrefs.SetInt(ResolutionConfiguredKey, 1);
+            PlayerPrefs.Save();
             ApplyGraphicsQuality();
             ApplyResolution();
         }
@@ -151,6 +167,7 @@ namespace FPS
             PlayerPrefs.SetInt(ResolutionWidthKey, resolutionWidth);
             PlayerPrefs.SetInt(ResolutionHeightKey, resolutionHeight);
             PlayerPrefs.SetInt(FullscreenKey, fullscreen ? 1 : 0);
+            PlayerPrefs.SetInt(ResolutionConfiguredKey, 1);
             PlayerPrefs.Save();
             ApplyResolution();
             OnResolutionChanged?.Invoke(resolutionWidth, resolutionHeight, fullscreen);
@@ -181,13 +198,36 @@ namespace FPS
                 QualitySettings.SetQualityLevel(graphicsQuality, applyExpensiveChanges: true);
 
             QualitySettings.resolutionScalingFixedDPIFactor = 1f;
+            // Built-in pipeline quality settings do not automatically opt every
+            // camera into HDR/MSAA. Apply the camera-side switches as well, and
+            // explicitly reset dynamic resolution so a previous session cannot
+            // leave the game rendering into a smaller upscaled buffer.
+            ApplyCameraRenderingSettings();
             if (string.Equals(QualitySettings.names[graphicsQuality], "Ultra", StringComparison.OrdinalIgnoreCase))
             {
                 QualitySettings.globalTextureMipmapLimit = 0;
                 QualitySettings.lodBias = 2f;
                 QualitySettings.anisotropicFiltering = AnisotropicFiltering.ForceEnable;
                 QualitySettings.antiAliasing = 4;
+                ApplyCameraRenderingSettings();
             }
+        }
+
+        private static void ApplyCameraRenderingSettings()
+        {
+            Camera[] cameras = FindObjectsByType<Camera>(FindObjectsInactive.Include);
+            for (int i = 0; i < cameras.Length; i++)
+            {
+                Camera camera = cameras[i];
+                if (camera == null) continue;
+                camera.allowHDR = true;
+                camera.allowMSAA = true;
+                camera.allowDynamicResolution = false;
+            }
+
+            // ScalableBufferManager is global and can remain scaled after a
+            // previous scene or platform preset. Restore native resolution.
+            ScalableBufferManager.ResizeBuffers(1f, 1f);
         }
 
         private void ApplyResolution()

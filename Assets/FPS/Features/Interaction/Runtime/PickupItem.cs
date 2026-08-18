@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace FPS
 {
-    public enum PickupType { Ammo, Health }
+    public enum PickupType { Ammo, Health, Weapon }
 
     public class PickupItem : NetworkBehaviour, IInteractable
     {
@@ -11,6 +11,7 @@ namespace FPS
         [SerializeField] private PickupType pickupType = PickupType.Ammo;
         [SerializeField] private int ammoAmount = 30;
         [SerializeField] private float healthAmount = 25f;
+        [SerializeField] private PrimaryWeaponId primaryWeaponId = PrimaryWeaponId.Vandal;
         [SerializeField] private string displayName = "Ammo Box";
 
         [Header("After Pickup")]
@@ -18,6 +19,8 @@ namespace FPS
 
         private bool canInteract = true;
         public bool CanInteract => canInteract;
+        public PickupType Type => pickupType;
+        public PrimaryWeaponId PrimaryWeapon => primaryWeaponId;
 
         public string GetInteractText()
         {
@@ -29,6 +32,7 @@ namespace FPS
             {
                 PickupType.Ammo   => $"[{interactKey}] Pick up {displayName} (+{ammoAmount} ammo)",
                 PickupType.Health => $"[{interactKey}] Pick up {displayName} (+{healthAmount} HP)",
+                PickupType.Weapon => $"[{interactKey}] Pick up {displayName} ({primaryWeaponId})",
                 _                 => $"[{interactKey}] Pick up {displayName}"
             };
         }
@@ -72,16 +76,10 @@ namespace FPS
             // Unity gameplay and RPC callbacks run on the main thread. Set this before mutating
             // inventory so a second request can never observe the item as available.
             canInteract = false;
-
-            switch (pickupType)
+            if (!ApplyPickup(interactorObject))
             {
-                case PickupType.Ammo:
-                    GiveAmmo(interactorObject);
-                    break;
-
-                case PickupType.Health:
-                    GiveHealth(interactorObject);
-                    break;
+                canInteract = true;
+                return PickupResultCode.InventoryFull;
             }
 
             PlayerHealth playerHealth = interactorObject.GetComponent<PlayerHealth>();
@@ -105,23 +103,59 @@ namespace FPS
                 return health != null && !health.IsDead && health.CurrentHealth < health.MaxHealth;
             }
 
+            if (pickupType == PickupType.Weapon)
+            {
+                WeaponManager manager = player.GetComponent<WeaponManager>();
+                return manager != null
+                    && manager.ActivePrimaryWeaponId != primaryWeaponId
+                    && manager.TryGetPrimaryCandidate(primaryWeaponId, out GameObject candidate)
+                    && candidate != null
+                    && candidate.GetComponent<Weapon>()?.Data != null;
+            }
+
             WeaponFireHandler fireHandler = player.GetComponent<WeaponFireHandler>();
             return fireHandler != null && fireHandler.CanReceiveAmmoServer();
         }
 
-        private void GiveAmmo(NetworkObject player)
+        private bool ApplyPickup(NetworkObject player)
         {
-            WeaponManager weaponManager = player.GetComponent<WeaponManager>();
-            if (weaponManager == null) return;
-
-            weaponManager.GetComponent<WeaponFireHandler>()?.AddReserveAmmoServer(ammoAmount);
+            switch (pickupType)
+            {
+                case PickupType.Ammo:
+                    return GiveAmmo(player);
+                case PickupType.Health:
+                    return GiveHealth(player);
+                case PickupType.Weapon:
+                    return GiveWeapon(player);
+                default:
+                    return false;
+            }
         }
 
-        private void GiveHealth(NetworkObject player)
+        private bool GiveAmmo(NetworkObject player)
+        {
+            WeaponManager weaponManager = player.GetComponent<WeaponManager>();
+            if (weaponManager == null) return false;
+
+            return weaponManager.GetComponent<WeaponFireHandler>()?.AddReserveAmmoServer(ammoAmount) == true;
+        }
+
+        private bool GiveHealth(NetworkObject player)
         {
             PlayerHealth health = player.GetComponent<PlayerHealth>();
-            if (health != null)
-                health.Heal(healthAmount);
+            if (health == null || health.IsDead || health.CurrentHealth >= health.MaxHealth)
+                return false;
+
+            health.Heal(healthAmount);
+            return true;
+        }
+
+        private bool GiveWeapon(NetworkObject player)
+        {
+            WeaponManager manager = player.GetComponent<WeaponManager>();
+            return manager != null
+                && manager.ActivePrimaryWeaponId != primaryWeaponId
+                && manager.TryReplacePrimaryWeaponServer(primaryWeaponId);
         }
 
         private void DespawnItem()

@@ -23,6 +23,7 @@ namespace FPS
 
         private float xRotation = 0f;
         private float yRotation = 0f;
+        private float lookSensitivityMultiplier = 1f;
         private bool subscribedToSettings;
 
         public static MouseMovement LocalInstance { get; private set; }
@@ -32,8 +33,26 @@ namespace FPS
         public float MaxSensitivity => maxSensitivity;
         public float YRotation => yRotation;
         public float XRotation => xRotation;
+        public float LookSensitivityMultiplier => lookSensitivityMultiplier;
 
         public Camera BodyCam => bodyCam;
+        public Camera WeaponCam => weaponCam;
+
+        private void Awake()
+        {
+            // Older player prefabs serialized the retired 10..500 range. Keep
+            // runtime behavior canonical even if an un-upgraded prefab is loaded.
+            minSensitivity = SettingsManager.MinMouseSensitivity;
+            maxSensitivity = SettingsManager.MaxMouseSensitivity;
+            mouseSensitivity = SettingsManager.NormalizeSensitivity(mouseSensitivity);
+        }
+
+        private void OnValidate()
+        {
+            minSensitivity = SettingsManager.MinMouseSensitivity;
+            maxSensitivity = SettingsManager.MaxMouseSensitivity;
+            mouseSensitivity = SettingsManager.NormalizeSensitivity(mouseSensitivity);
+        }
 
         public override void OnNetworkSpawn()
         {
@@ -77,6 +96,7 @@ namespace FPS
         public override void OnNetworkDespawn()
         {
             bool wasOwner = IsOwner;
+            lookSensitivityMultiplier = 1f;
             DisableLocalCameraAndListener();
             if (wasOwner && LocalInstance == this)
             {
@@ -160,8 +180,9 @@ namespace FPS
             Vector2 lookDelta = InputManager.Instance != null
                 ? InputManager.Instance.GetLookDelta()
                 : Vector2.zero;
-            float mouseX = lookDelta.x * mouseSensitivity;
-            float mouseY = lookDelta.y * mouseSensitivity;
+            float effectiveSensitivity = mouseSensitivity * lookSensitivityMultiplier;
+            float mouseX = lookDelta.x * effectiveSensitivity;
+            float mouseY = lookDelta.y * effectiveSensitivity;
 
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, minRotationX, maxRotationX);
@@ -184,21 +205,30 @@ namespace FPS
 
         public void SetSensitivity(float newSensitivity)
         {
-            mouseSensitivity = Mathf.Clamp(newSensitivity, minSensitivity, maxSensitivity);
+            float canonical = SettingsManager.NormalizeSensitivity(newSensitivity);
+            if (SettingsManager.Instance != null)
+            {
+                SettingsManager.Instance.SetMouseSensitivity(canonical);
+                ApplySettingsSensitivity(SettingsManager.Instance.MouseSensitivity);
+                return;
+            }
+
+            mouseSensitivity = Mathf.Clamp(canonical, minSensitivity, maxSensitivity);
             PlayerPrefs.SetFloat(MouseSensitivityKey, mouseSensitivity);
             PlayerPrefs.Save();
         }
 
+        public void SetLookSensitivityMultiplier(float multiplier)
+        {
+            lookSensitivityMultiplier = Mathf.Clamp(multiplier, 0.01f, 1f);
+        }
+
         private void ApplySettingsSensitivity(float newSensitivity)
         {
-            if (newSensitivity >= 10f && newSensitivity > maxSensitivity)
-            {
-                // Values written by the old 10..500 runtime scale are converted once
-                // instead of being collapsed to the new maximum.
-                newSensitivity = Mathf.Lerp(minSensitivity, maxSensitivity,
-                    Mathf.InverseLerp(10f, 500f, newSensitivity));
-            }
-            mouseSensitivity = Mathf.Clamp(newSensitivity, minSensitivity, maxSensitivity);
+            mouseSensitivity = Mathf.Clamp(
+                SettingsManager.NormalizeSensitivity(newSensitivity),
+                SettingsManager.MinMouseSensitivity,
+                SettingsManager.MaxMouseSensitivity);
         }
 
         public void SetSensitivityNormalized(float normalized01)

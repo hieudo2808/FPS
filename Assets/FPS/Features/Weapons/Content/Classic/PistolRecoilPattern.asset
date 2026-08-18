@@ -13,9 +13,16 @@ MonoBehaviour:
   m_Name: PistolRecoilPattern
   m_EditorClassIdentifier: Assembly-CSharp::FPS.RecoilPattern
   shots:
-  - {x: 1.0, y: 0}
-  - {x: 1.2, y: -0.1}
-  - {x: 1.5, y: 0.2}
-  snappiness: 25
-  returnSpeed: 8
-  resetCooldown: 0.2
+  - {x: 2.2, y: 0}
+  - {x: 2.5, y: -0.35}
+  - {x: 2.8, y: 0.55}
+  - {x: 3, y: -0.8}
+  snappiness: 38
+  returnSpeed: 7
+  resetCooldown: 0.28
+  pitchJitter: 0.1
+  yawJitter: 0.3
+  sustainedPitch: 1.2
+  sustainedYaw: 1
+  sustainedDirectionHoldShots: 2
+  variationSeed: 3253

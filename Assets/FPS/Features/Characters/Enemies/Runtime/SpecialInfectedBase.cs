@@ -38,11 +38,10 @@ namespace FPS
         {
             int playerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
             
-            float hpScale = Mathf.Pow(1.5f, playerCount - 1);
-            
-            if (playerCount == 1) {
-                hpScale *= 0.5f;
-            }
+            // Use the same linear multiplayer curve as normal zombies. The
+            // previous exponential curve made a four-player Screamer over
+            // fifteen times tougher than its solo version.
+            float hpScale = 1f + (Mathf.Max(1, playerCount) - 1) * 0.35f;
             
             EnemyHealth health = GetComponent<EnemyHealth>();
             if (health != null)

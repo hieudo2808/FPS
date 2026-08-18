@@ -8,8 +8,8 @@ namespace FPS
 {
     public static class NetworkProtocol
     {
-        public const ushort Version = 2;
-        public const ushort SnapshotSchemaVersion = 1;
+        public const ushort Version = 5;
+        public const ushort SnapshotSchemaVersion = 4;
     }
 
     public enum SessionState : byte
@@ -234,7 +234,8 @@ namespace FPS
             if (operation.Version != operationVersion || activeOperation == null)
                 return false;
 
-            activeOperation.Dispose();
+            try { activeOperation.Dispose(); }
+            catch (ObjectDisposedException) { }
             activeOperation = null;
             Transition(nextState);
             return true;
@@ -244,8 +245,10 @@ namespace FPS
         {
             if (activeOperation != null)
             {
-                activeOperation.Cancel();
-                activeOperation.Dispose();
+                try { activeOperation.Cancel(); }
+                catch (ObjectDisposedException) { }
+                try { activeOperation.Dispose(); }
+                catch (ObjectDisposedException) { }
                 activeOperation = null;
                 operationVersion++;
             }

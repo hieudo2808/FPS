@@ -30,6 +30,10 @@ namespace FPS
         private bool isLocalPlayer;
         private WeaponManager weaponManager;
 
+        public GameObject FirstPersonArms => firstPersonArms;
+        public GameObject[] FirstPersonWeaponSlots => firstPersonWeaponSlots;
+        public GameObject[] ThirdPersonWeaponSlots => thirdPersonWeaponSlots;
+
         public override void OnNetworkSpawn()
         {
             weaponManager = GetComponent<WeaponManager>();
@@ -50,6 +54,12 @@ namespace FPS
         public void SetupVisibility(bool isLocal)
         {
             isLocalPlayer = isLocal;
+
+            if (isLocalPlayer)
+            {
+                string armsName = firstPersonArms != null ? firstPersonArms.name : "NULL";
+                GameLog.Info(() => $"[PlayerVisual] root={name} firstPersonArms={armsName} slots={HasWeaponSlotRepresentations}");
+            }
 
             if (HasWeaponSlotRepresentations)
             {
@@ -116,6 +126,22 @@ namespace FPS
             for (int i = 0; i < firstPersonWeaponSlots.Length; i++)
             {
                 GameObject fpWeapon = firstPersonWeaponSlots[i];
+                GameObject tpWeapon = i < thirdPersonWeaponSlots.Length ? thirdPersonWeaponSlots[i] : null;
+
+                // A first-person weapon lives under the owner camera/arms rig and
+                // must never be reused as a third-person representation. Existing
+                // prefabs may still contain the same reference in both arrays;
+                // treat that legacy configuration as FP-only until a dedicated TP
+                // visual is assigned to the third-person slot.
+                if (fpWeapon != null && fpWeapon == tpWeapon)
+                {
+                    bool visible = isLocalPlayer && i == index;
+                    SetGroupVisible(fpWeapon, visible);
+                    if (visible)
+                        SetLayerRecursively(fpWeapon, weaponLayer);
+                    continue;
+                }
+
                 if (fpWeapon != null)
                 {
                     SetGroupVisible(fpWeapon, isLocalPlayer && i == index);
@@ -123,7 +149,6 @@ namespace FPS
                         SetLayerRecursively(fpWeapon, weaponLayer);
                 }
 
-                GameObject tpWeapon = i < thirdPersonWeaponSlots.Length ? thirdPersonWeaponSlots[i] : null;
                 if (tpWeapon != null)
                 {
                     SetGroupVisible(tpWeapon, !isLocalPlayer && i == index);

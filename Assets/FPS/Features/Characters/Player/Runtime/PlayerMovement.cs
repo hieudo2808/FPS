@@ -15,6 +15,7 @@ namespace FPS
             public Vector3 origin;
             public float yaw;
             public float pitch;
+            public bool aim;
         }
 
         [Header("References")]
@@ -59,6 +60,7 @@ namespace FPS
         private Vector2 cachedMove;
         private bool jumpQueued;
         private bool sprintHeld;
+        private bool aimHeld;
         private float cachedYaw;
         private float cachedPitch;
         private uint localCommandSequence;
@@ -103,6 +105,7 @@ namespace FPS
         // ==========================================
         // GAMEPLAY STATE
         // ==========================================
+        private float planarSpeed;
         private float verticalVelocity;
         private bool isGrounded;
         private LayerMask groundMask;
@@ -116,6 +119,7 @@ namespace FPS
         private Vector3 ownerVisualCorrectionOffset;
         private bool hasTickedOnce;
         private PlayerHealth playerHealth;
+        private WeaponManager weaponManager;
         private float ownerHardSnapDistance = NetworkGameplayPolicy.OwnerHardSnapDistance;
         private int maxRepeatedInputTicks = NetworkGameplayPolicy.MaxRepeatedInputTicks;
         private bool serverReplicationStopped;
@@ -137,6 +141,7 @@ namespace FPS
             };
             groundMask = LayerMask.GetMask("Ground");
             playerHealth = GetComponent<PlayerHealth>();
+            weaponManager = GetComponent<WeaponManager>();
             if (NetworkGameManager.Instance != null)
             {
                 NetworkHardeningSettings settings = NetworkGameManager.Instance.Settings;
@@ -182,6 +187,9 @@ namespace FPS
             if (playerHealth != null && playerHealth.IsDead)
             {
                 cachedMove = Vector2.zero;
+                planarSpeed = 0f;
+                sprintHeld = false;
+                aimHeld = false;
                 jumpQueued = false;
                 UpdateAnimation();
                 return;
@@ -190,7 +198,9 @@ namespace FPS
             if (playerHealth != null && !playerHealth.IsInputReady)
             {
                 cachedMove = Vector2.zero;
+                planarSpeed = 0f;
                 sprintHeld = false;
+                aimHeld = false;
                 jumpQueued = false;
                 UpdateAnimation();
                 return;
@@ -241,6 +251,7 @@ namespace FPS
             {
                 cachedMove = Vector2.ClampMagnitude(verificationMove, 1f);
                 sprintHeld = false;
+                aimHeld = false;
                 jumpQueued = false;
                 cachedYaw = transform.eulerAngles.y;
                 cachedPitch = 0f;
@@ -251,6 +262,7 @@ namespace FPS
             {
                 cachedMove = Vector2.zero;
                 sprintHeld = false;
+                aimHeld = false;
                 jumpQueued = false;
                 cachedYaw = mouseMovement != null
                     ? mouseMovement.YRotation
@@ -263,6 +275,10 @@ namespace FPS
             cachedMove = Vector2.ClampMagnitude(cachedMove, 1f);
 
             sprintHeld = inputManager != null && inputManager.GetSprintInput();
+            Weapon activeWeapon = weaponManager != null
+                ? weaponManager.CurrentWeapon?.GetComponent<Weapon>()
+                : null;
+            aimHeld = activeWeapon != null && activeWeapon.IsAimRequested;
 
             cachedYaw = mouseMovement != null
                 ? mouseMovement.YRotation
@@ -284,6 +300,7 @@ namespace FPS
                 move = cachedMove,
                 jumpPressed = jumpQueued,
                 sprint = sprintHeld,
+                aim = aimHeld,
                 yaw = cachedYaw,
                 pitch = cachedPitch
             };
@@ -429,8 +446,19 @@ namespace FPS
             out Vector3 origin,
             out Vector3 direction)
         {
+            return TryBuildServerAim(inputTick, inputSequence, out origin, out direction, out _);
+        }
+
+        public bool TryBuildServerAim(
+            int inputTick,
+            uint inputSequence,
+            out Vector3 origin,
+            out Vector3 direction,
+            out bool aim)
+        {
             origin = default;
             direction = default;
+            aim = false;
             if (!IsServer)
             {
                 Debug.LogWarning($"[DIAGNOSTIC][ServerAim] TryBuildServerAim FAILED: IsServer is false!");
@@ -446,6 +474,7 @@ namespace FPS
                 {
                     origin = sample.origin;
                     direction = Quaternion.Euler(sample.pitch, sample.yaw, 0f) * Vector3.forward;
+                    aim = sample.aim;
                     return direction.sqrMagnitude > 0.999f;
                 }
 
@@ -459,15 +488,26 @@ namespace FPS
                     {
                         origin = s.origin;
                         direction = Quaternion.Euler(s.pitch, s.yaw, 0f) * Vector3.forward;
+                        aim = s.aim;
                         return direction.sqrMagnitude > 0.999f;
                     }
                 }
             }
 
             // 3. Ultimate Fallback: Use current server transform position and eye height
-            float eyeHeight = controller != null ? Mathf.Max(0.5f, controller.height * 0.8f) : 1.6f;
-            origin = transform.position + Vector3.up * eyeHeight;
-            direction = transform.forward;
+            Camera bodyCamera = GetComponent<MouseMovement>()?.BodyCam;
+            origin = bodyCamera != null
+                ? bodyCamera.transform.position
+                : transform.position + Vector3.up * 1.6f;
+            if (hasLastInput)
+            {
+                direction = Quaternion.Euler(lastInput.pitch, lastInput.yaw, 0f) * Vector3.forward;
+                aim = lastInput.aim;
+            }
+            else
+            {
+                direction = bodyCamera != null ? bodyCamera.transform.forward : transform.forward;
+            }
             bool ok = direction.sqrMagnitude > 0.999f;
             if (!ok)
             {
@@ -705,9 +745,11 @@ namespace FPS
             if (serverAimHistory == null)
                 return;
 
-            float eyeHeight = controller != null ? Mathf.Max(0.5f, controller.height * 0.8f) : 1.6f;
             Vector3 bodyOrigin = transform.position + Vector3.up * 0.5f;
-            Vector3 desiredOrigin = transform.position + Vector3.up * eyeHeight;
+            Camera bodyCamera = GetComponent<MouseMovement>()?.BodyCam;
+            Vector3 desiredOrigin = bodyCamera != null
+                ? bodyCamera.transform.position
+                : transform.position + Vector3.up * 1.6f;
             Vector3 offset = desiredOrigin - bodyOrigin;
             if (Physics.Raycast(bodyOrigin, offset.normalized, out RaycastHit obstruction, offset.magnitude,
                     Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)
@@ -723,7 +765,8 @@ namespace FPS
                 inputSequence = input.sequence,
                 origin = desiredOrigin,
                 yaw = input.yaw,
-                pitch = input.pitch
+                pitch = input.pitch,
+                aim = input.aim
             };
         }
 
@@ -755,6 +798,7 @@ namespace FPS
                 controller.enabled = true;
 
             verticalVelocity = state.verticalVelocity;
+            planarSpeed = state.planarSpeed;
             isGrounded = state.grounded;
         }
 
@@ -770,6 +814,7 @@ namespace FPS
                 controller.enabled = controllerWasEnabled;
 
             verticalVelocity = 0f;
+            planarSpeed = 0f;
             isGrounded = false;
             previousTickPosition = position;
             currentTickPosition = position;
@@ -872,6 +917,9 @@ namespace FPS
             {
                 transform.position = b.position;
                 transform.rotation = Quaternion.Euler(0f, b.yaw, 0f);
+                verticalVelocity = b.verticalVelocity;
+                planarSpeed = b.planarSpeed;
+                isGrounded = b.grounded;
                 stateSnapshots.RemoveAt(0);
                 interpolationTimer = 0f;
                 return;
@@ -885,6 +933,7 @@ namespace FPS
             );
 
             verticalVelocity = Mathf.Lerp(a.verticalVelocity, b.verticalVelocity, t);
+            planarSpeed = Mathf.Lerp(a.planarSpeed, b.planarSpeed, t);
             isGrounded = b.grounded;
         }
 
@@ -951,6 +1000,8 @@ namespace FPS
                 ? speed
                 : speed / walkMultiplier;
 
+            planarSpeed = input.move.magnitude * currentSpeed;
+
             Vector3 totalMove = move * currentSpeed;
             totalMove.y = verticalVelocity;
 
@@ -989,6 +1040,7 @@ namespace FPS
                 tick = tick,
                 lastProcessedCommand = lastProcessedCommandSequence,
                 position = transform.position,
+                planarSpeed = planarSpeed,
                 verticalVelocity = verticalVelocity,
                 grounded = isGrounded,
                 yaw = transform.eulerAngles.y
@@ -1006,16 +1058,7 @@ namespace FPS
 
             characterAnimation.SetBool("Grounded", isGrounded);
             characterAnimation.SetBool("FreeFall", !isGrounded && verticalVelocity < -2f);
-
-            if (IsOwner)
-            {
-                float moveMagnitude = cachedMove.magnitude;
-                float currentSpeed = sprintHeld
-                    ? speed
-                    : speed / walkMultiplier;
-
-                characterAnimation.SetFloat("Speed", moveMagnitude * currentSpeed);
-            }
+            characterAnimation.SetFloat("Speed", planarSpeed, 0.1f, Time.deltaTime);
         }
     }
 }

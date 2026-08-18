@@ -102,6 +102,16 @@ namespace FPS
 
         public GameObject SpawnZombieAtSmartPosition(float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
         {
+            if (DirectorSpawnService.Instance != null)
+            {
+                DirectorSpawnAnchorType requestedTypes = DirectorSpawnAnchorType.Common;
+                if (AIDirector.Instance != null)
+                    requestedTypes |= AIDirector.Instance.CurrentSpawnAnchorTypes;
+
+                if (DirectorSpawnService.Instance.TryGetSpawnPosition(requestedTypes, out Vector3 anchorPosition))
+                    return SpawnZombie(anchorPosition, Quaternion.identity, hpMod, speedMod, damageMod);
+            }
+
             if (InfluenceMapManager.Instance != null)
             {
                 if (InfluenceMapManager.Instance.TryGetBestSpawnPosition(out Vector3 smartPos))

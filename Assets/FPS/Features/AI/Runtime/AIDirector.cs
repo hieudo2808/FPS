@@ -70,6 +70,7 @@ namespace FPS
         private float phaseTimer;
         private float intensity;
         private float spawnTimer;
+        private double forcedCrescendoUntil;
 
         private float hpModifier = 1f;
         private float speedModifier = 1f;
@@ -105,6 +106,24 @@ namespace FPS
         public DirectorPhase AdaptivePhase => HasBoundNetworkState
             ? networkAdaptivePhase.Value
             : localAdaptivePhase;
+        public DirectorSpawnAnchorType CurrentSpawnAnchorTypes
+        {
+            get
+            {
+                if (FactoryMissionController.Instance != null
+                    && FactoryMissionController.Instance.State == FactoryMissionState.ExtractionActive)
+                {
+                    return DirectorSpawnAnchorType.Common
+                        | DirectorSpawnAnchorType.Horde
+                        | DirectorSpawnAnchorType.Finale;
+                }
+
+                if (GetDirectorTime() < forcedCrescendoUntil || CurrentPhase == GamePhase.PEAK)
+                    return DirectorSpawnAnchorType.Common | DirectorSpawnAnchorType.Horde;
+
+                return DirectorSpawnAnchorType.Ambient | DirectorSpawnAnchorType.Common;
+            }
+        }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         public void SetVerificationMaxZombiesAlive(int count)
@@ -202,7 +221,7 @@ namespace FPS
                     break;
 
                 case GamePhase.PEAK:
-                    if (phaseTimer >= peakDuration)
+                    if (GetDirectorTime() >= forcedCrescendoUntil && phaseTimer >= peakDuration)
                         TransitionTo(GamePhase.RELAX);
                     break;
 
@@ -220,6 +239,22 @@ namespace FPS
 
             if (showDebugLogs)
                 GameLog.Info(() => $"[AIDirector] Phase -> {newPhase}");
+        }
+
+        public void RequestCrescendo(string reason, float minimumDurationSeconds)
+        {
+            if (!CanRunServerLogic())
+                return;
+
+            forcedCrescendoUntil = System.Math.Max(
+                forcedCrescendoUntil,
+                GetDirectorTime() + Mathf.Max(1f, minimumDurationSeconds));
+            intensity = Mathf.Max(intensity, 85f);
+            if (CurrentPhase != GamePhase.PEAK)
+                TransitionTo(GamePhase.PEAK);
+
+            if (showDebugLogs)
+                GameLog.Info(() => $"[AIDirector] Crescendo requested: {reason}");
         }
 
         private IEnumerator StartFirstWave()
@@ -476,6 +511,14 @@ namespace FPS
         {
             position = Vector3.zero;
 
+            if (DirectorSpawnService.Instance != null
+                && DirectorSpawnService.Instance.TryGetSpawnPosition(
+                    DirectorSpawnAnchorType.Special | CurrentSpawnAnchorTypes,
+                    out position))
+            {
+                return true;
+            }
+
             if (InfluenceMapManager.Instance != null)
                 return InfluenceMapManager.Instance.TryGetBestSpawnPosition(out position);
 
@@ -598,6 +641,14 @@ namespace FPS
         private bool CanRunServerLogic()
         {
             return IsServer || NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening;
+        }
+
+        private double GetDirectorTime()
+        {
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+                return NetworkManager.Singleton.ServerTime.Time;
+
+            return Time.timeAsDouble;
         }
 
         private void SetPhase(GamePhase value)

@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c8b7e004fa79d4d8b2a9f3e4fc1289, type: 3}
+  m_Name: Odin
+  m_EditorClassIdentifier: FPS::FPS.WeaponData
+  weaponName: Odin
+  weaponIcon: {fileID: 0}
+  damage: 20
+  damageType: 1
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  bulletSpeed: 200
+  bakedFireInterval: 0.11363637
+  bulletLiveTime: 2
+  burstCount: 3
+  fireMode: 2
+  projectileCount: 1
+  hipSpreadAngle: 0.6
+  aimedSpreadAngle: 0.6
+  maximumRange: 120
+  falloffStartDistance: 30
+  falloffEndDistance: 60
+  minimumDamageMultiplier: 0.65
+  restartFireAnimationPerShot: 0
+  fireLoopStartFrame: 0
+  fireLoopEndFrame: 30
+  magazineSize: 100
+  totalAmmo: 300
+  reloadMode: 0
+  reloadAmmoCommitFrame: 120
+  reloadLoopStartFrame: 0
+  reloadLoopEndFrame: 0
+  bakedReloadDuration: 6
+  bakedReloadAmmoCommitDuration: 2
+  bakedPerShellOpeningDuration: 0
+  bakedPerShellInterval: 0
+  bakedPerShellClosingDuration: 0
+  firstPersonAnimatorLayer: Odin
+  bakedEquipDuration: 2.8333335
+  supportsAim: 0
+  aimedWorldFov: 25
+  aimTransitionDuration: 0.12
+  aimedSensitivityMultiplier: 0.65
+  showScopeOverlay: 0
+  scopeOverlaySprite: {fileID: 0}
+  exitAimAfterShot: 0
+  hideViewmodelWhenAimed: 1
+  bulletPrefab: {fileID: 9127804531831411338, guid: 51be62899448f8c4cb83bff73baf4f61, type: 3}
+  shootSound: {fileID: 0}
+  reloadSound: {fileID: 0}
+  recoilPattern: {fileID: 11400000, guid: 0d15a456132a03a48868ae186030cbf6, type: 2}
+  muzzleFlashPrefab: {fileID: 1000010254994808, guid: 9defeac88977c0d448aa4541073ee9e4, type: 3}
+  muzzleFlashLocalEulerAngles: {x: 0, y: 270, z: 0}
+  muzzleFlashScale: 0.0112
+  surfaceImpactPrefab: {fileID: 4141317489459417463, guid: ba6ff69759a8e59468940736e0e069b4, type: 3}
+  maxConcurrentSurfaceImpacts: 64

@@ -32,6 +32,52 @@ Transform:
   - {fileID: 3934998159463594997}
   m_Father: {fileID: 1776789358717198790}
   m_LocalEulerAnglesHint: {x: 1.4408883e-12, y: -0.0000010263296, z: 0.000014226589}
+--- !u!1 &284630338847453646
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3867284041317333801}
+  - component: {fileID: 1298869149142028883}
+  m_Layer: 0
+  m_Name: Vandal_BulletPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3867284041317333801
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284630338847453646}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7195090774361075973}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1298869149142028883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284630338847453646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98990c40ce0ec0644b5692d2fd5d6ce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.ObjectPooling
+  objectPrefab: {fileID: 9127804531831411338, guid: 51be62899448f8c4cb83bff73baf4f61, type: 3}
+  poolSize: 30
 --- !u!1 &368733721841333398
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,6 +241,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7195090774361075973}
+  - component: {fileID: 8510010156066910218}
   m_Layer: 0
   m_Name: Vandal
   m_TagString: Untagged
@@ -220,8 +267,34 @@ Transform:
   - {fileID: 4210858950777580064}
   - {fileID: 3594827009844904573}
   - {fileID: 4851501495610110857}
+  - {fileID: 1135924809362352522}
+  - {fileID: 3867284041317333801}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8510010156066910218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845639745628845917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6284597d50c3d004481078bd69ff109c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.Weapon
+  bulletSpawnPoint: {fileID: 1745370452462307773}
+  muzzleEffect: {fileID: 0}
+  fpsArmsAnimator: {fileID: 0}
+  weaponAnimator: {fileID: 8979296464487705176}
+  aimSight: {fileID: 2877424050473711356}
+  aimSightEnd: {fileID: 915173145494363932}
+  aimedSightCameraLocalPosition: {x: 0, y: 0, z: 0.35}
+  weaponData: {fileID: 11400000, guid: ae34ccdb45f4d834d8db00259aaada52, type: 2}
+  bulletPool: {fileID: 1298869149142028883}
+  allowInstantiateFallbackInDevelopment: 1
+  magazineOnGun: {fileID: 0}
+  magazineInHand: {fileID: 0}
 --- !u!1 &886638281883437379
 GameObject:
   m_ObjectHideFlags: 0
@@ -2354,6 +2427,37 @@ Transform:
   - {fileID: 6940086903809962091}
   m_Father: {fileID: 1947447446152080614}
   m_LocalEulerAnglesHint: {x: 0.000005562468, y: 0.0000010347547, z: -1.2692196e-13}
+--- !u!1 &6782877528150772386
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1135924809362352522}
+  m_Layer: 0
+  m_Name: Vandal_BulletSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1135924809362352522
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6782877528150772386}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7195090774361075973}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6800393057261514616
 GameObject:
   m_ObjectHideFlags: 0
@@ -2798,7 +2902,7 @@ Transform:
   m_GameObject: {fileID: 8615292976394304424}
   serializedVersion: 2
   m_LocalRotation: {x: 2.1175824e-22, y: -6.731056e-30, z: 1, w: 0.0000000754979}
-  m_LocalPosition: {x: -0.0061, y: 0, z: 0.002}
+  m_LocalPosition: {x: -0.0063, y: 0, z: 0.002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

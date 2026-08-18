@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6993260181527821385}
   - component: {fileID: 3804711792008108010}
   - component: {fileID: 8831234747355351322}
+  - component: {fileID: 2641237585915282524}
   m_Layer: 0
   m_Name: OperatorBullet
   m_TagString: Untagged
@@ -90,3 +91,16 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2641237585915282524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4703751771506959392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f1d9700239f11428d52fe08bbb6891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.VisualBulletProjectile
+  localForwardAxis: {x: -1, y: 0, z: 0}

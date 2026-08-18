@@ -980,16 +980,10 @@ namespace FPS
             List<ulong> clientsTimedOut)
         {
             NetworkManager manager = NetworkManager.Singleton;
-            if (manager?.SceneManager != null)
-                manager.SceneManager.OnLoadEventCompleted -= HandleGameSceneLoaded;
-            if (sceneLoadTimeoutRoutine != null)
-            {
-                StopCoroutine(sceneLoadTimeoutRoutine);
-                sceneLoadTimeoutRoutine = null;
-            }
-
             if (manager == null || !manager.IsServer || !string.Equals(sceneName, gameScene, StringComparison.Ordinal))
                 return;
+            if (manager.SceneManager != null)
+                manager.SceneManager.OnLoadEventCompleted -= HandleGameSceneLoaded;
             if (clientsTimedOut != null && clientsTimedOut.Count > 0)
             {
                 _ = HandleSceneLoadFailureAsync(SessionFailureReason.SceneLoadTimedOut, clientsTimedOut);
@@ -999,7 +993,12 @@ namespace FPS
             var completed = clientsCompleted != null
                 ? new HashSet<ulong>(clientsCompleted)
                 : new HashSet<ulong>();
-            foreach (ulong clientId in manager.ConnectedClientsIds)
+            // Re-read the authoritative lobby list immediately before spawning.
+            // This closes the race where the scene-load callback arrives in the
+            // same frame as the final character-selection NetworkList update.
+            SyncLobbyCharacterSelectionsToRegistry();
+            var connectedClientIds = new List<ulong>(manager.ConnectedClientsIds);
+            foreach (ulong clientId in connectedClientIds)
             {
                 if (!completed.Contains(clientId))
                 {
@@ -1010,15 +1009,41 @@ namespace FPS
                 }
             }
 
-            foreach (ulong clientId in manager.ConnectedClientsIds)
+            foreach (ulong clientId in connectedClientIds)
             {
                 if (!playerRegistry.TryGetByClientId(clientId, out PlayerSessionRecord record))
-                    continue;
+                {
+                    _ = HandleSceneLoadFailureAsync(
+                        SessionFailureReason.SceneLoadTimedOut,
+                        new List<ulong> { clientId });
+                    return;
+                }
                 SpawnPlayerForClient(clientId, record, isReconnect: false);
             }
 
+            foreach (ulong clientId in connectedClientIds)
+            {
+                if (!manager.ConnectedClients.TryGetValue(clientId, out NetworkClient client)
+                    || client.PlayerObject == null
+                    || !client.PlayerObject.IsSpawned
+                    || !client.PlayerObject.IsPlayerObject
+                    || client.PlayerObject.OwnerClientId != clientId)
+                {
+                    _ = HandleSceneLoadFailureAsync(
+                        SessionFailureReason.SceneLoadTimedOut,
+                        new List<ulong> { clientId });
+                    return;
+                }
+            }
+
+            if (sceneLoadTimeoutRoutine != null)
+            {
+                StopCoroutine(sceneLoadTimeoutRoutine);
+                sceneLoadTimeoutRoutine = null;
+            }
+
             sessionCoordinator.Complete(matchLoadOperation, SessionState.InMatch);
-            NetworkMatchStateManager.Instance?.EnterWarmup();
+            NetworkMatchStateManager.Instance?.EnterPlaying();
             NetworkDiagnostics.Emit("match_ready", State);
         }
 
@@ -1066,6 +1091,8 @@ namespace FPS
                 manager.DisconnectClient(clientId, "PlayerCharacterUnavailable");
                 return;
             }
+
+            GameLog.Info(() => $"[PlayerSpawn] client={clientId} character={record.CharacterId} prefab={playerPrefab.name}");
 
             GameObject playerObject = Instantiate(playerPrefab, position, rotation);
             NetworkObject networkObject = playerObject.GetComponent<NetworkObject>();
@@ -1435,7 +1462,6 @@ namespace FPS
             if (Instance != this)
                 return;
 
-            lifetimeCancellation?.Cancel();
             UnregisterCustomMessageHandler();
             UnregisterNetworkCallbacks();
             Task cleanup = CleanupTransportAsync(clearReconnectCredentials: true);
@@ -1457,6 +1483,10 @@ namespace FPS
             }
             finally
             {
+                // Let the Multiplayer/Lobby SDK finish its leave request before
+                // canceling the lifetime token. Canceling first makes ServicesCore
+                // scheduler report an expected OperationCanceledException.
+                lifetimeCancellation?.Cancel();
                 lifetimeCancellation?.Dispose();
                 lifetimeCancellation = null;
                 if (sessionCoordinator != null)

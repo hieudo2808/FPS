@@ -154,6 +154,37 @@ Transform:
   - {fileID: 163655647850344615}
   m_Father: {fileID: 8191620433224299386}
   m_LocalEulerAnglesHint: {x: 0.000016320802, y: 0.000005332875, z: 1.5628127e-12}
+--- !u!1 &899093982588964701
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4179314863817136408}
+  m_Layer: 0
+  m_Name: Classic_BulletSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4179314863817136408
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 899093982588964701}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9168367280746837430}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1083770760808613749
 GameObject:
   m_ObjectHideFlags: 0
@@ -699,6 +730,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9168367280746837430}
+  - component: {fileID: 4808164275002655420}
   m_Layer: 0
   m_Name: Classic
   m_TagString: Untagged
@@ -722,8 +754,31 @@ Transform:
   - {fileID: 8408092703704090594}
   - {fileID: 6608916323950601266}
   - {fileID: 4773401338565772795}
+  - {fileID: 4179314863817136408}
+  - {fileID: 5555596331191698357}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4808164275002655420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3774507447070342444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6284597d50c3d004481078bd69ff109c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.Weapon
+  bulletSpawnPoint: {fileID: 7605479244297498366}
+  muzzleEffect: {fileID: 0}
+  fpsArmsAnimator: {fileID: 0}
+  weaponAnimator: {fileID: 3780097185481259907}
+  weaponData: {fileID: 11400000, guid: 8e6f43511c4dbb44f95ae75082734a49, type: 2}
+  bulletPool: {fileID: 8113117793975897037}
+  allowInstantiateFallbackInDevelopment: 1
+  magazineOnGun: {fileID: 0}
+  magazineInHand: {fileID: 0}
 --- !u!1 &4640597325788843113
 GameObject:
   m_ObjectHideFlags: 0
@@ -1374,6 +1429,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8109645244306761021}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8468242272384903257
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5555596331191698357}
+  - component: {fileID: 8113117793975897037}
+  m_Layer: 0
+  m_Name: Classic_BulletPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5555596331191698357
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8468242272384903257}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9168367280746837430}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8113117793975897037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8468242272384903257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98990c40ce0ec0644b5692d2fd5d6ce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.ObjectPooling
+  objectPrefab: {fileID: 3460164765463935174, guid: 65c64756a1c6bd243b91524c76f60bca, type: 3}
+  poolSize: 30
 --- !u!1 &8536298747116915419
 GameObject:
   m_ObjectHideFlags: 0

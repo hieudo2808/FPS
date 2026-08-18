@@ -14,7 +14,8 @@ namespace FPS
         InvalidTick,
         WrongWeapon,
         DuplicateSequence,
-        CooldownOrAmmo
+        CooldownOrAmmo,
+        Equipping
     }
 
     public struct FireCommand : INetworkSerializable
@@ -39,6 +40,7 @@ namespace FPS
         public int magazineAmmo;
         public int reserveAmmo;
         public bool isReloading;
+        public double equipCompleteTime;
         public ushort acknowledgedFireSequence;
         public FireRejectReason lastFireResult;
         public int authoritativeShotTick;
@@ -49,6 +51,7 @@ namespace FPS
                 && magazineAmmo == other.magazineAmmo
                 && reserveAmmo == other.reserveAmmo
                 && isReloading == other.isReloading
+                && equipCompleteTime.Equals(other.equipCompleteTime)
                 && acknowledgedFireSequence == other.acknowledgedFireSequence
                 && lastFireResult == other.lastFireResult
                 && authoritativeShotTick == other.authoritativeShotTick;
@@ -60,6 +63,7 @@ namespace FPS
             serializer.SerializeValue(ref magazineAmmo);
             serializer.SerializeValue(ref reserveAmmo);
             serializer.SerializeValue(ref isReloading);
+            serializer.SerializeValue(ref equipCompleteTime);
             serializer.SerializeValue(ref acknowledgedFireSequence);
             serializer.SerializeValue(ref lastFireResult);
             serializer.SerializeValue(ref authoritativeShotTick);
@@ -70,12 +74,14 @@ namespace FPS
     {
         public byte slotIndex;
         public bool isReloading;
+        public double equipCompleteTime;
         public ushort shotSequence;
 
         public bool Equals(WeaponPresentationState other)
         {
             return slotIndex == other.slotIndex
                 && isReloading == other.isReloading
+                && equipCompleteTime.Equals(other.equipCompleteTime)
                 && shotSequence == other.shotSequence;
         }
 
@@ -83,6 +89,7 @@ namespace FPS
         {
             serializer.SerializeValue(ref slotIndex);
             serializer.SerializeValue(ref isReloading);
+            serializer.SerializeValue(ref equipCompleteTime);
             serializer.SerializeValue(ref shotSequence);
         }
     }
@@ -90,7 +97,6 @@ namespace FPS
     public class WeaponFireHandler : NetworkBehaviour
     {
         private const float MaxFireOriginDistance = 2.5f;
-        private const float MaxRaycastDistance = 500f;
 
         private readonly Dictionary<int, WeaponServerState> serverStates = new();
         private readonly double[] recentFireRequests = new double[64];
@@ -105,6 +111,7 @@ namespace FPS
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
         private WeaponManager weaponManager;
+        private bool restoredServerSnapshot;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         private ushort verificationFireSequence;
 #endif
@@ -112,13 +119,18 @@ namespace FPS
         public int ServerMagazineAmmo => GetCurrentServerState(false)?.MagazineAmmo ?? 0;
         public int ServerReserveAmmo => GetCurrentServerState(false)?.ReserveAmmo ?? 0;
         public bool IsServerReloading => GetCurrentServerState(false)?.IsReloading(GetServerTime()) ?? false;
+        public bool IsServerEquipping => GetCurrentServerState(false)?.IsEquipping(GetServerTime()) ?? false;
 
         public override void OnNetworkSpawn()
         {
             ownerWeaponState.OnValueChanged += HandleOwnerWeaponStateChanged;
             presentationState.OnValueChanged += HandlePresentationStateChanged;
             if (IsServer)
+            {
+                if (!restoredServerSnapshot)
+                    BeginEquipForSlot(weaponManager != null ? weaponManager.CurrentWeaponIndex : 0, true);
                 PublishOwnerState(FireRejectReason.None, 0, GetServerTick());
+            }
             if (IsOwner)
                 HandleOwnerWeaponStateChanged(default, ownerWeaponState.Value);
         }
@@ -136,14 +148,14 @@ namespace FPS
 
             Weapon weapon = GetCurrentWeaponAndEnsureServerState();
             WeaponServerState state = GetCurrentServerState(false);
-            if (weapon == null || weapon.Data == null || state == null || state.ReloadCompleteTime < 0.0)
+            if (weapon == null || weapon.Data == null || state == null || state.NextReloadEventTime < 0.0)
                 return;
 
-            double reloadDue = state.ReloadCompleteTime;
+            double reloadDue = state.NextReloadEventTime;
             if (reloadDue < 0.0 || GetServerTime() < reloadDue)
                 return;
 
-            state.CompleteReloadIfReady(weapon.Data, GetServerTime());
+            state.AdvanceReloadIfReady(weapon.Data, GetServerTime());
             PublishOwnerState(FireRejectReason.None, state.LastAcceptedFireSequence, GetServerTick());
             UpdateServerTelemetry();
         }
@@ -207,6 +219,12 @@ namespace FPS
             }
 
             double now = GetServerTime();
+            if (state.IsEquipping(now))
+            {
+                PublishOwnerState(FireRejectReason.Equipping, command.sequence, GetServerTick());
+                return false;
+            }
+
             if (!TryConsumeFireRequestBudget(weapon.Data, now))
             {
                 PublishOwnerState(FireRejectReason.CooldownOrAmmo, command.sequence, GetServerTick());
@@ -224,7 +242,8 @@ namespace FPS
                     command.estimatedServerTick,
                     command.inputSequence,
                     out Vector3 origin,
-                    out Vector3 direction))
+                    out Vector3 direction,
+                    out bool aimed))
             {
                 PublishOwnerState(FireRejectReason.InvalidAim, command.sequence, GetServerTick());
                 return false;
@@ -263,7 +282,8 @@ namespace FPS
                 emitEffects: true,
                 senderClientId: senderClientId,
                 validateSender: true,
-                clientTimeAlreadyResolved: true);
+                clientTimeAlreadyResolved: true,
+                aimed: aimed);
 
             PublishOwnerState(
                 accepted ? FireRejectReason.None : FireRejectReason.CooldownOrAmmo,
@@ -281,7 +301,7 @@ namespace FPS
                 fireRequestCount--;
             }
 
-            float interval = weaponData != null ? Mathf.Max(0.001f, weaponData.fireRate) : 0.001f;
+            float interval = weaponData != null ? weaponData.FireInterval : 0.001f;
             int burstAllowance = weaponData != null ? Mathf.Max(4, weaponData.burstCount * 2) : 4;
             int allowedPerSecond = Mathf.Clamp(Mathf.CeilToInt(1.5f / interval) + burstAllowance,
                 15, recentFireRequests.Length);
@@ -301,7 +321,8 @@ namespace FPS
             double clientShotLocalTime = 0.0,
             ushort fireSequence = 0,
             ulong senderClientId = 0,
-            bool validateSender = false)
+            bool validateSender = false,
+            bool aimed = false)
         {
             return TryProcessFireServer(
                 spawnPosition,
@@ -312,7 +333,8 @@ namespace FPS
                 false,
                 senderClientId,
                 validateSender,
-                clientTimeAlreadyResolved: false);
+                clientTimeAlreadyResolved: false,
+                aimed: aimed);
         }
 
         private bool TryProcessFireServer(
@@ -324,7 +346,8 @@ namespace FPS
             bool emitEffects,
             ulong senderClientId,
             bool validateSender,
-            bool clientTimeAlreadyResolved)
+            bool clientTimeAlreadyResolved,
+            bool aimed)
         {
             Weapon weapon = GetCurrentWeaponAndEnsureServerState();
             if (weapon == null || weapon.Data == null) return false;
@@ -350,51 +373,80 @@ namespace FPS
             UpdateServerTelemetry();
 
             direction = direction.normalized;
-            int hitMask = GetHitMask(weapon.Data);
-            bool currentHitFound = Physics.Raycast(
-                spawnPosition,
-                direction,
-                out RaycastHit currentHit,
-                MaxRaycastDistance,
-                hitMask,
-                QueryTriggerInteraction.Ignore);
-
-            DamageInfo appliedDamageInfo = default;
-            bool appliedDamage = false;
+            WeaponData weaponData = weapon.Data;
+            int hitMask = GetHitMask(weaponData);
+            float maximumRange = Mathf.Max(0.01f, weaponData.maximumRange);
+            int projectileCount = Mathf.Max(1, weaponData.projectileCount);
+            float spreadAngle = weaponData.GetSpreadAngle(aimed);
+            uint shotSeed = WeaponBallistics.BuildShotSeed(
+                validateSender ? senderClientId : OwnerClientId,
+                fireSequence,
+                (byte)Mathf.Clamp(weaponManager != null ? weaponManager.CurrentWeaponIndex : 0, 0, byte.MaxValue));
             double rewindTime = clientTimeAlreadyResolved
                 ? clientShotLocalTime
                 : LagCompensationManager.ResolveRewindTime(now, clientShotLocalTime);
-            float blockingDistance = currentHitFound ? currentHit.distance : MaxRaycastDistance;
 
-            if (LagCompensationManager.TryRaycast(
+            bool appliedDamage = false;
+            bool anyHeadshot = false;
+            float totalAppliedDamage = 0f;
+            ulong attackerClientId = validateSender ? senderClientId : OwnerClientId;
+            for (int projectileIndex = 0; projectileIndex < projectileCount; projectileIndex++)
+            {
+                Vector3 projectileDirection = WeaponBallistics.GetProjectileDirection(
+                    direction, spreadAngle, shotSeed, projectileIndex);
+                bool currentHitFound = Physics.Raycast(
                     spawnPosition,
-                    direction,
-                    MaxRaycastDistance,
+                    projectileDirection,
+                    out RaycastHit currentHit,
+                    maximumRange,
                     hitMask,
-                    rewindTime,
-                    blockingDistance,
-                    out LagCompensatedHit lagHit))
-            {
-                appliedDamage = TryApplyDamage(
-                    weapon.Data,
-                    lagHit,
-                    validateSender ? senderClientId : OwnerClientId,
-                    out appliedDamageInfo);
-            }
-            else if (currentHitFound)
-            {
-                appliedDamage = TryApplyDamage(
-                    weapon.Data,
-                    currentHit,
-                    validateSender ? senderClientId : OwnerClientId,
-                    out appliedDamageInfo);
+                    QueryTriggerInteraction.Ignore);
+                float blockingDistance = currentHitFound ? currentHit.distance : maximumRange;
+
+                DamageInfo pelletDamage = default;
+                bool pelletApplied;
+                if (LagCompensationManager.TryRaycast(
+                        spawnPosition,
+                        projectileDirection,
+                        maximumRange,
+                        hitMask,
+                        rewindTime,
+                        blockingDistance,
+                        out LagCompensatedHit lagHit))
+                {
+                    pelletApplied = TryApplyDamage(
+                        weaponData,
+                        lagHit,
+                        attackerClientId,
+                        out pelletDamage);
+                }
+                else
+                {
+                    pelletApplied = currentHitFound && TryApplyDamage(
+                        weaponData,
+                        currentHit,
+                        attackerClientId,
+                        out pelletDamage);
+                }
+
+                if (!pelletApplied)
+                    continue;
+
+                appliedDamage = true;
+                anyHeadshot |= pelletDamage.isHeadshot;
+                totalAppliedDamage += pelletDamage.amount;
             }
 
             if (emitEffects)
             {
-                FireEffectsClientRpc(spawnPosition, direction);
+                FireEffectsClientRpc(spawnPosition, direction, fireSequence, aimed);
                 if (appliedDamage)
-                    SendHitConfirmedToAttacker(validateSender ? senderClientId : OwnerClientId, appliedDamageInfo);
+                {
+                    SendHitConfirmedToAttacker(
+                        attackerClientId,
+                        anyHeadshot ? HitboxZone.Head : HitboxZone.Body,
+                        totalAppliedDamage);
+                }
             }
 
             PlayerHealth shooterHealth = GetComponent<PlayerHealth>();
@@ -402,7 +454,7 @@ namespace FPS
                 shooterHealth != null ? shooterHealth.StablePlayerId : default,
                 GetServerTick(),
                 appliedDamage,
-                appliedDamage && appliedDamageInfo.isHeadshot);
+                appliedDamage && anyHeadshot);
 
             NetworkDiagnostics.Emit(
                 "fire_result",
@@ -413,14 +465,38 @@ namespace FPS
             return true;
         }
 
-        public void HandleServerWeaponSwitched(int slotIndex)
+        public void HandleServerWeaponSwitched(int previousSlotIndex, int slotIndex, bool beginEquip = true)
         {
             if (!IsServer)
                 return;
 
-            GetServerState(slotIndex, true);
+            if (previousSlotIndex != slotIndex)
+                GetServerState(previousSlotIndex, false)?.CancelReload();
+
+            BeginEquipForSlot(slotIndex, beginEquip);
             PublishOwnerState(FireRejectReason.None, 0, GetServerTick());
             UpdateServerTelemetry();
+        }
+
+        public void HandleServerPrimaryWeaponReplaced(bool primaryIsEquipped)
+        {
+            if (!IsServer)
+                return;
+
+            GetServerState(0, false)?.CancelReload();
+            serverStates.Remove(0);
+            if (primaryIsEquipped)
+                BeginEquipForSlot(0, true);
+            PublishOwnerState(FireRejectReason.None, 0, GetServerTick());
+            UpdateServerTelemetry();
+        }
+
+        private void BeginEquipForSlot(int slotIndex, bool beginEquip)
+        {
+            Weapon weapon = GetWeapon(slotIndex);
+            WeaponServerState state = GetServerState(slotIndex, weapon != null);
+            if (beginEquip && weapon != null && weapon.Data != null && state != null)
+                state.BeginEquip(weapon.Data, GetServerTime());
         }
 
         public WeaponRuntimeSnapshot CaptureWeaponSnapshot(int slotIndex)
@@ -434,6 +510,7 @@ namespace FPS
 
         public void RestoreServerSnapshot(PlayerRuntimeSnapshot snapshot)
         {
+            restoredServerSnapshot = true;
             if (snapshot.weaponSlot0.definitionId.Length > 0)
                 RestoreSlot(snapshot.weaponSlot0);
             if (snapshot.weaponSlot1.definitionId.Length > 0)
@@ -520,14 +597,25 @@ namespace FPS
         }
 
         [ClientRpc]
-        private void FireEffectsClientRpc(Vector3 spawnPosition, Vector3 direction)
+        private void FireEffectsClientRpc(
+            Vector3 aimOrigin,
+            Vector3 aimDirection,
+            ushort shotSequence,
+            bool aimed)
         {
             if (IsOwner) return;
 
             Weapon weapon = GetCurrentWeapon();
             if (weapon == null) return;
 
-            weapon.SpawnVisualBullet(spawnPosition, direction);
+            int slot = weaponManager != null ? weaponManager.CurrentWeaponIndex : 0;
+            weapon.SpawnVisualProjectiles(
+                aimOrigin,
+                aimDirection,
+                shotSequence,
+                OwnerClientId,
+                (byte)Mathf.Clamp(slot, 0, byte.MaxValue),
+                aimed);
             weapon.PlayMuzzleEffect();
             weapon.PlayShootSound();
         }
@@ -551,7 +639,7 @@ namespace FPS
                 : null;
             HitboxZone zone = ResolveZone(segment, legacyHitbox);
             float multiplier = ResolveMultiplier(segment, legacyHitbox, zone);
-            float finalDamage = weaponData.damage * multiplier;
+            float finalDamage = weaponData.EvaluateBaseDamage(hit.distance) * multiplier;
 
             damageInfo = new DamageInfo(
                 finalDamage,
@@ -591,7 +679,7 @@ namespace FPS
             float multiplier = hit.damageMultiplier > 0f
                 ? hit.damageMultiplier
                 : HitboxSegment.GetDefaultMultiplier(hit.zone);
-            float finalDamage = weaponData.damage * multiplier;
+            float finalDamage = weaponData.EvaluateBaseDamage(hit.distance) * multiplier;
             damageInfo = new DamageInfo(
                 finalDamage,
                 attackerClientId,
@@ -713,6 +801,7 @@ namespace FPS
                 magazineAmmo = state.MagazineAmmo,
                 reserveAmmo = state.ReserveAmmo,
                 isReloading = state.IsReloading(GetServerTime()),
+                equipCompleteTime = state.EquipCompleteTime,
                 acknowledgedFireSequence = sequence,
                 lastFireResult = result,
                 authoritativeShotTick = shotTick
@@ -721,6 +810,7 @@ namespace FPS
             {
                 slotIndex = (byte)Mathf.Clamp(slot, 0, byte.MaxValue),
                 isReloading = state.IsReloading(GetServerTime()),
+                equipCompleteTime = state.EquipCompleteTime,
                 shotSequence = state.LastAcceptedFireSequence
             };
 
@@ -749,12 +839,12 @@ namespace FPS
             WeaponPresentationState previous,
             WeaponPresentationState current)
         {
-            if (IsOwner || !current.isReloading || previous.isReloading)
+            if (IsOwner)
                 return;
 
             if (weaponManager == null)
                 weaponManager = GetComponent<WeaponManager>();
-            weaponManager?.TriggerAnimation("Reload");
+            weaponManager?.ApplyPresentationState(current);
         }
 
         private void UpdateServerTelemetry()
@@ -820,14 +910,17 @@ namespace FPS
             return targetNetworkObject != null && targetNetworkObject.OwnerClientId == attackerClientId;
         }
 
-        private void SendHitConfirmedToAttacker(ulong attackerClientId, DamageInfo damageInfo)
+        private void SendHitConfirmedToAttacker(
+            ulong attackerClientId,
+            HitboxZone zone,
+            float finalDamage)
         {
             if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening)
                 return;
 
             HitConfirmedClientRpc(
-                damageInfo.hitZone,
-                damageInfo.amount,
+                zone,
+                finalDamage,
                 new ClientRpcParams
                 {
                     Send = new ClientRpcSendParams

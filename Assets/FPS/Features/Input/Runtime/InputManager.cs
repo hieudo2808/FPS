@@ -23,10 +23,11 @@ namespace FPS
         private static bool menuInputBlocked;
 
         public static bool MatchInputBlocked { get; set; }
+        public static bool CinematicInputBlocked { get; set; }
 
         public static bool GameplayInputBlocked
         {
-            get => menuInputBlocked || MatchInputBlocked;
+            get => menuInputBlocked || MatchInputBlocked || CinematicInputBlocked;
             set => menuInputBlocked = value;
         }
 
@@ -62,19 +63,21 @@ namespace FPS
 
         private void OnEnable()
         {
-            gameplayMap?.Enable();
+            if (gameplayMap == null || actionAsset == null)
+                InitializeActions();
+            EnableGameplayMapSafely();
         }
 
         private void OnDisable()
         {
             CancelInteractiveRebind();
-            gameplayMap?.Disable();
+            DisableGameplayMapSafely();
         }
 
         private void OnDestroy()
         {
             CancelInteractiveRebind();
-            gameplayMap?.Disable();
+            DisableGameplayMapSafely();
             if (actionAsset != null)
             {
                 if (Application.isPlaying)
@@ -108,7 +111,31 @@ namespace FPS
                 actions[action.name] = action;
 
             LoadBindingOverrides();
-            gameplayMap.Enable();
+            EnableGameplayMapSafely();
+        }
+
+        private void EnableGameplayMapSafely()
+        {
+            // A map cloned from an input-actions asset must belong to the
+            // current asset state before Enable() is called. During domain
+            // reload/ExecuteAlways, Unity can briefly expose the old map and
+            // produce "Map must be contained in state" / out-of-range errors.
+            if (actionAsset == null || gameplayMap == null || gameplayMap.asset != actionAsset)
+                return;
+            try { actionAsset.Enable(); }
+            catch (InvalidOperationException)
+            {
+                // The next enable/domain-reload pass will recreate the map.
+                gameplayMap = null;
+            }
+        }
+
+        private void DisableGameplayMapSafely()
+        {
+            if (actionAsset == null || gameplayMap == null || gameplayMap.asset != actionAsset)
+                return;
+            try { actionAsset.Disable(); }
+            catch (InvalidOperationException) { }
         }
 
         private static InputActionAsset CreateFallbackAsset()
@@ -133,6 +160,7 @@ namespace FPS
             AddButton(map, "Fire", "<Mouse>/leftButton");
             map.FindAction("Fire").AddBinding("<Gamepad>/rightTrigger");
             AddButton(map, "Reload", "<Keyboard>/r");
+            AddButton(map, "Inspect", "<Keyboard>/y");
             AddButton(map, "Aim", "<Mouse>/rightButton");
             AddButton(map, "Weapon1", "<Keyboard>/1");
             AddButton(map, "Weapon2", "<Keyboard>/2");
@@ -193,7 +221,13 @@ namespace FPS
         public bool GetFireInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Fire");
         public bool GetReloadInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Reload");
         public bool GetReloadInput() => !GameplayInputBlocked && IsPressed("Reload");
-        public bool GetAimInput() => !GameplayInputBlocked && IsPressed("Aim");
+        public bool GetInspectInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Inspect");
+        // Raw held state is intentional: Weapon owns the gameplay-block check
+        // but still needs to track the physical release edge while a menu or
+        // match-state block is active, otherwise holding RMB through unblock
+        // would create a synthetic new toggle.
+        public bool GetAimInput() => IsPressed("Aim");
+        public bool GetAimInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Aim");
         public bool GetWeapon1InputDown() => !GameplayInputBlocked && WasPressedThisFrame("Weapon1");
         public bool GetWeapon2InputDown() => !GameplayInputBlocked && WasPressedThisFrame("Weapon2");
         public bool GetInteractInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Interact");

@@ -8,6 +8,7 @@ namespace FPS
         private RecoilPattern currentPattern;
         
         private int currentShotIndex;
+        private uint spraySequence;
         private float timeSinceLastShot;
         
         private Vector2 currentRecoil;
@@ -33,7 +34,11 @@ namespace FPS
 
             if (timeSinceLastShot > currentPattern.resetCooldown)
             {
-                currentShotIndex = 0;
+                if (currentShotIndex != 0)
+                {
+                    currentShotIndex = 0;
+                    spraySequence++;
+                }
                 // Exponential decay return when not firing (framerate-independent)
                 float returnFactor = 1f - Mathf.Exp(-currentPattern.returnSpeed * Time.deltaTime);
                 targetRecoil = Vector2.Lerp(targetRecoil, Vector2.zero, returnFactor);
@@ -56,25 +61,17 @@ namespace FPS
         public void Fire(RecoilPattern pattern)
         {
             if (!IsOwner) return;
-            
+
+            if (currentPattern != pattern)
+            {
+                currentShotIndex = 0;
+                spraySequence++;
+            }
             currentPattern = pattern;
-            
+
             if (pattern.shots == null || pattern.shots.Length == 0) return;
-            
-            Vector2 shotRecoil;
-            if (currentShotIndex < pattern.shots.Length)
-            {
-                shotRecoil = pattern.shots[currentShotIndex];
-            }
-            else
-            {
-                // After reaching the end of the pattern, oscillate horizontal recoil left/right
-                Vector2 lastRecoil = pattern.shots[pattern.shots.Length - 1];
-                int overflowShots = currentShotIndex - pattern.shots.Length + 1;
-                float sideSign = (overflowShots % 2 == 1) ? -1f : 1f;
-                shotRecoil = new Vector2(Mathf.Abs(lastRecoil.x) * sideSign, lastRecoil.y * 0.3f);
-            }
-            
+
+            Vector2 shotRecoil = pattern.GetShot(currentShotIndex, spraySequence);
             targetRecoil += shotRecoil;
             
             currentShotIndex++;

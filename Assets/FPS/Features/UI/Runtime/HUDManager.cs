@@ -47,6 +47,11 @@ namespace FPS
         [SerializeField] private TextMeshProUGUI hitMarkerText;
         [SerializeField] private float hitMarkerDuration = 0.18f;
 
+        [Header("Aiming")]
+        [SerializeField] private GameObject crosshairRoot;
+        [SerializeField] private GameObject scopeOverlayRoot;
+        [SerializeField] private Image scopeOverlayImage;
+
         [Header("Prompts")]
         [SerializeField] private TextMeshProUGUI interactionPromptText;
         [SerializeField] private GameObject waveAnnouncementPanel;
@@ -66,6 +71,7 @@ namespace FPS
 
         private void Start()
         {
+            SetAimHudVisible(false, false);
             weaponManager = WeaponManager.LocalInstance;
             if (weaponManager != null)
             {
@@ -458,6 +464,98 @@ namespace FPS
             hitMarkerText.color = zone == HitboxZone.Head ? WarningColor : AccentColor;
             hitMarkerText.gameObject.SetActive(true);
             hitMarkerTimer = hitMarkerDuration;
+        }
+
+        public void SetAimHudVisible(bool aiming, bool showScopeOverlay, Sprite scopeSprite = null)
+        {
+            EnsureCrosshairReference();
+            if (showScopeOverlay)
+                EnsureScopeOverlay(scopeSprite);
+            if (scopeOverlayImage != null && scopeSprite != null)
+                scopeOverlayImage.sprite = scopeSprite;
+            if (scopeOverlayRoot != null)
+                scopeOverlayRoot.SetActive(showScopeOverlay);
+            if (crosshairRoot != null)
+                crosshairRoot.SetActive(!aiming);
+        }
+
+        public void SetScopeVisible(bool visible)
+        {
+            SetAimHudVisible(visible, visible);
+        }
+
+        private void EnsureCrosshairReference()
+        {
+            if (crosshairRoot != null)
+                return;
+
+            foreach (Canvas candidateCanvas in FindObjectsByType<Canvas>(
+                         FindObjectsInactive.Include))
+            {
+                foreach (RectTransform child in candidateCanvas.GetComponentsInChildren<RectTransform>(true))
+                {
+                    if (child.name != "Crosshair")
+                        continue;
+
+                    crosshairRoot = child.gameObject;
+                    return;
+                }
+            }
+        }
+
+        private void EnsureScopeOverlay(Sprite scopeSprite)
+        {
+            if (scopeOverlayRoot != null)
+            {
+                if (scopeOverlayImage == null)
+                    scopeOverlayImage = scopeOverlayRoot.GetComponentInChildren<Image>(true);
+                return;
+            }
+
+            Canvas canvas = crosshairRoot != null
+                ? crosshairRoot.GetComponentInParent<Canvas>(true)
+                : FindAnyObjectByType<Canvas>(FindObjectsInactive.Include);
+            if (canvas == null)
+                return;
+
+            GameObject root = new GameObject(
+                "OperatorScopeOverlay",
+                typeof(RectTransform),
+                typeof(CanvasGroup));
+            root.transform.SetParent(canvas.transform, false);
+            RectTransform rootRect = (RectTransform)root.transform;
+            rootRect.anchorMin = Vector2.zero;
+            rootRect.anchorMax = Vector2.one;
+            rootRect.offsetMin = Vector2.zero;
+            rootRect.offsetMax = Vector2.zero;
+            rootRect.SetAsLastSibling();
+            root.GetComponent<CanvasGroup>().blocksRaycasts = false;
+
+            GameObject artwork = new GameObject(
+                "ScopeArtwork",
+                typeof(RectTransform),
+                typeof(Image),
+                typeof(AspectRatioFitter));
+            artwork.transform.SetParent(rootRect, false);
+            RectTransform artworkRect = (RectTransform)artwork.transform;
+            artworkRect.anchorMin = new Vector2(0.5f, 0.5f);
+            artworkRect.anchorMax = new Vector2(0.5f, 0.5f);
+            artworkRect.pivot = new Vector2(0.5f, 0.5f);
+            artworkRect.anchoredPosition = Vector2.zero;
+
+            scopeOverlayImage = artwork.GetComponent<Image>();
+            scopeOverlayImage.sprite = scopeSprite;
+            scopeOverlayImage.preserveAspect = true;
+            scopeOverlayImage.raycastTarget = false;
+
+            AspectRatioFitter fitter = artwork.GetComponent<AspectRatioFitter>();
+            fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+            fitter.aspectRatio = scopeSprite != null && scopeSprite.rect.height > 0f
+                ? scopeSprite.rect.width / scopeSprite.rect.height
+                : 1.5f;
+
+            scopeOverlayRoot = root;
+            scopeOverlayRoot.SetActive(false);
         }
 
         private void UpdateHitMarkerTimer()

@@ -20,14 +20,47 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967291
   bulletSpeed: 200
-  fireRate: 0.18
+  bakedFireInterval: 0.18
   bulletLiveTime: 2
   burstCount: 3
   fireMode: 0
+  projectileCount: 1
+  hipSpreadAngle: 0.25
+  aimedSpreadAngle: 0.25
+  maximumRange: 60
+  falloffStartDistance: 20
+  falloffEndDistance: 40
+  minimumDamageMultiplier: 0.7
+  restartFireAnimationPerShot: 1
+  fireLoopStartFrame: 0
+  fireLoopEndFrame: 0
   magazineSize: 12
   totalAmmo: 36
-  reloadTime: 1.8
+  reloadMode: 0
+  reloadAmmoCommitFrame: 54
+  reloadLoopStartFrame: 0
+  reloadLoopEndFrame: 0
+  bakedReloadDuration: 2.1166668
+  bakedReloadAmmoCommitDuration: 0.90000004
+  bakedPerShellOpeningDuration: 0
+  bakedPerShellInterval: 0
+  bakedPerShellClosingDuration: 0
+  firstPersonAnimatorLayer: Classic
+  bakedEquipDuration: 1
+  supportsAim: 0
+  aimedWorldFov: 25
+  aimTransitionDuration: 0.12
+  aimedSensitivityMultiplier: 0.65
+  showScopeOverlay: 0
+  scopeOverlaySprite: {fileID: 0}
+  exitAimAfterShot: 0
+  hideViewmodelWhenAimed: 1
   bulletPrefab: {fileID: 3460164765463935174, guid: 65c64756a1c6bd243b91524c76f60bca, type: 3}
   shootSound: {fileID: 0}
   reloadSound: {fileID: 0}
   recoilPattern: {fileID: 11400000, guid: 5c782194a82142e09b17420185ca8201, type: 2}
+  muzzleFlashPrefab: {fileID: 1000010254994808, guid: 9defeac88977c0d448aa4541073ee9e4, type: 3}
+  muzzleFlashLocalEulerAngles: {x: 0, y: 270, z: 0}
+  muzzleFlashScale: 0.01
+  surfaceImpactPrefab: {fileID: 4141317489459417463, guid: ba6ff69759a8e59468940736e0e069b4, type: 3}
+  maxConcurrentSurfaceImpacts: 64

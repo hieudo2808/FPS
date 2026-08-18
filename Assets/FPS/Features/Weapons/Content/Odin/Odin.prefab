@@ -1144,6 +1144,7 @@ Transform:
   - {fileID: 4040136476577340656}
   - {fileID: 8823414590587716881}
   - {fileID: 7929841209040622521}
+  - {fileID: 944515982825127927}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2316547249173263449
@@ -2448,6 +2449,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5401452586918145278}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6970911918330393267
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 944515982825127927}
+  - component: {fileID: 3887725349827628732}
+  m_Layer: 8
+  m_Name: Odin_BulletPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &944515982825127927
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6970911918330393267}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1937352407112764623}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3887725349827628732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6970911918330393267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98990c40ce0ec0644b5692d2fd5d6ce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.ObjectPooling
+  objectPrefab: {fileID: 9127804531831411338, guid: 51be62899448f8c4cb83bff73baf4f61, type: 3}
+  poolSize: 24
 --- !u!1 &7072926970707369946
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,7 +20,9 @@ namespace FPS
         public int magazineAmmo;
         public int reserveAmmo;
         public double nextAllowedFireTime;
+        public double reloadAmmoCommitTime;
         public double reloadCompleteTime;
+        public double equipCompleteTime;
         public ushort lastAcceptedFireSequence;
         public bool hasAcceptedFireSequence;
 
@@ -31,7 +33,9 @@ namespace FPS
                 && magazineAmmo == other.magazineAmmo
                 && reserveAmmo == other.reserveAmmo
                 && nextAllowedFireTime.Equals(other.nextAllowedFireTime)
+                && reloadAmmoCommitTime.Equals(other.reloadAmmoCommitTime)
                 && reloadCompleteTime.Equals(other.reloadCompleteTime)
+                && equipCompleteTime.Equals(other.equipCompleteTime)
                 && lastAcceptedFireSequence == other.lastAcceptedFireSequence
                 && hasAcceptedFireSequence == other.hasAcceptedFireSequence;
         }
@@ -43,7 +47,9 @@ namespace FPS
             serializer.SerializeValue(ref magazineAmmo);
             serializer.SerializeValue(ref reserveAmmo);
             serializer.SerializeValue(ref nextAllowedFireTime);
+            serializer.SerializeValue(ref reloadAmmoCommitTime);
             serializer.SerializeValue(ref reloadCompleteTime);
+            serializer.SerializeValue(ref equipCompleteTime);
             serializer.SerializeValue(ref lastAcceptedFireSequence);
             serializer.SerializeValue(ref hasAcceptedFireSequence);
         }
@@ -63,6 +69,7 @@ namespace FPS
         public PlayerLifeState lifeState;
         public double lifeStateDeadline;
         public byte equippedWeaponSlot;
+        public PrimaryWeaponId primaryWeaponId;
         public WeaponRuntimeSnapshot weaponSlot0;
         public WeaponRuntimeSnapshot weaponSlot1;
         public ushort inventorySchemaVersion;
@@ -77,7 +84,7 @@ namespace FPS
                 rotation = rotation,
                 health = 100f,
                 lifeState = PlayerLifeState.Alive,
-                inventorySchemaVersion = 1
+                inventorySchemaVersion = 3
             };
         }
 
@@ -95,6 +102,7 @@ namespace FPS
             serializer.SerializeValue(ref lifeState);
             serializer.SerializeValue(ref lifeStateDeadline);
             serializer.SerializeValue(ref equippedWeaponSlot);
+            serializer.SerializeValue(ref primaryWeaponId);
             serializer.SerializeValue(ref weaponSlot0);
             serializer.SerializeValue(ref weaponSlot1);
             serializer.SerializeValue(ref inventorySchemaVersion);

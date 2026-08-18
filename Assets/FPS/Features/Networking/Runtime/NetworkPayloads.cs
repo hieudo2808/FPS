@@ -13,6 +13,7 @@ namespace FPS
         public Vector2 move;
         public bool jumpPressed;   // true for exactly 1 tick
         public bool sprint;
+        public bool aim;
         public float yaw;          // player yaw (gameplay), NOT camera pitch
         public float pitch;
 
@@ -32,6 +33,7 @@ namespace FPS
                 quantizedPitch = QuantizeSignedUnit(Mathf.Clamp(pitch, -90f, 90f) / 90f);
                 if (jumpPressed) buttonFlags |= 1;
                 if (sprint) buttonFlags |= 2;
+                if (aim) buttonFlags |= 4;
             }
 
             serializer.SerializeValue(ref sequence);
@@ -49,6 +51,7 @@ namespace FPS
                 pitch = DequantizeSignedUnit(quantizedPitch) * 90f;
                 jumpPressed = (buttonFlags & 1) != 0;
                 sprint = (buttonFlags & 2) != 0;
+                aim = (buttonFlags & 4) != 0;
             }
         }
 
@@ -98,6 +101,7 @@ namespace FPS
         public int tick;
         public uint lastProcessedCommand;
         public Vector3 position;
+        public float planarSpeed;
         public float verticalVelocity;
         public bool grounded;
         public float yaw;
@@ -107,6 +111,7 @@ namespace FPS
             serializer.SerializeValue(ref tick);
             serializer.SerializeValue(ref lastProcessedCommand);
             serializer.SerializeValue(ref position);
+            serializer.SerializeValue(ref planarSpeed);
             serializer.SerializeValue(ref verticalVelocity);
             serializer.SerializeValue(ref grounded);
             serializer.SerializeValue(ref yaw);

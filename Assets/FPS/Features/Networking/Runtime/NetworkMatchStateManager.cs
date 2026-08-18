@@ -20,7 +20,7 @@ namespace FPS
         public static NetworkMatchStateManager Instance { get; private set; }
 
         private readonly NetworkVariable<NetworkMatchState> state = new(
-            NetworkMatchState.Lobby,
+            NetworkMatchState.Loading,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
 
@@ -164,10 +164,7 @@ namespace FPS
 
         private void ApplyLocalInputBlock()
         {
-            InputManager.MatchInputBlocked =
-                State == NetworkMatchState.Loading
-                || State == NetworkMatchState.Warmup
-                || State == NetworkMatchState.GameOver;
+            InputManager.MatchInputBlocked = State != NetworkMatchState.Playing;
         }
 
         private void SetLocalState(NetworkMatchState nextState, double startedTime)

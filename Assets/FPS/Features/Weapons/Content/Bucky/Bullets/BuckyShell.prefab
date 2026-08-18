@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7415832798169225780}
   - component: {fileID: 294806714156279600}
   - component: {fileID: 3950893317461301406}
+  - component: {fileID: 6175427515378383119}
   m_Layer: 0
   m_Name: BuckyShell
   m_TagString: Untagged
@@ -90,3 +91,16 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6175427515378383119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6750651416288300163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f1d9700239f11428d52fe08bbb6891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.VisualBulletProjectile
+  localForwardAxis: {x: -1, y: 0, z: 0}

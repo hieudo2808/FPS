@@ -222,11 +222,12 @@ namespace FPS
                 health = networkHealth.Value,
                 lifeState = networkLifeState.Value,
                 lifeStateDeadline = networkLifeStateDeadline.Value,
-                inventorySchemaVersion = 1
+                inventorySchemaVersion = 3
             };
 
             WeaponManager manager = GetComponent<WeaponManager>();
             snapshot.equippedWeaponSlot = (byte)Mathf.Clamp(manager != null ? manager.CurrentWeaponIndex : 0, 0, byte.MaxValue);
+            snapshot.primaryWeaponId = manager != null ? manager.ActivePrimaryWeaponId : PrimaryWeaponId.Vandal;
             WeaponFireHandler fireHandler = GetComponent<WeaponFireHandler>();
             if (fireHandler != null)
             {
@@ -262,6 +263,9 @@ namespace FPS
             networkInputReady.Value = !preparedAsReconnect;
             ApplyRespawnPose(preparedSnapshot.position, preparedSnapshot.rotation);
 
+            WeaponManager manager = GetComponent<WeaponManager>();
+            manager?.RestorePrimaryWeaponServer(preparedSnapshot.primaryWeaponId);
+
             WeaponFireHandler fireHandler = GetComponent<WeaponFireHandler>();
             if (fireHandler != null)
             {
@@ -269,7 +273,7 @@ namespace FPS
                 preparedSnapshot.weaponSlot0 = fireHandler.CaptureWeaponSnapshot(0);
                 preparedSnapshot.weaponSlot1 = fireHandler.CaptureWeaponSnapshot(1);
             }
-            GetComponent<WeaponManager>()?.SetEquippedWeaponServer(preparedSnapshot.equippedWeaponSlot);
+            manager?.RestoreEquippedWeaponServer(preparedSnapshot.equippedWeaponSlot);
         }
 
         private PlayerLifeState ResolveExpiredLifeState(PlayerLifeState state, double deadline)
@@ -300,6 +304,7 @@ namespace FPS
                 reserveAmmo = weaponSnapshot.reserveAmmo,
                 isReloading = weaponSnapshot.reloadCompleteTime >= 0.0
                     && now < weaponSnapshot.reloadCompleteTime,
+                equipCompleteTime = weaponSnapshot.equipCompleteTime,
                 acknowledgedFireSequence = weaponSnapshot.lastAcceptedFireSequence,
                 lastFireResult = FireRejectReason.None,
                 authoritativeShotTick = snapshot.serverTick
