@@ -44,6 +44,10 @@ namespace FPS
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
         private bool networkCallbacksRegistered;
+        private bool thirdPersonReloadActive;
+        private double thirdPersonReloadCompleteTime = -1d;
+        private bool thirdPersonEquipCompletionPending;
+        private double thirdPersonEquipCompleteTime = -1d;
 
         public static WeaponManager LocalInstance { get; private set; }
 
@@ -71,25 +75,14 @@ namespace FPS
 
         public override void OnNetworkSpawn()
         {
+            if (characterAnimation == null)
+                characterAnimation = GetComponent<PlayerMovement>()?.CharacterAnimation;
+
             if (IsOwner) LocalInstance = this;
 
             networkedWeaponIndex.OnValueChanged += OnWeaponChanged;
             networkedPrimaryWeapon.OnValueChanged += OnPrimaryWeaponChanged;
             networkCallbacksRegistered = true;
-
-            #region agent log
-            int nullWeaponSlots = 0;
-            if (weapons != null)
-            {
-                for (int i = 0; i < weapons.Count; i++)
-                    if (weapons[i] == null)
-                        nullWeaponSlots++;
-            }
-            GameLog.Info(() => $"[WeaponManager][dbg] OnNetworkSpawn owner={IsOwner} weaponCount={WeaponCount} nullSlots={nullWeaponSlots} currentIndex={networkedWeaponIndex.Value}");
-            #region agent log
-            GameLog.DebugSession("initial", "W1", "WeaponManager.cs:45", "weapon configuration at network spawn", $"{{\"owner\":{(IsOwner ? "true" : "false")},\"count\":{WeaponCount},\"nullSlots\":{nullWeaponSlots},\"index\":{networkedWeaponIndex.Value}}}");
-            #endregion
-            #endregion
 
             ApplyPrimaryWeapon(networkedPrimaryWeapon.Value);
             BindFirstPersonPresentation();
@@ -107,6 +100,18 @@ namespace FPS
             networkedWeaponIndex.OnValueChanged -= OnWeaponChanged;
             networkedPrimaryWeapon.OnValueChanged -= OnPrimaryWeaponChanged;
             networkCallbacksRegistered = false;
+        }
+
+        private void Update()
+        {
+            if (!thirdPersonEquipCompletionPending
+                || thirdPersonEquipCompleteTime < 0d
+                || GetPresentationTime() < thirdPersonEquipCompleteTime)
+            {
+                return;
+            }
+
+            TriggerAnimation("EquipComplete");
         }
 
         private void ApplyOwnerStateToWeapons()
@@ -187,11 +192,17 @@ namespace FPS
             if (!ApplyPrimaryWeapon(current))
                 return;
 
+            // Replacing the primary object does not change its slot index, so
+            // OnWeaponChanged is not raised.  Clear any Reload/Equip state from
+            // the previous controller before binding and driving the new one.
+            ResetThirdPersonActionState();
             bool primaryIsEquipped = CurrentWeaponIndex == PrimarySlotIndex;
             // The selected object must be active before the authoritative equip
             // deadline is published; otherwise Weapon ignores the presentation
             // update and only the gun controller's Entry state is visible.
             UpdateWeaponVisibility(CurrentWeaponIndex);
+            GetComponent<PlayerVisibilityController>()?
+                .RefreshWeaponPresentation(CurrentWeaponIndex);
             if (IsServer)
                 GetComponent<WeaponFireHandler>()?.HandleServerPrimaryWeaponReplaced(primaryIsEquipped);
             if (primaryIsEquipped)
@@ -291,6 +302,7 @@ namespace FPS
 
         private void OnWeaponChanged(int oldIndex, int newIndex)
         {
+            ResetThirdPersonActionState();
             UpdateWeaponVisibility(newIndex);
             CurrentWeapon?.GetComponent<Weapon>()?.PrepareFirstPersonPresentation(false);
             WeaponIndexChanged?.Invoke(CurrentWeaponIndex);
@@ -307,17 +319,6 @@ namespace FPS
                     if (candidate?.WeaponObject != null)
                         candidate.WeaponObject.SetActive(false);
             }
-
-            #region agent log
-            int nullWeaponSlots = 0;
-            for (int i = 0; i < weapons.Count; i++)
-                if (weapons[i] == null)
-                    nullWeaponSlots++;
-            GameLog.Info(() => $"[WeaponManager][dbg] UpdateWeaponVisibility index={index} count={weapons.Count} nullSlots={nullWeaponSlots}");
-            #region agent log
-            GameLog.DebugSession("initial", "W1", "WeaponManager.cs:113", "weapon visibility update", $"{{\"index\":{index},\"count\":{weapons.Count},\"nullSlots\":{nullWeaponSlots}}}");
-            #endregion
-            #endregion
 
             for (int i = 0; i < weapons.Count; i++)
             {
@@ -375,17 +376,57 @@ namespace FPS
 
         public void ApplyAuthoritativeWeaponState(WeaponOwnerState state)
         {
+            ApplyThirdPersonActionTiming(
+                state.isReloading,
+                state.reloadCompleteTime,
+                state.equipCompleteTime);
             Weapon weapon = GetWeapon(state.slotIndex);
             weapon?.SetLocalAmmoState(state.magazineAmmo, state.reserveAmmo, state.isReloading);
-            weapon?.ApplyAuthoritativePresentation(state.equipCompleteTime, state.isReloading);
+            weapon?.ApplyAuthoritativePresentation(
+                state.equipCompleteTime, state.isReloading, state.reloadCompleteTime);
 
             if (IsOwner && HUDManager.HasInstance)
                 HUDManager.Instance.UpdateAmmoInfo();
         }
 
-        public void ApplyPresentationState(WeaponPresentationState state)
+        public void ApplyPresentationState(
+            WeaponPresentationState previous,
+            WeaponPresentationState current)
         {
-            GetWeapon(state.slotIndex)?.ApplyAuthoritativePresentation(state.equipCompleteTime, state.isReloading);
+            ApplyThirdPersonActionTiming(
+                current.isReloading,
+                current.reloadCompleteTime,
+                current.equipCompleteTime);
+            GetWeapon(current.slotIndex)?.ApplyAuthoritativePresentation(
+                current.equipCompleteTime,
+                current.isReloading,
+                current.reloadCompleteTime);
+
+            // A remote client's first-person weapon may be inactive, in which case
+            // Weapon.ApplyAuthoritativePresentation intentionally skips its local
+            // presentation path. Drive the third-person body and gun directly from
+            // the replicated equip edge so their authored animation is independent
+            // of first-person visibility. If Weapon already emitted the trigger,
+            // resetting it again here is harmless because both calls are synchronous
+            // and the Animator cannot evaluate between them.
+            double presentationTime = NetworkManager != null
+                && NetworkManager.IsListening
+                    ? NetworkManager.ServerTime.Time
+                    : Time.timeAsDouble;
+            bool equipStarted = System.Math.Abs(
+                    previous.equipCompleteTime - current.equipCompleteTime)
+                > 0.0001
+                && current.equipCompleteTime >= 0d
+                && presentationTime < current.equipCompleteTime;
+            if (equipStarted)
+                TriggerAnimation("Equip");
+
+            // Fire is presented by FireEffectsClientRpc. Reload has no separate
+            // RPC, so detect its authoritative rising edge here as well.
+            if (!previous.isReloading && current.isReloading)
+                TriggerAnimation("Reload");
+            else if (previous.isReloading && !current.isReloading)
+                TriggerAnimation("ReloadComplete");
         }
 
         public bool TryInspectCurrentWeapon()
@@ -399,12 +440,244 @@ namespace FPS
         /// </summary>
         public void TriggerAnimation(string triggerName)
         {
+            if (string.IsNullOrWhiteSpace(triggerName))
+                return;
+
+            if (triggerName == "Fire"
+                && (thirdPersonReloadActive
+                    || thirdPersonEquipCompletionPending))
+            {
+                return;
+            }
+
+            UpdateThirdPersonActionState(triggerName);
+
             // The FPS hand/weapon animators are driven by Weapon. This optional
             // reference is only for legacy third-person rigs; destroyed Unity
             // objects can still compare non-null through C#'s null-conditional
             // operator, so use Unity's overloaded comparison explicitly.
-            if (characterAnimation != null && characterAnimation.isActiveAndEnabled)
-                characterAnimation.SetTrigger(triggerName);
+            TriggerIfPresent(characterAnimation, triggerName);
+            GetComponent<PlayerVisibilityController>()?
+                .TriggerThirdPersonWeaponAnimation(triggerName);
+        }
+
+        public void ConfigureThirdPersonActionDuration(
+            string actionName,
+            float duration)
+        {
+            WeaponData data = CurrentWeapon != null
+                ? CurrentWeapon.GetComponent<Weapon>()?.Data
+                : null;
+            if (data == null || duration <= 0f)
+                return;
+
+            float authoredDuration = actionName == "Reload"
+                ? data.ReloadDuration
+                : actionName == "Equip"
+                    ? data.EquipDuration
+                    : 0f;
+            if (authoredDuration <= 0f)
+                return;
+
+            SetThirdPersonActionPlaybackSpeed(
+                actionName,
+                Mathf.Clamp(authoredDuration / duration, 0.05f, 20f));
+        }
+
+        private void ApplyThirdPersonActionTiming(
+            bool isReloading,
+            double reloadCompleteTime,
+            double equipCompleteTime)
+        {
+            double now = GetPresentationTime();
+            if (isReloading
+                && reloadCompleteTime > now
+                && (!thirdPersonReloadActive
+                    || System.Math.Abs(
+                        thirdPersonReloadCompleteTime - reloadCompleteTime)
+                        > 0.0001d))
+            {
+                ConfigureThirdPersonActionDuration(
+                    "Reload",
+                    (float)(reloadCompleteTime - now));
+                thirdPersonReloadCompleteTime = reloadCompleteTime;
+            }
+
+            if (equipCompleteTime > now
+                && (!thirdPersonEquipCompletionPending
+                    || System.Math.Abs(
+                        thirdPersonEquipCompleteTime - equipCompleteTime)
+                        > 0.0001d))
+            {
+                ConfigureThirdPersonActionDuration(
+                    "Equip",
+                    (float)(equipCompleteTime - now));
+                thirdPersonEquipCompleteTime = equipCompleteTime;
+                thirdPersonEquipCompletionPending = true;
+            }
+        }
+
+        private void SetThirdPersonActionPlaybackSpeed(
+            string actionName,
+            float playbackSpeed)
+        {
+            string parameterName = actionName + "PlaybackSpeed";
+            SetAnimatorFloatIfPresent(
+                characterAnimation,
+                parameterName,
+                playbackSpeed);
+            GetComponent<PlayerVisibilityController>()?
+                .SetThirdPersonWeaponAnimationFloat(
+                    parameterName,
+                    playbackSpeed);
+        }
+
+        private void UpdateThirdPersonActionState(string triggerName)
+        {
+            switch (triggerName)
+            {
+                case "Reload":
+                    thirdPersonReloadActive = true;
+                    thirdPersonEquipCompletionPending = false;
+                    thirdPersonEquipCompleteTime = -1d;
+                    break;
+
+                case "ReloadComplete":
+                    thirdPersonReloadActive = false;
+                    thirdPersonReloadCompleteTime = -1d;
+                    break;
+
+                case "Equip":
+                    thirdPersonReloadActive = false;
+                    thirdPersonReloadCompleteTime = -1d;
+                    if (!thirdPersonEquipCompletionPending)
+                    {
+                        WeaponData data = CurrentWeapon != null
+                            ? CurrentWeapon.GetComponent<Weapon>()?.Data
+                            : null;
+                        if (data != null)
+                        {
+                            thirdPersonEquipCompleteTime =
+                                GetPresentationTime() + data.EquipDuration;
+                            thirdPersonEquipCompletionPending = true;
+                        }
+                    }
+                    break;
+
+                case "EquipComplete":
+                    thirdPersonEquipCompletionPending = false;
+                    thirdPersonEquipCompleteTime = -1d;
+                    break;
+            }
+        }
+
+        private void ResetThirdPersonActionState()
+        {
+            thirdPersonReloadActive = false;
+            thirdPersonReloadCompleteTime = -1d;
+            thirdPersonEquipCompletionPending = false;
+            thirdPersonEquipCompleteTime = -1d;
+        }
+
+        private double GetPresentationTime()
+        {
+            return NetworkManager != null && NetworkManager.IsListening
+                ? NetworkManager.ServerTime.Time
+                : Time.timeAsDouble;
+        }
+
+        private static void TriggerIfPresent(Animator animator, string triggerName)
+        {
+            if (animator == null || !animator.isActiveAndEnabled
+                || animator.runtimeAnimatorController == null
+                || string.IsNullOrWhiteSpace(triggerName))
+                return;
+
+            // Fire uses a separate Additive layer on most 3P body controllers.
+            // A reload/equip action owns the complete authored upper-body pose,
+            // so leaving Fire active would blend recoil over the action and can
+            // visibly twist the neck/arms even though each clip previews well
+            // in isolation. Clear both a queued trigger and the active layer
+            // before starting the mutually-exclusive action.
+            if (triggerName == "Reload" || triggerName == "Equip")
+                CancelFirePresentation(animator);
+
+            if (triggerName == "Reload")
+                ResetTriggerIfPresent(animator, "ReloadComplete");
+            if (triggerName == "Equip")
+                ResetTriggerIfPresent(animator, "EquipComplete");
+
+            int parameterHash = Animator.StringToHash(triggerName);
+            foreach (AnimatorControllerParameter parameter in animator.parameters)
+            {
+                if (parameter.nameHash != parameterHash
+                    || parameter.type != AnimatorControllerParameterType.Trigger)
+                    continue;
+
+                animator.ResetTrigger(parameterHash);
+                animator.SetTrigger(parameterHash);
+                return;
+            }
+        }
+
+        private static void ResetTriggerIfPresent(
+            Animator animator,
+            string triggerName)
+        {
+            int triggerHash = Animator.StringToHash(triggerName);
+            foreach (AnimatorControllerParameter parameter in animator.parameters)
+            {
+                if (parameter.nameHash != triggerHash
+                    || parameter.type != AnimatorControllerParameterType.Trigger)
+                    continue;
+
+                animator.ResetTrigger(triggerHash);
+                return;
+            }
+        }
+
+        private static void SetAnimatorFloatIfPresent(
+            Animator animator,
+            string parameterName,
+            float value)
+        {
+            if (animator == null || animator.runtimeAnimatorController == null)
+                return;
+
+            int parameterHash = Animator.StringToHash(parameterName);
+            foreach (AnimatorControllerParameter parameter in animator.parameters)
+            {
+                if (parameter.nameHash == parameterHash
+                    && parameter.type == AnimatorControllerParameterType.Float)
+                {
+                    animator.SetFloat(parameterHash, value);
+                    return;
+                }
+            }
+        }
+
+        private static void CancelFirePresentation(Animator animator)
+        {
+            int fireHash = Animator.StringToHash("Fire");
+            foreach (AnimatorControllerParameter parameter in animator.parameters)
+            {
+                if (parameter.nameHash == fireHash
+                    && parameter.type == AnimatorControllerParameterType.Trigger)
+                {
+                    animator.ResetTrigger(fireHash);
+                    break;
+                }
+            }
+
+            for (int layer = 0; layer < animator.layerCount; layer++)
+            {
+                if (animator.GetLayerName(layer).IndexOf(
+                        "Fire Additive",
+                        System.StringComparison.OrdinalIgnoreCase) < 0)
+                    continue;
+
+                animator.Play("Zero", layer, 0f);
+            }
         }
     }
 }

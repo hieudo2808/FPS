@@ -14,6 +14,7 @@ namespace FPS
 
         public Transform cameraTransform;
         public PlayerHealth cachedHealth;
+        public PlayerInfectionController cachedInfection;
         public PlayerCombatTelemetry combatTelemetry;
 
         public List<Vector3> positionHistory = new List<Vector3>();
@@ -28,6 +29,8 @@ namespace FPS
         public float avgReactionTime;
 
         public float currentHealth;
+        public float currentInfection;
+        public InfectionStage currentInfectionStage = InfectionStage.None;
         public float currentAmmoPercent = 1f;
         public bool isReloading;
         public bool isMoving;
@@ -65,6 +68,34 @@ namespace FPS
 
         public List<PlayerProfile> AllProfiles => playerProfiles;
         public int PlayerCount => playerProfiles.Count;
+
+        public int TeamInfectedCount
+        {
+            get
+            {
+                int count = 0;
+                for (int i = 0; i < playerProfiles.Count; i++)
+                {
+                    if (playerProfiles[i] != null && playerProfiles[i].currentInfection > 0.01f)
+                        count++;
+                }
+                return count;
+            }
+        }
+
+        public int TeamCriticalInfectedCount
+        {
+            get
+            {
+                int count = 0;
+                for (int i = 0; i < playerProfiles.Count; i++)
+                {
+                    if (playerProfiles[i] != null && playerProfiles[i].currentInfectionStage >= InfectionStage.Critical)
+                        count++;
+                }
+                return count;
+            }
+        }
 
         private void Awake()
         {
@@ -183,6 +214,7 @@ namespace FPS
                 profile.stablePlayerId = stablePlayerId;
                 profile.playerTransform = playerObject.transform;
                 profile.cachedHealth = playerHealth;
+                profile.cachedInfection = playerObject.GetComponent<PlayerInfectionController>();
                 profile.playerIndex = index++;
                 profile.cameraTransform = FindCameraTransform(playerObject.gameObject);
                 profile.combatTelemetry = playerObject.GetComponent<PlayerCombatTelemetry>();
@@ -217,6 +249,7 @@ namespace FPS
                     playerIndex = index++,
                     cameraTransform = FindCameraTransform(player),
                     cachedHealth = player.GetComponent<PlayerHealth>(),
+                    cachedInfection = player.GetComponent<PlayerInfectionController>(),
                     combatTelemetry = player.GetComponent<PlayerCombatTelemetry>()
                 };
 
@@ -326,6 +359,12 @@ namespace FPS
 
                 if (profile.cachedHealth != null)
                     profile.currentHealth = profile.cachedHealth.CurrentHealth;
+
+                if (profile.cachedInfection != null)
+                {
+                    profile.currentInfection = profile.cachedInfection.CurrentInfection;
+                    profile.currentInfectionStage = profile.cachedInfection.CurrentStage;
+                }
 
                 UpdateCombatTelemetry(profile);
 

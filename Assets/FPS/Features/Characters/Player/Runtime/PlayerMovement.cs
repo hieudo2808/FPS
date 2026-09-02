@@ -44,6 +44,12 @@ namespace FPS
         // Khoảng cách để teleport thay vì lerp (lag spike, respawn)
         [SerializeField] private float remoteTeleportDistance = 3f;
 
+        [Header("Knockback")]
+        [SerializeField] private float knockbackDecayRate = 8f;
+        private Vector3 externalVelocity;
+
+        public Vector3 ExternalVelocity => externalVelocity;
+
         // ==========================================
         // CONSTANTS
         private const float GRAVITY = -9.81f;
@@ -53,9 +59,6 @@ namespace FPS
         private const int BUFFER_SIZE = 2048;
         private const int STATE_SEND_EVERY_N_TICKS = NetworkGameplayPolicy.StateSendEveryNTicks;
         private const int SERVER_INPUT_BUFFER_TICKS = 3;
-        private const int MAX_INPUT_TICKS_BEHIND = NetworkGameplayPolicy.MaxPastInputTicks;
-        private const int MAX_INPUT_TICKS_AHEAD = NetworkGameplayPolicy.MaxFutureInputTicks;
-        private const int MAX_REPEATED_INPUT_TICKS = NetworkGameplayPolicy.MaxRepeatedInputTicks;
         private NetworkTimer networkTimer;
         private Vector2 cachedMove;
         private bool jumpQueued;
@@ -115,23 +118,35 @@ namespace FPS
         // ==========================================
         private Vector3 previousTickPosition;
         private Vector3 currentTickPosition;
+        private Vector3 visualRootAuthoredLocalPosition;
+        private Quaternion visualRootAuthoredLocalRotation = Quaternion.identity;
+        private bool hasCachedVisualRootPose;
         // Offset để smooth visual sau reconcile thay vì snap cứng
         private Vector3 ownerVisualCorrectionOffset;
         private bool hasTickedOnce;
         private PlayerHealth playerHealth;
         private WeaponManager weaponManager;
+        private PlayerInfectionController infectionController;
+        private PlayerVisibilityController playerVisibility;
         private float ownerHardSnapDistance = NetworkGameplayPolicy.OwnerHardSnapDistance;
         private int maxRepeatedInputTicks = NetworkGameplayPolicy.MaxRepeatedInputTicks;
         private bool serverReplicationStopped;
 
         public int CurrentSimulationTick => networkTimer != null ? networkTimer.CurrentTick : 0;
+        public Animator CharacterAnimation => characterAnimation;
 
         // ==========================================
         // INITIALIZATION
         // ==========================================
 
+        private void Awake()
+        {
+            CacheVisualRootPose();
+        }
+
         public override void OnNetworkSpawn()
         {
+            CacheVisualRootPose();
             serverReplicationStopped = false;
             networkTimer = new NetworkTimer(TICK_DT)
             {
@@ -142,6 +157,8 @@ namespace FPS
             groundMask = LayerMask.GetMask("Ground");
             playerHealth = GetComponent<PlayerHealth>();
             weaponManager = GetComponent<WeaponManager>();
+            infectionController = GetComponent<PlayerInfectionController>();
+            playerVisibility = GetComponent<PlayerVisibilityController>();
             if (NetworkGameManager.Instance != null)
             {
                 NetworkHardeningSettings settings = NetworkGameManager.Instance.Settings;
@@ -274,7 +291,9 @@ namespace FPS
             cachedMove = inputManager != null ? inputManager.GetMove() : Vector2.zero;
             cachedMove = Vector2.ClampMagnitude(cachedMove, 1f);
 
-            sprintHeld = inputManager != null && inputManager.GetSprintInput();
+            sprintHeld = inputManager != null
+                && inputManager.GetSprintInput()
+                && (infectionController == null || infectionController.CanSprint);
             Weapon activeWeapon = weaponManager != null
                 ? weaponManager.CurrentWeapon?.GetComponent<Weapon>()
                 : null;
@@ -460,10 +479,7 @@ namespace FPS
             direction = default;
             aim = false;
             if (!IsServer)
-            {
-                Debug.LogWarning($"[DIAGNOSTIC][ServerAim] TryBuildServerAim FAILED: IsServer is false!");
                 return false;
-            }
 
             // 1. Try exact match in serverAimHistory
             if (serverAimHistory != null)
@@ -508,12 +524,7 @@ namespace FPS
             {
                 direction = bodyCamera != null ? bodyCamera.transform.forward : transform.forward;
             }
-            bool ok = direction.sqrMagnitude > 0.999f;
-            if (!ok)
-            {
-                Debug.LogWarning($"[DIAGNOSTIC][ServerAim] TryBuildServerAim FAILED: direction sqrMagnitude={direction.sqrMagnitude} <= 0.999!");
-            }
-            return ok;
+            return direction.sqrMagnitude > 0.999f;
         }
 
         public bool TryGetLatestFireReference(out uint inputSequence, out int inputTick)
@@ -800,6 +811,7 @@ namespace FPS
             verticalVelocity = state.verticalVelocity;
             planarSpeed = state.planarSpeed;
             isGrounded = state.grounded;
+            aimHeld = state.aiming;
         }
 
         public void TeleportForRespawn(Vector3 position, Quaternion rotation)
@@ -823,8 +835,7 @@ namespace FPS
             interpolationTimer = 0f;
             remoteInterpolationStarted = false;
 
-            if (visualRoot != null)
-                visualRoot.position = position;
+            ApplyVisualPose(position, rotation, Vector3.zero);
         }
 
         private void ReplayFrom(int startTick)
@@ -920,6 +931,7 @@ namespace FPS
                 verticalVelocity = b.verticalVelocity;
                 planarSpeed = b.planarSpeed;
                 isGrounded = b.grounded;
+                aimHeld = b.aiming;
                 stateSnapshots.RemoveAt(0);
                 interpolationTimer = 0f;
                 return;
@@ -935,6 +947,7 @@ namespace FPS
             verticalVelocity = Mathf.Lerp(a.verticalVelocity, b.verticalVelocity, t);
             planarSpeed = Mathf.Lerp(a.planarSpeed, b.planarSpeed, t);
             isGrounded = b.grounded;
+            aimHeld = b.aiming;
         }
 
         // ==========================================
@@ -971,7 +984,33 @@ namespace FPS
                 ownerVisualCorrectionOffset = Vector3.zero;
             }
 
-            visualRoot.position = smoothPosition + ownerVisualCorrectionOffset;
+            ApplyVisualPose(smoothPosition, transform.rotation, ownerVisualCorrectionOffset);
+        }
+
+        private void CacheVisualRootPose()
+        {
+            if (visualRoot == null || hasCachedVisualRootPose)
+                return;
+
+            visualRootAuthoredLocalPosition = visualRoot.localPosition;
+            visualRootAuthoredLocalRotation = visualRoot.localRotation;
+            hasCachedVisualRootPose = true;
+        }
+
+        private void ApplyVisualPose(
+            Vector3 baseWorldPosition,
+            Quaternion rootRotation,
+            Vector3 correctionOffset)
+        {
+            if (visualRoot == null)
+                return;
+
+            CacheVisualRootPose();
+            visualRoot.SetPositionAndRotation(
+                baseWorldPosition
+                    + correctionOffset
+                    + rootRotation * visualRootAuthoredLocalPosition,
+                rootRotation * visualRootAuthoredLocalRotation);
         }
 
         // ==========================================
@@ -980,6 +1019,13 @@ namespace FPS
 
         private void SimulateTick(PlayerInputPayload input, float dt)
         {
+            if (infectionController != null && !infectionController.CanSprint)
+                input.sprint = false;
+
+            aimHeld = input.aim;
+            if (controller == null)
+                controller = GetComponent<CharacterController>();
+
             if (controller == null || !controller.enabled)
                 return;
 
@@ -999,14 +1045,28 @@ namespace FPS
             float currentSpeed = input.sprint
                 ? speed
                 : speed / walkMultiplier;
+            if (infectionController != null)
+                currentSpeed *= infectionController.MovementSpeedMultiplier;
 
             planarSpeed = input.move.magnitude * currentSpeed;
 
             Vector3 totalMove = move * currentSpeed;
             totalMove.y = verticalVelocity;
+            totalMove += externalVelocity;
 
             controller.Move(totalMove * dt);
+
+            if (externalVelocity.sqrMagnitude > 0.0001f)
+            {
+                externalVelocity = Vector3.Lerp(externalVelocity, Vector3.zero, knockbackDecayRate * dt);
+                if (externalVelocity.sqrMagnitude < 0.0001f)
+                    externalVelocity = Vector3.zero;
+            }
         }
+
+        public bool IsSprinting => sprintHeld
+            && cachedMove.sqrMagnitude > 0.01f
+            && (infectionController == null || infectionController.CanSprint);
 
         private bool CheckGrounded()
         {
@@ -1043,6 +1103,7 @@ namespace FPS
                 planarSpeed = planarSpeed,
                 verticalVelocity = verticalVelocity,
                 grounded = isGrounded,
+                aiming = aimHeld,
                 yaw = transform.eulerAngles.y
             };
         }
@@ -1053,12 +1114,100 @@ namespace FPS
 
         private void UpdateAnimation()
         {
+            UpdateAnimation(Time.deltaTime);
+        }
+
+        // Keeping delta time explicit makes the animation handoff deterministic
+        // in EditMode tests while preserving the normal runtime call above.
+        private void UpdateAnimation(float deltaTime)
+        {
             if (characterAnimation == null)
                 return;
 
             characterAnimation.SetBool("Grounded", isGrounded);
             characterAnimation.SetBool("FreeFall", !isGrounded && verticalVelocity < -2f);
-            characterAnimation.SetFloat("Speed", planarSpeed, 0.1f, Time.deltaTime);
+            characterAnimation.SetFloat("Speed", planarSpeed, 0.1f, Mathf.Max(0f, deltaTime));
+            if (playerVisibility == null)
+                playerVisibility = GetComponent<PlayerVisibilityController>();
+            if (playerVisibility != null)
+                playerVisibility.SetThirdPersonAiming(aimHeld);
+            else
+                SetAnimatorBoolIfPresent(characterAnimation, "Aiming", aimHeld);
+        }
+
+        private static void SetAnimatorBoolIfPresent(
+            Animator animator,
+            string parameterName,
+            bool value)
+        {
+            if (animator == null || animator.runtimeAnimatorController == null)
+                return;
+
+            int hash = Animator.StringToHash(parameterName);
+            foreach (AnimatorControllerParameter parameter in animator.parameters)
+            {
+                if (parameter.nameHash == hash
+                    && parameter.type == AnimatorControllerParameterType.Bool)
+                {
+                    animator.SetBool(hash, value);
+                    return;
+                }
+            }
+        }
+
+        // ==========================================
+        // KNOCKBACK API
+        // ==========================================
+
+        private const float MaxServerKnockbackMagnitude = 20f;
+
+        public bool TryApplyServerKnockback(Vector3 force)
+        {
+            bool networked = NetworkManager != null && NetworkManager.IsListening;
+            if (networked && !IsServer)
+                return false;
+
+            if (!IsFinite(force))
+                return false;
+
+            Vector3 clampedForce = Vector3.ClampMagnitude(force, MaxServerKnockbackMagnitude);
+            externalVelocity += clampedForce;
+
+            if (networked && OwnerClientId != NetworkManager.ServerClientId)
+                ApplyKnockbackClientRpc(clampedForce, CreateOwnerClientRpcParams());
+
+            return true;
+        }
+
+        // Compatibility for offline callers. Network clients cannot use this to request force.
+        public void ApplyKnockback(Vector3 force)
+        {
+            TryApplyServerKnockback(force);
+        }
+
+        [ClientRpc]
+        private void ApplyKnockbackClientRpc(Vector3 force, ClientRpcParams rpcParams = default)
+        {
+            if (!IsServer)
+                externalVelocity += force;
+        }
+
+        private ClientRpcParams CreateOwnerClientRpcParams()
+        {
+            return new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new[] { OwnerClientId }
+                }
+            };
+        }
+
+        private static bool IsFinite(Vector3 value)
+        {
+            return float.IsFinite(value.x)
+                && float.IsFinite(value.y)
+                && float.IsFinite(value.z);
         }
     }
 }

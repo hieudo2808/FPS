@@ -21,6 +21,8 @@ namespace FPS
         private IInteractable currentInteractable;
         private ItemOutline currentOutline;
         private NetworkObject currentNetworkObject;
+        [SerializeField] private PlayerInfectionController infectionController;
+        private PlayerInfectionController treatmentTarget;
 
         private Camera playerCamera;
         private uint nextRequestSequence;
@@ -37,6 +39,8 @@ namespace FPS
             playerCamera = GetComponentInChildren<Camera>();
             if (playerCamera == null)
                 playerCamera = Camera.main;
+            if (infectionController == null)
+                infectionController = GetComponent<PlayerInfectionController>();
 
             effectiveInteractableMask = interactableLayer.value != 0
                 ? interactableLayer.value
@@ -49,17 +53,78 @@ namespace FPS
         {
             ScanForInteractable();
 
-            if (currentInteractable != null
-                && currentInteractable.CanInteract
-                && GetInteractInputDown())
+            if (currentInteractable != null && currentInteractable.CanInteract)
             {
-                TryInteract();
+                if (GetInteractInputDown())
+                    TryInteract();
+
+                // Pickups/interactables have higher context priority than treatment.
+                // Do not let the treatment prompt overwrite an authored pickup prompt.
+                return;
             }
+
+            UpdateTreatmentInteraction();
         }
 
         private bool GetInteractInputDown()
         {
             return InputManager.Instance != null && InputManager.Instance.GetInteractInputDown();
+        }
+
+        private void UpdateTreatmentInteraction()
+        {
+            if (infectionController == null || InputManager.Instance == null)
+                return;
+
+            treatmentTarget = FindInfectedTeammateInView();
+            if (treatmentTarget != null)
+            {
+                SetPromptText("Hold [F] Treat teammate");
+                SetPromptVisible(true);
+            }
+            else if (infectionController.IsInfected)
+            {
+                SetPromptText("Hold [F] Self-treatment");
+                SetPromptVisible(true);
+            }
+            else
+            {
+                SetPromptVisible(false);
+            }
+
+            if (InputManager.Instance.GetInteractInputDown())
+            {
+                if (treatmentTarget != null)
+                    infectionController.StartTeammateTreatment(treatmentTarget);
+                else if (infectionController.IsInfected)
+                    infectionController.StartSelfTreatment();
+            }
+
+            if (InputManager.Instance.GetInteractInputUp())
+            {
+                infectionController.CancelSelfTreatment();
+                infectionController.CancelTeammateTreatment();
+            }
+        }
+
+        private PlayerInfectionController FindInfectedTeammateInView()
+        {
+            if (playerCamera == null)
+                return null;
+
+            Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            if (!Physics.Raycast(ray, out RaycastHit hit, interactRange,
+                    Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                return null;
+
+            PlayerInfectionController target = hit.collider.GetComponentInParent<PlayerInfectionController>();
+            if (target == null || target == infectionController || !target.IsInfected)
+                return null;
+
+            PlayerHealth targetHealth = target.GetComponent<PlayerHealth>();
+            return targetHealth != null && !targetHealth.IsDead && targetHealth.LifeState == PlayerLifeState.Alive
+                ? target
+                : null;
         }
 
         private void ScanForInteractable()
@@ -289,12 +354,16 @@ namespace FPS
         {
             if (interactPromptText != null)
                 interactPromptText.text = text;
+            else if (HUDManager.Instance != null)
+                HUDManager.Instance.SetInteractionPrompt(text, true);
         }
 
         private void SetPromptVisible(bool visible)
         {
             if (interactPromptText != null)
                 interactPromptText.gameObject.SetActive(visible);
+            else if (HUDManager.Instance != null)
+                HUDManager.Instance.SetInteractionPrompt(null, visible);
         }
     }
 }

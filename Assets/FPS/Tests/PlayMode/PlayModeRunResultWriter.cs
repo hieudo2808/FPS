@@ -43,6 +43,35 @@ namespace FPS.PlayModeTests
                 "ClaudeTestRunSummary.txt");
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             File.WriteAllText(path, sb.ToString());
+
+            if (ContainsTest(result, "FPS.PlayModeTests.ColdLedgerRuntimePlayModeTests"))
+            {
+                string coldLedgerPath = Path.Combine(
+                    Directory.GetParent(Application.dataPath).FullName,
+                    "Logs",
+                    "ColdLedgerPlayModeStatus.txt");
+                File.WriteAllText(coldLedgerPath,
+                    $"Status: Completed{System.Environment.NewLine}" +
+                    $"ResultState: {result.ResultState}{System.Environment.NewLine}" +
+                    $"Passed: {result.PassCount}{System.Environment.NewLine}" +
+                    $"Failed: {result.FailCount}{System.Environment.NewLine}" +
+                    $"Skipped: {result.SkipCount}{System.Environment.NewLine}" +
+                    $"DurationSeconds: {result.Duration:F3}{System.Environment.NewLine}");
+            }
+        }
+
+        private static bool ContainsTest(ITestResult result, string testName)
+        {
+            if (result.FullName == testName || result.FullName.StartsWith(testName + "."))
+                return true;
+            if (!result.HasChildren)
+                return false;
+            foreach (ITestResult child in result.Children)
+            {
+                if (ContainsTest(child, testName))
+                    return true;
+            }
+            return false;
         }
 
         private static void AppendFailures(ITestResult result, StringBuilder sb)

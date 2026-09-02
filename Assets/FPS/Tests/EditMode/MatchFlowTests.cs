@@ -28,7 +28,7 @@ namespace FPS.Tests
         {
             NetworkMatchStateManager manager = CreateMatchStateManager();
 
-            manager.SetStateForTests(NetworkMatchState.Warmup, Time.timeAsDouble);
+            manager.SetStateForTests(NetworkMatchState.Loading, Time.timeAsDouble);
             Assert.False(NetworkMatchStateManager.IsGameplayActive);
             Assert.True(InputManager.GameplayInputBlocked);
 

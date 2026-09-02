@@ -11,6 +11,14 @@ namespace FPS
         Dead
     }
 
+    public enum EnemySpecialActionKind : byte
+    {
+        None,
+        Primary,
+        Secondary,
+        Stagger
+    }
+
     [Flags]
     public enum EnemyActionFlags : byte
     {
@@ -26,6 +34,7 @@ namespace FPS
         public EnemyLocomotionState locomotion;
         public byte normalizedSpeed;
         public EnemyActionFlags actionFlags;
+        public EnemySpecialActionKind specialActionKind;
         public ushort actionSequence;
         public int actionStartServerTick;
         public int specialAbilityDeadlineTick;
@@ -35,6 +44,7 @@ namespace FPS
             return locomotion == other.locomotion
                 && normalizedSpeed == other.normalizedSpeed
                 && actionFlags == other.actionFlags
+                && specialActionKind == other.specialActionKind
                 && actionSequence == other.actionSequence
                 && actionStartServerTick == other.actionStartServerTick
                 && specialAbilityDeadlineTick == other.specialAbilityDeadlineTick;
@@ -49,6 +59,7 @@ namespace FPS
                 int hash = (int)locomotion;
                 hash = (hash * 397) ^ normalizedSpeed;
                 hash = (hash * 397) ^ (int)actionFlags;
+                hash = (hash * 397) ^ (int)specialActionKind;
                 hash = (hash * 397) ^ actionSequence;
                 hash = (hash * 397) ^ actionStartServerTick;
                 hash = (hash * 397) ^ specialAbilityDeadlineTick;
@@ -61,6 +72,7 @@ namespace FPS
             serializer.SerializeValue(ref locomotion);
             serializer.SerializeValue(ref normalizedSpeed);
             serializer.SerializeValue(ref actionFlags);
+            serializer.SerializeValue(ref specialActionKind);
             serializer.SerializeValue(ref actionSequence);
             serializer.SerializeValue(ref actionStartServerTick);
             serializer.SerializeValue(ref specialAbilityDeadlineTick);

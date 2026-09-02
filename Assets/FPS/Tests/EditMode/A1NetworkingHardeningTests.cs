@@ -225,7 +225,7 @@ namespace FPS.Tests
             {
                 data.magazineSize = 4;
                 data.totalAmmo = 4;
-                data.fireRate = 0f;
+                data.ApplyBakedFireInterval(0.001f);
                 var state = new WeaponServerState();
                 state.InitializeForTests(1, 4, 0);
 

@@ -263,7 +263,8 @@ namespace FPS
             return new DirectorDecision(
                 phase,
                 spawnRateMultiplier,
-                phase == DirectorPhase.Peak && phaseElapsed >= policy.SpecialCooldownSeconds,
+                (phase == DirectorPhase.BuildUp || phase == DirectorPhase.Peak)
+                    && phaseElapsed >= policy.SpecialCooldownSeconds,
                 lastInput.WeakestHealth01 <= policy.WeakestHealthFloor01,
                 lastInput.TeamSeparation01,
                 lastInput.IdleSeconds);

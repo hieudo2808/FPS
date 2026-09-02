@@ -62,6 +62,13 @@ namespace FPS
             nextSampleTime = now + (1.0 / NetworkGameplayPolicy.HitboxHistoryHz);
         }
 
+        public void SetHitboxSegments(HitboxSegment[] segments)
+        {
+            hitboxSegments = segments;
+            autoRefreshSegments = true;
+            AllocateHistory();
+        }
+
         public void RefreshSegments()
         {
             hitboxSegments = GetComponentsInChildren<HitboxSegment>(includeInactive: false);
@@ -102,11 +109,14 @@ namespace FPS
 
         private void EnsureInitialized()
         {
-            if (autoRefreshSegments && (hitboxSegments == null || hitboxSegments.Length == 0))
-                hitboxSegments = GetComponentsInChildren<HitboxSegment>(includeInactive: false);
-
             if (history == null)
                 AllocateHistory();
+        }
+
+        private void OnValidate()
+        {
+            if (hitboxSegments == null || hitboxSegments.Length == 0)
+                hitboxSegments = GetComponentsInChildren<HitboxSegment>(includeInactive: false);
         }
 
         private void AllocateHistory()

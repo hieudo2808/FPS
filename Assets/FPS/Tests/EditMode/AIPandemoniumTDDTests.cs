@@ -325,9 +325,10 @@ namespace FPS.Tests
                 "Stalker is framework-only in this pass and must not be promoted to playable.");
             Assert.False((bool)registerPlayable.Invoke(registry, new object[] { SpecialType.Spitter, spitterPrefab }),
                 "Spitter is framework-only in this pass and must not be promoted to playable.");
-            Assert.False((bool)registerPlayable.Invoke(registry, new object[] { SpecialType.Tank, tankPrefab }),
-                "Tank is framework-only in this pass and must not be promoted to playable.");
-            Assert.False(registry.HasImplementedSpecial(), "Stub special abilities must not satisfy live spawn checks.");
+            Assert.True((bool)registerPlayable.Invoke(registry, new object[] { SpecialType.Tank, tankPrefab }),
+                "Tank has a complete runtime brain and must be promotable to playable.");
+            Assert.False(registry.HasImplementedSpecial(),
+                "Playable registration must not bypass Tank's fail-closed team-data spawn guard.");
         }
 
         [Test]
@@ -339,13 +340,12 @@ namespace FPS.Tests
 
             AssertFrameworkOnlyAbilityStaysInactive<SI_Stalker>("Stalker");
             AssertFrameworkOnlyAbilityStaysInactive<SI_Spitter>("Spitter");
-            AssertFrameworkOnlyAbilityStaysInactive<SI_Tank>("Tank");
         }
 
         [Test]
         public void PlayerPrefab_HasCombatTelemetryForAIProfiler()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/FPS/Features/Characters/Content/Players/Player/Player.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/FPS/Features/Characters/Content/Players/Clove/ClovePlayer.prefab");
             Assert.NotNull(prefab, "Player prefab should be loadable.");
             Assert.NotNull(prefab.GetComponent<PlayerCombatTelemetry>(),
                 "Player prefab must include PlayerCombatTelemetry so PlayerProfiler can read reload/ammo state.");
@@ -358,8 +358,9 @@ namespace FPS.Tests
             Assert.NotNull(prefab, "Screamer prefab should be loadable.");
 
             var behaviorTree = prefab.GetComponent<BehaviorTree>();
-            Assert.NotNull(behaviorTree, "The UniBT asset may remain for authoring/history.");
-            Assert.False(behaviorTree.enabled, "Screamer must not run a second auto-ticking client-side brain at runtime.");
+            Assert.IsNull(behaviorTree, "Legacy UniBT BehaviorTree must be removed from the runtime prefab.");
+            Assert.NotNull(prefab.GetComponent<SI_Screamer>(),
+                "Screamer must use the SI_Screamer runtime brain after the legacy graph is removed.");
         }
 
         [Test]

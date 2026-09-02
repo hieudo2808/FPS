@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Collections;
 
 public class GunAim:MonoBehaviour
@@ -18,8 +19,11 @@ public class GunAim:MonoBehaviour
 
 	void Update()
 	{
-		float mouseX = Input.mousePosition.x;
-		float mouseY = Input.mousePosition.y;
+		Vector2 mousePosition = Mouse.current != null
+			? Mouse.current.position.ReadValue()
+			: Vector2.zero;
+		float mouseX = mousePosition.x;
+		float mouseY = mousePosition.y;
 
 		if (mouseX <= borderLeft || mouseX >= Screen.width - borderRight || mouseY <= borderBottom || mouseY >= Screen.height - borderTop) 
 		{
@@ -41,4 +45,3 @@ public class GunAim:MonoBehaviour
 		return isOutOfBounds;
 	}
 }
-

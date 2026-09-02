@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace FPS
@@ -48,15 +49,20 @@ namespace FPS
 
         private float lastSpecialSpawnTime;
         private List<GameObject> aliveSpecials = new List<GameObject>();
+        private readonly List<PlayerTeamHealthSnapshot> teamHealthSnapshots = new List<PlayerTeamHealthSnapshot>(4);
         private float lastAliveCleanupTime = -999f;
         [SerializeField] private float aliveCleanupInterval = 0.5f;
 
         private void Awake()
         {
+            // Scene-authored registries keep their serialized list. Runtime-created
+            // registries (and legacy unit fixtures) still need the canonical entries
+            // so explicit promotion APIs can operate without silently doing nothing.
+            InitializeDefaultTypes();
+
             if (Instance == null)
             {
                 Instance = this;
-                InitializeDefaultTypes();
             }
             else
             {
@@ -111,7 +117,19 @@ namespace FPS
                     prefab = null,
                     implementationState = SpecialImplementationState.FrameworkOnly,
                     allowedInSolo = true,
+                    spawnWeight = 2f,
                     cooldown = 120f
+                });
+
+                specialTypes.Add(new SpecialInfectedData
+                {
+                    displayName = "Infector",
+                    type = SpecialType.Infector,
+                    prefab = null,
+                    implementationState = SpecialImplementationState.FrameworkOnly,
+                    allowedInSolo = true,
+                    spawnWeight = 4f,
+                    cooldown = 45f
                 });
             }
         }
@@ -125,7 +143,7 @@ namespace FPS
             aliveSpecials.RemoveAll(s => s == null);
         }
 
-        public bool CanSpawnSpecial()
+        public bool CanSpawnSpecial(GamePhase phase = GamePhase.PEAK)
         {
             if (Time.time - lastSpecialSpawnTime < minTimeBetweenSpecials)
                 return false;
@@ -133,10 +151,10 @@ namespace FPS
             if (aliveSpecials.Count >= maxSpecialsAlive)
                 return false;
 
-            return HasImplementedSpecial();
+            return GetRemainingBudget(phase) > 0 && HasImplementedSpecial(phase);
         }
 
-        public bool HasImplementedSpecial()
+        public bool HasImplementedSpecial(GamePhase phase = GamePhase.PEAK)
         {
             int playerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
             
@@ -149,13 +167,18 @@ namespace FPS
                     continue;
                 
                 if (special.IsReady)
-                    return true;
+                {
+                    if (GetSpecialCost(special.type) <= GetRemainingBudget(phase)
+                        && !HasReachedTypeCap(special.type)
+                        && PassesSpawnRules(special))
+                        return true;
+                }
             }
             
             return false;
         }
 
-        public SpecialInfectedData GetRandomSpecial()
+        public SpecialInfectedData GetRandomSpecial(GamePhase phase = GamePhase.PEAK)
         {
             int playerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
             List<SpecialInfectedData> available = new List<SpecialInfectedData>();
@@ -170,6 +193,10 @@ namespace FPS
                     continue;
                 
                 if (!special.IsReady)
+                    continue;
+
+                if (GetSpecialCost(special.type) > GetRemainingBudget(phase)
+                    || HasReachedTypeCap(special.type))
                     continue;
 
                 if (!PassesSpawnRules(special))
@@ -195,9 +222,9 @@ namespace FPS
             return available[0];
         }
 
-        public GameObject SpawnSpecial(Vector3 position)
+        public GameObject SpawnSpecial(Vector3 position, GamePhase phase = GamePhase.PEAK)
         {
-            var data = GetRandomSpecial();
+            var data = GetRandomSpecial(phase);
             if (data == null)
             {
                 if (showDebugLogs)
@@ -220,31 +247,130 @@ namespace FPS
 
         public int AliveSpecialCount => aliveSpecials.Count;
 
+        public static int GetPhaseBudget(GamePhase phase)
+        {
+            return phase switch
+            {
+                GamePhase.BUILD => 2,
+                GamePhase.PEAK => 4,
+                _ => 0
+            };
+        }
+
+        public static int GetSpecialCost(SpecialType type)
+        {
+            return type switch
+            {
+                SpecialType.Screamer => 1,
+                SpecialType.Infector => 2,
+                SpecialType.Tank => 3,
+                _ => 1
+            };
+        }
+
+        public int GetRemainingBudget(GamePhase phase)
+        {
+            int spent = 0;
+            for (int i = aliveSpecials.Count - 1; i >= 0; i--)
+            {
+                GameObject special = aliveSpecials[i];
+                if (special == null)
+                {
+                    aliveSpecials.RemoveAt(i);
+                    continue;
+                }
+
+                SpecialInfectedBase brain = special.GetComponent<SpecialInfectedBase>();
+                if (brain != null)
+                    spent += GetSpecialCost(brain.Type);
+            }
+            return Mathf.Max(0, GetPhaseBudget(phase) - spent);
+        }
+
+        private bool HasReachedTypeCap(SpecialType type)
+        {
+            int cap = type == SpecialType.Infector ? 1 : int.MaxValue;
+            int count = 0;
+            for (int i = 0; i < aliveSpecials.Count; i++)
+            {
+                SpecialInfectedBase brain = aliveSpecials[i] != null
+                    ? aliveSpecials[i].GetComponent<SpecialInfectedBase>()
+                    : null;
+                if (brain != null && brain.Type == type && ++count >= cap)
+                    return true;
+            }
+            return false;
+        }
+
         private bool PassesSpawnRules(SpecialInfectedData special)
         {
             SpecialInfectedBase specialBrain = special.prefab != null
                 ? special.prefab.GetComponent<SpecialInfectedBase>()
                 : null;
 
-            if (specialBrain == null || PlayerProfiler.Instance == null || PlayerProfiler.Instance.PlayerCount == 0)
+            if (specialBrain == null)
                 return true;
 
-            foreach (var profile in PlayerProfiler.Instance.AllProfiles)
+            IReadOnlyList<PlayerProfile> profiles = PlayerProfiler.Instance != null
+                ? PlayerProfiler.Instance.AllProfiles
+                : null;
+            BuildTeamHealthSnapshot(profiles);
+            return specialBrain.ShouldSpawnForTeam(profiles, teamHealthSnapshots);
+        }
+
+        private void BuildTeamHealthSnapshot(IReadOnlyList<PlayerProfile> profiles)
+        {
+            teamHealthSnapshots.Clear();
+            NetworkManager manager = NetworkManager.Singleton;
+            if (manager != null && manager.IsListening)
             {
-                if (profile?.playerTransform == null) continue;
-                if (specialBrain.ShouldSpawn(profile))
-                    return true;
+                foreach (NetworkClient client in manager.ConnectedClientsList)
+                {
+                    PlayerHealth health = client.PlayerObject != null
+                        ? client.PlayerObject.GetComponent<PlayerHealth>()
+                        : null;
+                    if (health == null)
+                    {
+                        teamHealthSnapshots.Clear();
+                        return;
+                    }
+
+                    bool isDownOrDead = health.IsDead || health.LifeState != PlayerLifeState.Alive;
+                    teamHealthSnapshots.Add(new PlayerTeamHealthSnapshot(
+                        health.CurrentHealth,
+                        health.MaxHealth,
+                        isDownOrDead));
+                }
+
+                return;
             }
 
-            return false;
+            if (profiles == null)
+                return;
+
+            for (int i = 0; i < profiles.Count; i++)
+            {
+                PlayerProfile profile = profiles[i];
+                PlayerHealth health = profile?.cachedHealth;
+                if (profile?.playerTransform == null || health == null)
+                {
+                    teamHealthSnapshots.Clear();
+                    return;
+                }
+
+                bool isDownOrDead = health.IsDead || health.LifeState != PlayerLifeState.Alive;
+                teamHealthSnapshots.Add(new PlayerTeamHealthSnapshot(
+                    health.CurrentHealth,
+                    health.MaxHealth,
+                    isDownOrDead));
+            }
         }
 
         private static bool IsPlayableSpecial(SpecialInfectedData special)
         {
             return special != null
                 && special.IsPlayable
-                && special.prefab != null
-                && special.type == SpecialType.Screamer;
+                && special.prefab != null;
         }
 
         public void RegisterSpecialPrefab(SpecialType type, GameObject prefab)
@@ -287,7 +413,17 @@ namespace FPS
             if (prefab == null)
                 return false;
 
-            return type == SpecialType.Screamer && prefab.GetComponent<SI_Screamer>() != null;
+            switch (type)
+            {
+                case SpecialType.Screamer:
+                    return prefab.GetComponent<SI_Screamer>() != null;
+                case SpecialType.Tank:
+                    return prefab.GetComponent<SI_Tank>() != null;
+                case SpecialType.Infector:
+                    return prefab.GetComponent<SI_Infector>() != null;
+                default:
+                    return false;
+            }
         }
     }
 }

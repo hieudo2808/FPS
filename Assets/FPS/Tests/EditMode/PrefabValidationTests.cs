@@ -14,7 +14,7 @@ namespace FPS.Tests
         [Test]
         public void PlayerPrefab_HasMovementReferencesAndConfiguredWeaponSlots()
         {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/FPS/Features/Characters/Content/Players/Clove/ClovePlayer.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/FPS/Features/Characters/Content/Players/Sage/SagePlayer.prefab");
             Assert.NotNull(prefab, "Player prefab should be loadable.");
 
             var movement = prefab.GetComponent<PlayerMovement>();
@@ -28,6 +28,8 @@ namespace FPS.Tests
 
             var weaponManager = prefab.GetComponent<WeaponManager>();
             Assert.NotNull(weaponManager, "Player prefab should have WeaponManager.");
+            Assert.NotNull(weaponManager.FirstPersonArmsAnimator,
+                "The Sage pilot must centrally bind the model Animator that owns Skeleton.");
 
             var weapons = new SerializedObject(weaponManager).FindProperty("weapons");
             Assert.Greater(weapons.arraySize, 0, "Player prefab should have at least one configured weapon slot.");
@@ -45,8 +47,6 @@ namespace FPS.Tests
                     $"Weapon slot {i} must have WeaponData.");
                 Assert.NotNull(weaponSo.FindProperty("bulletPool").objectReferenceValue,
                     $"Weapon slot {i} should use the shared visual bullet pool instead of Instantiate/Destroy fallback.");
-                Assert.NotNull(weaponSo.FindProperty("fpsArmsAnimator").objectReferenceValue,
-                    $"Weapon slot {i} should drive the FPS arms animator for reloads.");
             }
         }
 
@@ -68,7 +68,10 @@ namespace FPS.Tests
                 Assert.NotNull(prefab.GetComponent<NavMeshAgent>(), $"{path} must have NavMeshAgent.");
                 Assert.NotNull(prefab.GetComponent<Animator>(), $"{path} must have Animator.");
                 Assert.NotNull(prefab.GetComponent<Collider>(), $"{path} must have root Collider.");
-                Assert.NotNull(prefab.GetComponent<EnemyHealth>(), $"{path} must have EnemyHealth.");
+                var health = prefab.GetComponent<EnemyHealth>();
+                Assert.NotNull(health, $"{path} must have EnemyHealth.");
+                Assert.AreEqual(100f, health.MaxHealth, 0.001f,
+                    $"{path} base health must match the 100 HP common-zombie balance; Screamer applies x1.5 at runtime.");
                 Assert.NotNull(prefab.GetComponent<NetworkTransform>(), $"{path} must have NetworkTransform on the prefab, not added at runtime.");
 
                 Bounds bounds = CalculateRendererBounds(prefab);

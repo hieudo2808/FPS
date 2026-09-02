@@ -104,6 +104,7 @@ namespace FPS
         public float planarSpeed;
         public float verticalVelocity;
         public bool grounded;
+        public bool aiming;
         public float yaw;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -114,6 +115,7 @@ namespace FPS
             serializer.SerializeValue(ref planarSpeed);
             serializer.SerializeValue(ref verticalVelocity);
             serializer.SerializeValue(ref grounded);
+            serializer.SerializeValue(ref aiming);
             serializer.SerializeValue(ref yaw);
         }
     }

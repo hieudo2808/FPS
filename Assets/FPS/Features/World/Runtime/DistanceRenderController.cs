@@ -13,6 +13,7 @@ namespace FPS
         private readonly List<DistanceRenderTarget> targets = new List<DistanceRenderTarget>();
         private float nextUpdateTime;
         private DistanceRenderSettings runtimeDefaultSettings;
+        private bool cullDistancesApplied;
 
         public int TargetCount => targets.Count;
         private DistanceRenderSettings ActiveSettings => settings != null ? settings : runtimeDefaultSettings;
@@ -22,14 +23,7 @@ namespace FPS
             if (settings == null && runtimeDefaultSettings == null)
                 runtimeDefaultSettings = ScriptableObject.CreateInstance<DistanceRenderSettings>();
 
-            if (targetCamera == null)
-            {
-                Camera localCamera = GetComponent<Camera>();
-                targetCamera = localCamera != null ? localCamera : Camera.main;
-            }
-
-            if (viewer == null && targetCamera != null)
-                viewer = targetCamera.transform;
+            ResolveViewer();
 
             if (autoFindTargetsOnEnable)
                 RefreshTargets();
@@ -40,8 +34,16 @@ namespace FPS
         private void Update()
         {
             DistanceRenderSettings activeSettings = ActiveSettings;
-            if (activeSettings == null || viewer == null)
+            if (activeSettings == null)
                 return;
+
+            if (viewer == null || targetCamera == null)
+                ResolveViewer();
+            if (viewer == null)
+                return;
+
+            if (!cullDistancesApplied && targetCamera != null)
+                ApplyCameraLayerCullDistances();
 
             if (Time.unscaledTime < nextUpdateTime)
                 return;
@@ -124,6 +126,33 @@ namespace FPS
             }
 
             targetCamera.layerCullDistances = distances;
+            cullDistancesApplied = true;
+        }
+
+        public void Configure(
+            DistanceRenderSettings renderSettings,
+            Camera camera = null,
+            Transform viewerTransform = null)
+        {
+            settings = renderSettings;
+            targetCamera = camera;
+            viewer = viewerTransform;
+            cullDistancesApplied = false;
+            ResolveViewer();
+            ApplyCameraLayerCullDistances();
+        }
+
+        private void ResolveViewer()
+        {
+            if (targetCamera == null)
+            {
+                Camera localCamera = GetComponent<Camera>();
+                targetCamera = localCamera != null ? localCamera : Camera.main;
+                cullDistancesApplied = false;
+            }
+
+            if (viewer == null && targetCamera != null)
+                viewer = targetCamera.transform;
         }
     }
 }

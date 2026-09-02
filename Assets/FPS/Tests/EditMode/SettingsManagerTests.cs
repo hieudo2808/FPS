@@ -51,7 +51,7 @@ namespace FPS.Tests
 
         private static void DestroyExistingSettingsManager()
         {
-            var managers = Object.FindObjectsByType<SettingsManager>(FindObjectsSortMode.None);
+            var managers = Object.FindObjectsByType<SettingsManager>();
             foreach (var manager in managers)
             {
                 Object.DestroyImmediate(manager.gameObject);

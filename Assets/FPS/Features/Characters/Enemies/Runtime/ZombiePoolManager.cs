@@ -80,11 +80,6 @@ namespace FPS
                 networkObject.Despawn(false);
             obj.SetActive(false);
 
-            #region agent log
-            NavMeshAgent agent = obj.GetComponent<NavMeshAgent>();
-            GameLog.DebugSession("initial", "N1", "ZombiePoolManager.cs:78", "pooled zombie created", $"{{\"prefab\":\"{prefab.name}\",\"hasAgent\":{(agent != null ? "true" : "false")},\"agentEnabled\":{(agent != null && agent.enabled ? "true" : "false")},\"isOnNavMesh\":{(agent != null && agent.isOnNavMesh ? "true" : "false")}}}");
-            #endregion
-
             return obj;
         }
 
@@ -245,10 +240,6 @@ namespace FPS
 
             if (agent != null)
             {
-                #region agent log
-                GameLog.DebugSession("initial", "N1", "ZombiePoolManager.cs:218", "resetting pooled zombie nav agent", $"{{\"name\":\"{zombie.name}\",\"x\":{position.x:F3},\"y\":{position.y:F3},\"z\":{position.z:F3},\"beforeEnabled\":{(agent.enabled ? "true" : "false")},\"beforeOnNavMesh\":{(agent.isOnNavMesh ? "true" : "false")}}}");
-                #endregion
-
                 agent.enabled = false;
                 zombie.transform.position = hit.position;
                 agent.enabled = true;

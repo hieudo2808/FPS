@@ -220,6 +220,7 @@ namespace FPS
                 position = transform.position,
                 rotation = transform.rotation,
                 health = networkHealth.Value,
+                infection = GetComponent<PlayerInfectionController>()?.CurrentInfection ?? 0f,
                 lifeState = networkLifeState.Value,
                 lifeStateDeadline = networkLifeStateDeadline.Value,
                 inventorySchemaVersion = 3
@@ -248,6 +249,7 @@ namespace FPS
             networkLifeState.Value = PlayerLifeState.Alive;
             networkLifeStateDeadline.Value = 0.0;
             networkInputReady.Value = true;
+            GetComponent<PlayerInfectionController>()?.SetInfectionServer(0f);
         }
 
         private void ApplyPreparedSnapshotServer()
@@ -261,6 +263,7 @@ namespace FPS
                 ? preparedSnapshot.lifeStateDeadline
                 : 0.0;
             networkInputReady.Value = !preparedAsReconnect;
+            GetComponent<PlayerInfectionController>()?.SetInfectionServer(preparedSnapshot.infection);
             ApplyRespawnPose(preparedSnapshot.position, preparedSnapshot.rotation);
 
             WeaponManager manager = GetComponent<WeaponManager>();

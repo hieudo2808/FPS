@@ -15,7 +15,6 @@ namespace FPS
         private const string MUSIC_VOLUME_PARAM = "music";
         private const string MASTER_VOLUME_PARAM = "master";
         private const float MIN_VOLUME_DB = -80f;
-        private const float MAX_VOLUME_DB = 0f;
         private const float VOLUME_STEP = 0.1f;
         private const float DEFAULT_VOLUME = 0.5f;
         private const float VOLUME_ADJUST_DELAY = 0.1f;
@@ -186,11 +185,6 @@ namespace FPS
         private float ConvertVolumeToDecibels(float volume)
         {
             return (volume <= 0.01f) ? MIN_VOLUME_DB : Mathf.Log10(volume) * 20f;
-        }
-
-        private float ConvertDecibelsToVolume(float dB)
-        {
-            return (dB <= MIN_VOLUME_DB) ? 0f : Mathf.Pow(10f, dB / 20f);
         }
 
         public float GetSFXVolume()

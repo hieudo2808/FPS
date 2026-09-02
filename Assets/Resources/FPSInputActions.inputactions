@@ -16,7 +16,8 @@
                 { "name": "Interact", "type": "Button", "id": "10000000-0000-0000-0000-000000000009", "expectedControlType": "Button" },
                 { "name": "Grenade", "type": "Button", "id": "10000000-0000-0000-0000-00000000000a", "expectedControlType": "Button" },
                 { "name": "Sprint", "type": "Button", "id": "10000000-0000-0000-0000-00000000000b", "expectedControlType": "Button" },
-                { "name": "Pause", "type": "Button", "id": "10000000-0000-0000-0000-00000000000c", "expectedControlType": "Button" }
+                { "name": "Pause", "type": "Button", "id": "10000000-0000-0000-0000-00000000000c", "expectedControlType": "Button" },
+                { "name": "Inspect", "type": "Button", "id": "10000000-0000-0000-0000-00000000000d", "expectedControlType": "Button" }
             ],
             "bindings": [
                 { "name": "Move", "id": "20000000-0000-0000-0000-000000000001", "path": "2DVector", "interactions": "", "processors": "", "groups": "", "action": "Move", "isComposite": true },
@@ -37,7 +38,8 @@
                 { "name": "Interact", "id": "20000000-0000-0000-0000-000000000010", "path": "<Keyboard>/f", "action": "Interact" },
                 { "name": "Grenade", "id": "20000000-0000-0000-0000-000000000011", "path": "<Keyboard>/g", "action": "Grenade" },
                 { "name": "Sprint", "id": "20000000-0000-0000-0000-000000000012", "path": "<Keyboard>/leftShift", "action": "Sprint" },
-                { "name": "Pause", "id": "20000000-0000-0000-0000-000000000013", "path": "<Keyboard>/escape", "action": "Pause" }
+                { "name": "Pause", "id": "20000000-0000-0000-0000-000000000013", "path": "<Keyboard>/escape", "action": "Pause" },
+                { "name": "Inspect", "id": "20000000-0000-0000-0000-000000000014", "path": "<Keyboard>/y", "action": "Inspect" }
             ]
         }
     ],

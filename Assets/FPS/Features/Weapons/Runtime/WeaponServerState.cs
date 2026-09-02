@@ -14,6 +14,7 @@ namespace FPS
         private double equipCompleteTime = -1.0;
         private ushort lastAcceptedFireSequence;
         private bool hasAcceptedFireSequence;
+        private float reloadTimingMultiplier = 1f;
 
         public int MagazineAmmo => magazineAmmo;
         public int ReserveAmmo => reserveAmmo;
@@ -101,10 +102,7 @@ namespace FPS
                 return false;
             }
             if (magazineAmmo <= 0)
-            {
-                Debug.LogWarning($"[DIAGNOSTIC][ServerState] REJECTED magazineAmmo={magazineAmmo} <= 0");
                 return false;
-            }
             // Arrival jitter cannot justify accepting a shot before the server's
             // authoritative cooldown.  The tiny epsilon is only for floating
             // point precision at the exact cooldown boundary.
@@ -114,10 +112,7 @@ namespace FPS
                 return false;
             }
             if (enforceSequence && !CanAcceptFireSequence(fireSequence))
-            {
-                Debug.LogWarning($"[DIAGNOSTIC][ServerState] REJECTED Sequence: seq={fireSequence} lastAccepted={lastAcceptedFireSequence}");
                 return false;
-            }
 
             // Cancel only after every other validation passes. A rejected
             // rapid/duplicate fire request must not terminate the reload.
@@ -135,7 +130,7 @@ namespace FPS
             return true;
         }
 
-        public bool TryBeginReload(WeaponData weaponData, double now)
+        public bool TryBeginReload(WeaponData weaponData, double now, float timingMultiplier = 1f)
         {
             if (weaponData == null)
                 return false;
@@ -147,12 +142,14 @@ namespace FPS
             if (reserveAmmo <= 0) return false;
             if (magazineAmmo >= weaponData.magazineSize) return false;
 
+            reloadTimingMultiplier = Mathf.Clamp(timingMultiplier, 1f, 3f);
+
             if (weaponData.reloadMode == ReloadMode.PerShell)
             {
                 int roundsToLoad = weaponData.GetPerShellRoundsToLoad(magazineAmmo, reserveAmmo);
-                float opening = weaponData.PerShellOpeningDuration;
-                float interval = weaponData.PerShellInterval;
-                float closing = weaponData.PerShellClosingDuration;
+                float opening = weaponData.PerShellOpeningDuration * reloadTimingMultiplier;
+                float interval = weaponData.PerShellInterval * reloadTimingMultiplier;
+                float closing = weaponData.PerShellClosingDuration * reloadTimingMultiplier;
                 reloadAmmoCommitTime = now + opening + interval;
                 reloadCompleteTime = reloadAmmoCommitTime
                     + Mathf.Max(0, roundsToLoad - 1) * interval
@@ -160,8 +157,8 @@ namespace FPS
             }
             else
             {
-                reloadAmmoCommitTime = now + weaponData.ReloadAmmoCommitDuration;
-                reloadCompleteTime = now + weaponData.ReloadDuration;
+                reloadAmmoCommitTime = now + weaponData.ReloadAmmoCommitDuration * reloadTimingMultiplier;
+                reloadCompleteTime = now + weaponData.ReloadDuration * reloadTimingMultiplier;
                 if (reloadCompleteTime < reloadAmmoCommitTime)
                     reloadCompleteTime = reloadAmmoCommitTime;
             }
@@ -184,7 +181,7 @@ namespace FPS
             {
                 if (weaponData.reloadMode == ReloadMode.PerShell)
                 {
-                    double interval = System.Math.Max(0.0001, weaponData.PerShellInterval);
+                    double interval = System.Math.Max(0.0001, weaponData.PerShellInterval * reloadTimingMultiplier);
                     while (reloadAmmoCommitTime >= 0.0 && now >= reloadAmmoCommitTime)
                     {
                         CommitReloadAmmo(weaponData, oneRoundOnly: true);

@@ -44,7 +44,7 @@ namespace FPS.Tests
             var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
             data.magazineSize = 2;
             data.totalAmmo = 2;
-            data.fireRate = 0f;
+            data.ApplyBakedFireInterval(0.001f);
 
             fireHandler.InitializeServerWeaponStateForTests(2, 0);
 
@@ -62,7 +62,7 @@ namespace FPS.Tests
             var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
             data.magazineSize = 3;
             data.totalAmmo = 3;
-            data.fireRate = 10f;
+            data.ApplyBakedFireInterval(10f);
 
             fireHandler.InitializeServerWeaponStateForTests(3, 0);
 
@@ -79,7 +79,7 @@ namespace FPS.Tests
             var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
             data.magazineSize = 2;
             data.totalAmmo = 2;
-            data.fireRate = 0f;
+            data.ApplyBakedFireInterval(0.001f);
 
             fireHandler.InitializeServerWeaponStateForTests(2, 0);
 
@@ -98,7 +98,7 @@ namespace FPS.Tests
             var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
             data.magazineSize = 2;
             data.totalAmmo = 2;
-            data.fireRate = 0f;
+            data.ApplyBakedFireInterval(0.001f);
             data.damage = 7f;
             data.damageType = DamageType.Bullet;
             data.hitMask = 1 << 0;
@@ -115,6 +115,7 @@ namespace FPS.Tests
 
             target.gameObject.layer = 0;
             Physics.SyncTransforms();
+            fireHandler.InitializeServerWeaponStateForTests(1, 0);
 
             Assert.IsTrue(fireHandler.ProcessFireServerForTests(Vector3.zero, Vector3.forward));
             Assert.AreEqual(1, target.HitCount);
@@ -127,7 +128,7 @@ namespace FPS.Tests
             var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
             data.magazineSize = 2;
             data.totalAmmo = 2;
-            data.fireRate = 0f;
+            data.ApplyBakedFireInterval(0.001f);
             data.hitMask = Physics.DefaultRaycastLayers;
 
             fireHandler.InitializeServerWeaponStateForTests(2, 0);
@@ -148,6 +149,7 @@ namespace FPS.Tests
                 "Bullet damage must be blocked by an Explosion-only DamageFilter.");
 
             data.damageType = DamageType.Explosion;
+            fireHandler.InitializeServerWeaponStateForTests(1, 0);
             Assert.IsTrue(fireHandler.ProcessFireServerForTests(Vector3.zero, Vector3.forward));
             Assert.AreEqual(1, target.HitCount,
                 "Explosion damage must pass an Explosion-only DamageFilter.");
@@ -179,7 +181,7 @@ namespace FPS.Tests
             var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
             data.magazineSize = 2;
             data.totalAmmo = 2;
-            data.fireRate = 0f;
+            data.ApplyBakedFireInterval(0.001f);
 
             fireHandler.InitializeServerWeaponStateForTests(2, 0);
 
@@ -194,7 +196,7 @@ namespace FPS.Tests
             var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
             data.magazineSize = 1;
             data.totalAmmo = 1;
-            data.fireRate = 0f;
+            data.ApplyBakedFireInterval(0.001f);
             data.damage = 10f;
             data.damageType = DamageType.Bullet;
             data.hitMask = Physics.DefaultRaycastLayers;
@@ -222,7 +224,7 @@ namespace FPS.Tests
             var fireHandler = CreateServerFireHandler(out _, out WeaponData data);
             data.magazineSize = 5;
             data.totalAmmo = 20;
-            data.reloadTime = 0f;
+            data.ApplyBakedAnimationTimings(0f, 0f, 0f, 0f, 0f, 0f);
 
             fireHandler.InitializeServerWeaponStateForTests(1, 10);
 
@@ -254,8 +256,8 @@ namespace FPS.Tests
             objectsToDestroy.Add(data);
             data.magazineSize = 5;
             data.totalAmmo = 10;
-            data.fireRate = 1f;
-            data.reloadTime = 0f;
+            data.ApplyBakedFireInterval(1f);
+            data.ApplyBakedAnimationTimings(0f, 0f, 0f, 0f, 0f, 0f);
 
             var state = new WeaponServerState();
             state.EnsureInitialized(10, data);
@@ -271,13 +273,145 @@ namespace FPS.Tests
         }
 
         [Test]
+        public void WeaponServerState_PerShellReloadInsertsAndSchedulesExactlyOneRoundPerCycle()
+        {
+            var data = ScriptableObject.CreateInstance<WeaponData>();
+            objectsToDestroy.Add(data);
+            data.magazineSize = 5;
+            data.totalAmmo = 9;
+            data.reloadMode = ReloadMode.PerShell;
+            data.reloadLoopStartFrame = 1;
+            data.reloadLoopEndFrame = 3;
+            data.ApplyBakedAnimationTimings(0f, 4f, 0f, 0.5f, 1f, 0f);
+
+            Assert.AreEqual(1, data.GetPerShellRoundsToLoad(4, 1));
+            Assert.AreEqual(5, data.GetPerShellRoundsToLoad(0, 9));
+
+            var state = new WeaponServerState();
+            state.InitializeForTests(10, 1, 4);
+
+            Assert.IsTrue(state.TryBeginReload(data, 0.0));
+            state.CompleteReloadIfReady(data, 1.49);
+            Assert.AreEqual(1, state.MagazineAmmo);
+
+            state.CompleteReloadIfReady(data, 1.5);
+            Assert.AreEqual(2, state.MagazineAmmo);
+            Assert.AreEqual(3, state.ReserveAmmo);
+            Assert.IsTrue(state.IsReloading(2.0));
+
+            state.CompleteReloadIfReady(data, 2.5);
+            state.CompleteReloadIfReady(data, 3.5);
+            state.CompleteReloadIfReady(data, 4.5);
+            Assert.AreEqual(5, state.MagazineAmmo);
+            Assert.AreEqual(0, state.ReserveAmmo);
+            Assert.IsFalse(state.IsReloading(4.5));
+        }
+
+        [Test]
+        public void WeaponServerState_PerShellReloadCanBeTerminatedByFire()
+        {
+            var data = ScriptableObject.CreateInstance<WeaponData>();
+            objectsToDestroy.Add(data);
+            data.magazineSize = 5;
+            data.totalAmmo = 9;
+            data.reloadMode = ReloadMode.PerShell;
+            data.ApplyBakedFireInterval(0.8f);
+            data.ApplyBakedAnimationTimings(0f, 4f, 0f, 0.5f, 1f, 0f);
+
+            var state = new WeaponServerState();
+            state.InitializeForTests(10, 1, 4);
+            Assert.IsTrue(state.TryBeginReload(data, 0.0));
+
+            // Inserts commit at 1.5, 2.5 and 3.5 seconds. Firing while the
+            // fourth shell is being loaded keeps the three completed inserts,
+            // cancels the rest of reload, then consumes exactly one shell.
+            Assert.IsTrue(state.TryConsumeFire(data, 3.6));
+            Assert.AreEqual(3, state.MagazineAmmo);
+            Assert.AreEqual(1, state.ReserveAmmo);
+            Assert.IsFalse(state.IsReloading(3.6));
+            Assert.Less(state.ReloadAmmoCommitTime, 0.0);
+            Assert.Less(state.ReloadCompleteTime, 0.0);
+        }
+
+        [Test]
+        public void WeaponServerState_MagazineReloadCannotBeTerminatedByFire()
+        {
+            var data = ScriptableObject.CreateInstance<WeaponData>();
+            objectsToDestroy.Add(data);
+            data.magazineSize = 5;
+            data.totalAmmo = 9;
+            data.reloadMode = ReloadMode.Magazine;
+            data.ApplyBakedFireInterval(0.1f);
+            data.ApplyBakedAnimationTimings(0f, 2f, 1f, 0f, 0f, 0f);
+
+            var state = new WeaponServerState();
+            state.InitializeForTests(10, 1, 4);
+            Assert.IsTrue(state.TryBeginReload(data, 0.0));
+            Assert.IsFalse(state.TryConsumeFire(data, 0.5));
+            Assert.AreEqual(1, state.MagazineAmmo);
+            Assert.IsTrue(state.IsReloading(0.5));
+        }
+
+        [Test]
+        public void WeaponServerState_RejectedRapidFireDoesNotTerminatePerShellReload()
+        {
+            var data = ScriptableObject.CreateInstance<WeaponData>();
+            objectsToDestroy.Add(data);
+            data.magazineSize = 5;
+            data.totalAmmo = 9;
+            data.reloadMode = ReloadMode.PerShell;
+            data.ApplyBakedFireInterval(0.8f);
+            data.ApplyBakedAnimationTimings(0f, 4f, 0f, 0.5f, 1f, 0f);
+
+            var state = new WeaponServerState();
+            state.InitializeForTests(10, 1, 4, nextFireTime: 10.0);
+            Assert.IsTrue(state.TryBeginReload(data, 0.0));
+
+            Assert.IsFalse(state.TryConsumeFire(data, 3.6));
+            Assert.AreEqual(4, state.MagazineAmmo,
+                "Three completed shell inserts remain committed.");
+            Assert.IsTrue(state.IsReloading(3.6),
+                "A cooldown-rejected shot must not terminate the reload.");
+        }
+
+        [Test]
+        public void WeaponServerState_MagazineAmmoCommitsBeforeReloadUnlockAndSurvivesSnapshot()
+        {
+            var data = ScriptableObject.CreateInstance<WeaponData>();
+            objectsToDestroy.Add(data);
+            data.magazineSize = 5;
+            data.totalAmmo = 10;
+            data.reloadMode = ReloadMode.Magazine;
+            data.ApplyBakedAnimationTimings(0f, 2f, 1f, 0f, 0f, 0f);
+
+            var state = new WeaponServerState();
+            state.InitializeForTests(10, 1, 4);
+            Assert.IsTrue(state.TryBeginReload(data, 0.0));
+
+            state.AdvanceReloadIfReady(data, 0.99);
+            Assert.AreEqual(1, state.MagazineAmmo);
+            state.AdvanceReloadIfReady(data, 1.0);
+            Assert.AreEqual(5, state.MagazineAmmo, "Ammo must commit at the authored magazine-seat frame.");
+            Assert.IsTrue(state.IsReloading(1.5), "Fire remains locked through the closing part of Reload.");
+
+            WeaponRuntimeSnapshot snapshot = state.Capture(0, data);
+            Assert.Less(snapshot.reloadAmmoCommitTime, 0.0);
+            Assert.AreEqual(2.0, snapshot.reloadCompleteTime, 0.0001);
+            var restored = new WeaponServerState();
+            restored.Restore(snapshot, 10);
+            restored.AdvanceReloadIfReady(data, 2.0);
+            Assert.IsFalse(restored.IsReloading(2.0));
+            Assert.AreEqual(5, restored.MagazineAmmo);
+        }
+
+        [Test]
         public void WeaponServerState_DoesNotAcceptFireBeforeConfiguredCooldown()
         {
             var data = ScriptableObject.CreateInstance<WeaponData>();
             objectsToDestroy.Add(data);
             data.magazineSize = 4;
             data.totalAmmo = 4;
-            data.fireRate = 0.1f;
+            data.ApplyBakedFireInterval(0.1f);
 
             var state = new WeaponServerState();
             state.EnsureInitialized(10, data);
@@ -287,6 +421,28 @@ namespace FPS.Tests
             Assert.IsFalse(state.TryConsumeFire(data, 0.099f));
             Assert.IsTrue(state.TryConsumeFire(data, 0.1));
             Assert.AreEqual(2, state.MagazineAmmo);
+        }
+
+        [Test]
+        public void WeaponServerState_EquipDeadlineBlocksFireAndReloadAndSurvivesSnapshot()
+        {
+            var data = ScriptableObject.CreateInstance<WeaponData>();
+            objectsToDestroy.Add(data);
+            data.magazineSize = 5;
+            data.totalAmmo = 10;
+            data.ApplyBakedAnimationTimings(1f, 2.5f, 1.5f, 0f, 0f, 0f);
+
+            var state = new WeaponServerState();
+            state.InitializeForTests(10, 4, 6, equipReadyTime: 11.0);
+            Assert.IsFalse(state.TryConsumeFire(data, 10.5));
+            Assert.IsFalse(state.TryBeginReload(data, 10.5));
+            Assert.AreEqual(4, state.MagazineAmmo);
+
+            WeaponRuntimeSnapshot snapshot = state.Capture(0, data);
+            var restored = new WeaponServerState();
+            restored.Restore(snapshot, 10);
+            Assert.AreEqual(11.0, restored.EquipCompleteTime);
+            Assert.IsTrue(restored.TryConsumeFire(data, 11.0));
         }
 
         [Test]

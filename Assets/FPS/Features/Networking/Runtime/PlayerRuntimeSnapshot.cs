@@ -66,6 +66,7 @@ namespace FPS
         public Vector3 position;
         public Quaternion rotation;
         public float health;
+        public float infection;
         public PlayerLifeState lifeState;
         public double lifeStateDeadline;
         public byte equippedWeaponSlot;
@@ -83,6 +84,7 @@ namespace FPS
                 position = position,
                 rotation = rotation,
                 health = 100f,
+                infection = 0f,
                 lifeState = PlayerLifeState.Alive,
                 inventorySchemaVersion = 3
             };
@@ -99,6 +101,7 @@ namespace FPS
             serializer.SerializeValue(ref position);
             serializer.SerializeValue(ref rotation);
             serializer.SerializeValue(ref health);
+            serializer.SerializeValue(ref infection);
             serializer.SerializeValue(ref lifeState);
             serializer.SerializeValue(ref lifeStateDeadline);
             serializer.SerializeValue(ref equippedWeaponSlot);

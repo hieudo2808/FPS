@@ -15,9 +15,9 @@ namespace FPS.PlayModeTests
             yield return LoadAndAssertScene("Assets/FPS/Scenes/LobbyScene.unity", "LobbyScene");
             yield return LoadAndAssertScene("Assets/FPS/Scenes/GameScene.unity", "GameScene");
 
-            Assert.NotNull(Object.FindFirstObjectByType<AttackSlotManager>(FindObjectsInactive.Include),
+            Assert.NotNull(Object.FindAnyObjectByType<AttackSlotManager>(FindObjectsInactive.Include),
                 "GameScene should contain AttackSlotManager so enemy slot coordination can run in gameplay.");
-            Assert.NotNull(Object.FindFirstObjectByType<NetworkGameManager>(FindObjectsInactive.Include),
+            Assert.NotNull(Object.FindAnyObjectByType<NetworkGameManager>(FindObjectsInactive.Include),
                 "GameScene should contain NetworkGameManager so network/session flow can own player spawning.");
         }
 

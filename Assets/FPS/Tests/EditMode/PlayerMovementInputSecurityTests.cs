@@ -1,4 +1,6 @@
 using NUnit.Framework;
+using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace FPS.Tests
@@ -56,6 +58,54 @@ namespace FPS.Tests
             Assert.True(accepted);
             Assert.GreaterOrEqual(sanitized.yaw, 0f);
             Assert.Less(sanitized.yaw, 360f);
+        }
+
+        [Test]
+        public void InputPayload_RoundTripPreservesAimBit()
+        {
+            var expected = new PlayerInputPayload
+            {
+                sequence = 42,
+                tick = 99,
+                move = new Vector2(0.25f, -0.5f),
+                aim = true,
+                yaw = 127f,
+                pitch = -13f
+            };
+
+            using var writer = new FastBufferWriter(64, Allocator.Temp);
+            writer.WriteNetworkSerializable(expected);
+
+            using var reader = new FastBufferReader(writer, Allocator.Temp);
+            reader.ReadNetworkSerializable(out PlayerInputPayload actual);
+
+            Assert.True(actual.aim);
+            Assert.AreEqual(expected.sequence, actual.sequence);
+            Assert.AreEqual(expected.tick, actual.tick);
+        }
+
+        [Test]
+        public void StatePayload_RoundTripPreservesRemoteAimBit()
+        {
+            var expected = new PlayerStatePayload
+            {
+                tick = 101,
+                lastProcessedCommand = 43,
+                position = new Vector3(1f, 2f, 3f),
+                grounded = true,
+                aiming = true,
+                yaw = 215f
+            };
+
+            using var writer = new FastBufferWriter(64, Allocator.Temp);
+            writer.WriteNetworkSerializable(expected);
+
+            using var reader = new FastBufferReader(writer, Allocator.Temp);
+            reader.ReadNetworkSerializable(out PlayerStatePayload actual);
+
+            Assert.True(actual.aiming);
+            Assert.AreEqual(expected.tick, actual.tick);
+            Assert.AreEqual(expected.lastProcessedCommand, actual.lastProcessedCommand);
         }
     }
 }

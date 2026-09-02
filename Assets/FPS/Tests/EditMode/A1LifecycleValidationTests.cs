@@ -16,7 +16,7 @@ namespace FPS.Tests
         public void PlayerPrefab_IsRegisteredInDefaultNetworkPrefabsList_AndHasDisabledListener()
         {
             GameObject playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(
-                "Assets/FPS/Features/Characters/Content/Players/Player/Player.prefab");
+                "Assets/FPS/Features/Characters/Content/Players/Clove/ClovePlayer.prefab");
             NetworkPrefabsList list = AssetDatabase.LoadAssetAtPath<NetworkPrefabsList>(
                 "Assets/DefaultNetworkPrefabs.asset");
 

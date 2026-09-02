@@ -203,6 +203,11 @@ namespace FPS
             return GetAction(actionName)?.WasPressedThisFrame() == true;
         }
 
+        private bool WasReleasedThisFrame(string actionName)
+        {
+            return GetAction(actionName)?.WasReleasedThisFrame() == true;
+        }
+
         public Vector2 GetMove()
         {
             return GameplayInputBlocked
@@ -231,6 +236,8 @@ namespace FPS
         public bool GetWeapon1InputDown() => !GameplayInputBlocked && WasPressedThisFrame("Weapon1");
         public bool GetWeapon2InputDown() => !GameplayInputBlocked && WasPressedThisFrame("Weapon2");
         public bool GetInteractInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Interact");
+        public bool GetInteractInput() => !GameplayInputBlocked && IsPressed("Interact");
+        public bool GetInteractInputUp() => WasReleasedThisFrame("Interact");
         public bool GetJumpInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Jump");
         public bool GetGrenadeInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Grenade");
         public bool GetSprintInput() => !GameplayInputBlocked && IsPressed("Sprint");

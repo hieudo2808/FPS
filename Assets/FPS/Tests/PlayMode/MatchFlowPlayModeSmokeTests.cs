@@ -83,7 +83,7 @@ namespace FPS.PlayModeTests
             WeaponFireHandler fireHandler = CreateRuntimeWeaponRig(out WeaponData data);
             data.magazineSize = 10;
             data.totalAmmo = 10;
-            data.fireRate = 0f;
+            data.ApplyBakedFireInterval(0.001f);
             data.damage = 10f;
             data.damageType = DamageType.Bullet;
             data.hitMask = Physics.DefaultRaycastLayers;

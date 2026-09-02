@@ -221,7 +221,10 @@ namespace FPS
                     break;
 
                 case GamePhase.PEAK:
-                    if (GetDirectorTime() >= forcedCrescendoUntil && phaseTimer >= peakDuration)
+                    // Anti-death-spiral: chuyển Relax sớm hơn nếu có >= 2 đồng đội bị nhiễm nguy kịch
+                    bool teamCriticallyInfected = PlayerProfiler.Instance != null && PlayerProfiler.Instance.TeamCriticalInfectedCount >= 2;
+                    float effectivePeakDuration = teamCriticallyInfected ? (peakDuration * 0.6f) : peakDuration;
+                    if (GetDirectorTime() >= forcedCrescendoUntil && phaseTimer >= effectivePeakDuration)
                         TransitionTo(GamePhase.RELAX);
                     break;
 
@@ -288,12 +291,20 @@ namespace FPS
             int playerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
             interval /= (1f + (playerCount - 1) * 0.3f);
 
+            // Anti-death-spiral: giảm tốc độ spawn quái thường khi team bị nhiễm nặng
+            if (PlayerProfiler.Instance != null && PlayerProfiler.Instance.TeamCriticalInfectedCount >= 2)
+            {
+                interval *= 1.3f;
+            }
+
             return Mathf.Max(interval, spawnIntervalMin);
         }
 
         private void SpawnZombie()
         {
-            if (CurrentPhase == GamePhase.PEAK && enableSpecialInfected && Random.value < GetSpecialSpawnChance())
+            if (CurrentPhase != GamePhase.RELAX
+                && enableSpecialInfected
+                && Random.value < GetSpecialSpawnChance())
             {
                 if (TrySpawnSpecial()) return;
             }
@@ -484,13 +495,14 @@ namespace FPS
 
         private bool TrySpawnSpecial()
         {
-            if (SpecialInfectedRegistry.Instance == null || !SpecialInfectedRegistry.Instance.CanSpawnSpecial())
+            if (SpecialInfectedRegistry.Instance == null
+                || !SpecialInfectedRegistry.Instance.CanSpawnSpecial(CurrentPhase))
                 return false;
 
             if (!TryGetSpecialSpawnPosition(out Vector3 pos))
                 return false;
 
-            GameObject special = SpecialInfectedRegistry.Instance.SpawnSpecial(pos);
+            GameObject special = SpecialInfectedRegistry.Instance.SpawnSpecial(pos, CurrentPhase);
 
             if (special != null)
             {

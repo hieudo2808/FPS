@@ -40,6 +40,7 @@ namespace FPS
         public int magazineAmmo;
         public int reserveAmmo;
         public bool isReloading;
+        public double reloadCompleteTime;
         public double equipCompleteTime;
         public ushort acknowledgedFireSequence;
         public FireRejectReason lastFireResult;
@@ -51,6 +52,7 @@ namespace FPS
                 && magazineAmmo == other.magazineAmmo
                 && reserveAmmo == other.reserveAmmo
                 && isReloading == other.isReloading
+                && reloadCompleteTime.Equals(other.reloadCompleteTime)
                 && equipCompleteTime.Equals(other.equipCompleteTime)
                 && acknowledgedFireSequence == other.acknowledgedFireSequence
                 && lastFireResult == other.lastFireResult
@@ -63,6 +65,7 @@ namespace FPS
             serializer.SerializeValue(ref magazineAmmo);
             serializer.SerializeValue(ref reserveAmmo);
             serializer.SerializeValue(ref isReloading);
+            serializer.SerializeValue(ref reloadCompleteTime);
             serializer.SerializeValue(ref equipCompleteTime);
             serializer.SerializeValue(ref acknowledgedFireSequence);
             serializer.SerializeValue(ref lastFireResult);
@@ -74,6 +77,7 @@ namespace FPS
     {
         public byte slotIndex;
         public bool isReloading;
+        public double reloadCompleteTime;
         public double equipCompleteTime;
         public ushort shotSequence;
 
@@ -81,6 +85,7 @@ namespace FPS
         {
             return slotIndex == other.slotIndex
                 && isReloading == other.isReloading
+                && reloadCompleteTime.Equals(other.reloadCompleteTime)
                 && equipCompleteTime.Equals(other.equipCompleteTime)
                 && shotSequence == other.shotSequence;
         }
@@ -89,6 +94,7 @@ namespace FPS
         {
             serializer.SerializeValue(ref slotIndex);
             serializer.SerializeValue(ref isReloading);
+            serializer.SerializeValue(ref reloadCompleteTime);
             serializer.SerializeValue(ref equipCompleteTime);
             serializer.SerializeValue(ref shotSequence);
         }
@@ -111,6 +117,7 @@ namespace FPS
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
         private WeaponManager weaponManager;
+        private PlayerInfectionController infectionController;
         private bool restoredServerSnapshot;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         private ushort verificationFireSequence;
@@ -370,6 +377,10 @@ namespace FPS
                     weapon.Data, now, fireSequence, enforceSequence: validateSender))
                 return false;
 
+            if (infectionController == null)
+                infectionController = GetComponent<PlayerInfectionController>();
+            infectionController?.CancelActiveTreatmentServer();
+
             UpdateServerTelemetry();
 
             direction = direction.normalized;
@@ -377,7 +388,8 @@ namespace FPS
             int hitMask = GetHitMask(weaponData);
             float maximumRange = Mathf.Max(0.01f, weaponData.maximumRange);
             int projectileCount = Mathf.Max(1, weaponData.projectileCount);
-            float spreadAngle = weaponData.GetSpreadAngle(aimed);
+            float spreadAngle = weaponData.GetSpreadAngle(aimed)
+                * (infectionController != null ? infectionController.WeaponSwayMultiplier : 1f);
             uint shotSeed = WeaponBallistics.BuildShotSeed(
                 validateSender ? senderClientId : OwnerClientId,
                 fireSequence,
@@ -555,7 +567,15 @@ namespace FPS
             if (weapon == null || weapon.Data == null) return false;
 
             WeaponServerState state = GetCurrentServerState(true);
-            bool accepted = state != null && state.TryBeginReload(weapon.Data, GetServerTime());
+            if (infectionController == null)
+                infectionController = GetComponent<PlayerInfectionController>();
+            float timingMultiplier = infectionController != null
+                ? infectionController.ReloadSpeedMultiplier
+                : 1f;
+            bool accepted = state != null
+                && state.TryBeginReload(weapon.Data, GetServerTime(), timingMultiplier);
+            if (accepted)
+                infectionController?.CancelActiveTreatmentServer();
             PublishOwnerState(FireRejectReason.None, state?.LastAcceptedFireSequence ?? 0, GetServerTick());
             UpdateServerTelemetry();
             return accepted;
@@ -801,6 +821,7 @@ namespace FPS
                 magazineAmmo = state.MagazineAmmo,
                 reserveAmmo = state.ReserveAmmo,
                 isReloading = state.IsReloading(GetServerTime()),
+                reloadCompleteTime = state.ReloadCompleteTime,
                 equipCompleteTime = state.EquipCompleteTime,
                 acknowledgedFireSequence = sequence,
                 lastFireResult = result,
@@ -810,6 +831,7 @@ namespace FPS
             {
                 slotIndex = (byte)Mathf.Clamp(slot, 0, byte.MaxValue),
                 isReloading = state.IsReloading(GetServerTime()),
+                reloadCompleteTime = state.ReloadCompleteTime,
                 equipCompleteTime = state.EquipCompleteTime,
                 shotSequence = state.LastAcceptedFireSequence
             };
@@ -844,7 +866,7 @@ namespace FPS
 
             if (weaponManager == null)
                 weaponManager = GetComponent<WeaponManager>();
-            weaponManager?.ApplyPresentationState(current);
+            weaponManager?.ApplyPresentationState(previous, current);
         }
 
         private void UpdateServerTelemetry()

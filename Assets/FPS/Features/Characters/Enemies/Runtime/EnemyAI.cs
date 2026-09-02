@@ -32,9 +32,9 @@ namespace FPS
         [SerializeField] private float destinationRepathDistance = 0.75f;
 
         [Header("Audio")]
-        [SerializeField] private AudioClip attackSound;
-        [SerializeField] private AudioClip deathSound;
-        [SerializeField] private float soundVolume = 1f;
+        [SerializeField] protected AudioClip attackSound;
+        [SerializeField] protected AudioClip deathSound;
+        [SerializeField] protected float soundVolume = 1f;
 
         [Header("Target Switching (Multiplayer)")]
         [SerializeField] private float targetSwitchCooldown = 2f;
@@ -73,10 +73,18 @@ namespace FPS
         private ushort serverActionSequence;
         private int serverActionStartTick;
         private bool specialAbilityActive;
+        private EnemySpecialActionKind specialActionKind;
         private int specialAbilityDeadlineTick;
         private ushort lastPresentedActionSequence;
 
         public float AttackDamage => attackDamage;
+
+        /// <summary>
+        /// Specials with a complete FSM can opt out of the common idle/chase/attack brain
+        /// while continuing to use the replicated presentation owned by this component.
+        /// </summary>
+        protected virtual bool UsesGenericServerBrain => true;
+        protected virtual bool PreserveAuthoredAgentSettings => false;
 
         protected virtual void Start()
         {
@@ -86,8 +94,8 @@ namespace FPS
 
             if (agent != null)
             {
-                agent.speed = runSpeed;
-                agent.stoppingDistance = 0.5f;
+                if (!PreserveAuthoredAgentSettings)
+                    agent.speed = runSpeed;
                 agent.updateRotation = false;
             }
 
@@ -179,6 +187,15 @@ namespace FPS
             brainTickCount++;
             lastBrainTickTime = Time.time;
 
+            if (!UsesGenericServerBrain)
+            {
+                TickCustomServerBrain();
+                UpdateAnimation();
+                SmoothLookAtMovementOrTarget();
+                PublishReplicatedState();
+                return;
+            }
+
             if (!IsValidTarget(player))
             {
                 FindPlayer(forceRefresh: true);
@@ -236,6 +253,10 @@ namespace FPS
             UpdateAnimation();
             SmoothLookAtMovementOrTarget();
             PublishReplicatedState();
+        }
+
+        protected virtual void TickCustomServerBrain()
+        {
         }
 
         private void SwitchState(State newState)
@@ -339,6 +360,16 @@ namespace FPS
 
         private void FindPlayer(bool forceRefresh = false)
         {
+            if (GetType() == typeof(EnemyAI)
+                && InfectionThreatService.Instance != null
+                && InfectionThreatService.Instance.TryGetPriorityTarget(transform.position, out Transform threatTarget)
+                && IsValidTarget(threatTarget))
+            {
+                player = threatTarget;
+                currentTargetIndex = -1;
+                return;
+            }
+
             Transform bestTarget = null;
             int bestIndex = -1;
             float bestDistSqr = float.MaxValue;
@@ -477,7 +508,7 @@ namespace FPS
 
         private void SmoothLookAtMovementOrTarget()
         {
-            if (currentState == State.Idle) return;
+            if (!ShouldRotateForPresentation()) return;
 
             Vector3 dir = GetLookDirection();
             dir.y = 0f;
@@ -494,11 +525,19 @@ namespace FPS
             }
         }
 
+        protected virtual bool ShouldRotateForPresentation()
+        {
+            return currentState != State.Idle && currentState != State.Dead;
+        }
+
         public virtual void OnDeath()
         {
             if (currentState == State.Dead) return;
 
             currentState = State.Dead;
+            specialAbilityActive = false;
+            specialActionKind = EnemySpecialActionKind.None;
+            specialAbilityDeadlineTick = 0;
 
             meleeAttack.CancelPendingDamage();
             meleeAttack.ClearActionLock();
@@ -542,6 +581,7 @@ namespace FPS
             serverActionSequence = 0;
             serverActionStartTick = 0;
             specialAbilityActive = false;
+            specialActionKind = EnemySpecialActionKind.None;
             specialAbilityDeadlineTick = 0;
             lastPresentedActionSequence = 0;
             lastFramePosition = transform.position;
@@ -550,7 +590,8 @@ namespace FPS
             if (agent != null)
             {
                 agent.enabled = true;
-                agent.speed = runSpeed;
+                if (!PreserveAuthoredAgentSettings)
+                    agent.speed = runSpeed;
 
                 if (agent.isOnNavMesh)
                 {
@@ -573,22 +614,52 @@ namespace FPS
 
         private void PlayLocalSound(AudioClip clip)
         {
-            if (clip != null && AudioManager.Instance != null)
+            // AudioManager is authored by the application bootstrap scene and persists
+            // across gameplay scenes. Do not touch Instance when no authored manager is
+            // present: Singleton.Instance would manufacture a runtime fallback object,
+            // hiding a missing scene/bootstrap dependency (and breaking direct-scene tests).
+            if (clip != null && AudioManager.HasInstance)
                 AudioManager.Instance.PlaySFXSound(clip, soundVolume);
         }
 
         protected void SetSpecialAbilityReplicated(bool active, double deadlineServerTime = 0.0)
         {
+            if (active)
+                SetSpecialActionReplicated(EnemySpecialActionKind.Primary, deadlineServerTime);
+            else
+                ClearSpecialActionReplicated();
+        }
+
+        protected void SetSpecialActionReplicated(
+            EnemySpecialActionKind actionKind,
+            double deadlineServerTime)
+        {
             if (!CanRunServerLogic())
                 return;
 
-            if (active && !specialAbilityActive)
+            if (actionKind == EnemySpecialActionKind.None)
+            {
+                ClearSpecialActionReplicated();
+                return;
+            }
+
+            if (!specialAbilityActive || specialActionKind != actionKind)
                 BeginReplicatedAction();
 
-            specialAbilityActive = active;
-            specialAbilityDeadlineTick = active
-                ? ServerTimeToTick(deadlineServerTime)
-                : 0;
+            specialAbilityActive = true;
+            specialActionKind = actionKind;
+            specialAbilityDeadlineTick = ServerTimeToTick(deadlineServerTime);
+            PublishReplicatedState(force: true);
+        }
+
+        protected void ClearSpecialActionReplicated()
+        {
+            if (!CanRunServerLogic())
+                return;
+
+            specialAbilityActive = false;
+            specialActionKind = EnemySpecialActionKind.None;
+            specialAbilityDeadlineTick = 0;
             PublishReplicatedState(force: true);
         }
 
@@ -598,6 +669,19 @@ namespace FPS
 
         protected virtual void OnReplicatedSpecialAbilityEnded()
         {
+        }
+
+        protected virtual void OnReplicatedSpecialActionStarted(
+            EnemySpecialActionKind actionKind,
+            int elapsedTicks)
+        {
+            if (actionKind == EnemySpecialActionKind.Primary)
+                OnReplicatedSpecialAbilityStarted(elapsedTicks);
+        }
+
+        protected virtual void OnReplicatedSpecialActionEnded(EnemySpecialActionKind actionKind)
+        {
+            OnReplicatedSpecialAbilityEnded();
         }
 
         private void BeginReplicatedAction()
@@ -621,18 +705,15 @@ namespace FPS
                 flags |= EnemyActionFlags.Dead;
             if (specialAbilityActive)
                 flags |= EnemyActionFlags.SpecialAbility;
+            if (specialActionKind == EnemySpecialActionKind.Stagger)
+                flags |= EnemyActionFlags.Stagger;
 
             EnemyReplicatedState next = new EnemyReplicatedState
             {
-                locomotion = currentState switch
-                {
-                    State.Chase => EnemyLocomotionState.Moving,
-                    State.Attack => EnemyLocomotionState.Attacking,
-                    State.Dead => EnemyLocomotionState.Dead,
-                    _ => EnemyLocomotionState.Idle
-                },
+                locomotion = ResolveReplicatedLocomotion(),
                 normalizedSpeed = quantizedSpeed,
                 actionFlags = flags,
+                specialActionKind = specialActionKind,
                 actionSequence = serverActionSequence,
                 actionStartServerTick = serverActionStartTick,
                 specialAbilityDeadlineTick = specialAbilityDeadlineTick
@@ -640,6 +721,17 @@ namespace FPS
 
             if (force || !next.Equals(replicatedState.Value))
                 replicatedState.Value = next;
+        }
+
+        protected virtual EnemyLocomotionState ResolveReplicatedLocomotion()
+        {
+            return currentState switch
+            {
+                State.Chase => EnemyLocomotionState.Moving,
+                State.Attack => EnemyLocomotionState.Attacking,
+                State.Dead => EnemyLocomotionState.Dead,
+                _ => EnemyLocomotionState.Idle
+            };
         }
 
         private void OnReplicatedStateChanged(EnemyReplicatedState previous, EnemyReplicatedState current)
@@ -680,9 +772,9 @@ namespace FPS
             bool specialEnded = (current.actionFlags & EnemyActionFlags.SpecialAbility) == 0
                 && (previous.actionFlags & EnemyActionFlags.SpecialAbility) != 0;
             if (specialStarted && GetServerTick() < current.specialAbilityDeadlineTick)
-                OnReplicatedSpecialAbilityStarted(elapsedTicks);
+                OnReplicatedSpecialActionStarted(current.specialActionKind, elapsedTicks);
             else if (specialEnded)
-                OnReplicatedSpecialAbilityEnded();
+                OnReplicatedSpecialActionEnded(previous.specialActionKind);
 
             lastPresentedActionSequence = current.actionSequence;
         }
@@ -743,7 +835,7 @@ namespace FPS
             return currentState == State.Attack && meleeAttack.IsActionLocked(Time.time);
         }
 
-        private Vector3 GetLookDirection()
+        protected virtual Vector3 GetLookDirection()
         {
             if (currentState == State.Attack && meleeAttack.TryGetLockedFacing(Time.time, out Vector3 attackFacing))
                 return attackFacing;
@@ -813,7 +905,7 @@ namespace FPS
             hasSubmittedAgentDestination = false;
         }
 
-        private float CalculateVisualMoveSpeed()
+        protected virtual float CalculateVisualMoveSpeed()
         {
             float speed = 0f;
             if (currentState == State.Chase && IsAgentReady())

@@ -16,6 +16,13 @@ namespace FPS
         [SerializeField] private Image healthFill;
         [SerializeField] private Image healthDangerBackground;
 
+        [Header("Infection")]
+        [SerializeField] private Image infectionFill;
+        [SerializeField] private Image infectionIcon;
+        [SerializeField] private TextMeshProUGUI infectionStageText;
+        [SerializeField] private Image treatmentProgressFill;
+        [SerializeField] private GameObject sepsisWarning;
+
         [Header("Ammo")]
         [SerializeField] private TextMeshProUGUI currentAmmo;
         [SerializeField] private TextMeshProUGUI reservedAmmo;
@@ -67,6 +74,7 @@ namespace FPS
         private Weapon currentWeapon;
         private Weapon unusedWeapon;
         private PlayerHealth playerHealth;
+        private PlayerInfectionController playerInfection;
         private float hitMarkerTimer;
 
         private void Start()
@@ -114,6 +122,7 @@ namespace FPS
             }
 
             UpdateHealthUI(100f, 100f);
+            UpdateInfectionUI(0f, 0f, InfectionStage.None);
             UpdateAmmoInfo();
             UpdateCombatInfo();
             UpdateMatchFlowInfo();
@@ -132,6 +141,7 @@ namespace FPS
             UpdateCombatInfo();
             UpdateMatchFlowInfo();
             UpdateHitMarkerTimer();
+            UpdateTreatmentUI();
         }
 
         protected override void OnDestroy()
@@ -144,6 +154,7 @@ namespace FPS
             }
 
             UnsubscribeHealth();
+            UnsubscribeInfection();
         }
 
         private void TryAcquireWeaponManager()
@@ -170,6 +181,23 @@ namespace FPS
 
             playerHealth.HealthChangedEvent += UpdateHealthUI;
             UpdateHealthUI(playerHealth.CurrentHealth, playerHealth.MaxHealth);
+
+            playerInfection = localClient.PlayerObject.GetComponent<PlayerInfectionController>();
+            if (playerInfection != null)
+            {
+                playerInfection.OnInfectionChanged += UpdateInfectionUI;
+                UpdateInfectionUI(
+                    playerInfection.CurrentInfection,
+                    playerInfection.CurrentInfection,
+                    playerInfection.CurrentStage);
+            }
+        }
+
+        private void UnsubscribeInfection()
+        {
+            if (playerInfection == null) return;
+            playerInfection.OnInfectionChanged -= UpdateInfectionUI;
+            playerInfection = null;
         }
 
         private void UnsubscribeHealth()
@@ -315,6 +343,16 @@ namespace FPS
             return weapon.Data.weaponName.ToUpperInvariant();
         }
 
+        public void SetInteractionPrompt(string text, bool visible)
+        {
+            if (interactionPromptText == null)
+                return;
+
+            if (!string.IsNullOrEmpty(text))
+                interactionPromptText.text = text;
+            interactionPromptText.gameObject.SetActive(visible);
+        }
+
         private void UpdateHealthUI(float current, float max)
         {
             max = Mathf.Max(1f, max);
@@ -347,6 +385,32 @@ namespace FPS
                     ? new Color(0.78f, 0.05f, 0.05f, 0.42f)
                     : new Color(0.78f, 0.18f, 0.05f, 0.30f);
             }
+        }
+
+        private void UpdateInfectionUI(float previous, float current, InfectionStage stage)
+        {
+            float normalized = Mathf.Clamp01(current / PlayerInfectionController.MaxInfection);
+            if (infectionFill != null)
+                infectionFill.fillAmount = normalized;
+            if (infectionIcon != null)
+                infectionIcon.enabled = current > 0.01f;
+            if (infectionStageText != null)
+            {
+                infectionStageText.text = stage == InfectionStage.None
+                    ? "INFECTION 0%"
+                    : $"{stage.ToString().ToUpperInvariant()} {Mathf.CeilToInt(current)}%";
+            }
+            if (sepsisWarning != null)
+                sepsisWarning.SetActive(stage == InfectionStage.Sepsis);
+        }
+
+        private void UpdateTreatmentUI()
+        {
+            if (treatmentProgressFill == null)
+                return;
+            float progress = playerInfection != null ? playerInfection.ActiveTreatmentProgress : 0f;
+            treatmentProgressFill.fillAmount = progress;
+            treatmentProgressFill.gameObject.SetActive(progress > 0f && progress < 1f);
         }
 
         private void UpdateCombatInfo()

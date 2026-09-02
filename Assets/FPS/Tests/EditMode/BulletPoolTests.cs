@@ -1,14 +1,13 @@
 ﻿using NUnit.Framework;
 using UnityEngine;
 using System.Reflection;
-using System.Collections;
 
 namespace FPS.Tests
 {
     /// <summary>
     /// Regression tests cho Task 11: Object Pooling cho dan trong Weapon.cs.
     /// Dam bao SpawnVisualBullet() su dung pool khi bulletPool duoc gan,
-    /// va ReturnBulletToPool coroutine ton tai de tra dan ve pool sau delay.
+    /// va van giu fallback an toan khi pool chua duoc gan.
     /// </summary>
     public class BulletPoolTests
     {
@@ -31,25 +30,7 @@ namespace FPS.Tests
         }
 
         // -------------------------------------------------------
-        // Test 2: Weapon co ReturnBulletToPool IEnumerator method
-        // -------------------------------------------------------
-        [Test]
-        public void TestWeapon_ReturnBulletToPool_MethodExists()
-        {
-            var method = typeof(Weapon).GetMethod(
-                "ReturnBulletToPool",
-                BindingFlags.Instance | BindingFlags.NonPublic);
-
-            Assert.IsNotNull(method,
-                "Weapon phai co private method 'ReturnBulletToPool' " +
-                "de tra dan ve pool sau khoang thoi gian bulletLiveTime (Task 11)");
-
-            Assert.AreEqual(typeof(IEnumerator), method.ReturnType,
-                "ReturnBulletToPool phai la IEnumerator (Coroutine)");
-        }
-
-        // -------------------------------------------------------
-        // Test 3: SpawnVisualBullet voi pool == null van hoat dong (fallback)
+        // Test 2: SpawnVisualBullet voi pool == null van hoat dong (fallback)
         //         Khong throw exception; dam bao backward compat
         // -------------------------------------------------------
         [Test]

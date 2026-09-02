@@ -25,19 +25,23 @@ namespace FPS
             : GetDefaultMultiplier(Zone);
 
         public bool IsHeadshot => Zone == HitboxZone.Head;
-        public NetworkObject OwnerNetworkObject => ownerNetworkObject != null
-            ? ownerNetworkObject
-            : GetComponentInParent<NetworkObject>();
+        public NetworkObject OwnerNetworkObject => ownerNetworkObject;
+        public IDamageable DamageTarget => damageTarget as IDamageable;
 
-        public IDamageable DamageTarget
+        public void Configure(HitboxZone newZone, float multiplier, NetworkObject netObj, MonoBehaviour target)
         {
-            get
-            {
-                if (damageTarget is IDamageable configuredTarget)
-                    return configuredTarget;
+            zone = newZone;
+            damageMultiplier = multiplier;
+            ownerNetworkObject = netObj;
+            damageTarget = target;
+        }
 
-                return GetComponentInParent<IDamageable>();
-            }
+        private void Awake()
+        {
+            if (ownerNetworkObject == null)
+                ownerNetworkObject = GetComponentInParent<NetworkObject>();
+            if (damageTarget == null)
+                damageTarget = GetComponentInParent<MonoBehaviour>() as IDamageable as MonoBehaviour;
         }
 
         private void Reset()
@@ -51,6 +55,10 @@ namespace FPS
         {
             if (damageMultiplier <= 0f)
                 damageMultiplier = GetDefaultMultiplier(zone);
+            if (ownerNetworkObject == null)
+                ownerNetworkObject = GetComponentInParent<NetworkObject>();
+            if (damageTarget == null)
+                damageTarget = GetComponentInParent<MonoBehaviour>();
         }
 
         public static float GetDefaultMultiplier(HitboxZone hitboxZone)

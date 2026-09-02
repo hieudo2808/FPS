@@ -22,6 +22,12 @@ namespace FPS
             NetworkVariableWritePermission.Server
         );
 
+        private readonly NetworkVariable<float> networkMaxHealth = new NetworkVariable<float>(
+            0f,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server
+        );
+
         // FIX 5: isDead cũng sync để client trigger animation/ragdoll
         private NetworkVariable<bool> isDead = new NetworkVariable<bool>(
             false,
@@ -41,9 +47,12 @@ namespace FPS
             && NetworkManager.Singleton != null
             && NetworkManager.Singleton.IsListening;
 
+        private bool CanMutateAuthoritativeState => !HasBoundNetworkState || IsServer;
+
         // Properties
         public float CurrentHealth => HasBoundNetworkState ? currentHealth.Value : localCurrentHealth;
-        public float MaxHealth => maxHealth;
+        public float MaxHealth => HasBoundNetworkState ? networkMaxHealth.Value : maxHealth;
+        public float AuthoredMaxHealth => originalMaxHealth > 0f ? originalMaxHealth : maxHealth;
         public bool IsDead => HasBoundNetworkState ? isDead.Value : localIsDead;
 
         // Event để UI hoặc các script khác subscribe
@@ -57,7 +66,7 @@ namespace FPS
 
         // FIX 3: Start() chỉ cache component, KHÔNG init state network
         // Tránh race condition với OnNetworkSpawn
-        private void Start()
+        private void Awake()
         {
             originalMaxHealth = maxHealth;
             localCurrentHealth = maxHealth;
@@ -69,19 +78,24 @@ namespace FPS
         {
             // Subscribe để update UI/visual trên tất cả client
             currentHealth.OnValueChanged += HandleHealthChanged;
+            networkMaxHealth.OnValueChanged += HandleMaxHealthChanged;
             isDead.OnValueChanged += HandleDeathChanged;
 
             // FIX 3: Chỉ server khởi tạo state
             if (IsServer)
             {
+                networkMaxHealth.Value = maxHealth;
                 currentHealth.Value = maxHealth;
                 isDead.Value = false;
             }
+
+            OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
         }
 
         public override void OnNetworkDespawn()
         {
             currentHealth.OnValueChanged -= HandleHealthChanged;
+            networkMaxHealth.OnValueChanged -= HandleMaxHealthChanged;
             isDead.OnValueChanged -= HandleDeathChanged;
         }
 
@@ -91,7 +105,12 @@ namespace FPS
 
         private void HandleHealthChanged(float previous, float current)
         {
-            OnHealthChanged?.Invoke(current, maxHealth);
+            OnHealthChanged?.Invoke(current, MaxHealth);
+        }
+
+        private void HandleMaxHealthChanged(float previous, float current)
+        {
+            OnHealthChanged?.Invoke(CurrentHealth, current);
         }
 
         private void HandleDeathChanged(bool previous, bool current)
@@ -122,13 +141,13 @@ namespace FPS
         // Gọi trực tiếp từ server-side code (EnemyAI, trap, explosion, v.v.)
         public void TakeDamage(float damage)
         {
-            if (!IsServer) return; // Guard cứng — chỉ server
+            if (!CanMutateAuthoritativeState) return;
             TakeDamage(new DamageInfo(damage));
         }
 
         public void TakeDamage(DamageInfo damageInfo)
         {
-            if (!IsServer) return; // Guard cứng — chỉ server
+            if (!CanMutateAuthoritativeState) return;
             lastDamageInfo = damageInfo;
             TakeDamageInternal(damageInfo.amount);
         }
@@ -139,7 +158,7 @@ namespace FPS
 
             float nextHealth = Mathf.Max(0f, CurrentHealth - damage);
             SetCurrentHealth(nextHealth);
-            GameLog.Info(() => $"[EnemyHealth] {gameObject.name} took {damage} damage. HP: {CurrentHealth}/{maxHealth}");
+            GameLog.Info(() => $"[EnemyHealth] {gameObject.name} took {damage} damage. HP: {CurrentHealth}/{MaxHealth}");
 
             if (CurrentHealth <= 0f)
                 Die();
@@ -151,11 +170,17 @@ namespace FPS
 
         public void SetMaxHealth(float newMaxHealth)
         {
-            if (!IsServer) return; // Guard cứng
+            if (!CanMutateAuthoritativeState) return;
 
-            maxHealth = newMaxHealth;
+            maxHealth = Mathf.Max(1f, newMaxHealth);
+            if (HasBoundNetworkState)
+                networkMaxHealth.Value = maxHealth;
+
             SetCurrentHealth(maxHealth);
-            GameLog.Info(() => $"[EnemyHealth] {gameObject.name} maxHealth scaled to {maxHealth}");
+            if (!HasBoundNetworkState)
+                OnHealthChanged?.Invoke(localCurrentHealth, maxHealth);
+
+            GameLog.Info(() => $"[EnemyHealth] {gameObject.name} maxHealth scaled to {MaxHealth}");
         }
 
         // ==========================================
@@ -225,20 +250,22 @@ namespace FPS
 
         public void ResetHealth()
         {
-            if (!IsServer) return;
+            if (!CanMutateAuthoritativeState) return;
 
             SetDead(false);
             maxHealth = originalMaxHealth;
+            if (HasBoundNetworkState)
+                networkMaxHealth.Value = maxHealth;
             SetCurrentHealth(maxHealth);
             CancelInvoke();
         }
 
         public void Heal(float amount)
         {
-            if (!IsServer) return;
+            if (!CanMutateAuthoritativeState) return;
             if (IsDead) return;
 
-            SetCurrentHealth(Mathf.Min(CurrentHealth + amount, maxHealth));
+            SetCurrentHealth(Mathf.Min(CurrentHealth + amount, MaxHealth));
         }
 
         private bool CanUseLocalPooling()

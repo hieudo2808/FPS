@@ -1,7 +1,27 @@
+using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace FPS
 {
+    public readonly struct PlayerTeamHealthSnapshot
+    {
+        public PlayerTeamHealthSnapshot(float currentHealth, float maxHealth, bool isDownOrDead)
+        {
+            CurrentHealth = Mathf.Max(0f, currentHealth);
+            MaxHealth = Mathf.Max(0f, maxHealth);
+            IsDownOrDead = isDownOrDead;
+        }
+
+        public float CurrentHealth { get; }
+        public float MaxHealth { get; }
+        public bool IsDownOrDead { get; }
+
+        public float HealthFraction => IsDownOrDead || MaxHealth <= 0f
+            ? 0f
+            : Mathf.Clamp01(CurrentHealth / MaxHealth);
+    }
+
     public enum SpecialType
     {
         None,
@@ -9,7 +29,8 @@ namespace FPS
         Screamer,
         Spitter,
         Charger,
-        Tank
+        Tank,
+        Infector
     }
 
     public abstract class SpecialInfectedBase : EnemyAI
@@ -22,9 +43,12 @@ namespace FPS
         
         protected float lastAbilityTime;
         protected bool abilityReady => Time.time - lastAbilityTime >= abilityCooldown;
+        protected int capturedSpawnPlayerCount = 1;
         
         public SpecialType Type => specialType;
         public bool AllowedInSoloMode => allowedInSoloMode;
+        public int CapturedSpawnPlayerCount => capturedSpawnPlayerCount;
+        protected virtual bool AutoTriggerPrimaryAbility => true;
 
         protected override void Start()
         {
@@ -36,19 +60,39 @@ namespace FPS
 
         protected virtual void ApplySpecialScaling()
         {
-            int playerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
-            
-            // Use the same linear multiplayer curve as normal zombies. The
-            // previous exponential curve made a four-player Screamer over
-            // fifteen times tougher than its solo version.
-            float hpScale = 1f + (Mathf.Max(1, playerCount) - 1) * 0.35f;
-            
+            capturedSpawnPlayerCount = ResolvePlayerCountForSpawn();
             EnemyHealth health = GetComponent<EnemyHealth>();
             if (health != null)
             {
-                float newHP = health.MaxHealth * hpScale * specialHPMultiplier;
+                float newHP = CalculateMaxHealth(capturedSpawnPlayerCount, health.AuthoredMaxHealth);
                 health.SetMaxHealth(newHP);
             }
+        }
+
+        protected virtual float CalculateMaxHealth(int playerCount, float authoredMaxHealth)
+        {
+            float hpScale = 1f + (ClampSupportedPlayerCount(playerCount) - 1) * 0.35f;
+            return Mathf.Max(1f, authoredMaxHealth * hpScale * specialHPMultiplier);
+        }
+
+        protected virtual int ResolvePlayerCountForSpawn()
+        {
+            NetworkManager manager = NetworkManager.Singleton;
+            if (manager != null && manager.IsListening)
+                return ClampSupportedPlayerCount(manager.ConnectedClientsList.Count);
+
+            return ClampSupportedPlayerCount(PlayerProfiler.Instance?.PlayerCount ?? 1);
+        }
+
+        public static int ClampSupportedPlayerCount(int playerCount)
+        {
+            return Mathf.Clamp(playerCount, 1, 4);
+        }
+
+        public override void ResetAI()
+        {
+            base.ResetAI();
+            ApplySpecialScaling();
         }
 
         protected override void Update()
@@ -56,7 +100,7 @@ namespace FPS
             base.Update();
             if (!CanRunServerLogic()) return;
 
-            if (abilityReady && CanUseAbility())
+            if (AutoTriggerPrimaryAbility && abilityReady && CanUseAbility())
             {
                 UseAbility();
                 lastAbilityTime = Time.time;
@@ -73,6 +117,23 @@ namespace FPS
         public virtual bool ShouldSpawn(PlayerProfile profile)
         {
             return true;
+        }
+
+        public virtual bool ShouldSpawnForTeam(
+            IReadOnlyList<PlayerProfile> profiles,
+            IReadOnlyList<PlayerTeamHealthSnapshot> teamHealth)
+        {
+            if (profiles == null || profiles.Count == 0)
+                return true;
+
+            for (int i = 0; i < profiles.Count; i++)
+            {
+                PlayerProfile profile = profiles[i];
+                if (profile?.playerTransform != null && ShouldSpawn(profile))
+                    return true;
+            }
+
+            return false;
         }
     }
 }

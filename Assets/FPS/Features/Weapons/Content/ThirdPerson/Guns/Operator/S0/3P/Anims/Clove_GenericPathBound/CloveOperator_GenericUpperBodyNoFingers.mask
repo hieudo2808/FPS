@@ -1,0 +1,1467 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CloveOperator_GenericUpperBodyNoFingers
+  m_Mask: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/L_Hand_IKpv_IUE
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/L_Hand_IKpv_IUE/L_Hand_IKpv_IUE_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/L_Hand_IKpv_IUE/L_Hand_IKpv_IUE_end/L_Hand_IKpv_IUE_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/L_WeaponMaster
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/L_WeaponMaster/L_WeaponMaster_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/L_WeaponMaster/L_WeaponMaster_end/L_WeaponMaster_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/L_Weapon_HandTarget
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/L_Weapon_HandTarget/L_Weapon_HandOffset
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/L_Weapon_HandTarget/L_Weapon_HandOffset/L_Weapon_HandOffset_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/L_Weapon_HandTarget/L_Weapon_HandOffset/L_Weapon_HandOffset_end/L_Weapon_HandOffset_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/R_WeaponMaster
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/R_WeaponMaster/R_WeaponMaster_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/R_WeaponMaster/R_WeaponMaster_end/R_WeaponMaster_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/R_Weapon_HandTarget
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/R_Weapon_HandTarget/R_Weapon_HandTarget_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/R_Weapon_HandTarget/R_Weapon_HandTarget_end/R_Weapon_HandTarget_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeaponAim_MasterWeapon_FK
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeaponAim_MasterWeapon_FK/MasterWeaponAim_MasterWeapon_FK_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeaponAim_MasterWeapon_FK/MasterWeaponAim_MasterWeapon_FK_end/MasterWeaponAim_MasterWeapon_FK_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/R_Hand_IKpv_IUE
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/R_Hand_IKpv_IUE/R_Hand_IKpv_IUE_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/R_Hand_IKpv_IUE/R_Hand_IKpv_IUE_end/R_Hand_IKpv_IUE_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine1_Offset
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine1_Offset/Spine1_Offset_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine1_Offset/Spine1_Offset_end/Spine1_Offset_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_A_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_A_01/L_Jacket_Front_A_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_A_01/L_Jacket_Front_A_02/L_Jacket_Front_A_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_A_01/L_Jacket_Front_A_02/L_Jacket_Front_A_03/L_Jacket_Front_A_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_A_01/L_Jacket_Front_A_02/L_Jacket_Front_A_03/L_Jacket_Front_A_03_end/L_Jacket_Front_A_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_B_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_B_01/L_Jacket_Front_B_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_B_01/L_Jacket_Front_B_02/L_Jacket_Front_B_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_B_01/L_Jacket_Front_B_02/L_Jacket_Front_B_03/L_Jacket_Front_B_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_B_01/L_Jacket_Front_B_02/L_Jacket_Front_B_03/L_Jacket_Front_B_03_end/L_Jacket_Front_B_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_C_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_C_01/L_Jacket_Front_C_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/L_Jacket_Front_C_01/L_Jacket_Front_C_01_end/L_Jacket_Front_C_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_A_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_A_01/R_Jacket_Front_A_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_A_01/R_Jacket_Front_A_02/R_Jacket_Front_A_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_A_01/R_Jacket_Front_A_02/R_Jacket_Front_A_03/Jacket_Zipper
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_A_01/R_Jacket_Front_A_02/R_Jacket_Front_A_03/Jacket_Zipper/Jacket_Zipper_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_A_01/R_Jacket_Front_A_02/R_Jacket_Front_A_03/Jacket_Zipper/Jacket_Zipper_end/Jacket_Zipper_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_B_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_B_01/R_Jacket_Front_B_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_B_01/R_Jacket_Front_B_02/R_Jacket_Front_B_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_B_01/R_Jacket_Front_B_02/R_Jacket_Front_B_03/R_Jacket_Front_B_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_B_01/R_Jacket_Front_B_02/R_Jacket_Front_B_03/R_Jacket_Front_B_03_end/R_Jacket_Front_B_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_C_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_C_01/R_Jacket_Front_C_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/R_Jacket_Front_C_01/R_Jacket_Front_C_01_end/R_Jacket_Front_C_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine2_Offset
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine2_Offset/Spine2_Offset_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine2_Offset/Spine2_Offset_end/Spine2_Offset_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/L_Backpack_Strap_Bot
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/L_Backpack_Strap_Bot/L_Backpack_Strap_Bot_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/L_Backpack_Strap_Bot/L_Backpack_Strap_Bot_end/L_Backpack_Strap_Bot_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/L_Jacket_Front_A_Spine
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/L_Jacket_Front_A_Spine/L_Jacket_Front_A_Spine_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/L_Jacket_Front_A_Spine/L_Jacket_Front_A_Spine_end/L_Jacket_Front_A_Spine_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/R_Backpack_Strap_Bot
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/R_Backpack_Strap_Bot/R_Backpack_Strap_Bot_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/R_Backpack_Strap_Bot/R_Backpack_Strap_Bot_end/R_Backpack_Strap_Bot_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/R_Jacket_Front_A_Spine
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/R_Jacket_Front_A_Spine/R_Jacket_Front_A_Spine_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/R_Jacket_Front_A_Spine/R_Jacket_Front_A_Spine_end/R_Jacket_Front_A_Spine_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine3_MasterWeaponAim_Offset_FK
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine3_MasterWeaponAim_Offset_FK/Spine3_MasterWeaponAim_Offset_FK_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine3_MasterWeaponAim_Offset_FK/Spine3_MasterWeaponAim_Offset_FK_end/Spine3_MasterWeaponAim_Offset_FK_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine3_Offset
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine3_Offset/Spine3_Offset_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine3_Offset/Spine3_Offset_end/Spine3_Offset_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot/Backpack
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot/Backpack/Backpack_Chain
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot/Backpack/Backpack_Chain/Backpack_Chain_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot/Backpack/Backpack_Chain/Backpack_Chain_02/Backpack_Chain_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot/Backpack/Backpack_Chain/Backpack_Chain_02/Backpack_Chain_03/Backpack_Chain_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot/Backpack/Backpack_Chain/Backpack_Chain_02/Backpack_Chain_03/Backpack_Chain_03_end/Backpack_Chain_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot/Backpack/Backpack_Charm
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot/Backpack/Backpack_Charm/Backpack_Charm_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot/Backpack/Backpack_Charm/Backpack_Charm_end/Backpack_Charm_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot/Backpack/Backpack_Zipper
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot/Backpack/Backpack_Zipper/Backpack_Zipper_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Backpack_Pivot/Backpack/Backpack_Zipper/Backpack_Zipper_end/Backpack_Zipper_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/C_Hood_Back_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/C_Hood_Back_01/C_Hood_Back_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/C_Hood_Back_01/C_Hood_Back_02/C_Hood_Back_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/C_Hood_Back_01/C_Hood_Back_02/C_Hood_Back_02_end/C_Hood_Back_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Back_Buckle
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Back_Buckle/L_Back_Buckle_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Back_Buckle/L_Back_Buckle_end/L_Back_Buckle_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Backpack_Strap_Armpit
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Backpack_Strap_Armpit/L_Backpack_Strap_Armpit_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Backpack_Strap_Armpit/L_Backpack_Strap_Armpit_end/L_Backpack_Strap_Armpit_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Armpit
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Armpit/L_Armpit_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Armpit/L_Armpit_end/L_Armpit_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Backpack_Strap_Front
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Backpack_Strap_Front/L_Backpack_Strap_Front_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Backpack_Strap_Front/L_Backpack_Strap_Front_end/L_Backpack_Strap_Front_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Backpack_Strap_Top
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Backpack_Strap_Top/L_Backpack_Strap_Top_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Backpack_Strap_Top/L_Backpack_Strap_Top_end/L_Backpack_Strap_Top_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Hood
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Hood/L_Hood_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Hood/L_Hood_end/L_Hood_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Elbow_Ndl
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Elbow_Ndl/L_Elbow_Ndl_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Elbow_Ndl/L_Elbow_Ndl_end/L_Elbow_Ndl_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Elbow_Twst1
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Elbow_Twst1/L_Elbow_Twst1_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Elbow_Twst1/L_Elbow_Twst1_end/L_Elbow_Twst1_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Elbow_Twst2
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Elbow_Twst2/L_Elbow_Twst2_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Elbow_Twst2/L_Elbow_Twst2_end/L_Elbow_Twst2_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Elbow_Twst3
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Elbow_Twst3/L_Elbow_Twst3_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Elbow_Twst3/L_Elbow_Twst3_end/L_Elbow_Twst3_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Hand
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Hand/L_Sleeve_Bot
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Hand/L_Sleeve_Bot/L_Sleeve_Bot_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Hand/L_Sleeve_Bot/L_Sleeve_Bot_end/L_Sleeve_Bot_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Hand/L_Sleeve_Top
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Hand/L_Sleeve_Top/L_Sleeve_Top_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Hand/L_Sleeve_Top/L_Sleeve_Top_end/L_Sleeve_Top_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Hand/L_WeaponPoint
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Hand/L_WeaponPoint/L_WeaponPoint_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Elbow/L_Hand/L_WeaponPoint/L_WeaponPoint_end/L_WeaponPoint_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Shoulder_Twst1
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Shoulder_Twst1/L_Shoulder_Helper
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Shoulder_Twst1/L_Shoulder_Helper/L_Shoulder_Helper_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Shoulder_Twst1/L_Shoulder_Helper/L_Shoulder_Helper_end/L_Shoulder_Helper_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Shoulder_Twst2
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Shoulder_Twst2/L_Shoulder_Twst2_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Shoulder_Twst2/L_Shoulder_Twst2_end/L_Shoulder_Twst2_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Shoulder_Twst3
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Shoulder_Twst3/L_Shoulder_Twst3_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/L_Clavicle/L_Shoulder/L_Shoulder_Twst3/L_Shoulder_Twst3_end/L_Shoulder_Twst3_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Collar
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Collar/Collar_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Collar/Collar_end/Collar_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_EyebrowLower
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_EyebrowLower/C_EyebrowLower_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_EyebrowLower/C_EyebrowLower_end/C_EyebrowLower_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_EyebrowUpper
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_EyebrowUpper/C_EyebrowUpper_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_EyebrowUpper/C_EyebrowUpper_end/C_EyebrowUpper_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Forehead
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Forehead/C_Forehead_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Forehead/C_Forehead_end/C_Forehead_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Jaw_Edge
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Jaw_Edge/C_Jaw_Edge_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Jaw_Edge/C_Jaw_Edge_end/C_Jaw_Edge_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_NasalBridge_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_NasalBridge_01/C_NasalBridge_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_NasalBridge_01/C_NasalBridge_01_end/C_NasalBridge_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_NasalBridge_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_NasalBridge_02/C_NasalBridge_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_NasalBridge_02/C_NasalBridge_02_end/C_NasalBridge_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_NasalBridge_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_NasalBridge_03/C_NasalBridge_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_NasalBridge_03/C_NasalBridge_03_end/C_NasalBridge_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Nasal_Lo
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Nasal_Lo/C_Nasal_Lo_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Nasal_Lo/C_Nasal_Lo_end/C_Nasal_Lo_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Nasal_Tip
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Nasal_Tip/C_Nasal_Tip_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Nasal_Tip/C_Nasal_Tip_end/C_Nasal_Tip_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Neck_Front_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Neck_Front_01/C_Neck_Front_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Neck_Front_01/C_Neck_Front_01_end/C_Neck_Front_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Neck_Front_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Neck_Front_02/C_Neck_Front_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_Neck_Front_02/C_Neck_Front_02_end/C_Neck_Front_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralInner_Lo
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralInner_Lo/C_OralInner_Lo_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralInner_Lo/C_OralInner_Lo_end/C_OralInner_Lo_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralLip_Lo
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralLip_Lo/C_OralLip_Lo_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralLip_Lo/C_OralLip_Lo_end/C_OralLip_Lo_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralLip_Lo_Str
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralLip_Lo_Str/C_OralLip_Lo_Str_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralLip_Lo_Str/C_OralLip_Lo_Str_end/C_OralLip_Lo_Str_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralLip_Up
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralLip_Up/C_OralLip_Up_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralLip_Up/C_OralLip_Up_end/C_OralLip_Up_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralLip_Up_Str
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralLip_Up_Str/C_OralLip_Up_Str_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralLip_Up_Str/C_OralLip_Up_Str_end/C_OralLip_Up_Str_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralOuter_Lo
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralOuter_Lo/C_OralOuter_Lo_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/C_OralOuter_Lo/C_OralOuter_Lo_end/C_OralOuter_Lo_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/C_Skull_Top
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/C_Skull_Top/C_Skull_Top_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/C_Skull_Top/C_Skull_Top_end/C_Skull_Top_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/Head_Twist_Tip_CS
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/Head_Twist_Tip_CS/Head_Twist_Tip_CS_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/Head_Twist_Tip_CS/Head_Twist_Tip_CS_end/Head_Twist_Tip_CS_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/Jaw_CS
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/Jaw_CS/Jaw_CS_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/Jaw_CS/Jaw_CS_end/Jaw_CS_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/L_Eye_CS
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/L_Eye_CS/L_Eye_CS_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/L_Eye_CS/L_Eye_CS_end/L_Eye_CS_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/R_Eye_CS
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/R_Eye_CS/R_Eye_CS_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/R_Eye_CS/R_Eye_CS_end/R_Eye_CS_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/Skull_CS
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/Skull_CS/Skull_CS_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_CS/Skull_CS/Skull_CS_end/Skull_CS_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_Twist
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_Twist/Head_Twist_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Head_Twist/Head_Twist_end/Head_Twist_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Jaw
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Jaw/Bot_Teeth
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Jaw/Bot_Teeth/Bot_Teeth_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Jaw/Bot_Teeth/Bot_Teeth_end/Bot_Teeth_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Jaw/M_Tongue_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Jaw/M_Tongue_01/M_Tongue_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Jaw/M_Tongue_01/M_Tongue_02/M_Tongue_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Jaw/M_Tongue_01/M_Tongue_02/M_Tongue_03/M_Tongue_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Jaw/M_Tongue_01/M_Tongue_02/M_Tongue_03/M_Tongue_03_end/M_Tongue_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Cheek
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Cheek/L_Cheek_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Cheek/L_Cheek_end/L_Cheek_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Cheek_Masseter
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Cheek_Masseter/L_Cheek_Masseter_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Cheek_Masseter/L_Cheek_Masseter_end/L_Cheek_Masseter_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Ear
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Ear/L_Earring_CS
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Ear/L_Earring_CS/L_Earring_CS_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Ear/L_Earring_CS/L_Earring_CS_end/L_Earring_CS_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyeHighlight
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyeHighlight/L_EyeHighlight_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyeHighlight/L_EyeHighlight_end/L_EyeHighlight_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Eyeball
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Eyeball/L_Eyeball_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Eyeball/L_Eyeball_end/L_Eyeball_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowLower_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowLower_01/L_EyebrowLower_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowLower_01/L_EyebrowLower_01_end/L_EyebrowLower_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowLower_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowLower_02/L_EyebrowLower_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowLower_02/L_EyebrowLower_02_end/L_EyebrowLower_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowLower_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowLower_03/L_EyebrowLower_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowLower_03/L_EyebrowLower_03_end/L_EyebrowLower_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowLower_04
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowLower_04/L_EyebrowLower_04_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowLower_04/L_EyebrowLower_04_end/L_EyebrowLower_04_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowUpper_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowUpper_01/L_EyebrowUpper_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowUpper_01/L_EyebrowUpper_01_end/L_EyebrowUpper_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowUpper_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowUpper_02/L_EyebrowUpper_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowUpper_02/L_EyebrowUpper_02_end/L_EyebrowUpper_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowUpper_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowUpper_03/L_EyebrowUpper_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowUpper_03/L_EyebrowUpper_03_end/L_EyebrowUpper_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowUpper_04
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowUpper_04/L_EyebrowUpper_04_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyebrowUpper_04/L_EyebrowUpper_04_end/L_EyebrowUpper_04_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Corner_In
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Corner_In/L_EyelidInner_Corner_In_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Corner_In/L_EyelidInner_Corner_In_end/L_EyelidInner_Corner_In_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Corner_Out
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Corner_Out/L_EyelidInner_Corner_Out_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Corner_Out/L_EyelidInner_Corner_Out_end/L_EyelidInner_Corner_Out_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Lo_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Lo_01/L_EyelidInner_Lo_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Lo_01/L_EyelidInner_Lo_01_end/L_EyelidInner_Lo_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Lo_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Lo_02/L_EyelidInner_Lo_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Lo_02/L_EyelidInner_Lo_02_end/L_EyelidInner_Lo_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Lo_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Lo_03/L_EyelidInner_Lo_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Lo_03/L_EyelidInner_Lo_03_end/L_EyelidInner_Lo_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Up_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Up_01/L_EyelidInner_Up_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Up_01/L_EyelidInner_Up_01_end/L_EyelidInner_Up_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Up_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Up_02/L_EyelidInner_Up_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Up_02/L_EyelidInner_Up_02_end/L_EyelidInner_Up_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Up_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Up_03/L_EyelidInner_Up_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidInner_Up_03/L_EyelidInner_Up_03_end/L_EyelidInner_Up_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Corner_In
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Corner_In/L_EyelidOuter_Corner_In_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Corner_In/L_EyelidOuter_Corner_In_end/L_EyelidOuter_Corner_In_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Corner_Out
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Corner_Out/L_EyelidOuter_Corner_Out_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Corner_Out/L_EyelidOuter_Corner_Out_end/L_EyelidOuter_Corner_Out_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Corner_Up
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Corner_Up/L_EyelidOuter_Corner_Up_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Corner_Up/L_EyelidOuter_Corner_Up_end/L_EyelidOuter_Corner_Up_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Lo_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Lo_01/L_EyelidOuter_Lo_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Lo_01/L_EyelidOuter_Lo_01_end/L_EyelidOuter_Lo_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Lo_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Lo_02/L_EyelidOuter_Lo_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Lo_02/L_EyelidOuter_Lo_02_end/L_EyelidOuter_Lo_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Lo_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Lo_03/L_EyelidOuter_Lo_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Lo_03/L_EyelidOuter_Lo_03_end/L_EyelidOuter_Lo_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Up_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Up_01/L_EyelidOuter_Up_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Up_01/L_EyelidOuter_Up_01_end/L_EyelidOuter_Up_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Up_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Up_02/L_EyelidOuter_Up_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Up_02/L_EyelidOuter_Up_02_end/L_EyelidOuter_Up_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Up_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Up_03/L_EyelidOuter_Up_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_EyelidOuter_Up_03/L_EyelidOuter_Up_03_end/L_EyelidOuter_Up_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Forehead_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Forehead_01/L_Forehead_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Forehead_01/L_Forehead_01_end/L_Forehead_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Forehead_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Forehead_02/L_Forehead_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Forehead_02/L_Forehead_02_end/L_Forehead_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Forehead_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Forehead_03/L_Forehead_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Forehead_03/L_Forehead_03_end/L_Forehead_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Hair_A_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Hair_A_01/L_Hair_A_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Hair_A_01/L_Hair_A_01_end/L_Hair_A_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Hair_B_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Hair_B_01/L_Hair_B_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Hair_B_01/L_Hair_B_01_end/L_Hair_B_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Jaw_Edge
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Jaw_Edge/L_Jaw_Edge_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Jaw_Edge/L_Jaw_Edge_end/L_Jaw_Edge_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Jaw_EdgeCorner
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Jaw_EdgeCorner/L_Jaw_EdgeCorner_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Jaw_EdgeCorner/L_Jaw_EdgeCorner_end/L_Jaw_EdgeCorner_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasal_Nostril_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasal_Nostril_01/L_Nasal_Nostril_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasal_Nostril_01/L_Nasal_Nostril_01_end/L_Nasal_Nostril_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasolabial_Up_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasolabial_Up_01/L_Nasolabial_Up_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasolabial_Up_01/L_Nasolabial_Up_01_end/L_Nasolabial_Up_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasolabial_Up_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasolabial_Up_02/L_Nasolabial_Up_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasolabial_Up_02/L_Nasolabial_Up_02_end/L_Nasolabial_Up_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasolabial_Up_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasolabial_Up_03/L_Nasolabial_Up_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasolabial_Up_03/L_Nasolabial_Up_03_end/L_Nasolabial_Up_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasolabial_Up_04
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasolabial_Up_04/L_Nasolabial_Up_04_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Nasolabial_Up_04/L_Nasolabial_Up_04_end/L_Nasolabial_Up_04_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Neck_SternoCl_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Neck_SternoCl_01/L_Neck_SternoCl_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Neck_SternoCl_01/L_Neck_SternoCl_01_end/L_Neck_SternoCl_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Neck_SternoCl_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Neck_SternoCl_02/L_Neck_SternoCl_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Neck_SternoCl_02/L_Neck_SternoCl_02_end/L_Neck_SternoCl_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Corner
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Corner/L_OralInner_Corner_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Corner/L_OralInner_Corner_end/L_OralInner_Corner_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Lo_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Lo_01/L_OralInner_Lo_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Lo_01/L_OralInner_Lo_01_end/L_OralInner_Lo_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Lo_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Lo_02/L_OralInner_Lo_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Lo_02/L_OralInner_Lo_02_end/L_OralInner_Lo_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Up_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Up_01/L_OralInner_Up_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Up_01/L_OralInner_Up_01_end/L_OralInner_Up_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Up_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Up_02/L_OralInner_Up_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralInner_Up_02/L_OralInner_Up_02_end/L_OralInner_Up_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Corner
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Corner/L_OralLip_Corner_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Corner/L_OralLip_Corner_end/L_OralLip_Corner_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Lo_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Lo_01/L_OralLip_Lo_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Lo_01/L_OralLip_Lo_01_end/L_OralLip_Lo_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Lo_01_Str
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Lo_01_Str/L_OralLip_Lo_01_Str_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Lo_01_Str/L_OralLip_Lo_01_Str_end/L_OralLip_Lo_01_Str_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Lo_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Lo_02/L_OralLip_Lo_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Lo_02/L_OralLip_Lo_02_end/L_OralLip_Lo_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Lo_02_Str
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Lo_02_Str/L_OralLip_Lo_02_Str_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Lo_02_Str/L_OralLip_Lo_02_Str_end/L_OralLip_Lo_02_Str_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Up_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Up_01/L_OralLip_Up_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Up_01/L_OralLip_Up_01_end/L_OralLip_Up_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Up_01_Str
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Up_01_Str/L_OralLip_Up_01_Str_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Up_01_Str/L_OralLip_Up_01_Str_end/L_OralLip_Up_01_Str_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Up_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Up_02/L_OralLip_Up_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Up_02/L_OralLip_Up_02_end/L_OralLip_Up_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Up_02_Str
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Up_02_Str/L_OralLip_Up_02_Str_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralLip_Up_02_Str/L_OralLip_Up_02_Str_end/L_OralLip_Up_02_Str_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Corner
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Corner/L_OralOuter_Corner_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Corner/L_OralOuter_Corner_end/L_OralOuter_Corner_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Lo_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Lo_01/L_OralOuter_Lo_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Lo_01/L_OralOuter_Lo_01_end/L_OralOuter_Lo_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Lo_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Lo_02/L_OralOuter_Lo_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Lo_02/L_OralOuter_Lo_02_end/L_OralOuter_Lo_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Up_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Up_01/L_OralOuter_Up_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Up_01/L_OralOuter_Up_01_end/L_OralOuter_Up_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Up_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Up_02/L_OralOuter_Up_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_OralOuter_Up_02/L_OralOuter_Up_02_end/L_OralOuter_Up_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_ZygoOut
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_ZygoOut/L_ZygoOut_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_ZygoOut/L_ZygoOut_end/L_ZygoOut_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_ZygoOut_Corner
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_ZygoOut_Corner/L_ZygoOut_Corner_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_ZygoOut_Corner/L_ZygoOut_Corner_end/L_ZygoOut_Corner_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Zygo_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Zygo_01/L_Zygo_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Zygo_01/L_Zygo_01_end/L_Zygo_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Zygo_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Zygo_02/L_Zygo_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Zygo_02/L_Zygo_02_end/L_Zygo_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Zygo_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Zygo_03/L_Zygo_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Zygo_03/L_Zygo_03_end/L_Zygo_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Zygo_Corner
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Zygo_Corner/L_Zygo_Corner_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/L_Zygo_Corner/L_Zygo_Corner_end/L_Zygo_Corner_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Cheek
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Cheek/R_Cheek_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Cheek/R_Cheek_end/R_Cheek_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Cheek_Masseter
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Cheek_Masseter/R_Cheek_Masseter_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Cheek_Masseter/R_Cheek_Masseter_end/R_Cheek_Masseter_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Ear
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Ear/R_Ear_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Ear/R_Ear_end/R_Ear_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyeHighlight
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyeHighlight/R_EyeHighlight_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyeHighlight/R_EyeHighlight_end/R_EyeHighlight_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Eyeball
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Eyeball/R_Eyeball_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Eyeball/R_Eyeball_end/R_Eyeball_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowLower_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowLower_01/R_EyebrowLower_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowLower_01/R_EyebrowLower_01_end/R_EyebrowLower_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowLower_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowLower_02/R_EyebrowLower_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowLower_02/R_EyebrowLower_02_end/R_EyebrowLower_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowLower_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowLower_03/R_EyebrowLower_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowLower_03/R_EyebrowLower_03_end/R_EyebrowLower_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowLower_04
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowLower_04/R_EyebrowLower_04_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowLower_04/R_EyebrowLower_04_end/R_EyebrowLower_04_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowUpper_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowUpper_01/R_EyebrowUpper_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowUpper_01/R_EyebrowUpper_01_end/R_EyebrowUpper_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowUpper_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowUpper_02/R_EyebrowUpper_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowUpper_02/R_EyebrowUpper_02_end/R_EyebrowUpper_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowUpper_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowUpper_03/R_EyebrowUpper_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowUpper_03/R_EyebrowUpper_03_end/R_EyebrowUpper_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowUpper_04
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowUpper_04/R_EyebrowUpper_04_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyebrowUpper_04/R_EyebrowUpper_04_end/R_EyebrowUpper_04_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Corner_In
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Corner_In/R_EyelidInner_Corner_In_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Corner_In/R_EyelidInner_Corner_In_end/R_EyelidInner_Corner_In_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Corner_Out
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Corner_Out/R_EyelidInner_Corner_Out_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Corner_Out/R_EyelidInner_Corner_Out_end/R_EyelidInner_Corner_Out_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Lo_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Lo_01/R_EyelidInner_Lo_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Lo_01/R_EyelidInner_Lo_01_end/R_EyelidInner_Lo_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Lo_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Lo_02/R_EyelidInner_Lo_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Lo_02/R_EyelidInner_Lo_02_end/R_EyelidInner_Lo_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Lo_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Lo_03/R_EyelidInner_Lo_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Lo_03/R_EyelidInner_Lo_03_end/R_EyelidInner_Lo_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Up_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Up_01/R_EyelidInner_Up_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Up_01/R_EyelidInner_Up_01_end/R_EyelidInner_Up_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Up_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Up_02/R_EyelidInner_Up_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Up_02/R_EyelidInner_Up_02_end/R_EyelidInner_Up_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Up_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Up_03/R_EyelidInner_Up_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidInner_Up_03/R_EyelidInner_Up_03_end/R_EyelidInner_Up_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Corner_In
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Corner_In/R_EyelidOuter_Corner_In_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Corner_In/R_EyelidOuter_Corner_In_end/R_EyelidOuter_Corner_In_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Corner_Out
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Corner_Out/R_EyelidOuter_Corner_Out_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Corner_Out/R_EyelidOuter_Corner_Out_end/R_EyelidOuter_Corner_Out_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Corner_Up
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Corner_Up/R_EyelidOuter_Corner_Up_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Corner_Up/R_EyelidOuter_Corner_Up_end/R_EyelidOuter_Corner_Up_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Lo_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Lo_01/R_EyelidOuter_Lo_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Lo_01/R_EyelidOuter_Lo_01_end/R_EyelidOuter_Lo_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Lo_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Lo_02/R_EyelidOuter_Lo_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Lo_02/R_EyelidOuter_Lo_02_end/R_EyelidOuter_Lo_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Lo_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Lo_03/R_EyelidOuter_Lo_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Lo_03/R_EyelidOuter_Lo_03_end/R_EyelidOuter_Lo_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Up_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Up_01/R_EyelidOuter_Up_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Up_01/R_EyelidOuter_Up_01_end/R_EyelidOuter_Up_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Up_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Up_02/R_EyelidOuter_Up_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Up_02/R_EyelidOuter_Up_02_end/R_EyelidOuter_Up_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Up_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Up_03/R_EyelidOuter_Up_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_EyelidOuter_Up_03/R_EyelidOuter_Up_03_end/R_EyelidOuter_Up_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Forehead_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Forehead_01/R_Forehead_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Forehead_01/R_Forehead_01_end/R_Forehead_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Forehead_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Forehead_02/R_Forehead_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Forehead_02/R_Forehead_02_end/R_Forehead_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Forehead_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Forehead_03/R_Forehead_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Forehead_03/R_Forehead_03_end/R_Forehead_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Hair_A_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Hair_A_01/R_Hair_A_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Hair_A_01/R_Hair_A_01_end/R_Hair_A_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Hair_B_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Hair_B_01/R_Hair_B_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Hair_B_01/R_Hair_B_01_end/R_Hair_B_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Jaw_Edge
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Jaw_Edge/R_Jaw_Edge_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Jaw_Edge/R_Jaw_Edge_end/R_Jaw_Edge_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Jaw_EdgeCorner
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Jaw_EdgeCorner/R_Jaw_EdgeCorner_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Jaw_EdgeCorner/R_Jaw_EdgeCorner_end/R_Jaw_EdgeCorner_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasal_Nostril_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasal_Nostril_01/R_Nasal_Nostril_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasal_Nostril_01/R_Nasal_Nostril_01_end/R_Nasal_Nostril_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasolabial_Up_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasolabial_Up_01/R_Nasolabial_Up_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasolabial_Up_01/R_Nasolabial_Up_01_end/R_Nasolabial_Up_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasolabial_Up_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasolabial_Up_02/R_Nasolabial_Up_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasolabial_Up_02/R_Nasolabial_Up_02_end/R_Nasolabial_Up_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasolabial_Up_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasolabial_Up_03/R_Nasolabial_Up_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasolabial_Up_03/R_Nasolabial_Up_03_end/R_Nasolabial_Up_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasolabial_Up_04
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasolabial_Up_04/R_Nasolabial_Up_04_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Nasolabial_Up_04/R_Nasolabial_Up_04_end/R_Nasolabial_Up_04_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Neck_SternoCl_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Neck_SternoCl_01/R_Neck_SternoCl_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Neck_SternoCl_01/R_Neck_SternoCl_01_end/R_Neck_SternoCl_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Neck_SternoCl_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Neck_SternoCl_02/R_Neck_SternoCl_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Neck_SternoCl_02/R_Neck_SternoCl_02_end/R_Neck_SternoCl_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Corner
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Corner/R_OralInner_Corner_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Corner/R_OralInner_Corner_end/R_OralInner_Corner_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Lo_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Lo_01/R_OralInner_Lo_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Lo_01/R_OralInner_Lo_01_end/R_OralInner_Lo_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Lo_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Lo_02/R_OralInner_Lo_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Lo_02/R_OralInner_Lo_02_end/R_OralInner_Lo_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Up_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Up_01/R_OralInner_Up_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Up_01/R_OralInner_Up_01_end/R_OralInner_Up_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Up_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Up_02/R_OralInner_Up_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralInner_Up_02/R_OralInner_Up_02_end/R_OralInner_Up_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Corner
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Corner/R_OralLip_Corner_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Corner/R_OralLip_Corner_end/R_OralLip_Corner_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Lo_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Lo_01/R_OralLip_Lo_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Lo_01/R_OralLip_Lo_01_end/R_OralLip_Lo_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Lo_01_Str
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Lo_01_Str/R_OralLip_Lo_01_Str_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Lo_01_Str/R_OralLip_Lo_01_Str_end/R_OralLip_Lo_01_Str_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Lo_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Lo_02/R_OralLip_Lo_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Lo_02/R_OralLip_Lo_02_end/R_OralLip_Lo_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Lo_02_Str
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Lo_02_Str/R_OralLip_Lo_02_Str_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Lo_02_Str/R_OralLip_Lo_02_Str_end/R_OralLip_Lo_02_Str_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Up_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Up_01/R_OralLip_Up_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Up_01/R_OralLip_Up_01_end/R_OralLip_Up_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Up_01_Str
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Up_01_Str/R_OralLip_Up_01_Str_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Up_01_Str/R_OralLip_Up_01_Str_end/R_OralLip_Up_01_Str_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Up_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Up_02/R_OralLip_Up_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Up_02/R_OralLip_Up_02_end/R_OralLip_Up_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Up_02_Str
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Up_02_Str/R_OralLip_Up_02_Str_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralLip_Up_02_Str/R_OralLip_Up_02_Str_end/R_OralLip_Up_02_Str_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Corner
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Corner/R_OralOuter_Corner_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Corner/R_OralOuter_Corner_end/R_OralOuter_Corner_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Lo_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Lo_01/R_OralOuter_Lo_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Lo_01/R_OralOuter_Lo_01_end/R_OralOuter_Lo_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Lo_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Lo_02/R_OralOuter_Lo_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Lo_02/R_OralOuter_Lo_02_end/R_OralOuter_Lo_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Up_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Up_01/R_OralOuter_Up_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Up_01/R_OralOuter_Up_01_end/R_OralOuter_Up_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Up_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Up_02/R_OralOuter_Up_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_OralOuter_Up_02/R_OralOuter_Up_02_end/R_OralOuter_Up_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_ZygoOut
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_ZygoOut/R_ZygoOut_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_ZygoOut/R_ZygoOut_end/R_ZygoOut_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_ZygoOut_Corner
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_ZygoOut_Corner/R_ZygoOut_Corner_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_ZygoOut_Corner/R_ZygoOut_Corner_end/R_ZygoOut_Corner_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Zygo_01
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Zygo_01/R_Zygo_01_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Zygo_01/R_Zygo_01_end/R_Zygo_01_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Zygo_02
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Zygo_02/R_Zygo_02_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Zygo_02/R_Zygo_02_end/R_Zygo_02_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Zygo_03
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Zygo_03/R_Zygo_03_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Zygo_03/R_Zygo_03_end/R_Zygo_03_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Zygo_Corner
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Zygo_Corner/R_Zygo_Corner_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/R_Zygo_Corner/R_Zygo_Corner_end/R_Zygo_Corner_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Up_Teeth
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Up_Teeth/Up_Teeth_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Head/Up_Teeth/Up_Teeth_end/Up_Teeth_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Neck_MasterWeaponAim_Offset_FK
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Neck_MasterWeaponAim_Offset_FK/Neck_MasterWeaponAim_Offset_FK_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Neck_MasterWeaponAim_Offset_FK/Neck_MasterWeaponAim_Offset_FK_end/Neck_MasterWeaponAim_Offset_FK_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Neck_Twist
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Neck_Twist/Neck_Twist_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Neck/Neck_Twist/Neck_Twist_end/Neck_Twist_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Back_Buckle
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Back_Buckle/R_Back_Buckle_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Back_Buckle/R_Back_Buckle_end/R_Back_Buckle_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Backpack_Strap_Armpit
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Backpack_Strap_Armpit/R_Backpack_Strap_Armpit_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Backpack_Strap_Armpit/R_Backpack_Strap_Armpit_end/R_Backpack_Strap_Armpit_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Armpit
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Armpit/R_Armpit_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Armpit/R_Armpit_end/R_Armpit_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Backpack_Strap_Front
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Backpack_Strap_Front/R_Backpack_Strap_Front_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Backpack_Strap_Front/R_Backpack_Strap_Front_end/R_Backpack_Strap_Front_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Backpack_Strap_Top
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Backpack_Strap_Top/R_Backpack_Strap_Top_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Backpack_Strap_Top/R_Backpack_Strap_Top_end/R_Backpack_Strap_Top_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Hood
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Hood/R_Hood_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Hood/R_Hood_end/R_Hood_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Ndl
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Ndl/R_Elbow_Ndl_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Ndl/R_Elbow_Ndl_end/R_Elbow_Ndl_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Twst1
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Twst1/R_Elbow_Twst1_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Twst1/R_Elbow_Twst1_end/R_Elbow_Twst1_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Twst2
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Twst2/R_Elbow_Twst2_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Twst2/R_Elbow_Twst2_end/R_Elbow_Twst2_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Twst3
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Twst3/R_Bracelet_Chain
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Twst3/R_Bracelet_Chain/R_Bracelet_Chain_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Elbow_Twst3/R_Bracelet_Chain/R_Bracelet_Chain_end/R_Bracelet_Chain_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand/R_Hand_L_Hand_IK
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand/R_Hand_L_Hand_IK/R_Hand_L_Hand_IK_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand/R_Hand_L_Hand_IK/R_Hand_L_Hand_IK_end/R_Hand_L_Hand_IK_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand/R_Sleeve_Bot
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand/R_Sleeve_Bot/R_Sleeve_Bot_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand/R_Sleeve_Bot/R_Sleeve_Bot_end/R_Sleeve_Bot_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand/R_Sleeve_Top
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand/R_Sleeve_Top/R_Sleeve_Top_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand/R_Sleeve_Top/R_Sleeve_Top_end/R_Sleeve_Top_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand/R_WeaponPoint
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand/R_WeaponPoint/R_WeaponPoint_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Elbow/R_Hand/R_WeaponPoint/R_WeaponPoint_end/R_WeaponPoint_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Shoulder_Twst1
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Shoulder_Twst1/R_Shoulder_Helper
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Shoulder_Twst1/R_Shoulder_Helper/R_Shoulder_Helper_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Shoulder_Twst1/R_Shoulder_Helper/R_Shoulder_Helper_end/R_Shoulder_Helper_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Shoulder_Twst2
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Shoulder_Twst2/R_Shoulder_Twst2_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Shoulder_Twst2/R_Shoulder_Twst2_end/R_Shoulder_Twst2_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Shoulder_Twst3
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Shoulder_Twst3/R_Shoulder_Twst3_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/R_Clavicle/R_Shoulder/R_Shoulder_Twst3/R_Shoulder_Twst3_end/R_Shoulder_Twst3_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Spine4_MasterWeaponAim_Offset_FK
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Spine4_MasterWeaponAim_Offset_FK/Spine4_MasterWeaponAim_Offset_FK_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Spine4_MasterWeaponAim_Offset_FK/Spine4_MasterWeaponAim_Offset_FK_end/Spine4_MasterWeaponAim_Offset_FK_end_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Spine4_Offset
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Spine4_Offset/Spine4_Offset_end
+    m_Weight: 1
+  - m_Path: CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Spine1/Spine2/Spine3/Spine4/Spine4_Offset/Spine4_Offset_end/Spine4_Offset_end_end
+    m_Weight: 1

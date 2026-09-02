@@ -160,7 +160,7 @@ namespace FPS.Tests
         {
             var cameraGo = new GameObject("Main Camera");
             cameraGo.tag = "MainCamera";
-            cameraGo.AddComponent<Camera>();
+            Camera bodyCamera = cameraGo.AddComponent<Camera>();
 
             var playerGo = new GameObject("Player");
             playerGo.AddComponent<NetworkObject>();
@@ -173,14 +173,15 @@ namespace FPS.Tests
 
             try
             {
+                weapon.BindFirstPersonPresentation(bodyCamera, null);
                 weapon.SetOwner(true);
 
                 Assert.AreSame(fireHandler, GetPrivateField<WeaponFireHandler>(weapon, "cachedFireHandler"),
                     "Weapon should cache WeaponFireHandler instead of GetComponentInParent during every fire/reload.");
                 Assert.AreSame(weaponManager, GetPrivateField<WeaponManager>(weapon, "cachedWeaponManager"),
                     "Weapon should cache WeaponManager for reload animation triggers.");
-                Assert.NotNull(GetPrivateField<Camera>(weapon, "cachedCamera"),
-                    "Weapon should cache Camera.main and only refresh when the cached camera becomes invalid.");
+                Assert.AreSame(bodyCamera, GetPrivateField<Camera>(weapon, "cachedCamera"),
+                    "Weapon should retain the explicit body-camera binding instead of searching Camera.main on the hot path.");
             }
             finally
             {
