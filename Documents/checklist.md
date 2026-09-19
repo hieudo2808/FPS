@@ -9,29 +9,34 @@
    Xử lý lag compensation cho hitbox súng (bắn trúng trên máy mình nhưng miss trên server) TRUE — EditMode A1 tests and PlayMode smoke test pass
    Giới hạn bandwidth: đo thử lượng data gửi/nhận khi 4 người + nhiều zombie cùng lúc FALSE
 2. AI Director & Dynamic Difficulty
-   Điều chỉnh công thức stress level để tính đúng cho 4 người thay vì 2 (tránh 1 người "gánh" làm sai lệch chỉ số cả team) FALSE
-   Test case: 1 người skill cao, 3 người yếu — Director có cân bằng đúng không FALSE
-   Thêm cooldown/giới hạn spawn để tránh spawn dồn dập gây khó chịu (spam feeling) FALSE
-   Log lại dữ liệu Director (spawn rate, stress value theo thời gian) để làm biểu đồ minh chứng cho báo cáo/bảo vệ — hội đồng rất thích thấy số liệu cụ thể FALSE
+   Điều chỉnh công thức stress level để tính đúng cho 4 người thay vì 2 (tránh 1 người "gánh" làm sai lệch chỉ số cả team) TRUE — runtime A2 profile 4 peer đã ghi score/multiplier tại Relax
+   Test case: 1 người skill cao, 3 người yếu — Director có cân bằng đúng không TRUE — controlled runtime profile: score 0.2403, multiplier 0.9221
+   Thêm cooldown/giới hạn spawn để tránh spawn dồn dập gây khó chịu (spam feeling) TRUE — special chỉ mở ở Peak, qua registry cooldown/budget/type cap/max-alive
+   Log lại dữ liệu Director (spawn rate, stress value theo thời gian) để làm biểu đồ minh chứng cho báo cáo/bảo vệ — hội đồng rất thích thấy số liệu cụ thể TRUE — JSONL phase/multiplier/spawn events trong A2 runtime report
    Balance riêng cho từng map (facility vs phòng nghiên cứu có mật độ zombie khác nhau) FALSE
    Test "worst case": cả 4 người đứng yên 1 chỗ xem Director phản ứng thế nào (không được bug loop) FALSE
 3. Zombie & Special Infected
    Hoàn thiện thêm 2 loại zombie thường (biến thể tốc độ/HP từ 2 model gốc, tái dùng animation) FALSE
-   Chọn 1 special infected (Screamer hoặc Tanker) làm trước, làm kỹ: FALSE
-   Thiết kế behavior tree riêng (không dùng chung AI với zombie thường) FALSE
-   Animation riêng (attack, alert, death) FALSE
-   Sound cue đặc trưng để player nhận biết từ xa FALSE
+   Chọn 1 special infected (Screamer hoặc Tanker) làm trước, làm kỹ: TRUE — đã triển khai và test cả Screamer, Tanker, Infector; special regression pass 71/71 EditMode và 22/22 PlayMode
+   Thiết kế behavior tree riêng (không dùng chung AI với zombie thường) FALSE — theo kiến trúc đã duyệt, dùng FSM/custom server brain nhỏ thay vì dựng behavior framework mới
+   Animation riêng (attack, alert, death) TRUE — controller/state riêng; GameScene PlayMode gate đo đủ ba vòng cho từng special, LocomotionRate 0.75–1.35 và sai số distance ≤10%
+   Sound cue đặc trưng để player nhận biết từ xa TRUE — enemy-local 3D logarithmic audio + pitch riêng; clip hiện là placeholder từ asset sẵn có, cần thay SFX production
    Test đồng bộ multiplayer riêng cho con này (do AI phức tạp hơn dễ desync hơn) FALSE
-   Nếu còn thời gian mới làm special infected thứ 2 FALSE
-   Kiểm tra pathfinding (NavMesh) hoạt động ổn trên cả 3 map, không bị kẹt góc FALSE
+   Nếu còn thời gian mới làm special infected thứ 2 TRUE — cả ba special đã được đăng ký Playable và NetworkPrefab
+   Kiểm tra pathfinding (NavMesh) hoạt động ổn trong GameScene, không bị kẹt góc TRUE — cả ba special chạy ba complete route đa góc trên NavMesh thật, có progress watchdog 2 s và endpoint timeout
+   Scale enemy theo snapshot team size 1–4 TRUE — profile chung; 17 EditMode case kiểm tra bảng HP/damage/status/CC/cooldown, không double-scale, late join/disconnect và pool respawn capture lại
+   Screamer né và hét ngoài LOS toàn team TRUE — endpoint còn thấy bị reject; multi-observer visibility test pass; crescendo request và HUD warning đã nối
+   Infector durable + retreat khuất toàn team TRUE — HP 500/750/975/1200; implant lock 1.625 s; khuất liên tục 1.5 s, timeout 8 s
+   Tanker threat targeting hài hòa TRUE — 50/30/20, ledger 8 s/half-life 4 s, commitment 4 s, strict switch >20%
+   Stationary action không NavMesh drift TRUE — GameScene PlayMode đo prefab thật cho Screamer scream/generic attack, Tanker swing/slam/stagger và Infector implant; tất cả ≤0.05 m
 4. Vũ khí
-   Xây dựng weapon base class/system chung (stats: damage, fire rate, recoil, ammo capacity) để thêm súng mới nhanh FALSE
-   Hoàn thiện 4 khẩu core trước: Assault Rifle, Pistol, Shotgun, Sniper FALSE
-   Thêm 2 khẩu còn lại (Machine gun, Handgun phụ) nếu 4 khẩu core đã mượt FALSE
-   Recoil pattern + spread riêng cho từng loại (không dùng chung 1 công thức) FALSE
-   Hiệu ứng bắn trúng theo vùng (headshot vs bodyshot) — ăn điểm về feel bắn súng FALSE
-   Đồng bộ multiplayer: reload animation, ammo count hiển thị đúng cho tất cả client FALSE
-   Sound & VFX riêng biệt cho từng khẩu (không dùng 1 sound bắn chung) FALSE
+   Xây dựng weapon base class/system chung (stats: damage, fire rate, recoil, ammo capacity) để thêm súng mới nhanh TRUE — hiện dùng `WeaponData + WeaponServerState + WeaponManager`; fire rate do Animator baker sinh
+   Hoàn thiện 4 khẩu core trước: Assault Rifle, Pistol, Shotgun, Sniper TRUE — Vandal, Classic, Bucky, Operator đã có gameplay và presentation timing
+   Thêm 2 khẩu còn lại (Machine gun, Handgun phụ) nếu 4 khẩu core đã mượt FALSE — Odin đã hoàn thiện; không thêm handgun thứ hai vì phạm vi đã khóa ở 5 súng
+   Recoil pattern + spread riêng cho từng loại (không dùng chung 1 công thức) TRUE — Vandal/Classic/Operator/Odin có pattern riêng; Bucky chủ đích không recoil và dùng cone 8 pellet
+   Hiệu ứng bắn trúng theo vùng (headshot vs bodyshot) — ăn điểm về feel bắn súng TRUE — damage dùng multiplier của từng `HitboxSegment`; VFX hit riêng vẫn thuộc phase sau
+   Đồng bộ multiplayer: reload animation, ammo count hiển thị đúng cho tất cả client FALSE — authoritative state/presentation đã triển khai, chưa pass gate host + client thực
+   Sound & VFX riêng biệt cho từng khẩu (không dùng 1 sound bắn chung) FALSE — để phase sau
 5. Map / Level Design
    Map 1 (facility): hoàn thiện blockout → detail → lighting → optimization FALSE
    Map 2 (phòng nghiên cứu): tối thiểu chơi được trọn vẹn, không cần chi tiết bằng map 1 FALSE
@@ -49,7 +54,7 @@
    HUD hiển thị: HP, ammo, stamina, trạng thái đồng đội (đặc biệt quan trọng với cơ chế lây nhiễm nội bộ) FALSE
    Màn hình lobby/matchmaking cho 4 người FALSE
    Menu chọn vũ khí trước mission (nếu có) FALSE
-   Indicator hướng special infected khi nó phát ra tiếng động FALSE
+   Indicator hướng special infected khi nó phát ra tiếng động FALSE — Screamer replicated directional warning đã có; Tanker/Infector chưa có indicator tương đương
    Death/spectate screen khi 1 người chết nhưng team vẫn tiếp tục FALSE
 8. Audio
    Ambient sound riêng theo từng khu vực map (tạo cảm giác căng thẳng kiểu RE) FALSE

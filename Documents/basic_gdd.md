@@ -311,49 +311,59 @@ Ghi log riêng biệt cho từng tầng để chứng minh chúng hoạt động
 
 **Screamer** (vai trò: báo động/gọi bầy — tương đương Boomer/Witch nhưng theo hướng khác)
 
-- HP: thấp (150) — nhưng nguy hiểm nếu để sống lâu
-- Hành vi: lẩn tránh player, khi phát hiện team sẽ phát ra tiếng hét lớn → tăng vọt Stress Value tạm thời và trigger spawn horde ngay lập tức tại vị trí nó đứng
+- HP theo snapshot 1–4 player: **150 / 200 / 250 / 300** trước difficulty
+- Hành vi server-authoritative: `DetectTeam → SeekCover/Evade → Scream → Relocate`; điểm đến còn bị bất kỳ player sống nào nhìn thấy đều bị loại
+- Scream yêu cầu Director mở crescendo/stress; fallback reinforcement là **5 / 6 / 7 / 8** theo team size
 - Chiến thuật buộc player: phải hạ nhanh trước khi nó hét, hoặc chấp nhận horde tới
-- Sound design quan trọng: tiếng hét phải nhận diện được từ xa để player có thời gian phản ứng
+- Scream khóa chuyển động **2.783 s**, generic attack khóa **4.617 s**; audio 3D logarithmic **4–60 m** và có directional HUD warning
 
-**[A1 ĐÃ THỰC HIỆN — NETWORK REPLICATION]** Screamer có replicated locomotion/action state, action sequence/start tick và server-authoritative ability trigger; client chỉ chạy animation/audio/VFX presentation. Multi-peer animation gate vẫn chờ kiểm thử thực tế.
+**[ĐÃ TRIỂN KHAI — CHỜ MULTI-PEER GATE]** Screamer có replicated locomotion/action state, action sequence/start tick và server-authoritative ability trigger; client chỉ chạy animation/audio/VFX presentation.
 
 **Tanker** (vai trò: tank, buộc team phải tập trung hỏa lực — tương đương Tank L4D2)
 
-- HP: rất cao (1500-2000, cần cả team focus fire)
+- HP theo snapshot 1–4 player: **2,500 / 5,000 / 7,500 / 10,000** trước difficulty
 - Damage: cao, có thể gây knockback mạnh hoặc downed ngay 1-2 hit nếu không né
-- Hành vi: lao thẳng, ưu tiên tấn công người gây damage nhiều nhất (aggro system đơn giản)
+- Target score: **50%** recent attributed damage (ledger 8 s, half-life 4 s), **30%** khoảng cách + complete path, **20%** vulnerability (HP thấp/cô lập/reload/ammo); giữ target 4 s và challenger phải cao hơn strict 20%
+- Stagger threshold bằng đúng **15% effective HP**, không nhân resistance lần hai
 - Xuất hiện: chỉ nên trigger ở Extraction/Finale hoặc as "mini-boss" điểm nhấn giữa map, không spawn tùy tiện — nên có cooldown dài
-- Animation cần riêng: attack (swing/slam), stagger (khi bị dồn damage tới ngưỡng), death
+- Swing/slam/stagger khóa chuyển động lần lượt **2.700 / 2.233 / 5.167 s**; có state attack, slam, stagger và death riêng
+
+**Infector** (vai trò: durable skirmisher áp infection rồi rút khỏi giao tranh)
+
+- HP theo snapshot 1–4 player: **500 / 750 / 975 / 1,200** trước difficulty
+- Implant impact tại **0.5 s**, giữ đứng yên hết **1.625 s** rồi mới retreat; damage và infection buildup dùng team multiplier, knockback không scale
+- Retreat chỉ thành công sau khi khuất mọi player sống liên tục **1.5 s**; bị nhìn lại thì reset timer và replan tối đa 3 lần/giây
+- Sau 8 s chưa thoát được thì attempt thất bại và quay lại stalk/reposition; không ghi nhận retreat thành công
+
+**Scaling và presentation chung đã triển khai:** một `EnemyScalingProfile` dùng chung được gán cho Director, `ZombieFactory` và ba special prefab. Team size được snapshot theo enemy spawn/spawn request; join/leave chỉ ảnh hưởng lần spawn sau. Locomotion lấy planar displacement thực, điều khiển `LocomotionRate` clamp **0.75–1.35**; action lock chặn NavMesh drift. Audio dùng enemy-local `AudioSource`, spatial blend 1, logarithmic rolloff và Doppler 0. Các cue hiện dùng asset có sẵn với pitch riêng theo loại; nên thay bằng recording/SFX production riêng khi có asset âm thanh cuối.
+
+**Bằng chứng hiện tại:** special regression pass **71/71 EditMode** và **22/22 PlayMode**; riêng snapshot suite mới pass **17/17 EditMode**, `GameScene` acceptance suite mới pass **5/5 PlayMode**. Acceptance chạy ba complete route đa góc cho cả ba special với watchdog chống kẹt, đo đủ ba locomotion cycle với sai số distance ≤10%, đo displacement ≤0.05 m cho toàn bộ scream/generic attack/swing/slam/stagger/implant, và kiểm tra spatial audio/pool reset. Scope NavMesh nghiệm thu là `GameScene`, không phải `Map_v1`/`Map_v2`. Gate multi-peer 1–4 bằng nhiều process/client thật vẫn tách riêng vì Test Runner một process chỉ chứng minh snapshot contract, không chứng minh desync giữa các peer.
 
 ---
 
 ## 7. VŨ KHÍ
 
-### 7.1 Base Weapon System (kiến trúc kỹ thuật đề xuất)
+### 7.1 Kiến trúc Weapon System hiện hành
 
-Xây dựng 1 `WeaponBase` class/scriptable object chứa các field chung, mỗi khẩu súng là 1 config khác nhau — giúp thêm súng mới nhanh mà không viết lại logic:
+- `WeaponData` (ScriptableObject): damage, projectile count, spread, range/falloff, ammo, recoil, ADS và timing read-only do Animator baker sinh.
+- `WeaponServerState`: magazine/reserve ammo, fire cooldown, equip deadline, reload commit/complete deadline và fire sequence.
+- `WeaponManager`: đúng hai slot owned (primary + Classic), danh sách bốn primary candidate cố định và primary đang được server chọn.
+- `WeaponFireHandler`: kiểm tra owner/input/timing, spread deterministic, lag compensation, raycast pellet và damage server-authoritative.
+- `Weapon`: input/predicted presentation, gun/hand Animator, viewmodel bullet và Operator scope owner-only.
 
-```
-WeaponBase {
-  damage, fireRate, magazineSize, reloadTime,
-  recoilPattern, spreadAngle, effectiveRange,
-  headshotMultiplier, ammoType
-}
-```
+Gun Animator Speed là nguồn timing. `fireRate`/`reloadTime` không còn là field designer chỉnh tay. Hitbox giữ multiplier head/body.
 
-### 7.2 Danh sách vũ khí đề xuất (6 khẩu core — 2 khẩu mở rộng nếu còn thời gian)
+### 7.2 Danh sách khóa (5 súng)
 
-| Loại                    | Tên đề xuất    | Damage                 | Fire rate  | Mag size | Vai trò                                       |
-| ----------------------- | -------------- | ---------------------- | ---------- | -------- | --------------------------------------------- |
-| Rifle                   | Assault Rifle  | Trung bình             | Cao        | 30       | All-around, súng chính mặc định               |
-| Handgun                 | Pistol         | Thấp                   | Trung bình | 15       | Backup, đạn dễ tìm nhất                       |
-| Shotgun                 | Combat Shotgun | Rất cao (tầm gần)      | Thấp       | 6-8      | Xử lý cận chiến, hiệu quả với Crawler         |
-| Sniper                  | Marksman Rifle | Rất cao (headshot lớn) | Rất thấp   | 5        | Xử lý từ xa, khắc chế Armor zombie (headshot) |
-| Machine Gun             | LMG            | Trung bình             | Rất cao    | 60-100   | Suppress horde lớn, độ giật cao               |
-| _(mở rộng)_ Handgun phụ | Magnum         | Cao                    | Thấp       | 6        | Damage cao hơn pistol thường, dùng dự phòng   |
+| Slot | Súng | Projectile / damage | Range và falloff | Spread | Recoil / vai trò |
+| --- | --- | --- | --- | --- | --- |
+| Primary | Vandal | 1 × 25 | 100 m; 40–70 m; min 80% | `0.15°` | Pattern rifle hiện hành |
+| Secondary | Classic | 1 × 20 | 60 m; 20–40 m; min 70% | `0.25°` | Backup single-fire |
+| Primary | Operator | 1 × 150 | 200 m; không falloff | Hip `2.5°`, scoped `0°` | Kick dọc mạnh; scope FOV 25° |
+| Primary | Odin | 1 × 20 | 120 m; 30–60 m; min 65% | `0.6°` | Sustained pattern 12 viên; 100/200 ammo |
+| Primary | Bucky | 8 × 18.75 | 25 m; 8–18 m; min 15% | Cone `4°` | Không recoil; reload từng shell |
 
-**Ammo economy:** đạn cho mỗi loại nên có độ khan hiếm khác nhau — pistol/rifle dễ tìm, sniper/shotgun hiếm hơn để giữ giá trị chiến thuật.
+Không thêm Magnum hoặc weapon expansion trong scope dự án hiện tại. Audio/VFX/magazine events và ammo economy theo map là phase sau.
 
 ---
 

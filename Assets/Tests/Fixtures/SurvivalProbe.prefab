@@ -1,0 +1,179 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1063009931782336386
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5478994323591381362}
+  - component: {fileID: 8813035622697727168}
+  - component: {fileID: 1526634282989249100}
+  - component: {fileID: 3516646764594410932}
+  - component: {fileID: 6693583911257336136}
+  - component: {fileID: 3841533798429936938}
+  - component: {fileID: 1662285115569159426}
+  m_Layer: 0
+  m_Name: SurvivalProbe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5478994323591381362
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063009931782336386}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8813035622697727168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063009931782336386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 3622193950
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  m_InScenePlaced: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &1526634282989249100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063009931782336386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c9d6a86532a90340be4074a58b005c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.PlayerHealth
+  ShowTopMostFoldoutHeaderGroup: 1
+  maxHealth: 100
+--- !u!114 &3516646764594410932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063009931782336386}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1ad082c79b024a44b81645c06c11991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.PlayerMovement
+  ShowTopMostFoldoutHeaderGroup: 1
+  controller: {fileID: 0}
+  characterAnimation: {fileID: 0}
+  mouseMovement: {fileID: 0}
+  visualRoot: {fileID: 0}
+  groundCheck: {fileID: 0}
+  speed: 5
+  walkMultiplier: 2
+  jumpHeight: 0.5
+  gravityScale: 1
+  reconciliationThreshold: 0.18
+  ownerCorrectionSmoothTime: 0.1
+  maxVisualCorrectionOffset: 0.75
+  remoteStartBufferSnapshots: 4
+  remoteTeleportDistance: 3
+  knockbackDecayRate: 8
+--- !u!114 &6693583911257336136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063009931782336386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f06c25d1c6c34c744823cac53f6988e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.PlayerInfectionController
+  ShowTopMostFoldoutHeaderGroup: 1
+  initialInfection: 0
+  passiveProgressionPerSecond: 0
+  coughInterval: 9
+  coughNoiseRadius: 15
+  enableContagion: 0
+  contagionRadius: 2.5
+  contagionExposureRequired: 5
+  contagionAmount: 15
+  sepsisNoiseInterval: 3
+  sepsisNoiseRadius: 30
+  sepsisDrainInterval: 5
+  sepsisDamagePerTick: 5
+  selfTreatmentDuration: 7
+  teammateTreatmentDuration: 3
+  selfTreatmentReduction: 60
+  teammateTreatmentReduction: 70
+  coughSound: {fileID: 0}
+  sepsisHeartbeatSound: {fileID: 0}
+  implantHitSound: {fileID: 0}
+  treatmentCompleteSound: {fileID: 0}
+  cachedHealth: {fileID: 1526634282989249100}
+  cachedMovement: {fileID: 3516646764594410932}
+--- !u!114 &3841533798429936938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063009931782336386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66e5aaa4286f3384e95caab4b72c4156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.SurvivalInventory
+  ShowTopMostFoldoutHeaderGroup: 1
+  projectilePrefab: {fileID: 5456762319590080205, guid: 3147d1ca29795b547b3c819e3f252bd7, type: 3}
+--- !u!136 &1662285115569159426
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063009931782336386}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.3
+  m_Height: 1.8
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}

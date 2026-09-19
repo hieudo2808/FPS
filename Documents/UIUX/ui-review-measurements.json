@@ -1,0 +1,41 @@
+{
+  "note": "Approximate ink bounds from selected high-contrast screenshot crops, not a complete XAG certification or a TMP font-size measurement. Source images are authored Canvas previews.",
+  "samples": [
+    {
+      "label": "INFECTION 0%",
+      "screenshot": "GameScene-hud-1024x768.png",
+      "crop": [
+        56,
+        640,
+        136,
+        662
+      ],
+      "threshold_luminance_8bit": 90,
+      "visible_ink_height_estimate_px": 7
+    },
+    {
+      "label": "Slot 1",
+      "screenshot": "GameScene-hud-1024x768.png",
+      "crop": [
+        775,
+        675,
+        790,
+        695
+      ],
+      "threshold_luminance_8bit": 90,
+      "visible_ink_height_estimate_px": 6
+    },
+    {
+      "label": "EMPTY",
+      "screenshot": "GameScene-hud-1024x768.png",
+      "crop": [
+        820,
+        722,
+        862,
+        740
+      ],
+      "threshold_luminance_8bit": 90,
+      "visible_ink_height_estimate_px": 6
+    }
+  ]
+}

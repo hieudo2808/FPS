@@ -1,0 +1,41 @@
+# Generated Unity state
+/Library/
+/Temp/
+/Logs/
+/obj/
+/Build/
+/Builds/
+/UserSettings/
+/.codex/
+/.local/
+/.vs/
+
+# Windows shell metadata and package documentation/examples.
+**/desktop.ini
+/Packages/*/Documentation~/
+/Packages/*/Samples~/
+
+# Unity serialized assets are handled by the separate Unity semantic index.
+*.meta
+*.unity
+*.prefab
+*.asset
+*.mat
+*.anim
+*.controller
+*.overrideController
+*.mask
+
+# Binary/media assets are not useful to the C# structural graph.
+*.fbx
+*.obj
+*.blend
+*.png
+*.jpg
+*.jpeg
+*.tga
+*.psd
+*.wav
+*.mp3
+*.ogg
+*.mp4

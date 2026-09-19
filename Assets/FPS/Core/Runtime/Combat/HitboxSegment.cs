@@ -33,41 +33,61 @@ namespace FPS
             zone = newZone;
             damageMultiplier = multiplier;
             ownerNetworkObject = netObj;
-            damageTarget = target;
+            damageTarget = target is IDamageable ? target : FindDamageTargetInParents();
         }
 
         private void Awake()
         {
-            if (ownerNetworkObject == null)
-                ownerNetworkObject = GetComponentInParent<NetworkObject>();
-            if (damageTarget == null)
-                damageTarget = GetComponentInParent<MonoBehaviour>() as IDamageable as MonoBehaviour;
+            ResolveReferences();
         }
 
         private void Reset()
         {
             damageMultiplier = GetDefaultMultiplier(zone);
-            ownerNetworkObject = GetComponentInParent<NetworkObject>();
-            damageTarget = GetComponentInParent<MonoBehaviour>();
+            ResolveReferences(force: true);
         }
 
         private void OnValidate()
         {
             if (damageMultiplier <= 0f)
                 damageMultiplier = GetDefaultMultiplier(zone);
-            if (ownerNetworkObject == null)
+            ResolveReferences();
+        }
+
+        private void ResolveReferences(bool force = false)
+        {
+            if (force || ownerNetworkObject == null)
                 ownerNetworkObject = GetComponentInParent<NetworkObject>();
-            if (damageTarget == null)
-                damageTarget = GetComponentInParent<MonoBehaviour>();
+            if (force || damageTarget == null || damageTarget is not IDamageable)
+                damageTarget = FindDamageTargetInParents();
+        }
+
+        private MonoBehaviour FindDamageTargetInParents()
+        {
+            Transform current = transform;
+            while (current != null)
+            {
+                MonoBehaviour[] behaviours = current.GetComponents<MonoBehaviour>();
+                for (int index = 0; index < behaviours.Length; index++)
+                {
+                    MonoBehaviour behaviour = behaviours[index];
+                    if (behaviour != null && behaviour is IDamageable)
+                        return behaviour;
+                }
+
+                current = current.parent;
+            }
+
+            return null;
         }
 
         public static float GetDefaultMultiplier(HitboxZone hitboxZone)
         {
             return hitboxZone switch
             {
-                HitboxZone.Head => 2f,
+                HitboxZone.Head => 4f,
                 HitboxZone.Arm => 0.75f,
-                HitboxZone.Leg => 0.75f,
+                HitboxZone.Leg => 0.5f,
                 _ => 1f
             };
         }
