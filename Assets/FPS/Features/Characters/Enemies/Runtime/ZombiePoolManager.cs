@@ -258,8 +258,20 @@ namespace FPS
             if (col != null)
                 col.enabled = true;
 
+            // Health must restore authored state before AI captures the new spawn snapshot.
+            // Component order differs between imported prefabs, so interface iteration alone
+            // can otherwise erase a special's freshly scaled health.
+            EnemyHealth health = zombie.GetComponent<EnemyHealth>();
+            EnemyAI ai = zombie.GetComponent<EnemyAI>();
+            health?.ResetForPool();
+            ai?.ResetForPool();
+
             foreach (var resettable in zombie.GetComponents<IPoolResettable>())
+            {
+                if (ReferenceEquals(resettable, health) || ReferenceEquals(resettable, ai))
+                    continue;
                 resettable.ResetForPool();
+            }
 
             return true;
         }

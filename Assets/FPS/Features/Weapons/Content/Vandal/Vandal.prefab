@@ -32,6 +32,38 @@ Transform:
   - {fileID: 3934998159463594997}
   m_Father: {fileID: 1776789358717198790}
   m_LocalEulerAnglesHint: {x: 1.4408883e-12, y: -0.0000010263296, z: 0.000014226589}
+--- !u!1 &179555055053509699
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8532951873414441409}
+  m_Layer: 0
+  m_Name: ADSIronSight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8532951873414441409
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 179555055053509699}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.000000059604645, y: -0.00000019371508, z: -0.000000119209275, w: -1}
+  m_LocalPosition: {x: 5.308539e-10, y: 0.0015930014, z: 0.0023022469}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 313785826855549671}
+  m_Father: {fileID: 1947447446152080614}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &284630338847453646
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,7 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FPS::FPS.ObjectPooling
   objectPrefab: {fileID: 9127804531831411338, guid: 51be62899448f8c4cb83bff73baf4f61, type: 3}
-  poolSize: 30
+  poolSize: 42
 --- !u!1 &368733721841333398
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,8 +319,9 @@ MonoBehaviour:
   muzzleEffect: {fileID: 0}
   fpsArmsAnimator: {fileID: 0}
   weaponAnimator: {fileID: 8979296464487705176}
-  aimSight: {fileID: 2877424050473711356}
-  aimSightEnd: {fileID: 915173145494363932}
+  aimSight: {fileID: 8532951873414441409}
+  aimSightEnd: {fileID: 313785826855549671}
+  alignAuthoredSightAxis: 1
   aimedSightCameraLocalPosition: {x: 0, y: 0, z: 0.35}
   weaponData: {fileID: 11400000, guid: ae34ccdb45f4d834d8db00259aaada52, type: 2}
   bulletPool: {fileID: 1298869149142028883}
@@ -562,6 +595,7 @@ Transform:
   - {fileID: 1776789358717198790}
   - {fileID: 4086261604677076090}
   - {fileID: 3846530993307927904}
+  - {fileID: 8532951873414441409}
   m_Father: {fileID: 4734385295038426899}
   m_LocalEulerAnglesHint: {x: 5.0001207e-19, y: -1.0486013e-12, z: 2.0972015e-12}
 --- !u!1 &1716311519760826134
@@ -689,6 +723,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4255968654048787127}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1805125436121461355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 313785826855549671}
+  m_Layer: 0
+  m_Name: ADSIronSightForward
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &313785826855549671
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1805125436121461355}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.4239877e-10, y: -7.494266e-11, z: 0.00425415}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8532951873414441409}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1892763111494728129
 GameObject:

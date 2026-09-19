@@ -191,37 +191,22 @@ namespace FPS
             TryResolveInteraction((FactoryObjectiveId)objectiveValue, playerObject);
         }
 
-        public FactoryInteractionResult CompleteObjectiveForTests(FactoryObjectiveId objectiveId)
-        {
-            return TryResolveInteraction(objectiveId, null, skipSpatialValidation: true);
-        }
-
-        public void FinishInsertionForTests()
-        {
-            if (progression.FinishInsertion())
-                SyncAuthoritativeState(forceTimestamp: true);
-        }
-
         private FactoryInteractionResult TryResolveInteraction(
             FactoryObjectiveId objectiveId,
-            NetworkObject interactorObject,
-            bool skipSpatialValidation = false)
+            NetworkObject interactorObject)
         {
             if (!CanRunAuthority())
                 return FactoryInteractionResult.InvalidInteractor;
 
             FactoryObjectiveInteractable interactable = FindObjective(objectiveId);
-            if (!skipSpatialValidation)
-            {
-                if (interactable == null)
-                    return FactoryInteractionResult.UnknownObjective;
+            if (interactable == null)
+                return FactoryInteractionResult.UnknownObjective;
 
-                FactoryInteractionResult validation = interactable.ValidateServerInteraction(interactorObject);
-                if (validation != FactoryInteractionResult.Accepted)
-                {
-                    ObjectiveResolved?.Invoke(objectiveId, validation);
-                    return validation;
-                }
+            FactoryInteractionResult validation = interactable.ValidateServerInteraction(interactorObject);
+            if (validation != FactoryInteractionResult.Accepted)
+            {
+                ObjectiveResolved?.Invoke(objectiveId, validation);
+                return validation;
             }
 
             FactoryMissionState previousState = progression.State;

@@ -18,8 +18,10 @@ namespace FPS
         [Header("Physical ADS")]
         [Tooltip("Authored sight socket on the weapon. Do not derive this from the muzzle.")]
         [SerializeField] private Transform aimSight;
-        [Tooltip("End marker defining the authored sight axis. Used for validation only; ADS never rotates Hand at runtime.")]
+        [Tooltip("Child marker on the sight line. Imported bone endpoints are not necessarily aligned with the barrel.")]
         [SerializeField] private Transform aimSightEnd;
+        [Tooltip("Align an explicitly authored sight line with the camera. Leave disabled for imported sockets whose endpoint points sideways.")]
+        [SerializeField] private bool alignAuthoredSightAxis;
         [Tooltip("Where the sight point sits relative to the body camera while aimed.")]
         [SerializeField] private Vector3 aimedSightCameraLocalPosition = new Vector3(0f, 0f, 0.12f);
 
@@ -62,9 +64,11 @@ namespace FPS
         private readonly Queue<GameObject> liveSurfaceImpacts = new Queue<GameObject>(64);
         private double authoritativeEquipCompleteTime = -1.0;
         private double authoritativeReloadCompleteTime = -1.0;
+        private WeaponReloadTimeline reloadPresentationTimeline;
         private float nextReloadRequestTime;
         private int remainingPerShellPresentationInserts;
         private bool continuousFirePresentationActive;
+        private bool combatInputBlocked;
         private bool aimPresentationInitialized;
         private bool scopePresentationVisible;
         private bool aimRequested;
@@ -125,6 +129,7 @@ namespace FPS
             if (isOwner)
             {
                 CacheOwnerDependencies();
+                SetCombatAvailability(HasCombatPermission());
                 aimBlockedUntilRelease = InputManager.Instance != null
                     && InputManager.Instance.GetAimInput();
                 ConfigureFpLayer();
@@ -173,6 +178,7 @@ namespace FPS
             if (isOwner)
             {
                 CacheOwnerDependencies();
+                SetCombatAvailability(HasCombatPermission());
                 aimBlockedUntilRelease = InputManager.Instance != null
                     && InputManager.Instance.GetAimInput();
             }
@@ -196,6 +202,14 @@ namespace FPS
             if (!isOwner) return;
             if (weaponData == null) return;
 
+            if (!HasCombatPermission())
+            {
+                SetCombatAvailability(false);
+                return;
+            }
+            if (combatInputBlocked)
+                SetCombatAvailability(true);
+
             UpdateAimPresentation();
 
             if (TryInterruptPerShellReloadWithFire())
@@ -217,7 +231,9 @@ namespace FPS
 
         private bool TryInterruptPerShellReloadWithFire()
         {
-            if (!isReloading
+            if (combatInputBlocked
+                || !HasCombatPermission()
+                || !isReloading
                 || weaponData.reloadMode != ReloadMode.PerShell
                 || IsEquipping()
                 || currentAmmo - pendingServerShots <= 0
@@ -246,7 +262,7 @@ namespace FPS
 
         private void LateUpdate()
         {
-            if (!isOwner || weaponData == null)
+            if (!isOwner || weaponData == null || combatInputBlocked || !HasCombatPermission())
                 return;
 
             UpdateContinuousFirePresentation();
@@ -258,6 +274,8 @@ namespace FPS
                 return;
 
             bool shouldPlay = !isReloading
+                && !combatInputBlocked
+                && HasCombatPermission()
                 && !IsEquipping()
                 && currentAmmo - pendingServerShots > 0
                 && NetworkMatchStateManager.IsGameplayActive
@@ -330,6 +348,11 @@ namespace FPS
 
         private void UpdatePerShellReloadPresentation()
         {
+            if (isReloading && reloadPresentationTimeline.IsValid)
+            {
+                UpdateReloadClockPresentation();
+                return;
+            }
             if (weaponData == null || weaponData.reloadMode != ReloadMode.PerShell
                 || !isReloading || remainingPerShellPresentationInserts <= 0)
                 return;
@@ -428,6 +451,7 @@ namespace FPS
         private void HandleFire()
         {
             if (weaponData == null) return;
+            if (combatInputBlocked || !HasCombatPermission()) return;
             if (isReloading) return;
             if (IsEquipping()) return;
             if (!NetworkMatchStateManager.IsGameplayActive) return;
@@ -517,6 +541,7 @@ namespace FPS
         private void FireBullet()
         {
             if (weaponData == null) return;
+            if (combatInputBlocked || !HasCombatPermission()) return;
             if (IsEquipping() || isReloading) return;
             if (currentAmmo - pendingServerShots <= 0) return;
 
@@ -655,7 +680,7 @@ namespace FPS
             Vector3 muzzlePosition = bulletSpawnPoint != null
                 ? bulletSpawnPoint.position
                 : transform.position;
-            float maximumRange = Mathf.Max(0.01f, weaponData.maximumRange);
+            float maximumTravelDistance = weaponData.MaximumTravelDistance;
             if (cachedInfection == null)
                 cachedInfection = GetComponentInParent<PlayerInfectionController>();
             float spreadAngle = weaponData.GetSpreadAngle(aimed)
@@ -675,12 +700,12 @@ namespace FPS
                 bool hitFound = Physics.Raycast(
                     gameplayRay,
                     out RaycastHit hit,
-                    maximumRange,
+                    maximumTravelDistance,
                     hitMask,
                     QueryTriggerInteraction.Ignore);
                 Vector3 targetPoint = hitFound
                     ? hit.point
-                    : gameplayRay.GetPoint(maximumRange);
+                    : gameplayRay.GetPoint(maximumTravelDistance);
                 Vector3 visualDirection = targetPoint - muzzlePosition;
                 if (visualDirection.sqrMagnitude <= 0.0001f)
                     visualDirection = gameplayDirection;
@@ -771,6 +796,14 @@ namespace FPS
             if (cachedWeaponManager == null)
                 cachedWeaponManager = GetComponentInParent<WeaponManager>();
 
+            // Fire can interrupt Reload before its completion trigger is consumed.
+            // A later Reload must not inherit that trigger and immediately exit.
+            if (triggerName == "Reload" || triggerName == "Equip")
+            {
+                ClearPendingActionTriggers(weaponAnimator, triggerName);
+                ClearPendingActionTriggers(fpsArmsAnimator, triggerName);
+            }
+
             bool suppressPerShotRestart = triggerName == "Fire"
                 && weaponData != null
                 && !weaponData.restartFireAnimationPerShot;
@@ -806,6 +839,16 @@ namespace FPS
             // first-person arms and gun animators, but every accepted action
             // must begin on the same frame to keep their authored poses aligned.
             cachedWeaponManager?.TriggerAnimation(triggerName);
+        }
+
+        private static void ClearPendingActionTriggers(Animator animator, string action)
+        {
+            if (animator == null || animator.runtimeAnimatorController == null)
+                return;
+            foreach (var parameter in animator.parameters)
+                if (parameter.type == AnimatorControllerParameterType.Trigger
+                    && (parameter.name == action + "Complete" || parameter.name == "Fire"))
+                    animator.ResetTrigger(parameter.nameHash);
         }
 
         private static bool IsAnimatorInState(Animator animator, int layer, string stateName)
@@ -876,6 +919,7 @@ namespace FPS
         private void ReloadWeapon()
         {
             if (weaponData == null) return;
+            if (combatInputBlocked || !HasCombatPermission()) return;
             if (isReloading) return;
             if (IsEquipping() || Time.unscaledTime < nextReloadRequestTime) return;
 
@@ -909,6 +953,11 @@ namespace FPS
             float reloadMultiplier = cachedInfection != null
                 ? cachedInfection.ReloadSpeedMultiplier
                 : 1f;
+
+            reloadPresentationTimeline = WeaponReloadTimeline.Begin(GetPresentationTime(), reloadMultiplier,
+                weaponData.GetPerShellRoundsToLoad(currentAmmo, reservedAmmo));
+            cachedWeaponManager?.SetReloadPresentationTimeline(reloadPresentationTimeline);
+            UpdateReloadClockPresentation();
 
             if (weaponData.reloadMode == ReloadMode.PerShell)
             {
@@ -997,6 +1046,10 @@ namespace FPS
 
         public void SetLocalAmmoState(int magazineAmmo, int reserveAmmo, bool reloading)
         {
+            bool canPresentCombat = HasCombatPermission();
+            if (!canPresentCombat)
+                SetCombatAvailability(false);
+
             int previousMagazineAmmo = currentAmmo;
             bool reloadStarted = !isReloading && reloading;
             bool reloadFinished = isReloading && !reloading;
@@ -1011,14 +1064,16 @@ namespace FPS
                 remainingPerShellPresentationInserts = weaponData != null
                     ? weaponData.GetPerShellRoundsToLoad(currentAmmo, reservedAmmo)
                     : 0;
-                TriggerAnimation("Reload");
+                if (canPresentCombat)
+                    TriggerAnimation("Reload");
             }
             else if (reloadFinished)
             {
                 canShoot = true;
                 remainingPerShellPresentationInserts = 0;
                 InsertMagazine();
-                TriggerAnimation("ReloadComplete");
+                if (canPresentCombat)
+                    TriggerAnimation("ReloadComplete");
             }
             else if (isReloading && reloading && currentAmmo > previousMagazineAmmo)
             {
@@ -1033,11 +1088,23 @@ namespace FPS
         public void ApplyAuthoritativePresentation(
             double equipCompleteTime,
             bool reloading,
-            double reloadCompleteTime = -1.0)
+            double reloadCompleteTime = -1.0,
+            WeaponReloadTimeline reloadTimeline = default)
         {
+            if (!HasCombatPermission())
+            {
+                SetCombatAvailability(false);
+                authoritativeEquipCompleteTime = -1.0;
+                authoritativeReloadCompleteTime = -1.0;
+                return;
+            }
+
             bool changed = System.Math.Abs(authoritativeEquipCompleteTime - equipCompleteTime) > 0.0001;
             authoritativeEquipCompleteTime = equipCompleteTime;
             authoritativeReloadCompleteTime = reloadCompleteTime;
+            reloadPresentationTimeline = reloading ? reloadTimeline : default;
+            if (reloading && reloadPresentationTimeline.IsValid && isOwner)
+                UpdateReloadClockPresentation();
             if (!gameObject.activeInHierarchy || !IsEquipping() || !changed)
                 return;
 
@@ -1052,7 +1119,8 @@ namespace FPS
 
         public bool TryPlayInspect()
         {
-            if (!isOwner || weaponData == null || isReloading || IsEquipping())
+            if (!isOwner || weaponData == null || combatInputBlocked || !HasCombatPermission()
+                || isReloading || IsEquipping())
                 return false;
 
             ForceExitAimPresentation();
@@ -1080,6 +1148,20 @@ namespace FPS
                 fpsArmsAnimator.Play("Equip", layer, Mathf.Clamp01(normalizedTime));
             if (weaponAnimator != null && weaponAnimator.runtimeAnimatorController != null)
                 weaponAnimator.Play("Equip", 0, Mathf.Clamp01(normalizedTime));
+        }
+
+        private void UpdateReloadClockPresentation()
+        {
+            float normalized = reloadPresentationTimeline.NormalizedTime(weaponData, GetPresentationTime(), false);
+            SetReloadMotionTime(weaponAnimator, normalized);
+            SetReloadMotionTime(fpsArmsAnimator, normalized);
+        }
+
+        private static void SetReloadMotionTime(Animator animator, float normalized)
+        {
+            if (animator != null && animator.isActiveAndEnabled
+                && HasAnimatorParameter(animator, "ReloadNormalizedTime", AnimatorControllerParameterType.Float))
+                animator.SetFloat("ReloadNormalizedTime", normalized);
         }
 
         public void ReportCombatTelemetry()
@@ -1116,6 +1198,49 @@ namespace FPS
             combatTelemetry = GetComponentInParent<PlayerCombatTelemetry>();
         }
 
+        private bool HasCombatPermission()
+        {
+            if (cachedPlayerHealth == null)
+                cachedPlayerHealth = GetComponentInParent<PlayerHealth>();
+            return cachedPlayerHealth != null && cachedPlayerHealth.CanUseCombat;
+        }
+
+        public void SetCombatAvailability(bool canUseCombat)
+        {
+            if (canUseCombat)
+            {
+                if (!combatInputBlocked)
+                    return;
+
+                combatInputBlocked = false;
+                canShoot = weaponData != null && !isReloading && !IsEquipping();
+                return;
+            }
+
+            if (combatInputBlocked)
+                return;
+
+            combatInputBlocked = true;
+            ForceExitAimPresentation();
+            StopAllCoroutines();
+            burstCoroutine = null;
+            reloadCoroutine = null;
+            isReloading = false;
+            canShoot = false;
+            pendingServerShots = 0;
+            remainingPerShellPresentationInserts = 0;
+            continuousFirePresentationActive = false;
+            InsertMagazine();
+
+            if (weaponAnimator != null && weaponAnimator.isActiveAndEnabled)
+                weaponAnimator.Play("Idle", 0, 0f);
+            int firstPersonLayer = fpsArmsAnimator != null
+                ? fpsArmsAnimator.GetLayerIndex(GetFirstPersonLayerName())
+                : -1;
+            if (fpsArmsAnimator != null && fpsArmsAnimator.isActiveAndEnabled && firstPersonLayer >= 0)
+                fpsArmsAnimator.Play("Idle", firstPersonLayer, 0f);
+        }
+
         private void UpdateAimPresentation()
         {
             if (weaponData == null || !weaponData.supportsAim)
@@ -1129,8 +1254,7 @@ namespace FPS
             if (cachedCamera == null || cachedMouseMovement == null)
                 return;
 
-            if (cachedPlayerHealth != null
-                && (cachedPlayerHealth.IsDead || !cachedPlayerHealth.IsInputReady))
+            if (!HasCombatPermission())
             {
                 ForceExitAimPresentation();
                 return;
@@ -1231,7 +1355,8 @@ namespace FPS
                 HUDManager.Instance.SetAimHudVisible(
                     aimHudActive,
                     weaponData.showScopeOverlay && scopePresentationVisible,
-                    weaponData.scopeOverlaySprite);
+                    weaponData.scopeOverlaySprite,
+                    showAdsReticle: !weaponData.showScopeOverlay);
             }
         }
 
@@ -1301,6 +1426,23 @@ namespace FPS
                 hipViewmodelLocalPosition,
                 hipViewmodelLocalRotation);
 
+            if (alignAuthoredSightAxis)
+            {
+                Vector3 sightDirection = aimSightEnd.position - aimSight.position;
+                if (sightDirection.sqrMagnitude < 0.000001f)
+                    return false;
+
+                // Move the complete weapon/hands composition together. Only an
+                // explicitly authored two-point sight line may opt into this;
+                // imported skeleton endpoints can point sideways (e.g. Operator).
+                Vector3 sightUp = Vector3.ProjectOnPlane(aimSight.up, sightDirection.normalized);
+                if (sightUp.sqrMagnitude < 0.000001f)
+                    return false;
+                Quaternion sightRotation = Quaternion.LookRotation(sightDirection, sightUp);
+                viewmodelRoot.rotation = cachedCamera.transform.rotation
+                    * Quaternion.Inverse(sightRotation) * viewmodelRoot.rotation;
+            }
+
             Vector3 targetSightPosition = cachedCamera.transform.TransformPoint(
                 aimedSightCameraLocalPosition);
             Vector3 targetRootPosition = viewmodelRoot.position
@@ -1310,11 +1452,9 @@ namespace FPS
             aimedViewmodelLocalPosition = parent != null
                 ? parent.InverseTransformPoint(targetRootPosition)
                 : targetRootPosition;
-            // The weapon and hands have already been authored/calibrated together.
-            // Runtime ADS translates that intact composition only. Rotating Hand
-            // from a socket transform is invalid because imported sight axes use
-            // local +Y, not Unity Transform.forward (+Z).
-            aimedViewmodelLocalRotation = hipViewmodelLocalRotation;
+            // Legacy sockets retain the authored hip rotation. Opt-in sight lines
+            // retain the solved rotation; neither mode changes the gameplay camera.
+            aimedViewmodelLocalRotation = viewmodelRoot.localRotation;
             return true;
         }
 

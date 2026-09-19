@@ -8,8 +8,8 @@ namespace FPS
 {
     public static class NetworkProtocol
     {
-        public const ushort Version = 5;
-        public const ushort SnapshotSchemaVersion = 4;
+        public const ushort Version = 9;
+        public const ushort SnapshotSchemaVersion = 8;
     }
 
     public enum SessionState : byte

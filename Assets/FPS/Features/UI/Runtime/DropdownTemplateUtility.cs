@@ -54,13 +54,13 @@ namespace FPS
             contentRect.anchorMax = new Vector2(1, 1);
             contentRect.pivot = new Vector2(0.5f, 1);
             contentRect.anchoredPosition = Vector2.zero;
-            contentRect.sizeDelta = new Vector2(0, 32);
+            contentRect.sizeDelta = new Vector2(0, 44);
 
             itemRect.anchorMin = new Vector2(0, 0.5f);
             itemRect.anchorMax = new Vector2(1, 0.5f);
             itemRect.pivot = new Vector2(0.5f, 0.5f);
             itemRect.anchoredPosition = Vector2.zero;
-            itemRect.sizeDelta = new Vector2(0, 32);
+            itemRect.sizeDelta = new Vector2(0, 44);
 
             if (dropdown.itemText != null)
             {

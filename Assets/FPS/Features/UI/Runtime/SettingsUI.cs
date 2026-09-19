@@ -11,8 +11,8 @@ namespace FPS
     {
         private const string MouseSensitivityKey = "MouseSensitivity";
         private const string GraphicsQualityKey = "GraphicsQuality";
-        private static readonly Color ActiveTabTextColor = Color.white;
-        private static readonly Color InactiveTabTextColor = new Color(0.88f, 0.92f, 0.95f, 1.0f);
+        private static readonly Color ActiveTabTextColor = TacticalUiTheme.Accent;
+        private static readonly Color InactiveTabTextColor = TacticalUiTheme.Muted;
 
         [Header("Tabs")]
         [SerializeField] private Button audioTabButton;
@@ -47,6 +47,9 @@ namespace FPS
         [SerializeField] private Button weapon2KeyBtn;
         [SerializeField] private Button interactKeyBtn;
         [SerializeField] private Button grenadeKeyBtn;
+        [SerializeField] private Button cycleGrenadeKeyBtn;
+        [SerializeField] private Button medkitKeyBtn;
+        [SerializeField] private Button antidoteKeyBtn;
         [SerializeField] private TextMeshProUGUI rebindStatusText;
 
         [Header("Footer")]
@@ -56,6 +59,8 @@ namespace FPS
         private Button currentRebindBtn = null;
         private TextMeshProUGUI currentRebindText = null;
         private bool initialized;
+        private int backBlockedThroughFrame = -1;
+        public bool BlocksBack => actionToRebind != null || Time.frameCount <= backBlockedThroughFrame;
 
         private void Start()
         {
@@ -138,7 +143,7 @@ namespace FPS
         private static void ConfigureTabButton(Button button)
         {
             if (button != null)
-                button.transition = Selectable.Transition.None;
+                button.transition = Selectable.Transition.ColorTint;
         }
 
         private void SwitchTab(GameObject targetPanel)
@@ -157,6 +162,11 @@ namespace FPS
             if (button == null) return;
 
             Color textColor = selected ? ActiveTabTextColor : InactiveTabTextColor;
+            var colors = TacticalUiTheme.ButtonColors();
+            colors.normalColor = selected ? TacticalUiTheme.Border : TacticalUiTheme.Control;
+            button.colors = colors;
+            var indicator = button.transform.Find("SelectionRule");
+            if (indicator != null) indicator.gameObject.SetActive(selected);
 
             TextMeshProUGUI label = button.GetComponentInChildren<TextMeshProUGUI>(true);
             if (label != null)
@@ -310,6 +320,9 @@ namespace FPS
             SetupRebindButton(weapon2KeyBtn, "Weapon2");
             SetupRebindButton(interactKeyBtn, "Interact");
             SetupRebindButton(grenadeKeyBtn, "Grenade");
+            SetupRebindButton(cycleGrenadeKeyBtn, "CycleGrenade");
+            SetupRebindButton(medkitKeyBtn, "Medkit");
+            SetupRebindButton(antidoteKeyBtn, "Antidote");
         }
 
         private void SetupRebindButton(Button btn, string actionName)
@@ -365,6 +378,9 @@ namespace FPS
                 InputManager.Instance.RebindKey("Jump", KeyCode.Space);
                 InputManager.Instance.RebindKey("Interact", KeyCode.F);
                 InputManager.Instance.RebindKey("Grenade", KeyCode.G);
+                InputManager.Instance.RebindKey("CycleGrenade", KeyCode.Alpha3);
+                InputManager.Instance.RebindKey("Medkit", KeyCode.Alpha4);
+                InputManager.Instance.RebindKey("Antidote", KeyCode.Alpha5);
             }
 
             RefreshKeybindingText(fireKeyBtn, "Fire");
@@ -374,6 +390,9 @@ namespace FPS
             RefreshKeybindingText(weapon2KeyBtn, "Weapon2");
             RefreshKeybindingText(interactKeyBtn, "Interact");
             RefreshKeybindingText(grenadeKeyBtn, "Grenade");
+            RefreshKeybindingText(cycleGrenadeKeyBtn, "CycleGrenade");
+            RefreshKeybindingText(medkitKeyBtn, "Medkit");
+            RefreshKeybindingText(antidoteKeyBtn, "Antidote");
 
             if (rebindStatusText != null)
             {
@@ -410,7 +429,8 @@ namespace FPS
 
         private void CompleteRebind(bool accepted)
         {
-            if (actionToRebind != null && accepted)
+            backBlockedThroughFrame = Time.frameCount + 1;
+            if (actionToRebind != null)
             {
                 if (currentRebindText != null && InputManager.Instance != null)
                     currentRebindText.text = InputManager.Instance.GetBindingDisplayName(actionToRebind);

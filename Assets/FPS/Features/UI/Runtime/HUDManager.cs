@@ -38,6 +38,9 @@ namespace FPS
         [Header("Throwables")]
         [SerializeField] private TextMeshProUGUI grenadeKeyText;
         [SerializeField] private TextMeshProUGUI grenadeCount;
+        [SerializeField] private TextMeshProUGUI incendiaryCount;
+        [SerializeField] private TextMeshProUGUI medkitCount;
+        [SerializeField] private TextMeshProUGUI antidoteCount;
 
         [Header("Combat Info")]
         [SerializeField] private TextMeshProUGUI killCountText;
@@ -64,9 +67,16 @@ namespace FPS
         [SerializeField] private GameObject waveAnnouncementPanel;
         [SerializeField] private TextMeshProUGUI waveAnnouncementText;
 
-        private static readonly Color TextColor = new Color(0.92f, 0.96f, 0.97f, 1f);
-        private static readonly Color MutedColor = new Color(0.55f, 0.65f, 0.70f, 1f);
-        private static readonly Color AccentColor = new Color(0.12f, 0.82f, 0.75f, 1f);
+        [Header("Special Threat")]
+        [SerializeField] private TextMeshProUGUI specialThreatWarningText;
+
+        private static readonly Color TextColor = TacticalUiTheme.Text;
+        private static readonly Color MutedColor = TacticalUiTheme.Muted;
+        private static readonly Color AccentColor = TacticalUiTheme.Accent;
+        // Unity's sprite pivot uses bottom-left normalized coordinates. The
+        // reticle crossing in HUDScope.png is at image-space y = 486 from top.
+        private static readonly Vector2 OperatorScopeReticleNormalizedPosition =
+            new Vector2(0.5f, 538f / 1024f);
         private static readonly Color WarningColor = new Color(0.94f, 0.68f, 0.23f, 1f);
         private static readonly Color CriticalColor = new Color(0.95f, 0.24f, 0.24f, 1f);
 
@@ -75,10 +85,29 @@ namespace FPS
         private Weapon unusedWeapon;
         private PlayerHealth playerHealth;
         private PlayerInfectionController playerInfection;
+        private SurvivalInventory survivalInventory;
         private float hitMarkerTimer;
+        private float specialThreatWarningUntil;
+        private Vector3 specialThreatWorldPosition;
+        private int validatedCrosshairScreenWidth = -1;
+        private int validatedCrosshairScreenHeight = -1;
+        private bool crosshairAlignmentWarningIssued;
+        private RectTransform adsReticleRect;
+        private Canvas adsReticleCanvas;
+        private Sprite adsReticleSprite;
+        private Texture2D adsReticleTexture;
+        private SurvivalHotbar survivalHotbar;
 
         private void Start()
         {
+            // Director phases are internal pacing state, not player-facing HUD information.
+            if (phaseText != null)
+            {
+                phaseText.text = string.Empty;
+                phaseText.gameObject.SetActive(false);
+            }
+            SpecialThreatSignal.Raised += OnSpecialThreatRaised;
+            EnsureSpecialThreatWarning();
             SetAimHudVisible(false, false);
             weaponManager = WeaponManager.LocalInstance;
             if (weaponManager != null)
@@ -132,6 +161,8 @@ namespace FPS
         {
             TryAcquireLocalPlayerHealth();
             TryAcquireWeaponManager();
+            TryAcquireSurvivalInventory();
+            ValidateCrosshairAlignmentIfNeeded();
 
             if (weaponManager != null)
             {
@@ -142,6 +173,8 @@ namespace FPS
             UpdateMatchFlowInfo();
             UpdateHitMarkerTimer();
             UpdateTreatmentUI();
+            UpdateSurvivalInventoryUI();
+            UpdateSpecialThreatWarning();
         }
 
         protected override void OnDestroy()
@@ -155,6 +188,92 @@ namespace FPS
 
             UnsubscribeHealth();
             UnsubscribeInfection();
+            if (survivalInventory != null)
+                survivalInventory.InventoryChanged -= UpdateSurvivalInventoryUI;
+            SpecialThreatSignal.Raised -= OnSpecialThreatRaised;
+            if (adsReticleRect != null && !adsReticleRect.IsChildOf(transform))
+            {
+                if (Application.isPlaying)
+                    Destroy(adsReticleRect.gameObject);
+                else
+                    DestroyImmediate(adsReticleRect.gameObject);
+            }
+            if (adsReticleSprite != null)
+            {
+                if (Application.isPlaying)
+                    Destroy(adsReticleSprite);
+                else
+                    DestroyImmediate(adsReticleSprite);
+            }
+            if (adsReticleTexture != null)
+            {
+                if (Application.isPlaying)
+                    Destroy(adsReticleTexture);
+                else
+                    DestroyImmediate(adsReticleTexture);
+            }
+        }
+
+        private void OnSpecialThreatRaised(Vector3 worldPosition, float durationSeconds)
+        {
+            specialThreatWorldPosition = worldPosition;
+            specialThreatWarningUntil = Time.unscaledTime + Mathf.Max(0.1f, durationSeconds);
+            EnsureSpecialThreatWarning();
+            UpdateSpecialThreatWarning();
+        }
+
+        private void EnsureSpecialThreatWarning()
+        {
+            if (specialThreatWarningText != null)
+                return;
+
+            GameObject warning = new GameObject(
+                "SpecialThreatWarning",
+                typeof(RectTransform),
+                typeof(TextMeshProUGUI));
+            RectTransform rect = warning.GetComponent<RectTransform>();
+            rect.SetParent(healthText != null && healthText.canvas != null ? healthText.canvas.transform : transform, false);
+            rect.anchorMin = new Vector2(0.5f, 1f);
+            rect.anchorMax = new Vector2(0.5f, 1f);
+            rect.pivot = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = new Vector2(0f, -144f);
+            rect.sizeDelta = new Vector2(520f, 52f);
+
+            specialThreatWarningText = warning.GetComponent<TextMeshProUGUI>();
+            specialThreatWarningText.alignment = TextAlignmentOptions.Center;
+            specialThreatWarningText.fontSize = 28f;
+            specialThreatWarningText.fontStyle = FontStyles.Bold;
+            specialThreatWarningText.raycastTarget = false;
+            specialThreatWarningText.color = WarningColor;
+            warning.SetActive(false);
+        }
+
+        private void UpdateSpecialThreatWarning()
+        {
+            if (specialThreatWarningText == null)
+                return;
+
+            bool visible = Time.unscaledTime < specialThreatWarningUntil;
+            specialThreatWarningText.gameObject.SetActive(visible);
+            if (!visible)
+                return;
+
+            Transform view = Camera.main != null ? Camera.main.transform : playerHealth?.transform;
+            if (view == null)
+            {
+                specialThreatWarningText.text = "SCREAMER";
+                return;
+            }
+
+            Vector3 direction = Vector3.ProjectOnPlane(
+                specialThreatWorldPosition - view.position,
+                Vector3.up).normalized;
+            float forward = Vector3.Dot(view.forward, direction);
+            float right = Vector3.Dot(view.right, direction);
+            string marker = Mathf.Abs(right) > Mathf.Abs(forward)
+                ? right >= 0f ? "▶" : "◀"
+                : forward >= 0f ? "▲" : "▼";
+            specialThreatWarningText.text = $"{marker}  SCREAMER  {marker}";
         }
 
         private void TryAcquireWeaponManager()
@@ -191,6 +310,40 @@ namespace FPS
                     playerInfection.CurrentInfection,
                     playerInfection.CurrentStage);
             }
+        }
+
+        private void TryAcquireSurvivalInventory()
+        {
+            if (survivalInventory != null) return;
+            NetworkClient client = NetworkManager.Singleton?.LocalClient;
+            NetworkObject player = client?.PlayerObject;
+            if (player == null) return;
+            survivalInventory = player.GetComponent<SurvivalInventory>();
+            if (survivalInventory == null) return;
+            survivalInventory.InventoryChanged += UpdateSurvivalInventoryUI;
+            EnsureSurvivalInventoryLabels();
+            UpdateSurvivalInventoryUI();
+        }
+
+        private void EnsureSurvivalInventoryLabels()
+        {
+            if (survivalHotbar != null) return;
+            Canvas canvas = healthText != null ? healthText.canvas : GetComponentInParent<Canvas>();
+            if (canvas == null) return;
+            var root = new GameObject("SurvivalHotbar", typeof(RectTransform));
+            root.transform.SetParent(canvas.transform, false);
+            survivalHotbar = root.AddComponent<SurvivalHotbar>();
+            survivalHotbar.Bind(survivalInventory);
+            if (grenadeCount != null) grenadeCount.transform.parent.gameObject.SetActive(false);
+            if (incendiaryCount != null) incendiaryCount.gameObject.SetActive(false);
+            if (medkitCount != null) medkitCount.gameObject.SetActive(false);
+            if (antidoteCount != null) antidoteCount.gameObject.SetActive(false);
+        }
+
+        private void UpdateSurvivalInventoryUI()
+        {
+            EnsureSurvivalInventoryLabels();
+            if (survivalHotbar != null) survivalHotbar.Bind(survivalInventory);
         }
 
         private void UnsubscribeInfection()
@@ -374,7 +527,9 @@ namespace FPS
 
             if (healthFill != null)
             {
-                healthFill.enabled = false;
+                healthFill.enabled = true;
+                healthFill.fillAmount = percent;
+                healthFill.color = healthColor;
             }
 
             if (healthDangerBackground != null)
@@ -408,24 +563,13 @@ namespace FPS
         {
             if (treatmentProgressFill == null)
                 return;
-            float progress = playerInfection != null ? playerInfection.ActiveTreatmentProgress : 0f;
+            float progress = survivalInventory != null && survivalInventory.IsUsingItem ? survivalInventory.UseProgress : (playerInfection != null ? playerInfection.ActiveTreatmentProgress : 0f);
             treatmentProgressFill.fillAmount = progress;
             treatmentProgressFill.gameObject.SetActive(progress > 0f && progress < 1f);
         }
 
         private void UpdateCombatInfo()
         {
-            if (NetworkMatchStateManager.HasInstance && NetworkMatchStateManager.Instance.State != NetworkMatchState.Playing)
-            {
-                if (phaseText != null)
-                    phaseText.text = FormatMatchState(NetworkMatchStateManager.Instance);
-            }
-            else if (AIDirector.Instance != null)
-            {
-                if (phaseText != null)
-                    phaseText.text = $"{AIDirector.Instance.CurrentPhase.ToString().ToUpperInvariant()} PHASE";
-            }
-
             if (AIDirector.Instance != null)
             {
                 if (killCountText != null)
@@ -438,7 +582,6 @@ namespace FPS
             {
                 if (killCountText != null) killCountText.text = "Kills: --";
                 if (zombieCountText != null) zombieCountText.text = "Zombies Left: --";
-                if (phaseText != null && !NetworkMatchStateManager.HasInstance) phaseText.text = "-- PHASE";
             }
 
             if (playerCountText != null)
@@ -457,8 +600,7 @@ namespace FPS
 
             if (grenadeCount != null)
             {
-                // Placeholder until grenade inventory exists.
-                grenadeCount.text = "2";
+                grenadeCount.text = survivalInventory != null ? survivalInventory.FragGrenadeCount.Value.ToString() : "--";
             }
 
             if (grenadeKeyText != null)
@@ -472,12 +614,11 @@ namespace FPS
         private void UpdateMatchFlowInfo()
         {
             NetworkMatchStateManager matchManager = NetworkMatchStateManager.Instance;
-            if (matchManager != null && matchStateText != null)
+            if (matchStateText != null)
             {
-                // Gameplay sạch như game thật: chỉ hiện banner khi GAME OVER.
-                bool showState = matchManager.State == NetworkMatchState.GameOver;
-                if (showState)
-                    matchStateText.text = FormatMatchState(matchManager);
+                // Never leave an authored warmup/loading label visible while the manager is absent.
+                bool showState = matchManager != null && matchManager.State == NetworkMatchState.GameOver;
+                matchStateText.text = showState ? "GAME OVER" : string.Empty;
                 matchStateText.gameObject.SetActive(showState);
             }
 
@@ -505,18 +646,6 @@ namespace FPS
             }
         }
 
-        private static string FormatMatchState(NetworkMatchStateManager matchManager)
-        {
-            return matchManager.State switch
-            {
-                NetworkMatchState.Warmup => $"WARMUP {Mathf.CeilToInt(matchManager.WarmupRemainingSeconds)}",
-                NetworkMatchState.Playing => "PLAYING",
-                NetworkMatchState.GameOver => "GAME OVER",
-                NetworkMatchState.Loading => "LOADING",
-                _ => "LOBBY"
-            };
-        }
-
         public void ShowHitConfirmed(HitboxZone zone, float finalDamage)
         {
             if (hitMarkerText == null)
@@ -530,7 +659,11 @@ namespace FPS
             hitMarkerTimer = hitMarkerDuration;
         }
 
-        public void SetAimHudVisible(bool aiming, bool showScopeOverlay, Sprite scopeSprite = null)
+        public void SetAimHudVisible(
+            bool aiming,
+            bool showScopeOverlay,
+            Sprite scopeSprite = null,
+            bool showAdsReticle = false)
         {
             EnsureCrosshairReference();
             if (showScopeOverlay)
@@ -540,7 +673,87 @@ namespace FPS
             if (scopeOverlayRoot != null)
                 scopeOverlayRoot.SetActive(showScopeOverlay);
             if (crosshairRoot != null)
-                crosshairRoot.SetActive(!aiming);
+                crosshairRoot.SetActive(!aiming && !showScopeOverlay);
+
+            // A physical-ADS weapon can opt into a small reflex-style marker.
+            // Scope weapons never opt in, including their raise/lower transition.
+            bool reticleVisible = aiming && showAdsReticle && !showScopeOverlay;
+            if (reticleVisible)
+                EnsureAdsReticle();
+            if (adsReticleRect != null)
+            {
+                if (reticleVisible && adsReticleCanvas != null)
+                {
+                    // Keep the 3 px core readable without growing with CanvasScaler.
+                    Vector2 size = Vector2.one * (10f / Mathf.Max(.01f, adsReticleCanvas.scaleFactor));
+                    if (adsReticleRect.sizeDelta != size)
+                        adsReticleRect.sizeDelta = size;
+                }
+                adsReticleRect.gameObject.SetActive(reticleVisible);
+            }
+        }
+
+        private void EnsureAdsReticle()
+        {
+            if (adsReticleRect != null)
+                return;
+
+            Canvas canvas = crosshairRoot != null
+                ? crosshairRoot.GetComponentInParent<Canvas>(true)
+                : GetComponentInParent<Canvas>(true);
+            if (canvas == null)
+                canvas = FindAnyObjectByType<Canvas>(FindObjectsInactive.Include);
+            if (canvas == null)
+                return;
+
+            adsReticleCanvas = canvas.rootCanvas;
+            GameObject reticle = new GameObject(
+                "ADSReflexReticle", typeof(RectTransform), typeof(Image));
+            reticle.layer = adsReticleCanvas.gameObject.layer;
+            adsReticleRect = (RectTransform)reticle.transform;
+            adsReticleRect.SetParent(adsReticleCanvas.transform, false);
+            adsReticleRect.anchorMin = adsReticleRect.anchorMax = Vector2.one * .5f;
+            adsReticleRect.pivot = Vector2.one * .5f;
+            adsReticleRect.anchoredPosition = Vector2.zero;
+            adsReticleRect.SetAsLastSibling();
+            Image graphic = reticle.GetComponent<Image>();
+            graphic.sprite = CreateAdsReticleSprite();
+            graphic.color = Color.white;
+            graphic.raycastTarget = false;
+        }
+
+        private Sprite CreateAdsReticleSprite()
+        {
+            if (adsReticleSprite != null)
+                return adsReticleSprite;
+
+            const int size = 32;
+            adsReticleTexture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+            {
+                name = "Runtime_ADSReflexReticle",
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp
+            };
+            Vector2 center = Vector2.one * size * .5f;
+            for (int y = 0; y < size; y++)
+            for (int x = 0; x < size; x++)
+            {
+                float distance = Vector2.Distance(new Vector2(x + .5f, y + .5f), center) / (size * .5f);
+                Color pixel = new Color(.15f, 1f, .8f, .22f * (1f - Mathf.SmoothStep(.44f, 1f, distance)));
+                if (distance <= .44f)
+                    pixel = new Color(.02f, .06f, .07f, .9f); // contrast on light backgrounds
+                if (distance <= .3f)
+                    pixel = new Color(.15f, 1f, .8f, 1f); // 3 px reflex core in a 10 px image
+                adsReticleTexture.SetPixel(x, y, pixel);
+            }
+            adsReticleTexture.Apply(false, true);
+            adsReticleSprite = Sprite.Create(
+                adsReticleTexture,
+                new Rect(0f, 0f, size, size),
+                Vector2.one * .5f,
+                size);
+            adsReticleSprite.name = "Runtime_ADSReflexReticle";
+            return adsReticleSprite;
         }
 
         public void SetScopeVisible(bool visible)
@@ -565,6 +778,58 @@ namespace FPS
                     return;
                 }
             }
+        }
+
+        public bool ValidateCrosshairAlignment(out float pixelError)
+        {
+            EnsureCrosshairReference();
+            RectTransform crosshairRect = crosshairRoot != null
+                ? crosshairRoot.GetComponent<RectTransform>()
+                : null;
+            Canvas canvas = crosshairRect != null
+                ? crosshairRect.GetComponentInParent<Canvas>(true)
+                : null;
+            if (crosshairRect == null || canvas == null)
+            {
+                pixelError = float.PositiveInfinity;
+                return false;
+            }
+
+            Canvas.ForceUpdateCanvases();
+            Camera uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay
+                ? null
+                : canvas.worldCamera;
+            Vector3 crosshairWorldCenter = crosshairRect.TransformPoint(crosshairRect.rect.center);
+            Vector2 crosshairPixel = RectTransformUtility.WorldToScreenPoint(
+                uiCamera,
+                crosshairWorldCenter);
+            Vector2 screenCenter = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+            pixelError = Vector2.Distance(crosshairPixel, screenCenter);
+            return pixelError <= 0.5f;
+        }
+
+        private void ValidateCrosshairAlignmentIfNeeded()
+        {
+            if (validatedCrosshairScreenWidth == Screen.width
+                && validatedCrosshairScreenHeight == Screen.height)
+            {
+                return;
+            }
+
+            validatedCrosshairScreenWidth = Screen.width;
+            validatedCrosshairScreenHeight = Screen.height;
+            if (ValidateCrosshairAlignment(out float pixelError))
+            {
+                crosshairAlignmentWarningIssued = false;
+                return;
+            }
+
+            if (crosshairAlignmentWarningIssued || float.IsPositiveInfinity(pixelError))
+                return;
+
+            crosshairAlignmentWarningIssued = true;
+            GameLog.Warning(() =>
+                $"[HUD] Crosshair is {pixelError:F2}px away from screen center at {Screen.width}x{Screen.height}; allowed error is 0.5px.");
         }
 
         private void EnsureScopeOverlay(Sprite scopeSprite)
@@ -595,24 +860,38 @@ namespace FPS
             rootRect.SetAsLastSibling();
             root.GetComponent<CanvasGroup>().blocksRaycasts = false;
 
+            // AspectRatioFitter owns the fitted frame's anchors and position, so
+            // keep that RectTransform centered. A separate child offsets the
+            // authored reticle point without fighting the fitter's driven values.
+            GameObject artworkFrame = new GameObject(
+                "ScopeArtworkFrame",
+                typeof(RectTransform),
+                typeof(AspectRatioFitter));
+            artworkFrame.transform.SetParent(rootRect, false);
+            RectTransform frameRect = (RectTransform)artworkFrame.transform;
+            frameRect.anchorMin = new Vector2(0.5f, 0.5f);
+            frameRect.anchorMax = new Vector2(0.5f, 0.5f);
+            frameRect.pivot = new Vector2(0.5f, 0.5f);
+            frameRect.anchoredPosition = Vector2.zero;
+
             GameObject artwork = new GameObject(
                 "ScopeArtwork",
                 typeof(RectTransform),
-                typeof(Image),
-                typeof(AspectRatioFitter));
-            artwork.transform.SetParent(rootRect, false);
+                typeof(Image));
+            artwork.transform.SetParent(frameRect, false);
             RectTransform artworkRect = (RectTransform)artwork.transform;
-            artworkRect.anchorMin = new Vector2(0.5f, 0.5f);
-            artworkRect.anchorMax = new Vector2(0.5f, 0.5f);
-            artworkRect.pivot = new Vector2(0.5f, 0.5f);
-            artworkRect.anchoredPosition = Vector2.zero;
+            artworkRect.anchorMin = Vector2.one * 0.5f - OperatorScopeReticleNormalizedPosition;
+            artworkRect.anchorMax = Vector2.one * 1.5f - OperatorScopeReticleNormalizedPosition;
+            artworkRect.pivot = OperatorScopeReticleNormalizedPosition;
+            artworkRect.offsetMin = Vector2.zero;
+            artworkRect.offsetMax = Vector2.zero;
 
             scopeOverlayImage = artwork.GetComponent<Image>();
             scopeOverlayImage.sprite = scopeSprite;
             scopeOverlayImage.preserveAspect = true;
             scopeOverlayImage.raycastTarget = false;
 
-            AspectRatioFitter fitter = artwork.GetComponent<AspectRatioFitter>();
+            AspectRatioFitter fitter = artworkFrame.GetComponent<AspectRatioFitter>();
             fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
             fitter.aspectRatio = scopeSprite != null && scopeSprite.rect.height > 0f
                 ? scopeSprite.rect.width / scopeSprite.rect.height
@@ -654,3 +933,4 @@ namespace FPS
         }
     }
 }
+

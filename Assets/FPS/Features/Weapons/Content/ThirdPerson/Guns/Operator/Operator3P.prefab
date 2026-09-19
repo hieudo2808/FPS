@@ -1510,7 +1510,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2444769868352451262}
-  - component: {fileID: 216985494937302576}
   m_Layer: 7
   m_Name: Operator3P
   m_TagString: Untagged
@@ -1538,22 +1537,6 @@ Transform:
   - {fileID: 9217150781682411067}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -89.98021, y: 179.99998, z: 0}
---- !u!114 &216985494937302576
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7568660000303757566}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7cb27d4f7d6ebf4885465efaf5f56dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FPS::FPS.ThirdPersonWeaponGrip
-  leftHandTarget: {fileID: 5156112173872996560}
-  handPositionOffset: {x: -0.082836, y: 0.071174, z: 0.130563}
-  handRotationOffset: {x: 298.771, y: 316.784, z: 116.588}
-  directIKTarget: {fileID: 37077490901162984}
 --- !u!1 &7687456964540968764
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Odin
   m_EditorClassIdentifier: FPS::FPS.WeaponData
   weaponName: Odin
-  weaponIcon: {fileID: 0}
+  weaponIcon: {fileID: 21300000, guid: e567238936783e1469fe3657cafc1bcd, type: 3}
   damage: 20
   damageType: 1
   hitMask:
@@ -21,13 +21,12 @@ MonoBehaviour:
     m_Bits: 4294967291
   bulletSpeed: 200
   bakedFireInterval: 0.11363637
-  bulletLiveTime: 2
+  bulletLiveTime: 5
   burstCount: 3
   fireMode: 2
   projectileCount: 1
-  hipSpreadAngle: 0.6
-  aimedSpreadAngle: 0.6
-  maximumRange: 120
+  hipSpreadAngle: 0
+  aimedSpreadAngle: 0
   falloffStartDistance: 30
   falloffEndDistance: 60
   minimumDamageMultiplier: 0.65
@@ -40,6 +39,7 @@ MonoBehaviour:
   reloadAmmoCommitFrame: 120
   reloadLoopStartFrame: 0
   reloadLoopEndFrame: 0
+  thirdPersonReloadInsertRange: {x: 0.1, y: 0.32}
   bakedReloadDuration: 6
   bakedReloadAmmoCommitDuration: 2
   bakedPerShellOpeningDuration: 0

@@ -49,12 +49,88 @@ namespace FPS
         private bool hasPreparedSnapshot;
         private bool preparedAsReconnect;
         private PlayerRuntimeSnapshot preparedSnapshot;
+        private bool combatAvailabilityInitialized;
+        private bool lastCombatAvailability;
+        private double campaignProtectionUntil;
+        private readonly NetworkVariable<uint> damageRevision = new();
+        public uint DamageRevision => damageRevision.Value;
+        private uint campaignTransferSerial;
+        private bool campaignTransferPending;
+        private Vector3 campaignTransferPosition;
+        private Quaternion campaignTransferRotation;
+        private double nextCampaignTransferRetry;
+        public bool CampaignTransferPending => campaignTransferPending;
+        private double CampaignNow => NetworkManager != null && NetworkManager.IsListening ? NetworkManager.ServerTime.Time : Time.timeAsDouble;
+
+        private void Update()
+        {
+            if (IsServer && CampaignMissionController.Instance != null && LifeState == PlayerLifeState.Downed && CampaignNow >= LifeStateDeadline)
+                Die();
+            if (IsServer && campaignTransferPending && CampaignNow >= nextCampaignTransferRetry)
+                SendCampaignTransfer();
+        }
+
+        public void RelocateCampaign(Vector3 position, Quaternion rotation)
+        {
+            if (!IsServer) return;
+            campaignTransferSerial++;
+            campaignTransferPending = true;
+            campaignTransferPosition = position;
+            campaignTransferRotation = rotation;
+            networkInputReady.Value = false;
+            ApplyRespawnPose(position, rotation);
+            SendCampaignTransfer();
+        }
+        private void SendCampaignTransfer()
+        {
+            nextCampaignTransferRetry = CampaignNow + 1;
+            CampaignTransferClientRpc(campaignTransferPosition, campaignTransferRotation, campaignTransferSerial);
+        }
+        [ClientRpc]
+        private void CampaignTransferClientRpc(Vector3 position, Quaternion rotation, uint serial)
+        {
+            ApplyRespawnPose(position, rotation);
+            if (IsOwner) AcknowledgeCampaignTransferServerRpc(serial);
+        }
+        [ServerRpc]
+        private void AcknowledgeCampaignTransferServerRpc(uint serial)
+        {
+            if (!campaignTransferPending || serial != campaignTransferSerial) return;
+            campaignTransferPending = false;
+            networkInputReady.Value = true;
+        }
+        public void SetCampaignSpectating()
+        {
+            if (!IsServer) return;
+            networkLifeState.Value = PlayerLifeState.Spectating;
+            networkIsDead.Value = true;
+            networkLifeStateDeadline.Value = 0;
+        }
+        public void ReviveCampaign(float health)
+        {
+            if (!IsServer) return;
+            networkIsDead.Value = false;
+            networkLifeState.Value = PlayerLifeState.Alive;
+            networkLifeStateDeadline.Value = 0;
+            networkHealth.Value = Mathf.Clamp(health, 1, maxHealth);
+            campaignProtectionUntil = CampaignNow + (CampaignMissionController.Instance?.settings.reviveProtectionSeconds ?? 2);
+        }
+        public void RestoreCampaignSnapshot(PlayerRuntimeSnapshot snapshot)
+        {
+            if (!IsServer) return;
+            campaignTransferPending = false;
+            preparedSnapshot = snapshot;
+            preparedAsReconnect = true;
+            ApplyPreparedSnapshotServer();
+            BeginReconnectRestoreClientRpc(snapshot, CreateOwnerRpcParams());
+        }
 
         public float CurrentHealth => networkHealth.Value;
         public float MaxHealth => maxHealth;
         public bool IsDead => networkIsDead.Value;
         public bool IsInputReady => networkInputReady.Value;
         public PlayerLifeState LifeState => networkLifeState.Value;
+        public bool CanUseCombat => LifeState == PlayerLifeState.Alive && IsInputReady && !IsDead;
         public double LifeStateDeadline => networkLifeStateDeadline.Value;
         public SessionPlayerId StablePlayerId => networkSessionPlayerId.Value;
 
@@ -63,7 +139,7 @@ namespace FPS
 
         public delegate void OnPlayerDeath();
         public event OnPlayerDeath PlayerDeathEvent;
-        public static event System.Action<SessionPlayerId> ReconnectRestoreAcknowledged;
+        public event System.Action<bool> CombatAvailabilityChanged;
 
         public override void OnNetworkSpawn()
         {
@@ -81,6 +157,8 @@ namespace FPS
             networkHealth.OnValueChanged += OnHealthValueChanged;
             networkIsDead.OnValueChanged += OnDeadValueChanged;
             networkLifeState.OnValueChanged += OnLifeStateChanged;
+            networkInputReady.OnValueChanged += OnInputReadyChanged;
+            RefreshCombatAvailability(raiseInitialEvent: false);
 
             // Initial UI update
             HealthChangedEvent?.Invoke(networkHealth.Value, maxHealth);
@@ -94,6 +172,8 @@ namespace FPS
             networkHealth.OnValueChanged -= OnHealthValueChanged;
             networkIsDead.OnValueChanged -= OnDeadValueChanged;
             networkLifeState.OnValueChanged -= OnLifeStateChanged;
+            networkInputReady.OnValueChanged -= OnInputReadyChanged;
+            combatAvailabilityInitialized = false;
 
             if (IsServer)
             {
@@ -109,6 +189,7 @@ namespace FPS
 
         private void OnDeadValueChanged(bool oldValue, bool newValue)
         {
+            RefreshCombatAvailability();
             if (newValue && !oldValue)
             {
                 PlayerDeathEvent?.Invoke();
@@ -117,6 +198,7 @@ namespace FPS
 
         private void OnLifeStateChanged(PlayerLifeState oldState, PlayerLifeState newState)
         {
+            RefreshCombatAvailability();
             if (!IsServer || newState != PlayerLifeState.Downed || oldState == PlayerLifeState.Downed)
                 return;
 
@@ -125,10 +207,49 @@ namespace FPS
                 NetworkManager != null && NetworkManager.IsListening ? NetworkManager.ServerTime.Tick : 0);
         }
 
-        public void TakeDamage(float damage)
+        private void OnInputReadyChanged(bool oldValue, bool newValue)
+        {
+            RefreshCombatAvailability();
+        }
+
+        private void RefreshCombatAvailability(bool raiseInitialEvent = true)
+        {
+            bool canUseCombat = CanUseCombat;
+            if (!combatAvailabilityInitialized)
+            {
+                combatAvailabilityInitialized = true;
+                lastCombatAvailability = canUseCombat;
+                if (raiseInitialEvent)
+                    CombatAvailabilityChanged?.Invoke(canUseCombat);
+                return;
+            }
+
+            if (lastCombatAvailability == canUseCombat)
+                return;
+
+            lastCombatAvailability = canUseCombat;
+            CombatAvailabilityChanged?.Invoke(canUseCombat);
+        }
+
+        public void TakeDamage(float damage) => ApplyDamage(damage, interruptTreatment: true);
+
+        // Sepsis drains health but must not make the five-second antidote impossible to finish.
+        public void TakeInfectionDamage(float damage) => ApplyDamage(damage, interruptTreatment: false);
+
+        private void ApplyDamage(float damage, bool interruptTreatment)
         {
             if (!IsServer) return;
             if (networkIsDead.Value) return;
+            var campaign = CampaignMissionController.Instance;
+            if (campaign != null && (campaign.BlocksInput || CampaignNow < campaignProtectionUntil)) return;
+            if (!float.IsFinite(damage) || damage <= 0) return;
+            if (interruptTreatment) damageRevision.Value++;
+            if (campaign != null && LifeState == PlayerLifeState.Downed)
+            {
+                networkLifeStateDeadline.Value -= damage * campaign.settings.bleedoutDamageSeconds;
+                if (CampaignNow >= LifeStateDeadline) Die();
+                return;
+            }
 
             networkHealth.Value = Mathf.Max(0, networkHealth.Value - Mathf.Max(0f, damage));
 
@@ -141,7 +262,14 @@ namespace FPS
             GameLog.Info(() => $"Player took {damage} damage. HP: {networkHealth.Value}/{maxHealth}");
 
             if (networkHealth.Value <= 0)
-                Die();
+            {
+                if (campaign != null && campaign.ActivePlayerCount > 1)
+                {
+                    networkLifeState.Value = PlayerLifeState.Downed;
+                    networkLifeStateDeadline.Value = CampaignNow + campaign.settings.bleedoutSeconds;
+                }
+                else Die();
+            }
         }
 
         private void Die()
@@ -166,7 +294,7 @@ namespace FPS
         public void Heal(float amount)
         {
             if (!IsServer) return;
-            if (networkIsDead.Value) return;
+            if (networkIsDead.Value || !float.IsFinite(amount) || amount <= 0f) return;
 
             networkHealth.Value = Mathf.Min(networkHealth.Value + amount, maxHealth);
         }
@@ -184,6 +312,7 @@ namespace FPS
         {
             if (!IsServer) return;
 
+            GetComponent<SurvivalInventory>()?.CancelUseServer();
             ApplyRespawnPose(position, rotation);
             networkIsDead.Value = false;
             networkLifeState.Value = PlayerLifeState.Alive;
@@ -223,7 +352,9 @@ namespace FPS
                 infection = GetComponent<PlayerInfectionController>()?.CurrentInfection ?? 0f,
                 lifeState = networkLifeState.Value,
                 lifeStateDeadline = networkLifeStateDeadline.Value,
-                inventorySchemaVersion = 3
+                inventorySchemaVersion = 5,
+                medicineCount = GetComponent<SurvivalInventory>()?.MedkitCount.Value ?? 0,
+                campaignChapter = CampaignMissionController.Instance != null ? (byte)((int)CampaignMissionController.Instance.SnapshotChapter + 1) : (byte)0
             };
 
             WeaponManager manager = GetComponent<WeaponManager>();
@@ -236,6 +367,7 @@ namespace FPS
                 snapshot.weaponSlot1 = fireHandler.CaptureWeaponSnapshot(1);
             }
 
+            GetComponent<SurvivalInventory>()?.Capture(ref snapshot);
             return snapshot;
         }
 
@@ -254,6 +386,7 @@ namespace FPS
 
         private void ApplyPreparedSnapshotServer()
         {
+            GetComponent<SurvivalInventory>()?.RestoreServer(preparedSnapshot);
             networkSessionPlayerId.Value = preparedSnapshot.sessionPlayerId;
             networkHealth.Value = Mathf.Clamp(preparedSnapshot.health, 0f, maxHealth);
             networkLifeState.Value = ResolveExpiredLifeState(preparedSnapshot.lifeState, preparedSnapshot.lifeStateDeadline);
@@ -328,10 +461,6 @@ namespace FPS
 
             networkInputReady.Value = true;
             preparedAsReconnect = false;
-            ReconnectRestoreAcknowledged?.Invoke(StablePlayerId);
-            NetworkDiagnostics.Emit("reconnect_restore_ack", NetworkGameManager.Instance != null
-                ? NetworkGameManager.Instance.State
-                : SessionState.InMatch, playerId: StablePlayerId);
         }
 
         private ClientRpcParams CreateOwnerRpcParams()

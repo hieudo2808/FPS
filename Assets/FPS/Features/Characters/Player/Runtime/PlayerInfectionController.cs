@@ -40,17 +40,10 @@ namespace FPS
         [SerializeField] private float sepsisDrainInterval = 5f;
         [SerializeField] private float sepsisDamagePerTick = 5f;
 
-        [Header("Treatment Settings")]
-        [SerializeField] private float selfTreatmentDuration = 7f;
-        [SerializeField] private float teammateTreatmentDuration = 3f;
-        [SerializeField] private float selfTreatmentReduction = 60f;
-        [SerializeField] private float teammateTreatmentReduction = 70f;
-
         [Header("Audio & SFX")]
         [SerializeField] private AudioClip coughSound;
         [SerializeField] private AudioClip sepsisHeartbeatSound;
         [SerializeField] private AudioClip implantHitSound;
-        [SerializeField] private AudioClip treatmentCompleteSound;
 
         // =========================================================
         // REPLICATED NETWORK STATE
@@ -70,21 +63,6 @@ namespace FPS
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
 
-        private readonly NetworkVariable<byte> networkTreatmentKind = new(
-            0,
-            NetworkVariableReadPermission.Everyone,
-            NetworkVariableWritePermission.Server);
-
-        private readonly NetworkVariable<double> networkTreatmentStart = new(
-            0.0,
-            NetworkVariableReadPermission.Everyone,
-            NetworkVariableWritePermission.Server);
-
-        private readonly NetworkVariable<double> networkTreatmentDeadline = new(
-            0.0,
-            NetworkVariableReadPermission.Everyone,
-            NetworkVariableWritePermission.Server);
-
         // =========================================================
         // LOCAL TIMERS & STATE
         // =========================================================
@@ -93,15 +71,6 @@ namespace FPS
         private float lastSepsisDrainTime;
         private float sepsisTimeRemaining;
         private readonly Dictionary<ulong, float> nearbyTeammateExposures = new();
-
-        private bool isTreatingSelf;
-        private float selfTreatmentProgress;
-        private bool isTreatingTeammate;
-        private float teammateTreatmentProgress;
-        private PlayerInfectionController currentTreatmentTarget;
-        private double treatmentStartServerTime;
-        private double treatmentDeadlineServerTime;
-        private float treatmentStartHealth;
 
         private float localInfection;
         private InfectionStage localStage = InfectionStage.None;
@@ -139,11 +108,14 @@ namespace FPS
         public bool IsInfected => CurrentInfection > 0.01f;
         public bool IsCritical => CurrentStage >= InfectionStage.Critical;
         public bool IsSepsis => CurrentStage == InfectionStage.Sepsis;
-        public bool IsTreatingSelf => HasBoundNetworkState ? networkTreatmentKind.Value == 1 : isTreatingSelf;
-        public bool IsTreatingTeammate => HasBoundNetworkState ? networkTreatmentKind.Value == 2 : isTreatingTeammate;
-        public float SelfTreatmentProgress => selfTreatmentProgress;
-        public float TeammateTreatmentProgress => teammateTreatmentProgress;
-        public float ActiveTreatmentProgress => GetTreatmentProgress();
+        private SurvivalInventory inventory;
+        private SurvivalInventory Inventory => inventory != null ? inventory : inventory = GetComponent<SurvivalInventory>();
+        private bool IsUsingAntidote => Inventory != null && Inventory.IsUsingItem && Inventory.ActiveConsumable == ConsumableKind.Antidote;
+        public bool IsTreatingSelf => IsUsingAntidote && Inventory.IsSelfUse;
+        public bool IsTreatingTeammate => IsUsingAntidote && !Inventory.IsSelfUse;
+        public float SelfTreatmentProgress => IsTreatingSelf ? Inventory.UseProgress : 0f;
+        public float TeammateTreatmentProgress => IsTreatingTeammate ? Inventory.UseProgress : 0f;
+        public float ActiveTreatmentProgress => IsUsingAntidote ? Inventory.UseProgress : 0f;
 
         // Gameplay Modifiers
         public float MovementSpeedMultiplier
@@ -236,7 +208,7 @@ namespace FPS
                 ServerUpdate();
             }
 
-            UpdateTreatmentPresentation();
+
         }
 
         // =========================================================
@@ -260,7 +232,7 @@ namespace FPS
                 UpdateSepsisServer();
             }
 
-            UpdateTreatmentServer();
+
         }
 
         private void UpdateCriticalServer()
@@ -334,7 +306,7 @@ namespace FPS
                 lastSepsisDrainTime = Time.time;
                 if (cachedHealth != null && !cachedHealth.IsDead)
                 {
-                    cachedHealth.TakeDamage(sepsisDamagePerTick);
+                    cachedHealth.TakeInfectionDamage(sepsisDamagePerTick);
                     OnSepsisDrainServer?.Invoke(sepsisDamagePerTick);
                 }
             }
@@ -368,19 +340,23 @@ namespace FPS
         // =========================================================
         public void AddInfectionServer(float amount)
         {
-            if (!CanMutateAuthoritativeState || amount <= 0f) return;
+            if (!CanMutateAuthoritativeState || !float.IsFinite(amount) || amount <= 0f) return;
             float newInfection = Mathf.Clamp(CurrentInfection + amount, 0f, MaxInfection);
             SetInfectionServer(newInfection);
         }
 
         public void TreatInfectionServer(float amount)
         {
-            if (!CanMutateAuthoritativeState || amount <= 0f) return;
+            if (!CanMutateAuthoritativeState || !float.IsFinite(amount) || amount <= 0f) return;
             float newInfection = Mathf.Clamp(CurrentInfection - amount, 0f, MaxInfection);
             SetInfectionServer(newInfection);
 
             if (newInfection < SepsisThreshold)
+            {
                 localSepsisTimer = 0f;
+                sepsisTimeRemaining = 0f;
+                if (HasBoundNetworkState) networkSepsisTimer.Value = 0f;
+            }
         }
 
         public void CureServer()
@@ -395,13 +371,24 @@ namespace FPS
 
         public void SetInfectionServer(float amount)
         {
-            if (!CanMutateAuthoritativeState) return;
+            if (!CanMutateAuthoritativeState || !float.IsFinite(amount)) return;
 
             float clamped = Mathf.Clamp(amount, 0f, MaxInfection);
             InfectionStage newStage = CalculateStage(clamped);
 
             float prevInfection = CurrentInfection;
             InfectionStage prevStage = CurrentStage;
+
+            if (prevStage != newStage)
+            {
+                if (newStage == InfectionStage.Sepsis)
+                    lastSepsisDrainTime = lastSepsisNoiseTime = Time.time;
+                else if (prevStage == InfectionStage.Sepsis)
+                {
+                    sepsisTimeRemaining = localSepsisTimer = 0f;
+                    if (HasBoundNetworkState) networkSepsisTimer.Value = 0f;
+                }
+            }
 
             localInfection = clamped;
             localStage = newStage;
@@ -441,172 +428,15 @@ namespace FPS
         // =========================================================
         // TREATMENT ACTIONS & RPCs
         // =========================================================
-        public void StartSelfTreatment()
-        {
-            if (!IsInfected) return;
-            if (HasBoundNetworkState)
-                StartTreatmentServerRpc(NetworkObjectId);
-            else
-                BeginTreatmentServer(this);
-        }
-
-        public void CancelSelfTreatment()
-        {
-            RequestCancelTreatment();
-        }
-
+        public void StartSelfTreatment() => GetComponent<SurvivalInventory>()?.RequestUse(ConsumableKind.Antidote);
+        public void CancelSelfTreatment() => GetComponent<SurvivalInventory>()?.CancelUse();
         public void StartTeammateTreatment(PlayerInfectionController target)
         {
-            if (target == null || !target.IsInfected) return;
-            if (HasBoundNetworkState)
-                StartTreatmentServerRpc(target.NetworkObjectId);
-            else
-                BeginTreatmentServer(target);
+            if (target != null && target.TryGetComponent(out SurvivalInventory targetInventory))
+                GetComponent<SurvivalInventory>()?.RequestUse(ConsumableKind.Antidote, targetInventory);
         }
-
-        public void CancelTeammateTreatment()
-        {
-            RequestCancelTreatment();
-        }
-
-        private void RequestCancelTreatment()
-        {
-            if (HasBoundNetworkState)
-                CancelTreatmentServerRpc();
-            else
-                CancelTreatmentServer();
-        }
-
-        [ServerRpc]
-        private void StartTreatmentServerRpc(ulong targetNetworkObjectId, ServerRpcParams rpcParams = default)
-        {
-            if (rpcParams.Receive.SenderClientId != OwnerClientId || NetworkManager?.SpawnManager == null)
-                return;
-            if (!NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out NetworkObject targetObject))
-                return;
-            BeginTreatmentServer(targetObject.GetComponent<PlayerInfectionController>());
-        }
-
-        [ServerRpc]
-        private void CancelTreatmentServerRpc(ServerRpcParams rpcParams = default)
-        {
-            if (rpcParams.Receive.SenderClientId == OwnerClientId)
-                CancelTreatmentServer();
-        }
-
-        private void BeginTreatmentServer(PlayerInfectionController target)
-        {
-            if (!CanMutateAuthoritativeState || !IsValidTreatmentTarget(target))
-                return;
-
-            currentTreatmentTarget = target;
-            isTreatingSelf = target == this;
-            isTreatingTeammate = target != this;
-            treatmentStartServerTime = GetServerTime();
-            treatmentDeadlineServerTime = treatmentStartServerTime
-                + (isTreatingSelf ? selfTreatmentDuration : teammateTreatmentDuration);
-            treatmentStartHealth = cachedHealth != null ? cachedHealth.CurrentHealth : 0f;
-            if (HasBoundNetworkState)
-            {
-                networkTreatmentKind.Value = isTreatingSelf ? (byte)1 : (byte)2;
-                networkTreatmentStart.Value = treatmentStartServerTime;
-                networkTreatmentDeadline.Value = treatmentDeadlineServerTime;
-            }
-        }
-
-        private void UpdateTreatmentServer()
-        {
-            if (!isTreatingSelf && !isTreatingTeammate)
-                return;
-            if (!IsValidTreatmentTarget(currentTreatmentTarget)
-                || (cachedHealth != null && cachedHealth.CurrentHealth < treatmentStartHealth)
-                || (cachedMovement != null && cachedMovement.IsSprinting))
-            {
-                CancelTreatmentServer();
-                return;
-            }
-
-            if (GetServerTime() < treatmentDeadlineServerTime)
-                return;
-
-            currentTreatmentTarget.TreatInfectionServer(
-                isTreatingSelf ? selfTreatmentReduction : teammateTreatmentReduction);
-            CancelTreatmentServer();
-        }
-
-        private bool IsValidTreatmentTarget(PlayerInfectionController target)
-        {
-            if (target == null || !target.IsInfected || cachedHealth == null
-                || cachedHealth.IsDead || cachedHealth.LifeState != PlayerLifeState.Alive)
-                return false;
-
-            PlayerHealth targetHealth = target.cachedHealth;
-            if (targetHealth == null || targetHealth.IsDead || targetHealth.LifeState != PlayerLifeState.Alive)
-                return false;
-            if (target != this && (target.transform.position - transform.position).sqrMagnitude > 9f)
-                return false;
-            return target == this || HasTreatmentLineOfSight(target);
-        }
-
-        private bool HasTreatmentLineOfSight(PlayerInfectionController target)
-        {
-            Vector3 origin = transform.position + Vector3.up;
-            Vector3 destination = target.transform.position + Vector3.up;
-            Vector3 direction = destination - origin;
-            float distance = direction.magnitude;
-            if (distance <= 0.01f) return true;
-            if (!Physics.Raycast(origin, direction / distance, out RaycastHit hit, distance,
-                    Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
-                return true;
-            return hit.transform == target.transform || hit.transform.IsChildOf(target.transform);
-        }
-
-        private void CancelTreatmentServer()
-        {
-            currentTreatmentTarget = null;
-            isTreatingSelf = false;
-            isTreatingTeammate = false;
-            treatmentStartServerTime = 0.0;
-            treatmentDeadlineServerTime = 0.0;
-            selfTreatmentProgress = 0f;
-            teammateTreatmentProgress = 0f;
-            if (HasBoundNetworkState)
-            {
-                networkTreatmentKind.Value = 0;
-                networkTreatmentStart.Value = 0.0;
-                networkTreatmentDeadline.Value = 0.0;
-            }
-        }
-
-        public void CancelActiveTreatmentServer()
-        {
-            if (CanMutateAuthoritativeState)
-                CancelTreatmentServer();
-        }
-
-        private void UpdateTreatmentPresentation()
-        {
-            float progress = GetTreatmentProgress();
-            selfTreatmentProgress = IsTreatingSelf ? progress : 0f;
-            teammateTreatmentProgress = IsTreatingTeammate ? progress : 0f;
-        }
-
-        private float GetTreatmentProgress()
-        {
-            double start = HasBoundNetworkState ? networkTreatmentStart.Value : treatmentStartServerTime;
-            double deadline = HasBoundNetworkState ? networkTreatmentDeadline.Value : treatmentDeadlineServerTime;
-            if (deadline <= start)
-                return 0f;
-            return Mathf.Clamp01((float)((GetServerTime() - start) / (deadline - start)));
-        }
-
-        private double GetServerTime()
-        {
-            return NetworkManager != null && NetworkManager.IsListening
-                ? NetworkManager.ServerTime.Time
-                : Time.timeAsDouble;
-        }
-
+        public void CancelTeammateTreatment() => CancelSelfTreatment();
+        public void CancelActiveTreatmentServer() => GetComponent<SurvivalInventory>()?.CancelUseServer();
         // =========================================================
         // REPLICATED VALUE CHANGED HANDLERS
         // =========================================================

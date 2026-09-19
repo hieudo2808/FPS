@@ -20,6 +20,7 @@ namespace FPS
         [SerializeField] private float baseSpawnInterval = 2f;
         [SerializeField] private int maxZombiesAlive = 30;
         [SerializeField] private float spawnIntervalMin = 0.5f;
+        [SerializeField] private EnemyScalingProfile enemyScalingProfile;
 
         [Header("Learning Rate")]
         [SerializeField] private float learningRate = 0.01f;
@@ -70,6 +71,8 @@ namespace FPS
         private float phaseTimer;
         private float intensity;
         private float spawnTimer;
+        private int spawnRequestPlayerCount = 1;
+        private bool hasSpawnRequestPlayerCount;
         private double forcedCrescendoUntil;
 
         private float hpModifier = 1f;
@@ -110,6 +113,8 @@ namespace FPS
         {
             get
             {
+                if (CampaignMissionController.Instance != null && CampaignMissionController.Instance.IsFinale)
+                    return DirectorSpawnAnchorType.Common | DirectorSpawnAnchorType.Horde | DirectorSpawnAnchorType.Finale;
                 if (FactoryMissionController.Instance != null
                     && FactoryMissionController.Instance.State == FactoryMissionState.ExtractionActive)
                 {
@@ -125,19 +130,6 @@ namespace FPS
             }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        public void SetVerificationMaxZombiesAlive(int count)
-        {
-            maxZombiesAlive = Mathf.Max(1, count);
-        }
-
-        public void ConfigureAdaptiveForVerification(bool enabled, bool observeOnly)
-        {
-            enableAdaptiveDirector = enabled;
-            adaptiveObserveOnly = observeOnly;
-            InitializeAdaptiveSystems();
-        }
-#endif
         public float SpeedModifier => speedModifier;
         public float DamageModifier => damageModifier;
 
@@ -239,6 +231,7 @@ namespace FPS
         {
             SetPhase(newPhase);
             phaseTimer = 0f;
+            ResetSpawnRequestSnapshot();
 
             if (showDebugLogs)
                 GameLog.Info(() => $"[AIDirector] Phase -> {newPhase}");
@@ -268,28 +261,57 @@ namespace FPS
 
         private void UpdateSpawning()
         {
-            if (!NetworkMatchStateManager.IsGameplayActive) return;
-            if (CurrentPhase == GamePhase.RELAX) return;
-            if (ZombiesAlive >= GetMaxZombiesAlive()) return;
+            if (!NetworkMatchStateManager.IsGameplayActive
+                || CurrentPhase == GamePhase.RELAX
+                || ZombiesAlive >= GetMaxZombiesAlive())
+            {
+                ResetSpawnRequestSnapshot();
+                return;
+            }
 
             spawnTimer += Time.deltaTime;
-            float interval = GetSpawnInterval();
+            float interval = GetSpawnInterval(GetOrCaptureSpawnRequestPlayerCount());
 
             if (spawnTimer >= interval)
             {
                 spawnTimer = 0f;
+                ResetSpawnRequestSnapshot();
                 SpawnZombie();
             }
         }
 
-        private float GetSpawnInterval()
+        public void EndCampaignEncounter()
+        {
+            if (!CanRunServerLogic()) return;
+            forcedCrescendoUntil = 0;
+            intensity = 0;
+            TransitionTo(GamePhase.RELAX);
+        }
+
+        /// <summary>Reconcile removals that are not kills, such as chapter cleanup and retry.</summary>
+        public void ReconcileActivePopulation()
+        {
+            if (!CanRunServerLogic()) return;
+            int alive = 0;
+            foreach (var enemy in FindObjectsByType<EnemyAI>())
+            {
+                if (!enemy.isActiveAndEnabled) continue;
+                var health = enemy.GetComponent<EnemyHealth>();
+                if (health == null || !health.IsDead) alive++;
+            }
+            SetZombiesAlive(alive);
+            lastCountedSpawnedEnemy = null;
+            lastCountedSpawnFrame = -1;
+            ResetSpawnRequestSnapshot();
+        }
+
+        private float GetSpawnInterval(int playerCount)
         {
             float interval = baseSpawnInterval;
             if (CurrentPhase == GamePhase.PEAK) interval *= 0.5f;
             interval *= GetDifficultyStats().spawnIntervalMultiplier;
 
-            int playerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
-            interval /= (1f + (playerCount - 1) * 0.3f);
+            interval /= EnemyScalingResolver.GetDirectorSpawnPressureMultiplier(playerCount, enemyScalingProfile);
 
             // Anti-death-spiral: giảm tốc độ spawn quái thường khi team bị nhiễm nặng
             if (PlayerProfiler.Instance != null && PlayerProfiler.Instance.TeamCriticalInfectedCount >= 2)
@@ -338,9 +360,6 @@ namespace FPS
             if (result.PhaseChanged)
             {
                 SetPhase(MapToLegacyPhase(result.Phase));
-                AdaptiveDirectorDiagnostics.Emit(
-                    "director_phase_changed",
-                    $"phase={result.Phase};legacyPhase={MapToLegacyPhase(result.Phase)}");
                 if (showDebugLogs)
                     GameLog.Info(() => $"[AIDirector] Adaptive phase -> {result.Phase}");
             }
@@ -360,10 +379,6 @@ namespace FPS
             adaptiveDifficultyMultiplier = evaluation.Multiplier;
             SetAdaptiveState(result.Phase, adaptiveDifficultyMultiplier);
             metrics?.ResetEncounter();
-            AdaptiveDirectorDiagnostics.Emit(
-                "difficulty_evaluated",
-                $"score={evaluation.TeamPerformanceScore:F4};target={evaluation.TargetMultiplier:F4};"
-                + $"multiplier={evaluation.Multiplier:F4};evidence={evaluation.HasEvidence};updated={evaluation.Updated}");
 
             if (showDebugLogs)
             {
@@ -376,10 +391,13 @@ namespace FPS
         private void UpdateAdaptiveSpawning()
         {
             if (!NetworkMatchStateManager.IsGameplayActive || ZombieFactory.Instance == null)
+            {
+                ResetSpawnRequestSnapshot();
                 return;
+            }
 
             DifficultyStats stats = GetDifficultyStats();
-            int playerCount = PlayerProfiler.Instance != null ? PlayerProfiler.Instance.PlayerCount : 1;
+            int playerCount = GetOrCaptureSpawnRequestPlayerCount();
             SpawnDecision decision = adaptiveSpawnController.Decide(
                 adaptiveDecision,
                 stats,
@@ -390,24 +408,22 @@ namespace FPS
                 baseSpawnInterval,
                 spawnIntervalMin,
                 enableSpecialInfected,
-                UnityEngine.Random.value);
+                UnityEngine.Random.value,
+                enemyScalingProfile);
 
             if (!decision.CanSpawn)
+            {
+                ResetSpawnRequestSnapshot();
                 return;
+            }
 
-            AdaptiveDirectorDiagnostics.Emit(
-                "spawn_decision",
-                $"phase={adaptiveDecision.Phase};canSpawn={decision.CanSpawn};maxAlive={decision.MaxAlive};"
-                + $"interval={decision.IntervalSeconds:F4};dynamicMultiplier={adaptiveDifficultyMultiplier:F4}");
 
             spawnTimer += Time.deltaTime;
             if (spawnTimer < decision.IntervalSeconds)
                 return;
 
             spawnTimer = 0f;
-            AdaptiveDirectorDiagnostics.Emit(
-                "special_spawn_roll",
-                $"gate={adaptiveDecision.SpecialGateOpen};rollDecision={decision.SpawnSpecial};chance={decision.SpecialChance:F4}");
+            ResetSpawnRequestSnapshot();
             if (decision.SpawnSpecial && TrySpawnSpecial())
                 return;
 
@@ -422,6 +438,27 @@ namespace FPS
                     adaptiveDifficultyMultiplier);
             if (zombie != null)
                 intensity += 5f;
+        }
+
+        private int GetOrCaptureSpawnRequestPlayerCount()
+        {
+            if (hasSpawnRequestPlayerCount)
+                return spawnRequestPlayerCount;
+
+            int currentPlayerCount;
+            if (NetworkManager != null && NetworkManager.IsListening)
+                currentPlayerCount = NetworkManager.ConnectedClientsList.Count;
+            else
+                currentPlayerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
+
+            spawnRequestPlayerCount = EnemyScalingResolver.ClampPlayerCount(currentPlayerCount);
+            hasSpawnRequestPlayerCount = true;
+            return spawnRequestPlayerCount;
+        }
+
+        private void ResetSpawnRequestSnapshot()
+        {
+            hasSpawnRequestPlayerCount = false;
         }
 
         private DirectorInput BuildDirectorInput()
@@ -495,7 +532,8 @@ namespace FPS
 
         private bool TrySpawnSpecial()
         {
-            if (SpecialInfectedRegistry.Instance == null
+            if (CurrentPhase != GamePhase.PEAK
+                || SpecialInfectedRegistry.Instance == null
                 || !SpecialInfectedRegistry.Instance.CanSpawnSpecial(CurrentPhase))
                 return false;
 
@@ -530,6 +568,11 @@ namespace FPS
             {
                 return true;
             }
+
+            // Campaign anchors encode chapter and floor membership. A global fallback
+            // could place a special in the closed chapter above the laboratory.
+            if (CampaignMissionController.Instance != null)
+                return false;
 
             if (InfluenceMapManager.Instance != null)
                 return InfluenceMapManager.Instance.TryGetBestSpawnPosition(out position);

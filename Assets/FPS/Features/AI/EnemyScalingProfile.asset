@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58263c869eec53b43b02d41d4098d991, type: 3}
+  m_Name: EnemyScalingProfile
+  m_EditorClassIdentifier: FPS:FPS:EnemyScalingProfile
+  commonHealthMultiplier:
+    onePlayer: 1
+    twoPlayers: 1.35
+    threePlayers: 1.7
+    fourPlayers: 2.05
+  damageAndStatusMultiplier:
+    onePlayer: 1
+    twoPlayers: 1.08
+    threePlayers: 1.15
+    fourPlayers: 1.2
+  controlResistanceMultiplier:
+    onePlayer: 1
+    twoPlayers: 1.15
+    threePlayers: 1.3
+    fourPlayers: 1.45
+  abilityCooldownMultiplier:
+    onePlayer: 1
+    twoPlayers: 0.95
+    threePlayers: 0.9
+    fourPlayers: 0.85
+  directorSpawnPressureMultiplier:
+    onePlayer: 1
+    twoPlayers: 1.2
+    threePlayers: 1.4
+    fourPlayers: 1.6
+  screamerHealth:
+    onePlayer: 150
+    twoPlayers: 200
+    threePlayers: 250
+    fourPlayers: 300
+  infectorHealth:
+    onePlayer: 500
+    twoPlayers: 750
+    threePlayers: 975
+    fourPlayers: 1200
+  tankHealth:
+    onePlayer: 2500
+    twoPlayers: 5000
+    threePlayers: 7500
+    fourPlayers: 10000

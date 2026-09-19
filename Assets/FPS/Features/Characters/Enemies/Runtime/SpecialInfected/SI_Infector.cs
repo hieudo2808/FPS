@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UniBT;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace FPS
 {
@@ -20,11 +19,13 @@ namespace FPS
 
     public class SI_Infector : SpecialInfectedBase
     {
-        private const float DefaultRunSpeed = 5.75f; // ~1.15x common zombie
+        private const float DefaultRunSpeed = 5.75f;
         private const float DefaultRetreatSpeed = 6.2f;
-        private const float AuthoredMaxHealth = 200f;
+        private const float SoloMaxHealth = 500f;
         private const float ImplantArcDegrees = 120f;
-        private const float ImplantRecovery = 0.4f;
+        private const float ImplantActionDuration = 1.625f;
+        private const float HiddenConfirmationDuration = 1.5f;
+        private const float RetreatReplanInterval = 1f / 3f;
 
         [Header("Infector Combat Settings")]
         [SerializeField] private float implantDamage = 15f;
@@ -32,9 +33,10 @@ namespace FPS
         [SerializeField] private float implantRange = 2.2f;
         [SerializeField] private float implantWindup = 0.5f;
         [SerializeField] private float implantCooldown = 12f;
-        [SerializeField] private float retreatDuration = 5f;
+        [SerializeField] private float retreatDuration = 8f;
         [SerializeField] private float retreatDistance = 12f;
         [SerializeField] private float stalkDistance = 8f;
+        [SerializeField] private LayerMask visibilityMask = Physics.DefaultRaycastLayers;
 
         [Header("Audio")]
         [SerializeField] private AudioClip stalkHissSound;
@@ -44,27 +46,40 @@ namespace FPS
         [SerializeField] private float audioVolume = 1f;
 
         private static readonly int AnimAttack = Animator.StringToHash("Attack");
-        private static readonly int AnimSpeed = Animator.StringToHash("Speed");
         private static readonly int AnimRoar = Animator.StringToHash("Roar");
+        private static readonly EnemyActionTiming ImplantTiming = new(
+            EnemyActionType.Implant,
+            0.5f,
+            ImplantActionDuration,
+            ImplantActionDuration);
 
+        private readonly SpecialEscapePlanner escapePlanner = new();
         private InfectorState currentInfectorState = InfectorState.Search;
         private Transform currentTargetTransform;
         private PlayerProfile currentTargetProfile;
         private float stateStartTime;
-        private float retreatEndTime;
+        private float retreatStartedAt;
+        private float hiddenSince = -1f;
+        private float nextRetreatPlanTime;
+        private Vector3 lastRetreatDestination;
         private bool isPerformingImplant;
+        private bool lastRetreatSucceeded;
+        private EnemyMotionLockHandle implantMotionLock;
         private Coroutine activeImplantRoutine;
         private Coroutine activePresentationRoutine;
 
         public InfectorState CurrentState => currentInfectorState;
         public float ImplantDamage => implantDamage;
+        public float EffectiveImplantDamage => ScaleDamage(implantDamage);
         public float ImplantInfectionAmount => implantInfectionAmount;
+        public float EffectiveImplantInfectionAmount => ScaleStatus(implantInfectionAmount);
         public float ImplantRange => implantRange;
         public float ImplantWindup => implantWindup;
         public float ImplantCooldown => implantCooldown;
         public float RetreatDuration => retreatDuration;
-        public float FixedMaxHealth => AuthoredMaxHealth;
+        public float FixedMaxHealth => SoloMaxHealth;
         public bool IsPerformingImplant => isPerformingImplant;
+        public bool LastRetreatSucceeded => lastRetreatSucceeded;
 
         protected override bool UsesGenericServerBrain => false;
         protected override bool AutoTriggerPrimaryAbility => false;
@@ -72,30 +87,36 @@ namespace FPS
 
         protected override void Start()
         {
+            specialType = SpecialType.Infector;
+            allowedInSoloMode = true;
+            specialHPMultiplier = 1f;
+            abilityCooldown = implantCooldown;
             base.Start();
-        }
-
-        protected override float CalculateMaxHealth(int playerCount, float authoredMaxHealth)
-        {
-            return AuthoredMaxHealth;
+            DisableBehaviorTreeBrain();
+            if (animator != null)
+                animator.applyRootMotion = false;
         }
 
         public override void ResetAI()
         {
-            base.ResetAI();
             CancelActiveCoroutines();
+            specialType = SpecialType.Infector;
+            abilityCooldown = implantCooldown;
+            base.ResetAI();
             currentInfectorState = InfectorState.Search;
             currentTargetTransform = null;
             currentTargetProfile = null;
             isPerformingImplant = false;
+            retreatStartedAt = 0f;
+            hiddenSince = -1f;
+            nextRetreatPlanTime = 0f;
+            lastRetreatDestination = Vector3.zero;
+            lastRetreatSucceeded = false;
+            if (agent != null && agent.enabled)
+                agent.speed = DefaultRunSpeed;
         }
 
         protected override void TickCustomServerBrain()
-        {
-            UpdateInfectorStateMachine();
-        }
-
-        private void UpdateInfectorStateMachine()
         {
             switch (currentInfectorState)
             {
@@ -108,32 +129,25 @@ namespace FPS
                 case InfectorState.Approach:
                     UpdateApproachState();
                     break;
-                case InfectorState.Implant:
-                    // Handled via Coroutine
-                    break;
                 case InfectorState.Retreat:
                     UpdateRetreatState();
                     break;
                 case InfectorState.Cooldown:
                     UpdateCooldownState();
                     break;
-                case InfectorState.Dead:
-                    break;
             }
         }
 
-        // =========================================================
-        // STATE TRANSITIONS & LOGIC
-        // =========================================================
         private void UpdateSearchState()
         {
             SelectBestTarget();
+            if (currentTargetTransform == null)
+                return;
 
-            if (currentTargetTransform != null)
-            {
-                currentInfectorState = InfectorState.Stalk;
-                stateStartTime = Time.time;
-            }
+            currentInfectorState = InfectorState.Stalk;
+            stateStartTime = Time.time;
+            TrySetAnimatorTrigger(AnimRoar);
+            PlayLocalSound(roarSound, 4f, 35f, audioVolume);
         }
 
         private void UpdateStalkState()
@@ -144,23 +158,16 @@ namespace FPS
                 return;
             }
 
-            float dist = Vector3.Distance(transform.position, currentTargetTransform.position);
-
-            // Move towards stalk position (flanking/medium range)
-            if (agent != null && agent.isOnNavMesh)
-            {
+            float distance = Vector3.Distance(transform.position, currentTargetTransform.position);
+            if (agent != null)
                 agent.speed = DefaultRunSpeed * 0.85f;
-                agent.SetDestination(currentTargetTransform.position);
-            }
+            TrySubmitAgentDestination(currentTargetTransform.position);
 
-            // If close enough or stalked for > 2 seconds, transition to Approach
-            if (dist <= stalkDistance || Time.time - stateStartTime > 2.5f)
+            if (distance <= stalkDistance || Time.time - stateStartTime > 2.5f)
             {
                 currentInfectorState = InfectorState.Approach;
                 stateStartTime = Time.time;
-
-                if (stalkHissSound != null && AudioManager.Instance != null)
-                    AudioManager.Instance.PlaySFXSound(stalkHissSound, audioVolume * 0.7f);
+                PlayLocalSound(stalkHissSound, 2f, 20f, audioVolume * 0.7f);
             }
         }
 
@@ -172,14 +179,13 @@ namespace FPS
                 return;
             }
 
-            if (agent != null && agent.isOnNavMesh)
-            {
+            if (agent != null)
                 agent.speed = DefaultRunSpeed;
-                agent.SetDestination(currentTargetTransform.position);
-            }
+            TrySubmitAgentDestination(currentTargetTransform.position);
 
-            float dist = Vector3.Distance(transform.position, currentTargetTransform.position);
-            if (dist <= implantRange && abilityReady && !isPerformingImplant && IsTargetValid())
+            if (Vector3.Distance(transform.position, currentTargetTransform.position) <= implantRange
+                && abilityReady
+                && !isPerformingImplant)
             {
                 StartImplantAttack();
             }
@@ -187,7 +193,8 @@ namespace FPS
 
         private void StartImplantAttack()
         {
-            if (isPerformingImplant) return;
+            if (isPerformingImplant || !CanRunServerLogic())
+                return;
 
             currentInfectorState = InfectorState.Implant;
             activeImplantRoutine = StartCoroutine(ImplantRoutine());
@@ -197,142 +204,177 @@ namespace FPS
         {
             isPerformingImplant = true;
             lastAbilityTime = Time.time;
+            implantMotionLock = AcquireMotionLock(ImplantTiming);
+            TrySetAnimatorTrigger(AnimAttack);
+            PlayLocalSound(implantWindupSound, 2f, 15f, audioVolume);
 
-            if (agent != null && agent.isOnNavMesh)
-            {
-                agent.isStopped = true;
-            }
-
-            if (animator != null)
-                animator.SetTrigger(AnimAttack);
-
-            // Windup presentation starts on the same authoritative action start tick.
-            if (implantWindupSound != null && AudioManager.Instance != null)
-                AudioManager.Instance.PlaySFXSound(implantWindupSound, audioVolume);
-
-            // Replicate action to clients
             double now = NetworkManager != null && NetworkManager.IsListening
                 ? NetworkManager.ServerTime.Time
                 : Time.timeAsDouble;
-            SetSpecialAbilityReplicated(true, now + implantWindup + ImplantRecovery);
+            SetSpecialAbilityReplicated(true, now + ImplantTiming.PresentationSeconds);
 
-            yield return new WaitForSeconds(implantWindup);
+            yield return new WaitForSeconds(ImplantTiming.ImpactSeconds);
+            PlayLocalSound(implantStabSound, 2f, 15f, audioVolume);
+            ApplyImplantImpact();
 
-            if (implantStabSound != null && AudioManager.Instance != null)
-                AudioManager.Instance.PlaySFXSound(implantStabSound, audioVolume);
+            float recovery = ImplantTiming.MotionLockSeconds - ImplantTiming.ImpactSeconds;
+            if (recovery > 0f)
+                yield return new WaitForSeconds(recovery);
 
-            if (CanImpactCurrentTarget())
-            {
-                if (currentTargetProfile?.cachedHealth != null)
-                {
-                    currentTargetProfile.cachedHealth.TakeDamage(implantDamage);
-                }
-                else if (currentTargetTransform.TryGetComponent<PlayerHealth>(out var playerHealth))
-                {
-                    playerHealth.TakeDamage(implantDamage);
-                }
-
-                PlayerInfectionController infection = currentTargetProfile?.cachedInfection;
-                if (infection == null)
-                    currentTargetTransform.TryGetComponent(out infection);
-                infection?.AddInfectionServer(implantInfectionAmount);
-                GameLog.Info(() => $"[Infector] Successfully implanted parasite into target (+{implantInfectionAmount}%)");
-            }
-
-            yield return new WaitForSeconds(ImplantRecovery);
-
-            if (agent != null && agent.isOnNavMesh)
-            {
-                agent.isStopped = false;
-            }
-
+            ReleaseMotionLock(implantMotionLock);
+            implantMotionLock = default;
             isPerformingImplant = false;
             activeImplantRoutine = null;
             SetSpecialAbilityReplicated(false);
-
-            // Transition to Retreat immediately after implant attempt
             BeginRetreat();
+        }
+
+        private void ApplyImplantImpact()
+        {
+            if (!CanImpactCurrentTarget())
+                return;
+
+            float damage = ScaleDamage(implantDamage);
+            float infectionAmount = ScaleStatus(implantInfectionAmount);
+            PlayerHealth playerHealth = currentTargetProfile?.cachedHealth;
+            if (playerHealth == null)
+                currentTargetTransform.TryGetComponent(out playerHealth);
+            playerHealth?.TakeDamage(damage);
+
+            PlayerInfectionController infection = currentTargetProfile?.cachedInfection;
+            if (infection == null)
+                currentTargetTransform.TryGetComponent(out infection);
+            infection?.AddInfectionServer(infectionAmount);
+            GameLog.Info(() => $"[Infector] Implant hit: damage={damage:F1}, infection={infectionAmount:F1}");
         }
 
         private void BeginRetreat()
         {
             currentInfectorState = InfectorState.Retreat;
-            retreatEndTime = Time.time + retreatDuration;
-
-            if (currentTargetTransform != null && agent != null && agent.isOnNavMesh)
-            {
+            retreatStartedAt = Time.time;
+            hiddenSince = -1f;
+            nextRetreatPlanTime = 0f;
+            lastRetreatSucceeded = false;
+            if (agent != null)
                 agent.speed = DefaultRetreatSpeed;
-                Vector3 fleeDirection = (transform.position - currentTargetTransform.position).normalized;
-                if (!TrySetCompleteRetreatPath(fleeDirection))
-                    EnterCooldown();
-            }
-            else
-                EnterCooldown();
+            ReplanRetreat(true);
         }
 
         private void UpdateRetreatState()
         {
-            if (Time.time >= retreatEndTime)
+            IReadOnlyList<PlayerProfile> observers = GetObservers();
+            bool visible = SpecialEscapePlanner.IsVisibleToAnyLivingPlayer(
+                transform.position + Vector3.up * 0.9f,
+                observers,
+                visibilityMask);
+
+            if (visible)
             {
-                EnterCooldown();
+                hiddenSince = -1f;
+                ReplanRetreat(false);
             }
+            else
+            {
+                if (hiddenSince < 0f)
+                    hiddenSince = Time.time;
+                if (Time.time - hiddenSince >= HiddenConfirmationDuration)
+                {
+                    lastRetreatSucceeded = true;
+                    EnterCooldown();
+                    return;
+                }
+            }
+
+            bool pathFinished = !IsAgentReady()
+                || !agent.hasPath
+                || agent.pathStatus != UnityEngine.AI.NavMeshPathStatus.PathComplete
+                || agent.remainingDistance <= Mathf.Max(agent.stoppingDistance + 0.2f, 0.4f);
+            if (pathFinished)
+                ReplanRetreat(false);
+
+            if (Time.time - retreatStartedAt >= Mathf.Max(8f, retreatDuration))
+                FailRetreatToStalk();
+        }
+
+        private void ReplanRetreat(bool force)
+        {
+            if (!force && Time.time < nextRetreatPlanTime)
+                return;
+
+            nextRetreatPlanTime = Time.time + RetreatReplanInterval;
+            IReadOnlyList<PlayerProfile> observers = GetObservers();
+            if (!escapePlanner.TryPlan(
+                    agent,
+                    transform.position,
+                    ResolveFleeDirection(observers),
+                    observers,
+                    retreatDistance,
+                    visibilityMask,
+                    lastRetreatDestination,
+                    out SpecialEscapePlan plan))
+            {
+                return;
+            }
+
+            lastRetreatDestination = plan.Destination;
+            ResumeAgentMotion();
+            TrySubmitAgentDestination(plan.Destination);
+        }
+
+        private Vector3 ResolveFleeDirection(IReadOnlyList<PlayerProfile> observers)
+        {
+            Vector3 center = Vector3.zero;
+            int count = 0;
+            if (observers != null)
+            {
+                for (int i = 0; i < observers.Count; i++)
+                {
+                    PlayerProfile profile = observers[i];
+                    if (!IsLivingProfile(profile))
+                        continue;
+                    center += profile.playerTransform.position;
+                    count++;
+                }
+            }
+
+            if (count > 0)
+                return transform.position - center / count;
+            return currentTargetTransform != null
+                ? transform.position - currentTargetTransform.position
+                : -transform.forward;
+        }
+
+        private void FailRetreatToStalk()
+        {
+            lastRetreatSucceeded = false;
+            currentInfectorState = InfectorState.Stalk;
+            stateStartTime = Time.time;
+            hiddenSince = -1f;
+            if (!IsTargetValid())
+                SelectBestTarget();
         }
 
         private void EnterCooldown()
         {
             currentInfectorState = InfectorState.Cooldown;
             stateStartTime = Time.time;
-            if (agent != null && agent.enabled && agent.isOnNavMesh)
+            if (IsAgentReady())
             {
-                agent.isStopped = false;
                 agent.ResetPath();
+                ResumeAgentMotion();
             }
-        }
-
-        private bool TrySetCompleteRetreatPath(Vector3 preferredDirection)
-        {
-            if (agent == null || !agent.enabled || !agent.isOnNavMesh)
-                return false;
-
-            Vector3 flatPreferred = preferredDirection;
-            flatPreferred.y = 0f;
-            if (flatPreferred.sqrMagnitude < 0.0001f)
-                flatPreferred = -transform.forward;
-            flatPreferred.Normalize();
-
-            var path = new NavMeshPath();
-            for (int i = 0; i < 8; i++)
-            {
-                float angle = i == 0 ? 0f : ((i + 1) / 2) * 45f * (i % 2 == 1 ? 1f : -1f);
-                Vector3 direction = Quaternion.Euler(0f, angle, 0f) * flatPreferred;
-                Vector3 candidate = transform.position + direction * retreatDistance;
-
-                if (!NavMesh.SamplePosition(candidate, out NavMeshHit hit, 4f, NavMesh.AllAreas))
-                    continue;
-                if (!agent.CalculatePath(hit.position, path) || path.status != NavMeshPathStatus.PathComplete)
-                    continue;
-
-                agent.isStopped = false;
-                return agent.SetPath(path);
-            }
-
-            return false;
         }
 
         private void UpdateCooldownState()
         {
             if (abilityReady)
-            {
                 currentInfectorState = InfectorState.Search;
-            }
         }
 
         public override void UseAbility()
         {
-            if (currentInfectorState == InfectorState.Approach || currentInfectorState == InfectorState.Stalk)
-            {
+            if (CanUseAbility())
                 StartImplantAttack();
-            }
         }
 
         protected override bool CanUseAbility()
@@ -346,26 +388,28 @@ namespace FPS
 
         private bool CanImpactCurrentTarget()
         {
-            if (!IsTargetValid()) return false;
-            return CanImpactTarget(transform, currentTargetTransform, implantRange, ImplantArcDegrees);
+            return IsTargetValid()
+                && CanImpactTarget(transform, currentTargetTransform, implantRange, ImplantArcDegrees);
         }
 
         public static bool CanImpactTarget(Transform attacker, Transform target, float range, float arcDegrees)
         {
-            if (attacker == null || target == null || range <= 0f) return false;
+            if (attacker == null || target == null || range <= 0f)
+                return false;
 
             Vector3 origin = attacker.position + Vector3.up;
             Vector3 targetPoint = target.position + Vector3.up;
             Vector3 toTarget = targetPoint - origin;
-            if (toTarget.sqrMagnitude > range * range) return false;
+            if (toTarget.sqrMagnitude > range * range)
+                return false;
 
-            Vector3 flatForward = attacker.forward;
-            flatForward.y = 0f;
-            Vector3 flatTarget = toTarget;
-            flatTarget.y = 0f;
+            Vector3 flatForward = Vector3.ProjectOnPlane(attacker.forward, Vector3.up);
+            Vector3 flatTarget = Vector3.ProjectOnPlane(toTarget, Vector3.up);
             if (flatTarget.sqrMagnitude > 0.0001f
                 && Vector3.Angle(flatForward, flatTarget) > arcDegrees * 0.5f)
+            {
                 return false;
+            }
 
             if (Physics.Raycast(origin, toTarget.normalized, out RaycastHit hit, toTarget.magnitude,
                     Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
@@ -376,101 +420,86 @@ namespace FPS
             return true;
         }
 
-        // =========================================================
-        // TARGET SELECTION UTILITY SCORING
-        // =========================================================
         private void SelectBestTarget()
         {
-            if (PlayerProfiler.Instance == null || PlayerProfiler.Instance.PlayerCount == 0)
-            {
-                currentTargetTransform = null;
-                currentTargetProfile = null;
-                return;
-            }
-
-            var profiles = PlayerProfiler.Instance.AllProfiles;
+            IReadOnlyList<PlayerProfile> profiles = GetObservers();
             PlayerProfile bestProfile = null;
             float highestScore = float.MinValue;
-
-            for (int i = 0; i < profiles.Count; i++)
+            if (profiles != null)
             {
-                var profile = profiles[i];
-                if (profile?.playerTransform == null) continue;
-
-                // Ignore dead or downed players
-                if (profile.cachedHealth != null && (profile.cachedHealth.IsDead || profile.cachedHealth.LifeState != PlayerLifeState.Alive))
-                    continue;
-
-                float score = CalculateTargetScore(profile);
-                if (score > highestScore)
+                for (int i = 0; i < profiles.Count; i++)
                 {
-                    highestScore = score;
-                    bestProfile = profile;
+                    PlayerProfile profile = profiles[i];
+                    if (!IsLivingProfile(profile))
+                        continue;
+
+                    float score = CalculateTargetScore(profile);
+                    if (score > highestScore)
+                    {
+                        highestScore = score;
+                        bestProfile = profile;
+                    }
                 }
             }
 
-            if (bestProfile != null)
-            {
-                currentTargetProfile = bestProfile;
-                currentTargetTransform = bestProfile.playerTransform;
-            }
+            currentTargetProfile = bestProfile;
+            currentTargetTransform = bestProfile?.playerTransform;
         }
 
         public float CalculateTargetScore(PlayerProfile profile)
         {
-            if (profile?.playerTransform == null) return float.MinValue;
+            if (profile?.playerTransform == null)
+                return float.MinValue;
 
             float distance = Vector3.Distance(transform.position, profile.playerTransform.position);
-            float distanceScore = Mathf.Clamp01(1f - (distance / 40f)) * 2.0f;
-
-            float isolationScore = profile.isIsolated ? 2.0f : 0f;
-            float healthScore = Mathf.Clamp01(1f - (profile.currentHealth / 100f)) * 0.8f;
+            float distanceScore = Mathf.Clamp01(1f - distance / 40f) * 2f;
+            float isolationScore = profile.isIsolated ? 2f : 0f;
+            float healthScore = Mathf.Clamp01(1f - profile.currentHealth / 100f) * 0.8f;
             float reloadScore = profile.isReloading ? 0.6f : 0f;
+            float ammoScore = Mathf.Clamp01(1f - profile.currentAmmoPercent) * 0.3f;
             float campingScore = profile.isCamping ? 0.4f : 0f;
-
-            // Heavily penalize already infected players so Infector spreads infection across the team
             float infectedPenalty = 0f;
-            if (profile.cachedInfection != null)
-            {
-                if (profile.cachedInfection.IsInfected)
-                {
-                    infectedPenalty = 3.0f * (profile.cachedInfection.CurrentInfection / 100f);
-                }
-            }
-            else if (profile.playerTransform != null && profile.playerTransform.TryGetComponent<PlayerInfectionController>(out var infection))
-            {
-                if (infection.IsInfected)
-                {
-                    infectedPenalty = 3.0f * (infection.CurrentInfection / 100f);
-                }
-            }
 
-            float teammateClosenessPenalty = profile.distanceToNearestAlly < 4.0f ? 0.8f : 0f;
+            PlayerInfectionController infection = profile.cachedInfection;
+            if (infection == null && profile.playerTransform != null)
+                profile.playerTransform.TryGetComponent(out infection);
+            if (infection != null && infection.IsInfected)
+                infectedPenalty = 3f * infection.CurrentInfection / 100f;
 
-            return distanceScore + isolationScore + healthScore + reloadScore + campingScore - infectedPenalty - teammateClosenessPenalty;
+            float teammateClosenessPenalty = profile.distanceToNearestAlly < 4f ? 0.8f : 0f;
+            return distanceScore + isolationScore + healthScore + reloadScore + ammoScore
+                + campingScore - infectedPenalty - teammateClosenessPenalty;
         }
 
         private bool IsTargetValid()
         {
-            if (currentTargetTransform == null) return false;
-            PlayerHealth health = currentTargetProfile?.cachedHealth;
+            return IsLivingProfile(currentTargetProfile)
+                && currentTargetProfile.playerTransform == currentTargetTransform;
+        }
+
+        private static bool IsLivingProfile(PlayerProfile profile)
+        {
+            if (profile?.playerTransform == null || !profile.playerTransform.gameObject.activeInHierarchy)
+                return false;
+            PlayerHealth health = profile.cachedHealth;
             if (health == null)
-                currentTargetTransform.TryGetComponent(out health);
+                profile.playerTransform.TryGetComponent(out health);
             return health != null && !health.IsDead && health.LifeState == PlayerLifeState.Alive;
         }
 
-        // =========================================================
-        // REPLICATION & BEHAVIOR TREE BRAIN OVERRIDE
-        // =========================================================
+        private static IReadOnlyList<PlayerProfile> GetObservers()
+        {
+            return PlayerProfiler.Instance != null ? PlayerProfiler.Instance.AllProfiles : null;
+        }
+
         protected override void OnReplicatedSpecialAbilityStarted(int elapsedTicks)
         {
             isPerformingImplant = true;
-            if (animator != null)
-                animator.SetTrigger(AnimAttack);
+            TrySetAnimatorTrigger(AnimAttack);
 
             float elapsedSeconds = elapsedTicks / (float)GetPresentationTickRate();
-            if (elapsedSeconds < implantWindup && implantWindupSound != null && AudioManager.Instance != null)
-                AudioManager.Instance.PlaySFXSound(implantWindupSound, audioVolume);
+            if (elapsedSeconds < ImplantTiming.ImpactSeconds)
+                PlayLocalSound(implantWindupSound, 2f, 15f, audioVolume);
 
             if (activePresentationRoutine != null)
                 StopCoroutine(activePresentationRoutine);
@@ -489,12 +518,12 @@ namespace FPS
 
         private IEnumerator PresentReplicatedImpact(float elapsedSeconds)
         {
-            float remaining = Mathf.Max(0f, implantWindup - elapsedSeconds);
+            float remaining = Mathf.Max(0f, ImplantTiming.ImpactSeconds - elapsedSeconds);
             if (remaining > 0f)
                 yield return new WaitForSeconds(remaining);
 
-            if (implantStabSound != null && AudioManager.Instance != null)
-                AudioManager.Instance.PlaySFXSound(implantStabSound, audioVolume);
+            if (elapsedSeconds <= ImplantTiming.PresentationSeconds)
+                PlayLocalSound(implantStabSound, 2f, 15f, audioVolume);
             activePresentationRoutine = null;
         }
 
@@ -517,6 +546,10 @@ namespace FPS
                 StopCoroutine(activePresentationRoutine);
                 activePresentationRoutine = null;
             }
+
+            ReleaseMotionLock(implantMotionLock);
+            implantMotionLock = default;
+            ClearSpecialActionReplicated();
         }
 
         public override void OnDeath()
@@ -537,26 +570,13 @@ namespace FPS
             base.OnNetworkDespawn();
         }
 
-        protected override float CalculateVisualMoveSpeed()
-        {
-            if (agent == null || !agent.enabled || !agent.isOnNavMesh || agent.isStopped)
-                return 0f;
-            return Mathf.Max(agent.velocity.magnitude, agent.desiredVelocity.magnitude);
-        }
+        protected override float CalculateVisualMoveSpeed() => base.CalculateVisualMoveSpeed();
 
         protected override Vector3 GetLookDirection()
         {
             if (currentInfectorState == InfectorState.Implant && currentTargetTransform != null)
                 return currentTargetTransform.position - transform.position;
-            if (agent != null && agent.enabled && agent.isOnNavMesh)
-            {
-                Vector3 direction = agent.velocity.sqrMagnitude > 0.04f ? agent.velocity : agent.desiredVelocity;
-                if (direction.sqrMagnitude > 0.04f)
-                    return direction;
-            }
-            return currentTargetTransform != null
-                ? currentTargetTransform.position - transform.position
-                : Vector3.zero;
+            return base.GetLookDirection();
         }
 
         protected override bool ShouldRotateForPresentation()
@@ -580,20 +600,12 @@ namespace FPS
 
         public override bool ShouldSpawn(PlayerProfile profile)
         {
-            if (profile == null || profile.playerTransform == null) return false;
-
-            // Only spawn if not all players are already critically infected
-            if (profile.cachedInfection != null)
-            {
-                return !profile.cachedInfection.IsCritical;
-            }
-
-            if (profile.playerTransform != null && profile.playerTransform.TryGetComponent<PlayerInfectionController>(out var infection))
-            {
-                return !infection.IsCritical;
-            }
-
-            return false;
+            if (!IsLivingProfile(profile))
+                return false;
+            PlayerInfectionController infection = profile.cachedInfection;
+            if (infection == null)
+                profile.playerTransform.TryGetComponent(out infection);
+            return infection != null && !infection.IsCritical;
         }
 
         public override bool ShouldSpawnForTeam(
@@ -607,21 +619,22 @@ namespace FPS
             for (int i = 0; i < profiles.Count; i++)
             {
                 PlayerProfile profile = profiles[i];
-                if (profile?.playerTransform == null || teamHealth[i].IsDownOrDead)
+                if (!IsLivingProfile(profile) || teamHealth[i].IsDownOrDead)
                     return false;
-
-                PlayerHealth health = profile.cachedHealth;
-                if (health == null || health.IsDead || health.LifeState != PlayerLifeState.Alive)
-                    return false;
-
                 PlayerInfectionController infection = profile.cachedInfection;
                 if (infection == null || infection.CurrentStage >= InfectionStage.Critical)
                     return false;
-
                 totalInfection += infection.CurrentInfection;
             }
 
             return totalInfection / profiles.Count < 50f;
+        }
+
+        private void DisableBehaviorTreeBrain()
+        {
+            BehaviorTree behaviorTree = GetComponent<BehaviorTree>();
+            if (behaviorTree != null)
+                behaviorTree.enabled = false;
         }
     }
 }

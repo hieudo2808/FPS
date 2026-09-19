@@ -22,6 +22,7 @@ namespace FPS
         public double nextAllowedFireTime;
         public double reloadAmmoCommitTime;
         public double reloadCompleteTime;
+        public WeaponReloadTimeline reloadTimeline;
         public double equipCompleteTime;
         public ushort lastAcceptedFireSequence;
         public bool hasAcceptedFireSequence;
@@ -35,6 +36,7 @@ namespace FPS
                 && nextAllowedFireTime.Equals(other.nextAllowedFireTime)
                 && reloadAmmoCommitTime.Equals(other.reloadAmmoCommitTime)
                 && reloadCompleteTime.Equals(other.reloadCompleteTime)
+                && reloadTimeline.Equals(other.reloadTimeline)
                 && equipCompleteTime.Equals(other.equipCompleteTime)
                 && lastAcceptedFireSequence == other.lastAcceptedFireSequence
                 && hasAcceptedFireSequence == other.hasAcceptedFireSequence;
@@ -49,6 +51,7 @@ namespace FPS
             serializer.SerializeValue(ref nextAllowedFireTime);
             serializer.SerializeValue(ref reloadAmmoCommitTime);
             serializer.SerializeValue(ref reloadCompleteTime);
+            serializer.SerializeValue(ref reloadTimeline);
             serializer.SerializeValue(ref equipCompleteTime);
             serializer.SerializeValue(ref lastAcceptedFireSequence);
             serializer.SerializeValue(ref hasAcceptedFireSequence);
@@ -74,6 +77,12 @@ namespace FPS
         public WeaponRuntimeSnapshot weaponSlot0;
         public WeaponRuntimeSnapshot weaponSlot1;
         public ushort inventorySchemaVersion;
+        public byte medicineCount;
+        public byte survivalInventoryVersion;
+        public byte fragCount, incendiaryCount, medkitCount, antidoteCount;
+        public ThrowableKind selectedThrowable;
+        // 0 outside campaign; 1..3 identify the chapter containing the saved pose.
+        public byte campaignChapter;
 
         public static PlayerRuntimeSnapshot CreateDefault(SessionPlayerId playerId, Vector3 position, Quaternion rotation)
         {
@@ -86,7 +95,10 @@ namespace FPS
                 health = 100f,
                 infection = 0f,
                 lifeState = PlayerLifeState.Alive,
-                inventorySchemaVersion = 3
+                inventorySchemaVersion = 5,
+                survivalInventoryVersion = 1,
+                fragCount = 3, incendiaryCount = 3, medkitCount = 2, antidoteCount = 2,
+                medicineCount = 0
             };
         }
 
@@ -109,6 +121,14 @@ namespace FPS
             serializer.SerializeValue(ref weaponSlot0);
             serializer.SerializeValue(ref weaponSlot1);
             serializer.SerializeValue(ref inventorySchemaVersion);
+            serializer.SerializeValue(ref medicineCount);
+            serializer.SerializeValue(ref campaignChapter);
+            serializer.SerializeValue(ref survivalInventoryVersion);
+            serializer.SerializeValue(ref fragCount);
+            serializer.SerializeValue(ref incendiaryCount);
+            serializer.SerializeValue(ref medkitCount);
+            serializer.SerializeValue(ref antidoteCount);
+            serializer.SerializeValue(ref selectedThrowable);
         }
     }
 }

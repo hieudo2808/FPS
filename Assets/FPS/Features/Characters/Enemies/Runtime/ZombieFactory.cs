@@ -10,6 +10,7 @@ namespace FPS
 
         [Header("Pooling")]
         [SerializeField] private bool usePooling = true;
+        [SerializeField] private EnemyScalingProfile enemyScalingProfile;
 
         [Header("Debug")]
         [SerializeField] private bool showDebugLogs = false;
@@ -78,7 +79,9 @@ namespace FPS
                 finalDamageMod *= diffStats.damageMultiplier;
             }
 
-            ApplyStats(zombie, data, finalHpMod, finalSpeedMod, finalDamageMod);
+            int spawnPlayerCount = GetPlayerCountSnapshot();
+            ApplyStats(zombie, data, finalHpMod, finalSpeedMod, finalDamageMod, spawnPlayerCount);
+            BeginCampaignEncounterPursuit(zombie, navMeshPosition);
             OnZombieSpawned?.Invoke(zombie);
 
             if (showDebugLogs)
@@ -92,8 +95,30 @@ namespace FPS
             return zombie;
         }
 
+        private static void BeginCampaignEncounterPursuit(GameObject zombie, Vector3 position)
+        {
+            var campaign = CampaignMissionController.Instance;
+            if (campaign == null || (!campaign.IsFinale && AIDirector.Instance?.CurrentPhase != GamePhase.PEAK)) return;
+            var brain = zombie.GetComponent<EnemyAI>();
+            if (brain == null) return;
+            Transform target = null;
+            float shortest = float.MaxValue;
+            foreach (var player in campaign.Players)
+            {
+                if (!player.CanUseCombat || !NavMesh.SamplePosition(player.transform.position, out var end, .75f, NavMesh.AllAreas)
+                    || Mathf.Abs(end.position.y - player.transform.position.y) > .6f
+                    || !CampaignPlacement.CompletePath(position, end.position, out float length) || length >= shortest) continue;
+                target = player.transform;
+                shortest = length;
+            }
+            // Fair anchors are deliberately outside ambient detection. A directed wave
+            // needs a reachable target so it cannot fill its budget with idle enemies.
+            if (target != null) brain.BeginDirectorPursuit(target);
+        }
+
         public GameObject SpawnZombieAtRandomPoint(float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
         {
+            if (CampaignMissionController.Instance != null) return SpawnZombieAtSmartPosition(hpMod, speedMod, damageMod);
             if (TryGetFairRegistrySpawnPosition(out Vector3 pos))
                 return SpawnZombie(pos, Quaternion.identity, hpMod, speedMod, damageMod);
 
@@ -102,6 +127,13 @@ namespace FPS
 
         public GameObject SpawnZombieAtSmartPosition(float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
         {
+            if (CampaignMissionController.Instance != null)
+            {
+                if (DirectorSpawnService.Instance != null && DirectorSpawnService.Instance.TryGetSpawnPosition(
+                    DirectorSpawnAnchorType.Common | DirectorSpawnAnchorType.Horde | DirectorSpawnAnchorType.Finale, out var campaignPosition))
+                    return SpawnZombie(campaignPosition, Quaternion.identity, hpMod, speedMod, damageMod);
+                return null;
+            }
             if (DirectorSpawnService.Instance != null)
             {
                 DirectorSpawnAnchorType requestedTypes = DirectorSpawnAnchorType.Common;
@@ -135,6 +167,7 @@ namespace FPS
         public GameObject SpawnZombieAtFairPressurePosition(Vector3 preferredPosition, Quaternion rotation,
             float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
         {
+            if (CampaignMissionController.Instance != null) return SpawnZombieAtSmartPosition(hpMod, speedMod, damageMod);
             if (IsFairPosition(preferredPosition))
                 return SpawnZombie(preferredPosition, rotation, hpMod, speedMod, damageMod);
 
@@ -143,6 +176,7 @@ namespace FPS
 
         public GameObject SpawnZombieAtFairPressurePosition(int playerIndex, float hpMod = 1f, float speedMod = 1f, float damageMod = 1f)
         {
+            if (CampaignMissionController.Instance != null) return SpawnZombieAtSmartPosition(hpMod, speedMod, damageMod);
             if (InfluenceMapManager.Instance != null &&
                 InfluenceMapManager.Instance.TryGetFairPressurePositionNearPlayer(playerIndex, out Vector3 pos))
             {
@@ -197,20 +231,31 @@ namespace FPS
             return Instantiate(prefab, position, rotation);
         }
 
-        private void ApplyStats(GameObject zombie, ZombieData data, float hpMod, float speedMod, float damageMod)
+        private void ApplyStats(
+            GameObject zombie,
+            ZombieData data,
+            float hpMod,
+            float speedMod,
+            float damageMod,
+            int spawnPlayerCount)
         {
-            float playerScale = GetPlayerCountMultiplier();
+            float healthScale = EnemyScalingResolver.GetCommonHealthMultiplier(
+                spawnPlayerCount,
+                enemyScalingProfile);
+            float damageScale = EnemyScalingResolver.GetDamageAndStatusMultiplier(
+                spawnPlayerCount,
+                enemyScalingProfile);
 
             EnemyHealth health = zombie.GetComponent<EnemyHealth>();
             if (health != null)
-                health.SetMaxHealth(data.baseHP * hpMod * playerScale);
+                health.SetMaxHealth(data.baseHP * hpMod * healthScale);
 
             EnemyAI ai = zombie.GetComponent<EnemyAI>();
             if (ai != null)
             {
                 ai.SetStats(
                     data.baseSpeed * speedMod,
-                    data.baseDamage * damageMod * playerScale,
+                    data.baseDamage * damageMod * damageScale,
                     data.attackRate
                 );
 
@@ -218,7 +263,7 @@ namespace FPS
             }
         }
 
-        private float GetPlayerCountMultiplier()
+        private int GetPlayerCountSnapshot()
         {
             int playerCount = 1;
 
@@ -227,7 +272,7 @@ namespace FPS
             else if (PlayerProfiler.Instance != null)
                 playerCount = Mathf.Max(1, PlayerProfiler.Instance.PlayerCount);
 
-            return 1f + (playerCount - 1) * 0.35f;
+            return EnemyScalingResolver.ClampPlayerCount(playerCount);
         }
 
         private static bool IsNetworkSession()

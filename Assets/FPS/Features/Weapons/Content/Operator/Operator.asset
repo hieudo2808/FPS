@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Operator
   m_EditorClassIdentifier: FPS::FPS.WeaponData
   weaponName: Operator
-  weaponIcon: {fileID: 0}
+  weaponIcon: {fileID: 21300000, guid: 3dc82dd9a87b58344ad2561536eb2dbb, type: 3}
   damage: 150
   damageType: 1
   hitMask:
@@ -21,13 +21,12 @@ MonoBehaviour:
     m_Bits: 4294967291
   bulletSpeed: 200
   bakedFireInterval: 1.2
-  bulletLiveTime: 2
+  bulletLiveTime: 5
   burstCount: 3
   fireMode: 0
   projectileCount: 1
   hipSpreadAngle: 2.5
   aimedSpreadAngle: 0
-  maximumRange: 200
   falloffStartDistance: 200
   falloffEndDistance: 200
   minimumDamageMultiplier: 1
@@ -40,6 +39,7 @@ MonoBehaviour:
   reloadAmmoCommitFrame: 97
   reloadLoopStartFrame: 0
   reloadLoopEndFrame: 0
+  thirdPersonReloadInsertRange: {x: 0.1, y: 0.32}
   bakedReloadDuration: 4.5
   bakedReloadAmmoCommitDuration: 1.6166668
   bakedPerShellOpeningDuration: 0

@@ -31,14 +31,14 @@ namespace FPS
 
         private readonly Dictionary<ulong, double> respawnDueTimes = new();
         private double localRespawnDueServerTime = -1.0;
-        private bool testMode;
-        private NetworkMatchState testState;
-        private double testStateStartedServerTime;
+        private bool useLocalState;
+        private NetworkMatchState localState;
+        private double localStateStartedServerTime;
 
         public event Action<NetworkMatchState, NetworkMatchState> OnStateChanged;
 
-        public NetworkMatchState State => testMode ? testState : state.Value;
-        public double StateStartedServerTime => testMode ? testStateStartedServerTime : stateStartedServerTime.Value;
+        public NetworkMatchState State => useLocalState ? localState : state.Value;
+        public double StateStartedServerTime => useLocalState ? localStateStartedServerTime : stateStartedServerTime.Value;
         public float StateElapsedSeconds => Mathf.Max(0f, (float)(GetServerTime() - StateStartedServerTime));
         public float WarmupRemainingSeconds => State == NetworkMatchState.Warmup
             ? Mathf.Max(0f, NetworkGameplayPolicy.WarmupSeconds - StateElapsedSeconds)
@@ -77,7 +77,7 @@ namespace FPS
 
         public override void OnNetworkSpawn()
         {
-            testMode = false;
+            useLocalState = false;
             state.OnValueChanged += HandleStateChanged;
             ApplyLocalInputBlock();
         }
@@ -128,7 +128,7 @@ namespace FPS
 
             if (!IsSpawned)
             {
-                testMode = true;
+                useLocalState = true;
                 SetLocalState(nextState, GetServerTime());
                 return true;
             }
@@ -136,14 +136,6 @@ namespace FPS
             stateStartedServerTime.Value = GetServerTime();
             state.Value = nextState;
             return true;
-        }
-
-        public void SetStateForTests(NetworkMatchState nextState, double startedTime = 0.0)
-        {
-            // EditMode không gọi Awake cho MonoBehaviour thường, nên test seam phải tự claim singleton.
-            Instance = this;
-            testMode = true;
-            SetLocalState(nextState, startedTime);
         }
 
         public bool TryGetRespawnRemaining(ulong clientId, out float remainingSeconds)
@@ -170,13 +162,14 @@ namespace FPS
         private void SetLocalState(NetworkMatchState nextState, double startedTime)
         {
             NetworkMatchState previous = State;
-            testState = nextState;
-            testStateStartedServerTime = startedTime;
+            localState = nextState;
+            localStateStartedServerTime = startedTime;
             HandleStateChanged(previous, nextState);
         }
 
         private void HandlePlayerDiedServer(PlayerHealth playerHealth, ulong clientId)
         {
+            if (CampaignMissionController.Instance != null) return;
             if (!CanRunServerLogic() || playerHealth == null)
                 return;
 
@@ -190,6 +183,7 @@ namespace FPS
 
         private void ProcessRespawns()
         {
+            if (CampaignMissionController.Instance != null) { respawnDueTimes.Clear(); return; }
             if (respawnDueTimes.Count == 0)
                 return;
 

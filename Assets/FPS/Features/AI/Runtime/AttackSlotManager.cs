@@ -271,32 +271,6 @@ namespace FPS
             return GetWaitWorldPosition(assignment, playerTransform, fallback);
         }
 
-#if UNITY_INCLUDE_TESTS
-        public bool IsAttacker(EnemyAI zombie)
-        {
-            if (zombieAssignments.TryGetValue(zombie, out SlotAssignment assignment))
-                return assignment.isAttacker;
-            return false;
-        }
-
-        public bool TryGetAssignmentMode(EnemyAI zombie, out EnemyAssignmentMode mode)
-        {
-            if (zombieAssignments.TryGetValue(zombie, out SlotAssignment assignment))
-            {
-                mode = assignment.mode;
-                return true;
-            }
-
-            mode = EnemyAssignmentMode.Reserve;
-            return false;
-        }
-
-        public bool HasAssignment(EnemyAI zombie)
-        {
-            return zombieAssignments.ContainsKey(zombie);
-        }
-#endif
-
         public int GetZombiesTargeting(int playerIndex)
         {
             int count = 0;

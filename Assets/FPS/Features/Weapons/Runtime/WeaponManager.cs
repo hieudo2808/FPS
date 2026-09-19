@@ -46,8 +46,10 @@ namespace FPS
         private bool networkCallbacksRegistered;
         private bool thirdPersonReloadActive;
         private double thirdPersonReloadCompleteTime = -1d;
+        private WeaponReloadTimeline thirdPersonReloadTimeline;
         private bool thirdPersonEquipCompletionPending;
         private double thirdPersonEquipCompleteTime = -1d;
+        private PlayerHealth playerHealth;
 
         public static WeaponManager LocalInstance { get; private set; }
 
@@ -80,6 +82,10 @@ namespace FPS
 
             if (IsOwner) LocalInstance = this;
 
+            playerHealth = GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+                playerHealth.CombatAvailabilityChanged += HandleCombatAvailabilityChanged;
+
             networkedWeaponIndex.OnValueChanged += OnWeaponChanged;
             networkedPrimaryWeapon.OnValueChanged += OnPrimaryWeaponChanged;
             networkCallbacksRegistered = true;
@@ -87,6 +93,7 @@ namespace FPS
             ApplyPrimaryWeapon(networkedPrimaryWeapon.Value);
             BindFirstPersonPresentation();
             ApplyOwnerStateToWeapons();
+            HandleCombatAvailabilityChanged(playerHealth != null && playerHealth.CanUseCombat);
             UpdateWeaponVisibility(networkedWeaponIndex.Value);
             CurrentWeapon?.GetComponent<Weapon>()?.PrepareFirstPersonPresentation(false);
             ReportCurrentWeaponTelemetry();
@@ -99,11 +106,21 @@ namespace FPS
 
             networkedWeaponIndex.OnValueChanged -= OnWeaponChanged;
             networkedPrimaryWeapon.OnValueChanged -= OnPrimaryWeaponChanged;
+            if (playerHealth != null)
+                playerHealth.CombatAvailabilityChanged -= HandleCombatAvailabilityChanged;
             networkCallbacksRegistered = false;
         }
 
         private void Update()
         {
+            if (thirdPersonReloadActive && thirdPersonReloadTimeline.IsValid)
+            {
+                WeaponData data = GetWeapon(CurrentWeaponIndex)?.Data;
+                float normalized = thirdPersonReloadTimeline.NormalizedTime(data, GetPresentationTime(), true);
+                SetAnimatorFloatIfPresent(characterAnimation, "ReloadNormalizedTime", normalized);
+                GetComponent<PlayerVisibilityController>()?
+                    .SetThirdPersonWeaponAnimationFloat("ReloadNormalizedTime", normalized);
+            }
             if (!thirdPersonEquipCompletionPending
                 || thirdPersonEquipCompleteTime < 0d
                 || GetPresentationTime() < thirdPersonEquipCompleteTime)
@@ -203,10 +220,12 @@ namespace FPS
             UpdateWeaponVisibility(CurrentWeaponIndex);
             GetComponent<PlayerVisibilityController>()?
                 .RefreshWeaponPresentation(CurrentWeaponIndex);
-            if (IsServer)
-                GetComponent<WeaponFireHandler>()?.HandleServerPrimaryWeaponReplaced(primaryIsEquipped);
             if (primaryIsEquipped)
                 CurrentWeapon?.GetComponent<Weapon>()?.PrepareFirstPersonPresentation(false);
+            // Reset the old pose before publishing Equip: the host applies the
+            // NetworkVariable callback synchronously during this publication.
+            if (IsServer)
+                GetComponent<WeaponFireHandler>()?.HandleServerPrimaryWeaponReplaced(primaryIsEquipped);
             ReportCurrentWeaponTelemetry();
         }
 
@@ -249,6 +268,7 @@ namespace FPS
         public void RequestSwitchWeaponServerRpc(ServerRpcParams rpcParams = default)
         {
             if (rpcParams.Receive.SenderClientId != OwnerClientId) return;
+            if (!CanUseCombat()) return;
             if (WeaponCount == 0) return;
             int oldSlot = CurrentWeaponIndex;
             int newSlot = (oldSlot + 1) % WeaponCount;
@@ -261,6 +281,7 @@ namespace FPS
         public void RequestEquipWeaponServerRpc(int slotIndex, ServerRpcParams rpcParams = default)
         {
             if (rpcParams.Receive.SenderClientId != OwnerClientId) return;
+            if (!CanUseCombat()) return;
             if (WeaponCount == 0) return;
 
             int clampedSlot = Mathf.Clamp(slotIndex, 0, WeaponCount - 1);
@@ -376,6 +397,7 @@ namespace FPS
 
         public void ApplyAuthoritativeWeaponState(WeaponOwnerState state)
         {
+            SetReloadPresentationTimeline(state.reloadTimeline);
             ApplyThirdPersonActionTiming(
                 state.isReloading,
                 state.reloadCompleteTime,
@@ -383,7 +405,7 @@ namespace FPS
             Weapon weapon = GetWeapon(state.slotIndex);
             weapon?.SetLocalAmmoState(state.magazineAmmo, state.reserveAmmo, state.isReloading);
             weapon?.ApplyAuthoritativePresentation(
-                state.equipCompleteTime, state.isReloading, state.reloadCompleteTime);
+                state.equipCompleteTime, state.isReloading, state.reloadCompleteTime, state.reloadTimeline);
 
             if (IsOwner && HUDManager.HasInstance)
                 HUDManager.Instance.UpdateAmmoInfo();
@@ -393,6 +415,7 @@ namespace FPS
             WeaponPresentationState previous,
             WeaponPresentationState current)
         {
+            SetReloadPresentationTimeline(current.reloadTimeline);
             ApplyThirdPersonActionTiming(
                 current.isReloading,
                 current.reloadCompleteTime,
@@ -400,7 +423,7 @@ namespace FPS
             GetWeapon(current.slotIndex)?.ApplyAuthoritativePresentation(
                 current.equipCompleteTime,
                 current.isReloading,
-                current.reloadCompleteTime);
+                current.reloadCompleteTime, current.reloadTimeline);
 
             // A remote client's first-person weapon may be inactive, in which case
             // Weapon.ApplyAuthoritativePresentation intentionally skips its local
@@ -423,7 +446,8 @@ namespace FPS
 
             // Fire is presented by FireEffectsClientRpc. Reload has no separate
             // RPC, so detect its authoritative rising edge here as well.
-            if (!previous.isReloading && current.isReloading)
+            if (current.isReloading && (!previous.isReloading
+                || !previous.reloadTimeline.Equals(current.reloadTimeline)))
                 TriggerAnimation("Reload");
             else if (previous.isReloading && !current.isReloading)
                 TriggerAnimation("ReloadComplete");
@@ -431,8 +455,27 @@ namespace FPS
 
         public bool TryInspectCurrentWeapon()
         {
+            if (!CanUseCombat())
+                return false;
+
             Weapon weapon = CurrentWeapon != null ? CurrentWeapon.GetComponent<Weapon>() : null;
             return weapon != null && weapon.TryPlayInspect();
+        }
+
+        private bool CanUseCombat()
+        {
+            if (playerHealth == null)
+                playerHealth = GetComponent<PlayerHealth>();
+            return playerHealth != null && playerHealth.CanUseCombat;
+        }
+
+        private void HandleCombatAvailabilityChanged(bool canUseCombat)
+        {
+            if (!canUseCombat)
+                ResetThirdPersonActionState();
+
+            foreach (GameObject weaponObject in EnumerateConfiguredWeapons())
+                weaponObject?.GetComponent<Weapon>()?.SetCombatAvailability(canUseCombat);
         }
 
         /// <summary>
@@ -482,6 +525,19 @@ namespace FPS
             SetThirdPersonActionPlaybackSpeed(
                 actionName,
                 Mathf.Clamp(authoredDuration / duration, 0.05f, 20f));
+        }
+
+        public void SetReloadPresentationTimeline(WeaponReloadTimeline timeline)
+        {
+            thirdPersonReloadTimeline = timeline;
+        }
+
+        public void CompleteActionsForAcceptedShot()
+        {
+            // The reliable shot RPC may arrive before this tick's NetworkVariable
+            // delta. A server-accepted Bucky shot has already cancelled reload.
+            if (thirdPersonReloadActive) TriggerAnimation("ReloadComplete");
+            if (thirdPersonEquipCompletionPending) TriggerAnimation("EquipComplete");
         }
 
         private void ApplyThirdPersonActionTiming(
@@ -573,6 +629,7 @@ namespace FPS
 
         private void ResetThirdPersonActionState()
         {
+            thirdPersonReloadTimeline = default;
             thirdPersonReloadActive = false;
             thirdPersonReloadCompleteTime = -1d;
             thirdPersonEquipCompletionPending = false;
@@ -641,7 +698,8 @@ namespace FPS
             string parameterName,
             float value)
         {
-            if (animator == null || animator.runtimeAnimatorController == null)
+            if (animator == null || !animator.isActiveAndEnabled
+                || animator.runtimeAnimatorController == null)
                 return;
 
             int parameterHash = Animator.StringToHash(parameterName);

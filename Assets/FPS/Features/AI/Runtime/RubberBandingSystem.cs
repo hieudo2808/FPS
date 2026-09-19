@@ -261,21 +261,5 @@ namespace FPS
             return profile?.playerTransform;
         }
 
-#if UNITY_INCLUDE_TESTS
-        public readonly struct TestSnapshot
-        {
-            public readonly int trackedZombieCount;
-
-            public TestSnapshot(int trackedZombieCount)
-            {
-                this.trackedZombieCount = trackedZombieCount;
-            }
-        }
-
-        public TestSnapshot CaptureTestSnapshot()
-        {
-            return new TestSnapshot(trackedZombies.Count);
-        }
-#endif
     }
 }

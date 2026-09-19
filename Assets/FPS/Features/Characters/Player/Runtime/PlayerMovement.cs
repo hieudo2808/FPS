@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Globalization;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -53,6 +52,11 @@ namespace FPS
         // ==========================================
         // CONSTANTS
         private const float GRAVITY = -9.81f;
+        // Animator damping never quite reaches zero. A denormalized residual
+        // speed makes the Generic 1D additive locomotion blend tree select its
+        // empty zero clip with an invalid effective length, which can prevent
+        // the upper-body layers from evaluating.
+        private const float AnimationStopSpeedThreshold = 0.01f;
         public const int SimulationHz = NetworkGameplayPolicy.SimulationHz;
         public const int SnapshotHz = NetworkGameplayPolicy.SnapshotHz;
         private const float TICK_DT = 1f / SimulationHz;
@@ -63,6 +67,8 @@ namespace FPS
         private Vector2 cachedMove;
         private bool jumpQueued;
         private bool sprintHeld;
+        private bool serverSprinting;
+        private SurvivalInventory survivalInventory;
         private bool aimHeld;
         private float cachedYaw;
         private float cachedPitch;
@@ -93,10 +99,6 @@ namespace FPS
         private bool hasConfirmedFireReference;
         private uint confirmedFireInputSequence;
         private int confirmedFireTick;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        private bool verificationInputEnabled;
-        private Vector2 verificationMove;
-#endif
 
         // ==========================================
         // REMOTE INTERPOLATION
@@ -201,7 +203,7 @@ namespace FPS
             if (networkTimer == null)
                 return;
 
-            if (playerHealth != null && playerHealth.IsDead)
+            if (playerHealth != null && playerHealth.LifeState != PlayerLifeState.Alive)
             {
                 cachedMove = Vector2.zero;
                 planarSpeed = 0f;
@@ -263,18 +265,6 @@ namespace FPS
 
         private void CaptureFrameInput()
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            if (verificationInputEnabled)
-            {
-                cachedMove = Vector2.ClampMagnitude(verificationMove, 1f);
-                sprintHeld = false;
-                aimHeld = false;
-                jumpQueued = false;
-                cachedYaw = transform.eulerAngles.y;
-                cachedPitch = 0f;
-                return;
-            }
-#endif
             if (InputManager.GameplayInputBlocked)
             {
                 cachedMove = Vector2.zero;
@@ -401,19 +391,16 @@ namespace FPS
                     : NetworkManager.ServerTime.Tick;
                 if (!TrySanitizeInput(input, expectedTick, out PlayerInputPayload sanitized))
                 {
-                    EmitCommandDrop("invalid_or_tick_window");
                     continue;
                 }
 
                 if (hasStartedServerTicking && sanitized.tick < nextServerTick)
                 {
-                    EmitCommandDrop("stale_tick");
                     continue;
                 }
 
                 if (pendingInputs.Count >= 256 && !pendingInputs.ContainsKey(sanitized.tick))
                 {
-                    EmitCommandDrop("queue_full");
                     continue;
                 }
 
@@ -446,16 +433,6 @@ namespace FPS
             sanitized.move = Vector2.ClampMagnitude(input.move, 1f);
             sanitized.yaw = Mathf.Repeat(input.yaw, 360f);
             sanitized.pitch = Mathf.Clamp(input.pitch, -90f, 90f);
-            return true;
-        }
-
-        public bool SimulateInputForTests(PlayerInputPayload input, float dt, int nextExpectedTick = 0)
-        {
-            if (!TrySanitizeInput(input, nextExpectedTick, out PlayerInputPayload sanitized))
-                return false;
-
-            transform.rotation = Quaternion.Euler(0f, sanitized.yaw, 0f);
-            SimulateTick(sanitized, dt);
             return true;
         }
 
@@ -547,14 +524,6 @@ namespace FPS
             return TryGetLatestFireReference(out inputSequence, out inputTick);
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        public void SetVerificationInput(Vector2 move)
-        {
-            verificationInputEnabled = true;
-            verificationMove = move;
-        }
-#endif
-
         private static bool IsFinite(float value)
         {
             return !float.IsNaN(value) && !float.IsInfinity(value);
@@ -589,8 +558,6 @@ namespace FPS
             bool sequenceAccepted = hasReceivedInput
                 && (!hasProcessedCommandSequence
                     || NetworkSequence.IsNewer(receivedInput.sequence, lastProcessedCommandSequence));
-            if (hasReceivedInput && !sequenceAccepted)
-                EmitCommandDrop("duplicate_or_out_of_order_sequence");
 
             if (sequenceAccepted)
             {
@@ -615,11 +582,17 @@ namespace FPS
                 {
                     input.move = Vector2.zero;
                     input.sprint = false;
-                    if (repeatedInputTicks == maxRepeatedInputTicks + 1)
-                        EmitCommandDrop("input_silence_neutralized");
                 }
             }
 
+            var health = GetComponent<PlayerHealth>();
+            if ((health != null && !health.CanUseCombat) || CampaignMissionController.Instance?.BlocksInput == true)
+            {
+                input.move = Vector2.zero;
+                input.sprint = false;
+                input.jumpPressed = false;
+                input.yaw = transform.eulerAngles.y;
+            }
             transform.rotation = Quaternion.Euler(0f, input.yaw, 0f);
             SimulateTick(input, TICK_DT);
             RecordServerAim(input, nextServerTick);
@@ -695,13 +668,6 @@ namespace FPS
 
             if (error < reconciliationThreshold)
                 return;
-
-            PlayerHealth health = GetComponent<PlayerHealth>();
-            NetworkDiagnostics.Emit(
-                "movement_correction",
-                NetworkGameManager.Instance != null ? NetworkGameManager.Instance.State : SessionState.InMatch,
-                error.ToString("F3", CultureInfo.InvariantCulture),
-                health != null ? health.StablePlayerId : default);
 
             // Lưu vị trí visual trước khi snap để tạo correction offset
             Vector3 visualBefore = visualRoot != null
@@ -785,16 +751,6 @@ namespace FPS
         {
             int remainder = value % divisor;
             return remainder < 0 ? remainder + divisor : remainder;
-        }
-
-        private void EmitCommandDrop(string reason)
-        {
-            PlayerHealth health = playerHealth != null ? playerHealth : GetComponent<PlayerHealth>();
-            NetworkDiagnostics.Emit(
-                "command_drop",
-                NetworkGameManager.Instance != null ? NetworkGameManager.Instance.State : SessionState.InMatch,
-                reason,
-                health != null ? health.StablePlayerId : default);
         }
 
         private void ApplyAuthoritativeState(PlayerStatePayload state)
@@ -1022,6 +978,7 @@ namespace FPS
             if (infectionController != null && !infectionController.CanSprint)
                 input.sprint = false;
 
+            if (IsServer) serverSprinting = input.sprint && input.move.sqrMagnitude > .01f;
             aimHeld = input.aim;
             if (controller == null)
                 controller = GetComponent<CharacterController>();
@@ -1048,6 +1005,8 @@ namespace FPS
             if (infectionController != null)
                 currentSpeed *= infectionController.MovementSpeedMultiplier;
 
+            if (survivalInventory == null) survivalInventory = GetComponent<SurvivalInventory>();
+            if (survivalInventory != null && survivalInventory.IsUsingItem) currentSpeed *= .55f;
             planarSpeed = input.move.magnitude * currentSpeed;
 
             Vector3 totalMove = move * currentSpeed;
@@ -1064,8 +1023,7 @@ namespace FPS
             }
         }
 
-        public bool IsSprinting => sprintHeld
-            && cachedMove.sqrMagnitude > 0.01f
+        public bool IsSprinting => (IsServer ? serverSprinting : sprintHeld && cachedMove.sqrMagnitude > 0.01f)
             && (infectionController == null || infectionController.CanSprint);
 
         private bool CheckGrounded()
@@ -1126,7 +1084,17 @@ namespace FPS
 
             characterAnimation.SetBool("Grounded", isGrounded);
             characterAnimation.SetBool("FreeFall", !isGrounded && verticalVelocity < -2f);
-            characterAnimation.SetFloat("Speed", planarSpeed, 0.1f, Mathf.Max(0f, deltaTime));
+            float animationSpeed = planarSpeed <= AnimationStopSpeedThreshold
+                ? 0f
+                : planarSpeed;
+            if (animationSpeed == 0f)
+                characterAnimation.SetFloat("Speed", 0f);
+            else
+                characterAnimation.SetFloat(
+                    "Speed",
+                    animationSpeed,
+                    0.1f,
+                    Mathf.Max(0f, deltaTime));
             if (playerVisibility == null)
                 playerVisibility = GetComponent<PlayerVisibilityController>();
             if (playerVisibility != null)

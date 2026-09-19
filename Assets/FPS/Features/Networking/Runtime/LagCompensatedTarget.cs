@@ -75,14 +75,6 @@ namespace FPS
             AllocateHistory();
         }
 
-        public void SampleForTests(double time)
-        {
-            // EditMode không gọi OnEnable, nên test seam phải tự đăng ký với manager.
-            EnsureInitialized();
-            LagCompensationManager.RegisterTarget(this);
-            Sample(time);
-        }
-
         public bool TryGetSnapshotAt(double targetTime, out HitboxSnapshot snapshot)
         {
             snapshot = null;

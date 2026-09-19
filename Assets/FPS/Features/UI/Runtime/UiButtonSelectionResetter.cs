@@ -36,9 +36,11 @@ namespace FPS
             ClearSelection();
         }
 
-        private static void ClearSelection()
+        private void ClearSelection()
         {
-            EventSystem.current?.SetSelectedGameObject(null);
+            // A different button being disabled must not steal keyboard focus.
+            if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject == gameObject)
+                EventSystem.current.SetSelectedGameObject(null);
         }
     }
 }

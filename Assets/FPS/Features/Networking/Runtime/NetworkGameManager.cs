@@ -7,6 +7,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
+using Unity.Services.Lobbies;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -21,8 +22,6 @@ namespace FPS
     public class NetworkGameManager : MonoBehaviour
     {
         private const string ReconnectGrantMessage = "FPS/A1/ReconnectGrant";
-        private const string ReconnectPrepareDisconnectMessage = "FPS/A1/PrepareDisconnect";
-        private const float VerificationDisconnectDrainSeconds = 0.25f;
 
         private sealed class PendingApproval
         {
@@ -92,16 +91,12 @@ namespace FPS
         private bool matchStarted;
         private bool intentionalShutdown;
         private bool suppressDisconnectHandling;
-        private bool holdReconnectForVerification;
-        private bool verificationTransportShutdown;
-        private Task verificationLeaveTask;
-        private double verificationDisconnectAt = -1d;
-        private bool verificationDisconnectStarted;
-        private bool terminateOnHostLossForVerification;
         private Coroutine sceneLoadTimeoutRoutine;
         private SessionOperation matchLoadOperation;
         private CancellationTokenSource lifetimeCancellation;
         private Task cleanupTask;
+        private Task leaveSessionTask;
+        private bool applicationQuitting;
 
         private async void Awake()
         {
@@ -128,6 +123,18 @@ namespace FPS
         private void LateUpdate()
         {
             NetworkManager manager = NetworkManager.Singleton;
+            // Only the host receives our match-load completion callback. Observe the
+            // local spawned player on clients so a normal lobby join also reaches the
+            // reconnect-capable state after NGO synchronizes GameScene.
+            if (manager != null && manager.IsListening && manager.IsClient && !manager.IsServer
+                && State == SessionState.Lobby && manager.LocalClient?.PlayerObject != null
+                && manager.LocalClient.PlayerObject.IsSpawned
+                && string.Equals(SceneManager.GetActiveScene().name, gameScene, StringComparison.Ordinal))
+            {
+                matchStarted = true;
+                IsInLobby = false;
+                sessionCoordinator.Transition(SessionState.InMatch);
+            }
             if (manager == null || !manager.IsListening || !manager.IsServer || Telemetry == null)
                 return;
 
@@ -155,31 +162,24 @@ namespace FPS
         {
             try
             {
-                InitializationOptions initializationOptions = CreateVerificationInitializationOptions();
-                Task initializationTask = initializationOptions == null
-                    ? UnityServices.InitializeAsync()
-                    : UnityServices.InitializeAsync(initializationOptions);
+                Task initializationTask = UnityServices.InitializeAsync();
                 await AwaitWithCancellation(initializationTask, cancellationToken);
                 if (!AuthenticationService.Instance.IsSignedIn)
                 {
-                    if (initializationOptions == null)
-                    {
-                        string fallbackName = $"Player{UnityEngine.Random.Range(1000, 9999)}";
-                        string playerName = PlayerPrefs.GetString("PlayerName", fallbackName).Trim();
-                        if (string.IsNullOrEmpty(playerName))
-                            playerName = fallbackName;
+                    string fallbackName = $"Player{UnityEngine.Random.Range(1000, 9999)}";
+                    string playerName = PlayerPrefs.GetString("PlayerName", fallbackName).Trim();
+                    if (string.IsNullOrEmpty(playerName))
+                        playerName = fallbackName;
 
-                        string profile = playerName.Split(' ')[0];
-                        profile = profile.Substring(0, Mathf.Min(profile.Length, 30));
-                        if (!string.Equals(AuthenticationService.Instance.Profile, profile, StringComparison.Ordinal))
-                            AuthenticationService.Instance.SwitchProfile(profile);
-                    }
+                    string profile = playerName.Split(' ')[0];
+                    profile = profile.Substring(0, Mathf.Min(profile.Length, 30));
+                    if (!string.Equals(AuthenticationService.Instance.Profile, profile, StringComparison.Ordinal))
+                        AuthenticationService.Instance.SwitchProfile(profile);
 
                     await AwaitWithCancellation(AuthenticationService.Instance.SignInAnonymouslyAsync(), cancellationToken);
                 }
 
                 IsServicesInitialized = true;
-                NetworkDiagnostics.Emit("services_ready", State);
             }
             catch (OperationCanceledException)
             {
@@ -192,29 +192,6 @@ namespace FPS
                 GameLog.Error($"[Services] Initialization failed: {exception.Message}");
                 OnConnectionFailed?.Invoke("Online services could not be initialized.");
             }
-        }
-
-        private static InitializationOptions CreateVerificationInitializationOptions()
-        {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            string requestedProfile = GetCommandLineArgument("-a1ServicesProfile")
-                ?? GetCommandLineArgument("-a2ServicesProfile");
-            if (!string.IsNullOrWhiteSpace(requestedProfile))
-                return new InitializationOptions().SetProfile(requestedProfile);
-#endif
-            return null;
-        }
-
-        private static string GetCommandLineArgument(string name)
-        {
-            string[] arguments = Environment.GetCommandLineArgs();
-            for (int index = 0; index < arguments.Length - 1; index++)
-            {
-                if (string.Equals(arguments[index], name, StringComparison.OrdinalIgnoreCase))
-                    return arguments[index + 1];
-            }
-
-            return null;
         }
 
         public void StartHostGame() => _ = StartHostGameAsync();
@@ -235,7 +212,6 @@ namespace FPS
             using CancellationTokenSource linked = CancellationTokenSource.CreateLinkedTokenSource(operation.Token, cancellationToken);
             try
             {
-                NetworkDiagnostics.BeginSession();
                 PrepareNetworkManager(ConnectionIntent.NewPlayer);
                 RegisterNetworkCallbacks();
                 playerRegistry.Clear();
@@ -259,7 +235,6 @@ namespace FPS
                     throw new InvalidOperationException($"Lobby scene load was rejected: {loadStatus}.");
 
                 sessionCoordinator.Complete(operation, SessionState.Lobby);
-                NetworkDiagnostics.Emit("host_started", State);
                 OnHostStarted?.Invoke();
                 return SessionOperationResult.Success();
             }
@@ -298,7 +273,6 @@ namespace FPS
             using CancellationTokenSource linked = CancellationTokenSource.CreateLinkedTokenSource(operation.Token, cancellationToken);
             try
             {
-                NetworkDiagnostics.BeginSession();
                 CurrentJoinCode = joinCode.Trim();
                 intentionalShutdown = false;
                 PrepareNetworkManager(ConnectionIntent.NewPlayer);
@@ -314,7 +288,6 @@ namespace FPS
 
                 IsInLobby = true;
                 sessionCoordinator.Complete(operation, SessionState.Lobby);
-                NetworkDiagnostics.Emit("client_joined", State);
                 return SessionOperationResult.Success();
             }
             catch (OperationCanceledException)
@@ -349,45 +322,16 @@ namespace FPS
 
             using CancellationTokenSource linked = CancellationTokenSource.CreateLinkedTokenSource(operation.Token, cancellationToken);
 
-            // A verification disconnect carries the exact local disconnect timestamp. If the
-            // reservation is already outside its grace window, do not start another NGO/Relay
-            // session just to discover expiry. Starting a failed session and then asking the
-            // Multiplayer package to stop it produces the package's "session was never started"
-            // warning because its network handler never reached Started.
-            if (verificationDisconnectAt >= 0d
-                && Time.realtimeSinceStartupAsDouble - verificationDisconnectAt >= settings.ReconnectGraceSeconds)
-            {
-                if (verificationTransportShutdown && verificationLeaveTask != null)
-                    await verificationLeaveTask;
-
-                verificationTransportShutdown = false;
-                verificationLeaveTask = null;
-                return await CompleteReconnectExpiredAsync(operation);
-            }
-
             double startedAt = Time.realtimeSinceStartupAsDouble;
             Exception lastException = null;
             while (Time.realtimeSinceStartupAsDouble - startedAt < settings.ReconnectGraceSeconds)
             {
                 try
                 {
-                    bool transportWasShutdownByVerification = verificationTransportShutdown;
-                    verificationTransportShutdown = false;
                     suppressDisconnectHandling = true;
                     UnregisterCustomMessageHandler();
                     UnregisterNetworkCallbacks();
-                    if (transportWasShutdownByVerification)
-                    {
-                        // DisconnectTransportForVerification starts LeaveAsync before NGO stops.
-                        // Await that single lifecycle operation; do not leave or shutdown again.
-                        if (verificationLeaveTask != null)
-                            await verificationLeaveTask;
-                    }
-                    else
-                    {
-                        await LeaveCurrentSessionBestEffortAsync();
-                    }
-                    verificationLeaveTask = null;
+                    await LeaveCurrentSessionBestEffortAsync();
                     if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
                         NetworkManager.Singleton.Shutdown(discardMessageQueue: true);
                     suppressDisconnectHandling = false;
@@ -403,10 +347,7 @@ namespace FPS
                     if (manager != null && manager.IsListening && manager.IsConnectedClient)
                     {
                         IsInLobby = false;
-                        verificationDisconnectAt = -1d;
-                        verificationDisconnectStarted = false;
                         sessionCoordinator.Complete(operation, SessionState.InMatch);
-                        NetworkDiagnostics.Emit("reconnect_transport_ready", State, playerId: localStablePlayerId);
                         return SessionOperationResult.Success();
                     }
                 }
@@ -477,69 +418,6 @@ namespace FPS
 
         public void Disconnect() => _ = DisconnectAsync();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        public void MarkExpectedShutdownForVerification()
-        {
-            intentionalShutdown = true;
-            holdReconnectForVerification = false;
-        }
-
-        public void HoldReconnectForVerification(bool hold)
-        {
-            holdReconnectForVerification = hold;
-        }
-
-        public void TerminateOnHostLossForVerification(bool enabled)
-        {
-            terminateOnHostLossForVerification = enabled;
-        }
-
-        public void DisconnectTransportForVerification()
-        {
-            NetworkManager manager = NetworkManager.Singleton;
-            if (manager == null || !manager.IsListening || verificationDisconnectStarted)
-                return;
-
-            verificationDisconnectStarted = true;
-            verificationDisconnectAt = Time.realtimeSinceStartupAsDouble;
-            verificationTransportShutdown = true;
-
-            // Stop movement snapshots before NGO broadcasts the disconnect/despawn. The
-            // short drain lets unreliable snapshots already in flight arrive before the
-            // reliable despawn message reaches the other peers.
-            if (manager.IsClient && !manager.IsServer && manager.CustomMessagingManager != null)
-            {
-                using var writer = new FastBufferWriter(1, Allocator.Temp);
-                manager.CustomMessagingManager.SendNamedMessage(
-                    ReconnectPrepareDisconnectMessage,
-                    NetworkManager.ServerClientId,
-                    writer,
-                    NetworkDelivery.ReliableSequenced);
-            }
-
-            StartCoroutine(ShutdownVerificationTransportAfterDrain());
-        }
-
-        private IEnumerator ShutdownVerificationTransportAfterDrain()
-        {
-            yield return new WaitForSecondsRealtime(VerificationDisconnectDrainSeconds);
-
-            // ISession.LeaveAsync owns the Multiplayer session leave. NGO is then shut down
-            // with its local queues discarded so no old RPC can cross the reconnect boundary.
-            verificationLeaveTask = LeaveCurrentSessionBestEffortAsync();
-            NetworkManager manager = NetworkManager.Singleton;
-            if (manager != null && manager.IsListening)
-                manager.Shutdown(discardMessageQueue: true);
-        }
-
-        public Task<SessionOperationResult> ReconnectForVerificationAsync(
-            CancellationToken cancellationToken = default)
-        {
-            holdReconnectForVerification = false;
-            return ReconnectAsync(cancellationToken);
-        }
-#endif
-
         public async Task DisconnectAsync()
         {
             if (State == SessionState.ShuttingDown)
@@ -586,8 +464,8 @@ namespace FPS
             if (manager == null || manager.SceneManager == null)
                 return await FailOperationAsync(matchLoadOperation, SessionFailureReason.SceneLoadFailed, "Network scene manager is unavailable.");
 
-            // The MPS session deliberately remains unlocked. NGO approval rejects fresh players after
-            // this point while still allowing a reserved player to reacquire the Relay allocation.
+            // Keep the MPS session unlocked for reserved reconnects and campaign spectators.
+            // NGO approval still enforces identity, capacity and the active campaign phase.
             SyncLobbyCharacterSelectionsToRegistry();
             matchStarted = true;
             IsInLobby = false;
@@ -652,7 +530,11 @@ namespace FPS
             }
 
             double now = GetServerTime();
-            if (matchStarted)
+            var campaign = CampaignMissionController.Instance;
+            bool campaignSpectator = payload.intent == ConnectionIntent.NewPlayer
+                && campaign != null && campaign.IsSpawned
+                && campaign.State.phase != CampaignPhase.Completed && campaign.State.phase != CampaignPhase.Failed;
+            if (matchStarted && !campaignSpectator)
             {
                 if (payload.intent != ConnectionIntent.Reconnect)
                 {
@@ -686,7 +568,6 @@ namespace FPS
                 };
                 connectionPlayerNames[request.ClientNetworkId] = payload.playerName;
                 response.Approved = true;
-                NetworkDiagnostics.Emit("approval_reconnect", State, playerId: reconnected.PlayerId);
                 return;
             }
 
@@ -732,7 +613,6 @@ namespace FPS
             }
 
             response.Approved = true;
-            NetworkDiagnostics.Emit("approval_new", State, playerId: record.PlayerId);
         }
 
         private void Reject(NetworkManager.ConnectionApprovalResponse response, SessionFailureReason reason)
@@ -740,7 +620,6 @@ namespace FPS
             response.Approved = false;
             response.CreatePlayerObject = false;
             response.Reason = reason.ToString();
-            NetworkDiagnostics.Emit("approval_rejected", State, reason.ToString());
         }
 
         private void RegisterNetworkCallbacks()
@@ -772,9 +651,6 @@ namespace FPS
                 return;
 
             manager.CustomMessagingManager.RegisterNamedMessageHandler(ReconnectGrantMessage, HandleReconnectGrantMessage);
-            manager.CustomMessagingManager.RegisterNamedMessageHandler(
-                ReconnectPrepareDisconnectMessage,
-                HandleReconnectPrepareDisconnectMessage);
             customMessageRegistered = true;
         }
 
@@ -785,7 +661,6 @@ namespace FPS
                 return;
 
             manager.CustomMessagingManager.UnregisterNamedMessageHandler(ReconnectGrantMessage);
-            manager.CustomMessagingManager.UnregisterNamedMessageHandler(ReconnectPrepareDisconnectMessage);
             customMessageRegistered = false;
         }
 
@@ -865,17 +740,6 @@ namespace FPS
             {
                 sessionCoordinator.CancelActive(SessionState.Failed);
                 OnConnectionFailed?.Invoke(LastDisconnectMessage);
-                _ = CleanupAndReturnToMenuAsync(clearReconnectCredentials: true);
-                return;
-            }
-
-            if (holdReconnectForVerification)
-                return;
-
-            if (terminateOnHostLossForVerification)
-            {
-                sessionCoordinator.CancelActive(SessionState.Failed);
-                OnConnectionFailed?.Invoke(SessionDisconnectReason.HostUnavailable.ToString());
                 _ = CleanupAndReturnToMenuAsync(clearReconnectCredentials: true);
                 return;
             }
@@ -960,17 +824,6 @@ namespace FPS
             reader.ReadValueSafe(out FixedString64Bytes token);
             localStablePlayerId = new SessionPlayerId(playerId);
             localReconnectToken = token.ToString();
-            NetworkDiagnostics.Emit("reconnect_credentials_received", State, playerId: localStablePlayerId);
-        }
-
-        private void HandleReconnectPrepareDisconnectMessage(ulong senderClientId, FastBufferReader reader)
-        {
-            NetworkManager manager = NetworkManager.Singleton;
-            if (manager == null || !manager.IsServer || senderClientId == manager.LocalClientId)
-                return;
-
-            StopServerReplicationForDisconnectedPlayer(senderClientId);
-            NetworkDiagnostics.Emit("reconnect_disconnect_prepared", State);
         }
 
         private void HandleGameSceneLoaded(
@@ -1044,7 +897,6 @@ namespace FPS
 
             sessionCoordinator.Complete(matchLoadOperation, SessionState.InMatch);
             NetworkMatchStateManager.Instance?.EnterPlaying();
-            NetworkDiagnostics.Emit("match_ready", State);
         }
 
         private IEnumerator SceneLoadTimeoutRoutine()
@@ -1109,6 +961,8 @@ namespace FPS
                 PlayerRuntimeSnapshot snapshot = record.Snapshot;
                 snapshot.position = position;
                 snapshot.rotation = rotation;
+                if (CampaignMissionController.Instance != null)
+                    snapshot = CampaignMissionController.Instance.PrepareReconnect(snapshot, clientId);
                 health.PrepareReconnect(snapshot);
             }
             else
@@ -1118,6 +972,9 @@ namespace FPS
 
             capturedDisconnects.Remove(clientId);
             networkObject.SpawnAsPlayerObject(clientId, true);
+            if (!isReconnect && CampaignMissionController.Instance != null
+                && CampaignMissionController.Instance.State.phase != CampaignPhase.Insertion)
+                health.SetCampaignSpectating();
         }
 
         internal bool SetPlayerCharacter(ulong clientId, PlayerCharacterId characterId)
@@ -1233,6 +1090,7 @@ namespace FPS
                 return;
 
             PlayerRuntimeSnapshot snapshot = playerHealth.CaptureRuntimeSnapshot();
+            CampaignMissionController.Instance?.RememberPlayerSnapshot(snapshot);
             if (capturedDisconnects.Contains(playerHealth.OwnerClientId))
             {
                 playerRegistry.UpdateReservedSnapshot(
@@ -1257,7 +1115,6 @@ namespace FPS
                 value.sessionPlayerId = record.PlayerId;
             playerRegistry.Reserve(clientId, value, GetServerTime() + settings.ReconnectReservationSeconds);
             capturedDisconnects.Add(clientId);
-            NetworkDiagnostics.Emit("player_reserved", State, playerId: record.PlayerId);
         }
 
         private bool CanAttemptReconnect(string unityPlayerId, double now)
@@ -1347,8 +1204,6 @@ namespace FPS
             connectionPlayerNames.Clear();
             reconnectAttemptWindows.Clear();
             capturedDisconnects.Clear();
-            verificationDisconnectAt = -1d;
-            verificationDisconnectStarted = false;
             playerRegistry.Clear();
             PickupTransactions?.Clear();
             Telemetry?.Clear();
@@ -1358,17 +1213,33 @@ namespace FPS
                 localReconnectToken = string.Empty;
             }
             suppressDisconnectHandling = false;
-            NetworkDiagnostics.EndSession();
         }
 
-        private async Task LeaveCurrentSessionBestEffortAsync()
+        private Task LeaveCurrentSessionBestEffortAsync()
         {
-            if (currentSession == null)
-                return;
+            if (leaveSessionTask != null && !leaveSessionTask.IsCompleted)
+                return leaveSessionTask;
 
+            // The Multiplayer SDK owns Application.quitting and leaves the session
+            // itself. OnDestroy must not start a second leave against that session.
+            if (currentSession == null || applicationQuitting)
+                return Task.CompletedTask;
+
+            ISession session = currentSession;
+            currentSession = null;
+            leaveSessionTask = LeaveSessionBestEffortAsync(session);
+            return leaveSessionTask;
+        }
+
+        private static async Task LeaveSessionBestEffortAsync(ISession session)
+        {
             try
             {
-                await currentSession.LeaveAsync();
+                if (session.State != Unity.Services.Multiplayer.SessionState.Disconnected
+                    && session.State != Unity.Services.Multiplayer.SessionState.Deleted)
+                {
+                    await session.LeaveAsync();
+                }
             }
             catch (OperationCanceledException)
             {
@@ -1379,23 +1250,29 @@ namespace FPS
                 // The Services SDK may dispose a session while a leave request is
                 // in flight. It is already in the desired terminal state.
             }
-            catch (Exception exception) when (exception.Message.IndexOf("already left", StringComparison.OrdinalIgnoreCase) >= 0)
+            catch (Exception exception) when (IsSessionAlreadyGone(exception))
             {
-                // Idempotent leave: the remote service already removed us.
+                // The remote service has already removed the lobby or player.
             }
             catch (Exception exception)
             {
                 GameLog.Warning(() => $"[Session] Unexpected leave failure: {exception.Message}");
             }
-            finally
+        }
+
+        private static bool IsSessionAlreadyGone(Exception exception)
+        {
+            if (exception is LobbyServiceException lobbyException)
             {
-                currentSession = null;
+                return lobbyException.Reason == LobbyExceptionReason.LobbyNotFound
+                    || lobbyException.Reason == LobbyExceptionReason.PlayerNotFound;
             }
+
+            return exception.Message.IndexOf("already left", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private void HandleSessionStateChanged(SessionState previous, SessionState current)
         {
-            NetworkDiagnostics.Emit("session_state", current, $"{previous}->{current}");
             OnSessionStateChanged?.Invoke(previous, current);
         }
 
@@ -1457,6 +1334,11 @@ namespace FPS
             await Task.Delay(delay, cancellationToken);
         }
 
+        private void OnApplicationQuit()
+        {
+            applicationQuitting = true;
+        }
+
         private void OnDestroy()
         {
             if (Instance != this)
@@ -1464,11 +1346,12 @@ namespace FPS
 
             UnregisterCustomMessageHandler();
             UnregisterNetworkCallbacks();
-            Task cleanup = CleanupTransportAsync(clearReconnectCredentials: true);
+            Task cleanup = applicationQuitting
+                ? cleanupTask ?? Task.CompletedTask
+                : CleanupTransportAsync(clearReconnectCredentials: true);
             _ = DisposeAfterCleanupAsync(cleanup);
             Instance = null;
             NetworkHardeningRuntime.Reset();
-            NetworkDiagnostics.EndSession();
         }
 
         private async Task DisposeAfterCleanupAsync(Task cleanup)
@@ -1483,9 +1366,8 @@ namespace FPS
             }
             finally
             {
-                // Let the Multiplayer/Lobby SDK finish its leave request before
-                // canceling the lifetime token. Canceling first makes ServicesCore
-                // scheduler report an expected OperationCanceledException.
+                // Cancel our operations after local cleanup. The SDK's shutdown
+                // scheduler uses Application.exitCancellationToken independently.
                 lifetimeCancellation?.Cancel();
                 lifetimeCancellation?.Dispose();
                 lifetimeCancellation = null;

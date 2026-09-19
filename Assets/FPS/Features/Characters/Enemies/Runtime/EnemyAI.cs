@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
@@ -30,19 +31,40 @@ namespace FPS
         [SerializeField] private float rotationSpeed = 10f;
         [SerializeField] private float pathRefreshInterval = 0.15f;
         [SerializeField] private float destinationRepathDistance = 0.75f;
+        [SerializeField] private EnemyLocomotionCalibration locomotionCalibration =
+            new EnemyLocomotionCalibration(5f, 0.75f, 1.35f, 0.05f);
 
         [Header("Audio")]
         [SerializeField] protected AudioClip attackSound;
         [SerializeField] protected AudioClip deathSound;
         [SerializeField] protected float soundVolume = 1f;
+        [SerializeField, Min(0.01f)] private float attackAudioMinDistance = 3f;
+        [SerializeField, Min(0.02f)] private float attackAudioMaxDistance = 30f;
+        [SerializeField, Min(0.01f)] private float deathAudioMinDistance = 3f;
+        [SerializeField, Min(0.02f)] private float deathAudioMaxDistance = 35f;
 
         [Header("Target Switching (Multiplayer)")]
         [SerializeField] private float targetSwitchCooldown = 2f;
         [SerializeField] private float maxTargetDistance = 30f;
 
         private static readonly int AnimSpeed = Animator.StringToHash("Speed");
+        private static readonly int AnimLocomotionRate = Animator.StringToHash("LocomotionRate");
         private static readonly int AnimAttack = Animator.StringToHash("Attack");
         private static readonly int AnimDead = Animator.StringToHash("Die");
+        private static readonly Dictionary<int, AnimatorParameterSupport> AnimatorParameterSupportByController = new();
+        private static readonly HashSet<long> WarnedMissingAnimatorParameters = new();
+
+        private readonly struct AnimatorParameterSupport
+        {
+            public readonly bool HasSpeed;
+            public readonly bool HasLocomotionRate;
+
+            public AnimatorParameterSupport(bool hasSpeed, bool hasLocomotionRate)
+            {
+                HasSpeed = hasSpeed;
+                HasLocomotionRate = hasLocomotionRate;
+            }
+        }
 
         private readonly NetworkVariable<EnemyReplicatedState> replicatedState = new(
             default,
@@ -76,8 +98,29 @@ namespace FPS
         private EnemySpecialActionKind specialActionKind;
         private int specialAbilityDeadlineTick;
         private ushort lastPresentedActionSequence;
+        private SpecialSpatialAudio spatialAudio;
+        private uint motionLockGeneration;
+        private uint activeMotionLockId;
+        private float activeMotionLockDeadline;
+        private EnemyMotionLockHandle genericAttackMotionLock;
+        private RuntimeAnimatorController cachedAnimatorController;
+        private AnimatorParameterSupport cachedAnimatorParameterSupport;
 
         public float AttackDamage => attackDamage;
+        public bool IsMotionLocked => activeMotionLockId != 0;
+
+        /// <summary>Begin an authoritative directed encounter without expanding ambient detection.</summary>
+        public void BeginDirectorPursuit(Transform target)
+        {
+            if (!CanRunServerLogic() || !UsesGenericServerBrain || currentState == State.Dead || !IsValidTarget(target)) return;
+            int targetIndex = PlayerProfiler.Instance?.GetProfileByTransform(target)?.playerIndex ?? -1;
+            SetCurrentTarget(target, targetIndex);
+            SwitchState(State.Chase);
+        }
+        protected Transform CurrentTarget => player;
+        protected int CurrentTargetIndex => currentTargetIndex;
+        protected float MaxTargetDistance => maxTargetDistance;
+        protected float TimeSinceTargetSwitch => Time.time - lastTargetSwitchTime;
 
         /// <summary>
         /// Specials with a complete FSM can opt out of the common idle/chase/attack brain
@@ -90,6 +133,8 @@ namespace FPS
         {
             if (agent == null) agent = GetComponent<NavMeshAgent>();
             if (animator == null) animator = GetComponent<Animator>();
+            CacheAnimatorParameterSupport();
+            spatialAudio = GetComponent<SpecialSpatialAudio>();
             ConfigureMeleeAttack();
 
             if (agent != null)
@@ -162,19 +207,27 @@ namespace FPS
 
         public override void OnNetworkDespawn()
         {
+            CancelMotionLock();
             replicatedState.OnValueChanged -= OnReplicatedStateChanged;
             base.OnNetworkDespawn();
+        }
+
+        protected virtual void OnDisable()
+        {
+            CancelMotionLock();
         }
 
         protected virtual void OnEnable()
         {
             if (animator != null)
             {
+                CacheAnimatorParameterSupport();
                 animator.Rebind();
                 animator.Update(0f);
             }
 
             meleeAttack.Reset();
+            CancelMotionLock();
             lastFramePosition = transform.position;
             hasLastFramePosition = true;
         }
@@ -186,6 +239,7 @@ namespace FPS
 
             brainTickCount++;
             lastBrainTickTime = Time.time;
+            UpdateMotionLock();
 
             if (!UsesGenericServerBrain)
             {
@@ -265,6 +319,8 @@ namespace FPS
             {
                 meleeAttack.CancelPendingDamage();
                 meleeAttack.ClearActionLock();
+                ReleaseMotionLock(genericAttackMotionLock);
+                genericAttackMotionLock = default;
             }
 
             currentState = newState;
@@ -279,7 +335,7 @@ namespace FPS
                     break;
 
                 case State.Chase:
-                    agent.isStopped = false;
+                    ResumeAgentMotion();
                     ForcePathRefresh();
                     break;
             }
@@ -317,15 +373,15 @@ namespace FPS
             return Time.time - lastDestinationRequestTime >= Mathf.Max(0.02f, pathRefreshInterval);
         }
 
-        private void TrySubmitAgentDestination(Vector3 destination)
+        protected bool TrySubmitAgentDestination(Vector3 destination)
         {
-            if (!IsAgentReady()) return;
+            if (IsMotionLocked || !IsAgentReady()) return false;
 
             float minRepathDistance = Mathf.Max(0f, destinationRepathDistance);
             if (hasSubmittedAgentDestination &&
                 (destination - lastSubmittedAgentDestination).sqrMagnitude < minRepathDistance * minRepathDistance)
             {
-                return;
+                return false;
             }
 
             if (agent.SetDestination(destination))
@@ -334,7 +390,10 @@ namespace FPS
                 hasSubmittedAgentDestination = true;
                 lastAgentDestinationRequestTime = Time.time;
                 agentDestinationRequestCount++;
+                return true;
             }
+
+            return false;
         }
 
         private void AttackBehavior()
@@ -342,13 +401,13 @@ namespace FPS
             if (player == null) return;
             if (!meleeAttack.TryBegin(transform, player, Time.time)) return;
 
-            StopAgentMotion();
+            genericAttackMotionLock = AcquireMotionLock(attackActionLockDuration);
 
             if (animator != null)
                 animator.SetTrigger(AnimAttack);
 
             if (attackSound != null)
-                PlayLocalSound(attackSound);
+                PlayLocalSound(attackSound, attackAudioMinDistance, attackAudioMaxDistance);
 
             BeginReplicatedAction();
         }
@@ -358,7 +417,7 @@ namespace FPS
             ProcessPendingAttackDamage(forceImpact: true);
         }
 
-        private void FindPlayer(bool forceRefresh = false)
+        protected virtual void FindPlayer(bool forceRefresh = false)
         {
             if (GetType() == typeof(EnemyAI)
                 && InfectionThreatService.Instance != null
@@ -420,7 +479,7 @@ namespace FPS
             currentTargetIndex = bestIndex;
         }
 
-        private void UpdateTarget()
+        protected virtual void UpdateTarget()
         {
             if (Time.time - lastTargetSwitchTime < targetSwitchCooldown) return;
             if (PlayerProfiler.Instance == null || PlayerProfiler.Instance.PlayerCount <= 1) return;
@@ -453,16 +512,11 @@ namespace FPS
 
             if (bestTarget != null && bestTarget != player)
             {
-                AttackSlotManager.Instance?.ReleaseSlot(this);
-
-                player = bestTarget;
-                currentTargetIndex = bestIndex;
-                lastTargetSwitchTime = Time.time;
-                ForcePathRefresh();
+                SetCurrentTarget(bestTarget, bestIndex);
             }
         }
 
-        private float ScoreTarget(PlayerProfile profile, int profileIndex, float distance)
+        protected virtual float ScoreTarget(PlayerProfile profile, int profileIndex, float distance)
         {
             float score = (maxTargetDistance - distance) * 2f;
 
@@ -503,7 +557,12 @@ namespace FPS
 
             if (animator == null) return;
 
-            animator.SetFloat(AnimSpeed, speed, 0.08f, Time.deltaTime);
+            TrySetAnimatorFloat(AnimSpeed, speed, 0.08f, Time.deltaTime);
+            TrySetAnimatorFloat(
+                AnimLocomotionRate,
+                locomotionCalibration.ResolvePlaybackRate(speed),
+                0.08f,
+                Time.deltaTime);
         }
 
         private void SmoothLookAtMovementOrTarget()
@@ -541,11 +600,11 @@ namespace FPS
 
             meleeAttack.CancelPendingDamage();
             meleeAttack.ClearActionLock();
+            CancelMotionLock();
 
             AttackSlotManager.Instance?.ReleaseSlot(this);
 
-            if (IsAgentReady())
-                agent.isStopped = true;
+            StopAgentMotion();
 
             if (agent != null)
                 agent.enabled = false;
@@ -554,7 +613,7 @@ namespace FPS
                 animator.SetTrigger(AnimDead);
 
             if (deathSound != null)
-                PlayLocalSound(deathSound);
+                PlayLocalSound(deathSound, deathAudioMinDistance, deathAudioMaxDistance);
 
             BeginReplicatedAction();
             PublishReplicatedState(force: true);
@@ -567,6 +626,7 @@ namespace FPS
             currentTargetIndex = -1;
             player = null;
             meleeAttack.Reset();
+            CancelMotionLock();
             brainTickCount = 0;
             lastBrainTickTime = 0f;
             lastDesiredDestination = Vector3.zero;
@@ -612,14 +672,25 @@ namespace FPS
                 agent.speed = runSpeed;
         }
 
-        private void PlayLocalSound(AudioClip clip)
+        protected void PlayLocalSound(
+            AudioClip clip,
+            float minimumDistance = 3f,
+            float maximumDistance = 30f,
+            float volumeMultiplier = 1f)
         {
-            // AudioManager is authored by the application bootstrap scene and persists
-            // across gameplay scenes. Do not touch Instance when no authored manager is
-            // present: Singleton.Instance would manufacture a runtime fallback object,
-            // hiding a missing scene/bootstrap dependency (and breaking direct-scene tests).
-            if (clip != null && AudioManager.HasInstance)
-                AudioManager.Instance.PlaySFXSound(clip, soundVolume);
+            if (clip == null)
+                return;
+
+            if (spatialAudio == null)
+                spatialAudio = GetComponent<SpecialSpatialAudio>();
+            if (spatialAudio == null)
+                spatialAudio = gameObject.AddComponent<SpecialSpatialAudio>();
+
+            spatialAudio.PlayOneShot(
+                clip,
+                soundVolume * Mathf.Max(0f, volumeMultiplier),
+                minimumDistance,
+                maximumDistance);
         }
 
         protected void SetSpecialAbilityReplicated(bool active, double deadlineServerTime = 0.0)
@@ -746,7 +817,12 @@ namespace FPS
             bool force)
         {
             if (animator != null)
-                animator.SetFloat(AnimSpeed, current.normalizedSpeed / 255f * runSpeed);
+            {
+                TrySetAnimatorFloat(AnimSpeed, current.normalizedSpeed / 255f * runSpeed);
+                TrySetAnimatorFloat(
+                    AnimLocomotionRate,
+                    locomotionCalibration.ResolvePlaybackRate(current.normalizedSpeed / 255f * runSpeed));
+            }
 
             bool newAction = force || current.actionSequence != lastPresentedActionSequence;
             int elapsedTicks = Mathf.Max(0, GetServerTick() - current.actionStartServerTick);
@@ -756,15 +832,15 @@ namespace FPS
             if ((current.actionFlags & EnemyActionFlags.Dead) != 0
                 && (force || (previous.actionFlags & EnemyActionFlags.Dead) == 0))
             {
-                animator?.SetTrigger(AnimDead);
-                PlayLocalSound(deathSound);
+                TrySetAnimatorTrigger(AnimDead);
+                PlayLocalSound(deathSound, deathAudioMinDistance, deathAudioMaxDistance);
             }
             else if (newAction
                 && (current.actionFlags & EnemyActionFlags.Attack) != 0
                 && elapsedTicks <= attackPresentationTicks)
             {
-                animator?.SetTrigger(AnimAttack);
-                PlayLocalSound(attackSound);
+                TrySetAnimatorTrigger(AnimAttack);
+                PlayLocalSound(attackSound, attackAudioMinDistance, attackAudioMaxDistance);
             }
 
             bool specialStarted = (current.actionFlags & EnemyActionFlags.SpecialAbility) != 0
@@ -777,6 +853,100 @@ namespace FPS
                 OnReplicatedSpecialActionEnded(previous.specialActionKind);
 
             lastPresentedActionSequence = current.actionSequence;
+        }
+
+        protected void TrySetAnimatorTrigger(int triggerHash)
+        {
+            // UnityEngine.Object can be a CLR-non-null destroyed/missing reference.
+            // Use Unity's overloaded null check instead of the null-conditional operator.
+            if (animator != null)
+                animator.SetTrigger(triggerHash);
+        }
+
+        private void CacheAnimatorParameterSupport()
+        {
+            RuntimeAnimatorController controller = animator != null
+                ? animator.runtimeAnimatorController
+                : null;
+            if (controller == cachedAnimatorController)
+                return;
+
+            cachedAnimatorController = controller;
+            cachedAnimatorParameterSupport = default;
+            if (controller == null)
+                return;
+
+            int controllerId = controller.GetEntityId().GetHashCode();
+            if (AnimatorParameterSupportByController.TryGetValue(
+                    controllerId,
+                    out cachedAnimatorParameterSupport))
+            {
+                return;
+            }
+
+            bool hasSpeed = false;
+            bool hasLocomotionRate = false;
+            AnimatorControllerParameter[] parameters = animator.parameters;
+            for (int index = 0; index < parameters.Length; index++)
+            {
+                AnimatorControllerParameter parameter = parameters[index];
+                if (parameter.type != AnimatorControllerParameterType.Float)
+                    continue;
+
+                hasSpeed |= parameter.nameHash == AnimSpeed;
+                hasLocomotionRate |= parameter.nameHash == AnimLocomotionRate;
+            }
+
+            cachedAnimatorParameterSupport = new AnimatorParameterSupport(
+                hasSpeed,
+                hasLocomotionRate);
+            AnimatorParameterSupportByController[controllerId] = cachedAnimatorParameterSupport;
+        }
+
+        private void TrySetAnimatorFloat(
+            int parameterHash,
+            float value,
+            float dampTime = 0f,
+            float deltaTime = 0f)
+        {
+            if (animator == null)
+                return;
+
+            CacheAnimatorParameterSupport();
+            bool supported = parameterHash == AnimSpeed
+                ? cachedAnimatorParameterSupport.HasSpeed
+                : parameterHash == AnimLocomotionRate
+                    ? cachedAnimatorParameterSupport.HasLocomotionRate
+                    : false;
+            if (!supported)
+            {
+                WarnMissingAnimatorParameterOnce(parameterHash);
+                return;
+            }
+
+            if (dampTime > 0f)
+                animator.SetFloat(parameterHash, value, dampTime, deltaTime);
+            else
+                animator.SetFloat(parameterHash, value);
+        }
+
+        private void WarnMissingAnimatorParameterOnce(int parameterHash)
+        {
+            if (cachedAnimatorController == null)
+                return;
+
+            long warningKey = ((long)cachedAnimatorController.GetEntityId().GetHashCode() << 32)
+                ^ (uint)parameterHash;
+            if (!WarnedMissingAnimatorParameters.Add(warningKey))
+                return;
+
+            string parameterName = parameterHash == AnimSpeed
+                ? "Speed"
+                : parameterHash == AnimLocomotionRate
+                    ? "LocomotionRate"
+                    : parameterHash.ToString();
+            GameLog.Warning(() =>
+                $"[EnemyAI] '{name}' controller '{cachedAnimatorController.name}' has no float parameter '{parameterName}'. The related animation update will be skipped.");
         }
 
         private int GetServerTick()
@@ -801,7 +971,7 @@ namespace FPS
                 : NetworkGameplayPolicy.SimulationHz;
         }
 
-        private bool IsAgentReady()
+        protected bool IsAgentReady()
         {
             return agent != null && agent.enabled && agent.isOnNavMesh;
         }
@@ -878,7 +1048,7 @@ namespace FPS
             return targetDirection;
         }
 
-        private void StopAgentMotion()
+        protected void StopAgentMotion()
         {
             if (!IsAgentReady())
                 return;
@@ -887,6 +1057,66 @@ namespace FPS
             agent.ResetPath();
             agent.velocity = Vector3.zero;
             agent.nextPosition = transform.position;
+        }
+
+        public EnemyMotionLockHandle AcquireMotionLock(float durationSeconds)
+        {
+            motionLockGeneration++;
+            if (motionLockGeneration == 0)
+                motionLockGeneration = 1;
+
+            activeMotionLockId = motionLockGeneration;
+            activeMotionLockDeadline = Time.time + Mathf.Max(0f, durationSeconds);
+            StopAgentMotion();
+            return new EnemyMotionLockHandle(activeMotionLockId);
+        }
+
+        public EnemyMotionLockHandle AcquireMotionLock(EnemyActionTiming timing)
+        {
+            return AcquireMotionLock(timing.MotionLockSeconds);
+        }
+
+        public bool ReleaseMotionLock(EnemyMotionLockHandle handle)
+        {
+            if (!handle.IsValid || handle.Id != activeMotionLockId)
+                return false;
+
+            activeMotionLockId = 0;
+            activeMotionLockDeadline = 0f;
+            ResumeAgentMotion();
+            return true;
+        }
+
+        protected void CancelMotionLock()
+        {
+            activeMotionLockId = 0;
+            activeMotionLockDeadline = 0f;
+            genericAttackMotionLock = default;
+            StopAgentMotion();
+        }
+
+        protected bool ResumeAgentMotion()
+        {
+            if (IsMotionLocked || !IsAgentReady())
+                return false;
+
+            agent.nextPosition = transform.position;
+            agent.isStopped = false;
+            return true;
+        }
+
+        private void UpdateMotionLock()
+        {
+            if (!IsMotionLocked)
+                return;
+
+            if (Time.time >= activeMotionLockDeadline)
+            {
+                ReleaseMotionLock(new EnemyMotionLockHandle(activeMotionLockId));
+                return;
+            }
+
+            StopAgentMotion();
         }
 
         private bool CanHitTarget(Transform target)
@@ -899,7 +1129,7 @@ namespace FPS
             ForcePathRefresh();
         }
 
-        private void ForcePathRefresh()
+        protected void ForcePathRefresh()
         {
             lastDestinationRequestTime = -Mathf.Infinity;
             hasSubmittedAgentDestination = false;
@@ -908,29 +1138,20 @@ namespace FPS
         protected virtual float CalculateVisualMoveSpeed()
         {
             float speed = 0f;
-            if (currentState == State.Chase && IsAgentReady())
-            {
-                speed = Mathf.Max(agent.velocity.magnitude, agent.desiredVelocity.magnitude);
-                if (agent.isStopped)
-                    speed = 0f;
-            }
-
             if (hasLastFramePosition && Time.deltaTime > 0.0001f)
             {
                 Vector3 delta = transform.position - lastFramePosition;
                 delta.y = 0f;
-                float displacementSpeed = delta.magnitude / Time.deltaTime;
-                if (currentState == State.Chase)
-                    speed = Mathf.Max(speed, displacementSpeed);
+                speed = delta.magnitude / Time.deltaTime;
             }
 
             lastFramePosition = transform.position;
             hasLastFramePosition = true;
 
-            return currentState == State.Chase ? speed : 0f;
+            return IsMotionLocked || currentState == State.Dead ? 0f : speed;
         }
 
-        private bool IsValidTarget(Transform target)
+        protected bool IsValidTarget(Transform target)
         {
             if (target == null) return false;
             if (!target.gameObject.activeInHierarchy) return false;
@@ -959,6 +1180,18 @@ namespace FPS
             return target.TryGetComponent<IDamageable>(out var damageable) ? damageable : null;
         }
 
+        protected void SetCurrentTarget(Transform target, int targetIndex, bool releaseAttackSlot = true)
+        {
+            if (releaseAttackSlot && target != player)
+                AttackSlotManager.Instance?.ReleaseSlot(this);
+
+            player = target;
+            currentTargetIndex = targetIndex;
+            lastTargetSwitchTime = Time.time;
+            loggedMissingPlayer = target == null;
+            ForcePathRefresh();
+        }
+
         protected bool CanRunServerLogic()
         {
             return IsServer || NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening;
@@ -972,135 +1205,5 @@ namespace FPS
             RubberBandingSystem.Instance.RegisterZombie(this);
         }
 
-#if UNITY_INCLUDE_TESTS
-        public readonly struct TestSnapshot
-        {
-            public readonly int brainTickCount;
-            public readonly float lastBrainTickTime;
-            public readonly Transform currentTarget;
-            public readonly int currentTargetIndex;
-            public readonly string currentState;
-            public readonly Vector3 lastDesiredDestination;
-            public readonly float lastDestinationRequestTime;
-            public readonly int intentDestinationRequestCount;
-            public readonly float lastAgentDestinationRequestTime;
-            public readonly int agentDestinationRequestCount;
-            public readonly float lastAnimatorSpeed;
-            public readonly bool hasPendingAttackDamage;
-
-            public TestSnapshot(
-                int brainTickCount,
-                float lastBrainTickTime,
-                Transform currentTarget,
-                int currentTargetIndex,
-                string currentState,
-                Vector3 lastDesiredDestination,
-                float lastDestinationRequestTime,
-                int intentDestinationRequestCount,
-                float lastAgentDestinationRequestTime,
-                int agentDestinationRequestCount,
-                float lastAnimatorSpeed,
-                bool hasPendingAttackDamage)
-            {
-                this.brainTickCount = brainTickCount;
-                this.lastBrainTickTime = lastBrainTickTime;
-                this.currentTarget = currentTarget;
-                this.currentTargetIndex = currentTargetIndex;
-                this.currentState = currentState;
-                this.lastDesiredDestination = lastDesiredDestination;
-                this.lastDestinationRequestTime = lastDestinationRequestTime;
-                this.intentDestinationRequestCount = intentDestinationRequestCount;
-                this.lastAgentDestinationRequestTime = lastAgentDestinationRequestTime;
-                this.agentDestinationRequestCount = agentDestinationRequestCount;
-                this.lastAnimatorSpeed = lastAnimatorSpeed;
-                this.hasPendingAttackDamage = hasPendingAttackDamage;
-            }
-        }
-
-        public TestSnapshot CaptureTestSnapshot()
-        {
-            return new TestSnapshot(
-                brainTickCount,
-                lastBrainTickTime,
-                player,
-                currentTargetIndex,
-                currentState.ToString(),
-                lastDesiredDestination,
-                lastDestinationRequestTime,
-                intentDestinationRequestCount,
-                lastAgentDestinationRequestTime,
-                agentDestinationRequestCount,
-                lastAnimatorSpeed,
-                meleeAttack.HasPendingDamage);
-        }
-
-        public void DebugConfigureCombatForTests(float range, float damage, float cooldown, float impactDelay)
-        {
-            attackRange = range;
-            attackDamage = damage;
-            attackCooldown = cooldown;
-            attackDelay = impactDelay;
-            minimumAttackImpactDelay = impactDelay;
-            ConfigureMeleeAttack();
-        }
-
-        public void DebugForceTargetForTests(Transform target, int targetIndex = 0)
-        {
-            player = target;
-            currentTargetIndex = targetIndex;
-            loggedMissingPlayer = target == null;
-            if (target != null)
-                ForcePathRefresh();
-        }
-
-        public void DebugBeginAttackForTests()
-        {
-            SwitchState(State.Attack);
-            meleeAttack.Reset();
-            AttackBehavior();
-        }
-
-        public void DebugProcessPendingAttackForTests(bool forceImpact = false)
-        {
-            ProcessPendingAttackDamage(forceImpact);
-        }
-
-        public bool DebugIsTargetValidForTests(Transform target)
-        {
-            return IsValidTarget(target);
-        }
-
-        public bool DebugCanHitTargetForTests(Transform target)
-        {
-            return CanHitTarget(target);
-        }
-
-        public void DebugSetStateForTests(string stateName)
-        {
-            if (System.Enum.TryParse(stateName, out State parsed))
-                SwitchState(parsed);
-        }
-
-        public void DebugUpdateAnimationForTests()
-        {
-            UpdateAnimation();
-        }
-
-        public void DebugSetDesiredDestinationForTests(Vector3 destination)
-        {
-            lastDesiredDestination = destination;
-            hasDesiredDestination = true;
-        }
-
-        public void DebugForcePathRefreshForTests()
-        {
-            ForcePathRefresh();
-        }
-
-        public void DebugSmoothLookForTests()
-        {
-            SmoothLookAtMovementOrTarget();
-        }
-#endif
     }
 }

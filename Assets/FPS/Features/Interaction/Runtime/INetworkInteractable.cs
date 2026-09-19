@@ -8,7 +8,6 @@ namespace FPS
     /// </summary>
     public interface INetworkInteractable : IInteractable
     {
-        FactoryObjectiveId ObjectiveId { get; }
         void RequestNetworkInteraction(NetworkObject interactorObject);
     }
 }

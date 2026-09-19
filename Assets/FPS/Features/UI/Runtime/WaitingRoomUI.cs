@@ -76,6 +76,8 @@ namespace FPS
             UpdateReadyButtonText();
             UpdateStartButton(false);
             UpdateStatus("Waiting for players...");
+            if (playerListContainer != null && playerListContainer.childCount == 0)
+                for (int i = 1; i <= 4; i++) CreateEmptyEntry(i);
             initialized = true;
         }
 
@@ -227,6 +229,8 @@ namespace FPS
             if (playerCountText != null)
                 playerCountText.text = $"{count}/4 Players";
 
+            UpdateReadyButtonText();
+
             if (joinCodeText != null && NetworkGameManager.HasInstance)
                 joinCodeText.text = NetworkGameManager.Instance.CurrentJoinCode;
         }
@@ -236,6 +240,11 @@ namespace FPS
             if (playerEntryPrefab == null || playerListContainer == null) return;
 
             GameObject entry = Instantiate(playerEntryPrefab, playerListContainer);
+            if (entry.TryGetComponent<PlayerRosterEntryView>(out var view))
+            {
+                view.SetPlayer(playerName, isHost, ready, character);
+                return;
+            }
             TextMeshProUGUI nameText = entry.GetComponentInChildren<TextMeshProUGUI>();
             if (nameText == null) return;
 
@@ -250,6 +259,11 @@ namespace FPS
             if (playerEntryPrefab == null || playerListContainer == null) return;
 
             GameObject entry = Instantiate(playerEntryPrefab, playerListContainer);
+            if (entry.TryGetComponent<PlayerRosterEntryView>(out var view))
+            {
+                view.SetEmpty(slotNumber);
+                return;
+            }
             TextMeshProUGUI nameText = entry.GetComponentInChildren<TextMeshProUGUI>();
             if (nameText == null) return;
 

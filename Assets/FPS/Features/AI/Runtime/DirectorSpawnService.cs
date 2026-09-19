@@ -48,8 +48,22 @@ namespace FPS
 
         public void RefreshAnchors()
         {
+            if (CampaignMissionController.Instance?.Current != null)
+            {
+                var chapter = CampaignMissionController.Instance.Current;
+                SetCampaignAnchors(chapter.anchors, chapter.spawnMinimumDistance, chapter.spawnMaximumDistance);
+                return;
+            }
             anchors.Clear();
             GetComponentsInChildren(true, anchors);
+        }
+
+        public void SetCampaignAnchors(DirectorSpawnAnchor[] values, float minimum, float maximum)
+        {
+            anchors.Clear();
+            if (values != null) anchors.AddRange(values);
+            minimumPlayerDistance = minimum;
+            maximumPlayerDistance = maximum;
         }
 
         public bool TryGetSpawnPosition(DirectorSpawnAnchorType requestedTypes, out Vector3 position)
@@ -102,6 +116,7 @@ namespace FPS
 
         public bool IsAnchorValid(DirectorSpawnAnchor anchor)
         {
+            if (CampaignMissionController.Instance != null && !CampaignMissionController.Instance.AllowsAnchor(anchor)) return false;
             if (anchor == null || anchor.Zone == null || !anchor.Zone.AllowsSpawning)
                 return false;
 
@@ -110,6 +125,22 @@ namespace FPS
                 return false;
             if (!HasGround(candidate))
                 return false;
+
+            var campaign = CampaignMissionController.Instance;
+            if (campaign != null)
+            {
+                bool reachable = false;
+                foreach (var player in campaign.Players)
+                {
+                    if (player.LifeState != PlayerLifeState.Alive) continue;
+                    float distance = Vector3.Distance(candidate, player.transform.position);
+                    if (distance < minimumPlayerDistance || HasPhysicalLineOfSight(player.transform.position, candidate))
+                        return false;
+                    if (distance <= maximumPlayerDistance && HasCompletePath(candidate, player.transform.position))
+                        reachable = true;
+                }
+                return reachable && CapsuleClear(candidate, .5f, 2f);
+            }
 
             if (PlayerProfiler.Instance == null || PlayerProfiler.Instance.PlayerCount == 0)
                 return NavMesh.SamplePosition(candidate, out _, navMeshSampleRadius, NavMesh.AllAreas);
@@ -120,6 +151,8 @@ namespace FPS
             foreach (PlayerProfile profile in PlayerProfiler.Instance.AllProfiles)
             {
                 if (profile?.playerTransform == null)
+                    continue;
+                if (profile.cachedHealth != null && profile.cachedHealth.LifeState != PlayerLifeState.Alive)
                     continue;
 
                 Vector3 playerPosition = profile.playerTransform.position;
@@ -186,12 +219,56 @@ namespace FPS
                 return false;
             }
 
+            // Sampling must not jump to another storey of the asylum.
+            if (Mathf.Abs(start.position.y - candidate.y) > .75f || Mathf.Abs(end.position.y - playerPosition.y) > 1f)
+                return false;
             return NavMesh.CalculatePath(start.position, end.position, NavMesh.AllAreas, reusablePath)
                 && reusablePath.status == NavMeshPathStatus.PathComplete;
         }
 
+        /// <summary>Validate the chosen special's body on a complete route before taking it from the pool.</summary>
+        public bool ValidateCampaignSpecialPosition(Vector3 position, bool tank)
+        {
+            var campaign = CampaignMissionController.Instance;
+            if (campaign == null) return true;
+            bool validAnchor = false;
+            foreach (var anchor in anchors)
+                if (anchor != null && (anchor.SpawnPosition - position).sqrMagnitude < 1f && IsAnchorValid(anchor))
+                { validAnchor = true; break; }
+            if (!validAnchor) return false;
+            float radius = tank ? .9f : .5f, height = tank ? 2.8f : 2f;
+            if (!CapsuleClear(position, radius, height)) return false;
+            foreach (var player in campaign.Players)
+            {
+                if (player.LifeState != PlayerLifeState.Alive || !HasCompletePath(position, player.transform.position)) continue;
+                var corners = reusablePath.corners;
+                bool clear = true;
+                for (int segment = 1; segment < corners.Length && clear; segment++)
+                {
+                    Vector3 a = corners[segment - 1], b = corners[segment];
+                    int steps = Mathf.Max(1, Mathf.CeilToInt(Vector3.Distance(a, b) / .45f));
+                    for (int step = 0; step <= steps; step++)
+                    {
+                        Vector3 point = Vector3.Lerp(a, b, (float)step / steps);
+                        // Stop outside the target's own body; the attack closes this gap.
+                        if (Vector3.Distance(point, player.transform.position) < radius + 1.5f) continue;
+                        if (!CapsuleClear(point, radius, height)) { clear = false; break; }
+                    }
+                }
+                if (clear) return true;
+            }
+            return false;
+        }
+
+        private static bool CapsuleClear(Vector3 feet, float radius, float height) =>
+            !Physics.CheckCapsule(feet + Vector3.up * (radius + .08f), feet + Vector3.up * (height - radius + .08f),
+                radius, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+
         private static DirectorSpawnAnchorType ResolveMissionSpawnTypes(DirectorSpawnAnchorType requested)
         {
+            if (CampaignMissionController.Instance != null)
+                return CampaignMissionController.Instance.IsFinale ? requested | DirectorSpawnAnchorType.Horde | DirectorSpawnAnchorType.Finale
+                    : requested | DirectorSpawnAnchorType.Common;
             FactoryMissionState state = FactoryMissionController.Instance != null
                 ? FactoryMissionController.Instance.State
                 : FactoryMissionState.BranchesActive;
@@ -207,6 +284,7 @@ namespace FPS
 
         private static bool IsDirectorSuppressed()
         {
+            if (CampaignMissionController.Instance != null) return CampaignMissionController.Instance.SuppressSpawns;
             if (FactoryMissionController.Instance == null)
                 return false;
 

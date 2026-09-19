@@ -20,9 +20,10 @@ namespace FPS
 
         private IInteractable currentInteractable;
         private ItemOutline currentOutline;
+        private SurvivalPickupPresentation currentPickupPresentation;
         private NetworkObject currentNetworkObject;
-        [SerializeField] private PlayerInfectionController infectionController;
-        private PlayerInfectionController treatmentTarget;
+        private SurvivalInventory survivalInventory;
+        private PlayerInfectionController infectionController;
 
         private Camera playerCamera;
         private uint nextRequestSequence;
@@ -41,6 +42,7 @@ namespace FPS
                 playerCamera = Camera.main;
             if (infectionController == null)
                 infectionController = GetComponent<PlayerInfectionController>();
+            survivalInventory = GetComponent<SurvivalInventory>();
 
             effectiveInteractableMask = interactableLayer.value != 0
                 ? interactableLayer.value
@@ -51,6 +53,11 @@ namespace FPS
 
         private void Update()
         {
+            if (!IsOwner || !IsSpawned) return;
+            if (survivalInventory != null && survivalInventory.IsUsingItem)
+            {
+                DeselectCurrent(); SetPromptVisible(false); return;
+            }
             ScanForInteractable();
 
             if (currentInteractable != null && currentInteractable.CanInteract)
@@ -73,58 +80,32 @@ namespace FPS
 
         private void UpdateTreatmentInteraction()
         {
-            if (infectionController == null || InputManager.Instance == null)
+            if (survivalInventory == null || InputManager.Instance == null) { SetPromptVisible(false); return; }
+            SurvivalInventory teammate = FindTeammateInventoryInView();
+            bool heal = survivalInventory.CanTreat(teammate, ConsumableKind.Medkit);
+            bool treat = survivalInventory.CanTreat(teammate, ConsumableKind.Antidote);
+            if (heal || treat)
+            {
+                SetPromptText("[" + SurvivalHotbar.Key("Interact", "F") + "] " + (heal ? "ASSIST HEAL" : "ASSIST ANTIDOTE"));
+                SetPromptVisible(true);
+                if (InputManager.Instance.GetInteractInputDown()) survivalInventory.RequestUse(heal ? ConsumableKind.Medkit : ConsumableKind.Antidote, teammate);
                 return;
-
-            treatmentTarget = FindInfectedTeammateInView();
-            if (treatmentTarget != null)
-            {
-                SetPromptText("Hold [F] Treat teammate");
-                SetPromptVisible(true);
             }
-            else if (infectionController.IsInfected)
-            {
-                SetPromptText("Hold [F] Self-treatment");
-                SetPromptVisible(true);
-            }
-            else
-            {
-                SetPromptVisible(false);
-            }
-
-            if (InputManager.Instance.GetInteractInputDown())
-            {
-                if (treatmentTarget != null)
-                    infectionController.StartTeammateTreatment(treatmentTarget);
-                else if (infectionController.IsInfected)
-                    infectionController.StartSelfTreatment();
-            }
-
-            if (InputManager.Instance.GetInteractInputUp())
-            {
-                infectionController.CancelSelfTreatment();
-                infectionController.CancelTeammateTreatment();
-            }
+            if (survivalInventory.CanTreat(survivalInventory, ConsumableKind.Antidote))
+            { SetPromptText("[" + SurvivalHotbar.Key("Antidote", "5") + "] SELF · ANTIDOTE"); SetPromptVisible(true); }
+            else if (survivalInventory.CanTreat(survivalInventory, ConsumableKind.Medkit))
+            { SetPromptText("[" + SurvivalHotbar.Key("Medkit", "4") + "] SELF · MEDKIT"); SetPromptVisible(true); }
+            else SetPromptVisible(false);
         }
 
-        private PlayerInfectionController FindInfectedTeammateInView()
+        private SurvivalInventory FindTeammateInventoryInView()
         {
-            if (playerCamera == null)
-                return null;
-
+            if (playerCamera == null) return null;
             Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-            if (!Physics.Raycast(ray, out RaycastHit hit, interactRange,
-                    Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            if (!Physics.Raycast(ray, out RaycastHit hit, interactRange, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
                 return null;
-
-            PlayerInfectionController target = hit.collider.GetComponentInParent<PlayerInfectionController>();
-            if (target == null || target == infectionController || !target.IsInfected)
-                return null;
-
-            PlayerHealth targetHealth = target.GetComponent<PlayerHealth>();
-            return targetHealth != null && !targetHealth.IsDead && targetHealth.LifeState == PlayerLifeState.Alive
-                ? target
-                : null;
+            SurvivalInventory target = hit.collider.GetComponentInParent<SurvivalInventory>();
+            return target != null && target != survivalInventory ? target : null;
         }
 
         private void ScanForInteractable()
@@ -143,7 +124,7 @@ namespace FPS
             {
                 IInteractable interactable = hit.collider.GetComponentInParent<IInteractable>();
 
-                if (interactable != null && interactable.CanInteract)
+                if (interactable != null && interactable.CanInteract && (!(interactable is CampaignSupply supply) || supply.HasCapacity(survivalInventory)) && (!(interactable is PickupItem item) || SurvivalRules.Capacity(item.Type) == 0 || (survivalInventory != null && survivalInventory.CanAdd(item.Type, item.ItemAmount))))
                 {
                     if (interactable == currentInteractable) return;
 
@@ -163,6 +144,8 @@ namespace FPS
 
             currentOutline = hitTransform.GetComponentInParent<ItemOutline>();
             currentOutline?.ShowOutline();
+            currentPickupPresentation = hitTransform.GetComponentInParent<SurvivalPickupPresentation>();
+            currentPickupPresentation?.Highlight(true);
 
             SetPromptText(interactable.GetInteractText());
             SetPromptVisible(true);
@@ -173,6 +156,8 @@ namespace FPS
             if (currentInteractable == null) return;
 
             currentOutline?.HideOutline();
+            currentPickupPresentation?.Highlight(false);
+            currentPickupPresentation = null;
             currentOutline        = null;
             currentInteractable   = null;
             currentNetworkObject  = null;
@@ -203,41 +188,6 @@ namespace FPS
             DeselectCurrent();
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        public void RequestVerificationPickup()
-        {
-            if (!IsOwner || !IsSpawned)
-                return;
-
-            PickupItem nearest = null;
-            float nearestDistance = float.MaxValue;
-            foreach (PickupItem pickup in FindObjectsByType<PickupItem>())
-            {
-                if (pickup == null || !pickup.CanInteract)
-                    continue;
-
-                float distance = (pickup.transform.position - transform.position).sqrMagnitude;
-                if (distance < nearestDistance)
-                {
-                    nearest = pickup;
-                    nearestDistance = distance;
-                }
-            }
-
-            NetworkObject pickupObject = nearest != null
-                ? nearest.GetComponentInParent<NetworkObject>()
-                : null;
-            PlayerHealth verificationPlayer = GetComponent<PlayerHealth>();
-            NetworkDiagnostics.Emit(
-                "pickup_transaction",
-                NetworkGameManager.Instance != null ? NetworkGameManager.Instance.State : SessionState.InMatch,
-                pickupObject != null ? $"verification_request:target={pickupObject.NetworkObjectId}" : "NoTargetAvailable",
-                verificationPlayer != null ? verificationPlayer.StablePlayerId : default);
-            if (pickupObject != null && IsSpawned && NetworkManager != null && NetworkManager.IsListening)
-                InteractServerRpc(pickupObject.NetworkObjectId, nextRequestSequence++);
-        }
-#endif
-
         [ServerRpc]
         private void InteractServerRpc(
             ulong targetNetworkObjectId,
@@ -264,12 +214,6 @@ namespace FPS
             SendPickupResultClientRpc(result.TargetNetworkObjectId, result.RequestSequence, result.Code,
                 CreateTargetRpcParams(senderClientId));
 
-            PlayerHealth playerHealth = GetComponent<PlayerHealth>();
-            NetworkDiagnostics.Emit(
-                "pickup_transaction",
-                NetworkGameManager.Instance != null ? NetworkGameManager.Instance.State : SessionState.InMatch,
-                $"{result.Code}:target={result.TargetNetworkObjectId}:sequence={result.RequestSequence}",
-                playerHealth != null ? playerHealth.StablePlayerId : default);
         }
 
         private PickupResultCode ValidateAndApplyPickup(ulong targetNetworkObjectId)
@@ -367,3 +311,10 @@ namespace FPS
         }
     }
 }
+
+
+
+
+
+
+

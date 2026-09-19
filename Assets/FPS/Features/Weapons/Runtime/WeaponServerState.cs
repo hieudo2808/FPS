@@ -15,6 +15,9 @@ namespace FPS
         private ushort lastAcceptedFireSequence;
         private bool hasAcceptedFireSequence;
         private float reloadTimingMultiplier = 1f;
+        private WeaponReloadTimeline reloadTimeline;
+
+        public WeaponReloadTimeline ReloadTimeline => reloadTimeline;
 
         public int MagazineAmmo => magazineAmmo;
         public int ReserveAmmo => reserveAmmo;
@@ -52,8 +55,16 @@ namespace FPS
 
         public void CancelReload()
         {
+            reloadTimeline = default;
             reloadAmmoCommitTime = -1.0;
             reloadCompleteTime = -1.0;
+        }
+
+        public void CancelTransientActions()
+        {
+            CancelReload();
+            equipCompleteTime = -1.0;
+            reloadTimingMultiplier = 1f;
         }
 
         public void EnsureInitialized(int currentWeaponInstanceId, WeaponData weaponData)
@@ -66,6 +77,7 @@ namespace FPS
 
             weaponInstanceId = currentWeaponInstanceId;
             initialized = true;
+            reloadTimeline = default;
             magazineAmmo = Mathf.Max(0, weaponData.magazineSize);
             reserveAmmo = Mathf.Max(0, weaponData.totalAmmo - magazineAmmo);
             nextAllowedFireTime = 0.0;
@@ -143,6 +155,8 @@ namespace FPS
             if (magazineAmmo >= weaponData.magazineSize) return false;
 
             reloadTimingMultiplier = Mathf.Clamp(timingMultiplier, 1f, 3f);
+            reloadTimeline = WeaponReloadTimeline.Begin(now, reloadTimingMultiplier,
+                weaponData.GetPerShellRoundsToLoad(magazineAmmo, reserveAmmo));
 
             if (weaponData.reloadMode == ReloadMode.PerShell)
             {
@@ -204,8 +218,7 @@ namespace FPS
 
             if (reloadCompleteTime >= 0.0 && now >= reloadCompleteTime)
             {
-                reloadAmmoCommitTime = -1.0;
-                reloadCompleteTime = -1.0;
+                CancelReload();
             }
         }
 
@@ -227,25 +240,6 @@ namespace FPS
             reserveAmmo += amount;
         }
 
-        public void InitializeForTests(
-            int currentWeaponInstanceId,
-            int magazineAmmo,
-            int reserveAmmo,
-            double nextFireTime = 0.0,
-            double equipReadyTime = -1.0)
-        {
-            weaponInstanceId = currentWeaponInstanceId;
-            initialized = true;
-            this.magazineAmmo = Mathf.Max(0, magazineAmmo);
-            this.reserveAmmo = Mathf.Max(0, reserveAmmo);
-            nextAllowedFireTime = nextFireTime;
-            reloadAmmoCommitTime = -1.0;
-            reloadCompleteTime = -1.0;
-            equipCompleteTime = equipReadyTime;
-            lastAcceptedFireSequence = 0;
-            hasAcceptedFireSequence = false;
-        }
-
         public WeaponRuntimeSnapshot Capture(byte slotIndex, WeaponData weaponData)
         {
             return new WeaponRuntimeSnapshot
@@ -257,6 +251,7 @@ namespace FPS
                 nextAllowedFireTime = nextAllowedFireTime,
                 reloadAmmoCommitTime = reloadAmmoCommitTime,
                 reloadCompleteTime = reloadCompleteTime,
+                reloadTimeline = reloadTimeline,
                 equipCompleteTime = equipCompleteTime,
                 lastAcceptedFireSequence = lastAcceptedFireSequence,
                 hasAcceptedFireSequence = hasAcceptedFireSequence
@@ -272,6 +267,8 @@ namespace FPS
             nextAllowedFireTime = snapshot.nextAllowedFireTime;
             reloadAmmoCommitTime = snapshot.reloadAmmoCommitTime;
             reloadCompleteTime = snapshot.reloadCompleteTime;
+            reloadTimeline = snapshot.reloadTimeline;
+            reloadTimingMultiplier = reloadTimeline.IsValid ? reloadTimeline.timingMultiplier : 1f;
             equipCompleteTime = snapshot.equipCompleteTime;
             lastAcceptedFireSequence = snapshot.lastAcceptedFireSequence;
             hasAcceptedFireSequence = snapshot.hasAcceptedFireSequence;

@@ -13,8 +13,10 @@ namespace FPS
         [SerializeField] private PlayableDirector extractionOutroDirector;
         [SerializeField] private PlayableDirector extractionApproachDirector;
         [SerializeField] private GameObject cinematicSquadDoubles;
+        [SerializeField] private HelicopterInsertionRappel campaignInsertionPresentation;
 
         private FactoryMissionState lastState = (FactoryMissionState)byte.MaxValue;
+        private bool campaignInsertion;
 
         private void OnEnable()
         {
@@ -31,6 +33,18 @@ namespace FPS
 
         private void Update()
         {
+            var campaign = CampaignMissionController.Instance;
+            if (campaign != null)
+            {
+                bool insertion = campaign.IsSpawned && campaign.State.phase == CampaignPhase.Insertion;
+                InputManager.CinematicInputBlocked = insertion;
+                if (cinematicSquadDoubles != null) cinematicSquadDoubles.SetActive(insertion && campaignInsertionPresentation == null);
+                if (campaignInsertionPresentation != null) StopDirector(insertionDirector);
+                else if (insertion) SynchronizeDirector(insertionDirector, campaign.PhaseStarted);
+                else if (campaignInsertion) StopDirector(insertionDirector);
+                campaignInsertion = insertion;
+                return;
+            }
             if (missionController == null)
             {
                 missionController = FactoryMissionController.Instance;

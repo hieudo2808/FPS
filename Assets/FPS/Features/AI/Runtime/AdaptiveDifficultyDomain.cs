@@ -270,14 +270,6 @@ namespace FPS
                 lastInput.IdleSeconds);
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        public void SetStateForTests(DirectorPhase nextPhase, float elapsedSeconds)
-        {
-            phase = nextPhase;
-            phaseElapsed = Math.Max(0f, elapsedSeconds);
-        }
-#endif
-
         private bool ShouldProtectTeam(DirectorInput input)
         {
             return input.WeakestHealth01 <= policy.WeakestHealthFloor01

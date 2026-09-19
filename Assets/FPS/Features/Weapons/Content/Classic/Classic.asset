@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Classic
   m_EditorClassIdentifier: FPS::FPS.WeaponData
   weaponName: Classic
-  weaponIcon: {fileID: 0}
+  weaponIcon: {fileID: 21300000, guid: 906220621d0a77a40a89c6838f951c0c, type: 3}
   damage: 20
   damageType: 1
   hitMask:
@@ -21,13 +21,12 @@ MonoBehaviour:
     m_Bits: 4294967291
   bulletSpeed: 200
   bakedFireInterval: 0.18
-  bulletLiveTime: 2
+  bulletLiveTime: 5
   burstCount: 3
   fireMode: 0
   projectileCount: 1
-  hipSpreadAngle: 0.25
-  aimedSpreadAngle: 0.25
-  maximumRange: 60
+  hipSpreadAngle: 0
+  aimedSpreadAngle: 0
   falloffStartDistance: 20
   falloffEndDistance: 40
   minimumDamageMultiplier: 0.7
@@ -40,6 +39,7 @@ MonoBehaviour:
   reloadAmmoCommitFrame: 54
   reloadLoopStartFrame: 0
   reloadLoopEndFrame: 0
+  thirdPersonReloadInsertRange: {x: 0.1, y: 0.32}
   bakedReloadDuration: 2.1166668
   bakedReloadAmmoCommitDuration: 0.90000004
   bakedPerShellOpeningDuration: 0

@@ -30,6 +30,15 @@ namespace FPS
         [SerializeField] private TMP_InputField playerNameInput;
 
         private bool initialized;
+        private bool connectionPending;
+
+        private void Update()
+        {
+            if (settingsPopup != null && settingsPopup.activeSelf && settingsPopup.TryGetComponent<SettingsUI>(out var settings) && settings.BlocksBack) return;
+            if (connectionPending || InputManager.Instance == null || !InputManager.Instance.GetPauseInputDown()) return;
+            if ((playPopup != null && playPopup.activeSelf) || (settingsPopup != null && settingsPopup.activeSelf))
+                OpenMainMenu();
+        }
 
         private void Start()
         {
@@ -166,6 +175,7 @@ namespace FPS
             if (mainPanel) mainPanel.SetActive(true);
             if (playPopup) playPopup.SetActive(false);
             if (settingsPopup) settingsPopup.SetActive(false);
+            SetMainInteraction(true);
             UpdateStatus("MAIN MENU READY");
         }
 
@@ -174,6 +184,8 @@ namespace FPS
             if (mainPanel) mainPanel.SetActive(true); // Keep background
             if (playPopup) playPopup.SetActive(true);
             if (settingsPopup) settingsPopup.SetActive(false);
+            SetMainInteraction(false);
+            if (playPopup) playPopup.transform.SetAsLastSibling();
             UpdateStatus("WAITING FOR ACTION");
         }
 
@@ -182,6 +194,18 @@ namespace FPS
             if (mainPanel) mainPanel.SetActive(true);
             if (playPopup) playPopup.SetActive(false);
             if (settingsPopup) settingsPopup.SetActive(true);
+            SetMainInteraction(false);
+            if (settingsPopup) settingsPopup.transform.SetAsLastSibling();
+        }
+
+        private void SetMainInteraction(bool enabled)
+        {
+            if (mainPanel == null) return;
+            var group = mainPanel.GetComponent<CanvasGroup>();
+            if (group == null) group = mainPanel.AddComponent<CanvasGroup>();
+            group.interactable = enabled;
+            group.blocksRaycasts = enabled;
+            EventSystem.current?.SetSelectedGameObject(null);
         }
 
         private void SavePlayerName()
@@ -256,7 +280,7 @@ namespace FPS
                 return;
             }
 
-            string code = joinCodeInput != null ? joinCodeInput.text : "";
+            string code = joinCodeInput != null ? joinCodeInput.text.Trim().ToUpperInvariant() : "";
             if (string.IsNullOrEmpty(code))
             {
                 UpdateStatus("ERROR: ENTER A JOIN CODE");
@@ -270,10 +294,13 @@ namespace FPS
 
         private void SetButtonsInteractable(bool interactable)
         {
+            connectionPending = !interactable;
             if (hostButton != null) hostButton.interactable = interactable;
             if (joinButton != null) joinButton.interactable = interactable;
             if (closePlayPopupBtn != null) closePlayPopupBtn.interactable = interactable;
             if (joinCodeInput != null) joinCodeInput.interactable = interactable;
+            if (playerNameInput != null) playerNameInput.interactable = interactable;
+            if (saveNameBtn != null) saveNameBtn.interactable = interactable;
         }
 
         private void UpdateStatus(string message)

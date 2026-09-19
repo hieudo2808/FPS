@@ -40,39 +40,63 @@ namespace FPS
         [SerializeField] protected float abilityCooldown = 10f;
         [SerializeField] protected bool allowedInSoloMode = true;
         [SerializeField] protected float specialHPMultiplier = 1.5f;
+        [SerializeField] private EnemyScalingProfile scalingProfile;
         
         protected float lastAbilityTime;
-        protected bool abilityReady => Time.time - lastAbilityTime >= abilityCooldown;
+        protected bool abilityReady => Time.time - lastAbilityTime >= EffectiveAbilityCooldown;
         protected int capturedSpawnPlayerCount = 1;
+        private EnemyScalingSnapshot scalingSnapshot;
+        private bool hasScalingSnapshot;
         
         public SpecialType Type => specialType;
         public bool AllowedInSoloMode => allowedInSoloMode;
         public int CapturedSpawnPlayerCount => capturedSpawnPlayerCount;
+        public EnemyScalingSnapshot ScalingSnapshot => hasScalingSnapshot
+            ? scalingSnapshot
+            : EnemyScalingResolver.ResolveSpecial(specialType, 1, 100f, 1f, 1f, scalingProfile);
+        protected float EffectiveAbilityCooldown => abilityCooldown * ScalingSnapshot.AbilityCooldownMultiplier;
         protected virtual bool AutoTriggerPrimaryAbility => true;
 
         protected override void Start()
         {
             base.Start();
-            lastAbilityTime = -abilityCooldown;
-            
             ApplySpecialScaling();
+            lastAbilityTime = -EffectiveAbilityCooldown;
         }
 
         protected virtual void ApplySpecialScaling()
         {
             capturedSpawnPlayerCount = ResolvePlayerCountForSpawn();
+            DifficultyStats difficulty = DifficultyManager.Instance != null
+                ? DifficultyManager.Instance.GetCurrentStats()
+                : new DifficultyStats { hpMultiplier = 1f, damageMultiplier = 1f };
+
             EnemyHealth health = GetComponent<EnemyHealth>();
+            float authoredHealth = health != null ? health.AuthoredMaxHealth : 100f;
+            scalingSnapshot = EnemyScalingResolver.ResolveSpecial(
+                specialType,
+                capturedSpawnPlayerCount,
+                authoredHealth * Mathf.Max(0.01f, specialHPMultiplier),
+                difficulty.hpMultiplier,
+                difficulty.damageMultiplier,
+                scalingProfile);
+            hasScalingSnapshot = true;
+
             if (health != null)
-            {
-                float newHP = CalculateMaxHealth(capturedSpawnPlayerCount, health.AuthoredMaxHealth);
-                health.SetMaxHealth(newHP);
-            }
+                health.SetMaxHealth(scalingSnapshot.MaxHealth);
         }
 
         protected virtual float CalculateMaxHealth(int playerCount, float authoredMaxHealth)
         {
-            float hpScale = 1f + (ClampSupportedPlayerCount(playerCount) - 1) * 0.35f;
-            return Mathf.Max(1f, authoredMaxHealth * hpScale * specialHPMultiplier);
+            float difficultyMultiplier = DifficultyManager.Instance != null
+                ? DifficultyManager.Instance.GetCurrentStats().hpMultiplier
+                : 1f;
+            return EnemyScalingResolver.GetSpecialHealth(
+                    specialType,
+                    playerCount,
+                    authoredMaxHealth * Mathf.Max(0.01f, specialHPMultiplier),
+                    scalingProfile)
+                * Mathf.Max(0.01f, difficultyMultiplier);
         }
 
         protected virtual int ResolvePlayerCountForSpawn()
@@ -93,6 +117,17 @@ namespace FPS
         {
             base.ResetAI();
             ApplySpecialScaling();
+            lastAbilityTime = -EffectiveAbilityCooldown;
+        }
+
+        protected float ScaleDamage(float authoredDamage)
+        {
+            return Mathf.Max(0f, authoredDamage) * ScalingSnapshot.DamageAndStatusMultiplier;
+        }
+
+        protected float ScaleStatus(float authoredAmount)
+        {
+            return Mathf.Max(0f, authoredAmount) * ScalingSnapshot.DamageAndStatusMultiplier;
         }
 
         protected override void Update()

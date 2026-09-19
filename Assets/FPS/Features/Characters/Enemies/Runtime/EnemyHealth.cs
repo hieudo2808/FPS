@@ -57,6 +57,7 @@ namespace FPS
 
         // Event để UI hoặc các script khác subscribe
         public event System.Action<float, float> OnHealthChanged; // (current, max)
+        public event System.Action<DamageInfo> OnDamageApplied;
         public event System.Action OnDied;
         public event System.Action OnDeathServer;
 
@@ -148,20 +149,39 @@ namespace FPS
         public void TakeDamage(DamageInfo damageInfo)
         {
             if (!CanMutateAuthoritativeState) return;
+            if (IsDead || damageInfo.amount <= 0f) return;
+
             lastDamageInfo = damageInfo;
-            TakeDamageInternal(damageInfo.amount);
+            TakeDamageInternal(damageInfo);
         }
 
-        private void TakeDamageInternal(float damage)
+        private void TakeDamageInternal(DamageInfo damageInfo)
         {
-            if (IsDead) return;
+            float appliedDamage = Mathf.Min(CurrentHealth, damageInfo.amount);
+            if (appliedDamage <= 0f)
+                return;
 
-            float nextHealth = Mathf.Max(0f, CurrentHealth - damage);
+            float nextHealth = Mathf.Max(0f, CurrentHealth - appliedDamage);
             SetCurrentHealth(nextHealth);
-            GameLog.Info(() => $"[EnemyHealth] {gameObject.name} took {damage} damage. HP: {CurrentHealth}/{MaxHealth}");
+            OnDamageApplied?.Invoke(CopyWithAmount(damageInfo, appliedDamage));
+            GameLog.Info(() => $"[EnemyHealth] {gameObject.name} took {appliedDamage} damage. HP: {CurrentHealth}/{MaxHealth}");
 
             if (CurrentHealth <= 0f)
                 Die();
+        }
+
+        private static DamageInfo CopyWithAmount(DamageInfo source, float amount)
+        {
+            return new DamageInfo(
+                amount,
+                source.attackerClientId,
+                source.attackerPlayerIndex,
+                source.hitPoint,
+                source.isHeadshot,
+                source.reactionTime,
+                source.damageType,
+                source.hitZone,
+                source.damageMultiplier);
         }
 
         // ==========================================

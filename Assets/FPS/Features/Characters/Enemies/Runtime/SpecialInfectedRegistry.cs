@@ -140,11 +140,26 @@ namespace FPS
                 return;
 
             lastAliveCleanupTime = Time.time;
-            aliveSpecials.RemoveAll(s => s == null);
+            aliveSpecials.RemoveAll(s => s == null || !s.activeInHierarchy);
+        }
+
+        private void Start()
+        {
+            if (ZombiePoolManager.Instance == null)
+                return;
+
+            for (int i = 0; i < specialTypes.Count; i++)
+            {
+                SpecialInfectedData special = specialTypes[i];
+                if (IsPlayableSpecial(special))
+                    ZombiePoolManager.Instance.InitializePool(special.prefab, 2);
+            }
         }
 
         public bool CanSpawnSpecial(GamePhase phase = GamePhase.PEAK)
         {
+            if (phase != GamePhase.PEAK)
+                return false;
             if (Time.time - lastSpecialSpawnTime < minTimeBetweenSpecials)
                 return false;
 
@@ -156,6 +171,8 @@ namespace FPS
 
         public bool HasImplementedSpecial(GamePhase phase = GamePhase.PEAK)
         {
+            if (phase != GamePhase.PEAK)
+                return false;
             int playerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
             
             foreach (var special in specialTypes)
@@ -180,12 +197,16 @@ namespace FPS
 
         public SpecialInfectedData GetRandomSpecial(GamePhase phase = GamePhase.PEAK)
         {
+            if (phase != GamePhase.PEAK)
+                return null;
             int playerCount = PlayerProfiler.Instance?.PlayerCount ?? 1;
             List<SpecialInfectedData> available = new List<SpecialInfectedData>();
             float totalWeight = 0f;
             
             foreach (var special in specialTypes)
             {
+                if (CampaignMissionController.Instance != null && !CampaignMissionController.Instance.AllowsSpecial(special.type.ToString()))
+                    continue;
                 if (!IsPlayableSpecial(special))
                     continue;
                 
@@ -224,6 +245,9 @@ namespace FPS
 
         public GameObject SpawnSpecial(Vector3 position, GamePhase phase = GamePhase.PEAK)
         {
+            if (phase != GamePhase.PEAK)
+                return null;
+
             var data = GetRandomSpecial(phase);
             if (data == null)
             {
@@ -232,7 +256,16 @@ namespace FPS
                 return null;
             }
             
-            GameObject special = Instantiate(data.prefab, position, Quaternion.identity);
+            if (CampaignMissionController.Instance != null
+                && (DirectorSpawnService.Instance == null
+                    || !DirectorSpawnService.Instance.ValidateCampaignSpecialPosition(position, data.type == SpecialType.Tank)))
+                return null;
+
+            GameObject special = ZombiePoolManager.Instance != null
+                ? ZombiePoolManager.Instance.GetZombie(data.prefab, position, Quaternion.identity)
+                : Instantiate(data.prefab, position, Quaternion.identity);
+            if (special == null)
+                return null;
             data.lastSpawnTime = Time.time;
             lastSpecialSpawnTime = Time.time;
             
@@ -251,7 +284,7 @@ namespace FPS
         {
             return phase switch
             {
-                GamePhase.BUILD => 2,
+                GamePhase.BUILD => 0,
                 GamePhase.PEAK => 4,
                 _ => 0
             };

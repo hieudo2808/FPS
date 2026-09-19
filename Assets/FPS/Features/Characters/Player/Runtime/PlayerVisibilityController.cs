@@ -26,24 +26,11 @@ namespace FPS
             "Avatar restored for Authored Avatar mode. Keep this authored per "
             + "presentation so switching away from a Generic weapon is deterministic.")]
         [SerializeField] private Avatar characterAvatar;
-        [Tooltip(
-            "Enable the authored third-person support-hand rig for this weapon. "
-            + "Disable when the canonical humanoid animation already owns both "
-            + "hands, such as Odin equip/reload.")]
-        [SerializeField] private bool useLeftHandIK = true;
-        [Tooltip(
-            "Use clip-authored Animation Rigging weight curves for this weapon. "
-            + "Disable for weapons such as Odin whose canonical equip/reload "
-            + "clips must drive the support hand without an IK override.")]
-        [SerializeField] private bool animationDrivenLeftHandIK = true;
-
         public WeaponData WeaponData => weaponData;
         public GameObject WeaponObject => weaponObject;
         public RuntimeAnimatorController CharacterController => characterController;
         public ThirdPersonCharacterRigMode CharacterRigMode => characterRigMode;
         public Avatar CharacterAvatar => characterAvatar;
-        public bool UseLeftHandIK => useLeftHandIK;
-        public bool AnimationDrivenLeftHandIK => animationDrivenLeftHandIK;
     }
 
     public class PlayerVisibilityController : NetworkBehaviour
@@ -357,19 +344,6 @@ namespace FPS
 
             ApplyThirdPersonAiming();
 
-            ThirdPersonLeftHandIK leftHandIK =
-                GetComponent<ThirdPersonLeftHandIK>();
-            if (leftHandIK != null)
-            {
-                // Prefabs without presentation entries keep their legacy proxy
-                // rig. An authored presentation can explicitly opt out when its
-                // canonical Humanoid clips already animate both hands.
-                leftHandIK.SetRigEnabled(
-                    selectedPresentation?.UseLeftHandIK ?? true);
-                leftHandIK.SetAnimationDrivenWeight(
-                    selectedPresentation?.AnimationDrivenLeftHandIK ?? false);
-                leftHandIK.BindWeapon(selectedThirdPersonWeapon);
-            }
         }
 
         private void ApplyCharacterAnimationProfile(
@@ -419,8 +393,14 @@ namespace FPS
                         : presentation.CharacterAvatar;
             }
 
-            characterAnimator.Rebind();
-            characterAnimator.Update(0f);
+            // Local players keep the third-person Animator disabled. Store the
+            // authored profile now; Unity binds it when the Animator is enabled.
+            if (characterAnimator.isActiveAndEnabled
+                && characterAnimator.runtimeAnimatorController != null)
+            {
+                characterAnimator.Rebind();
+                characterAnimator.Update(0f);
+            }
         }
 
         private static void SetAnimatorBoolIfPresent(
@@ -428,7 +408,12 @@ namespace FPS
             string parameterName,
             bool value)
         {
-            if (animator == null || animator.runtimeAnimatorController == null)
+            // A presentation can be disabled while the network state callback is
+            // still being delivered (for example during a local/remote visibility
+            // switch). Unity logs when parameters are written to such an Animator,
+            // even when its controller was valid one frame earlier.
+            if (animator == null || !animator.isActiveAndEnabled
+                || animator.runtimeAnimatorController == null)
                 return;
 
             int parameterHash = Animator.StringToHash(parameterName);
@@ -448,7 +433,8 @@ namespace FPS
             string parameterName,
             float value)
         {
-            if (animator == null || animator.runtimeAnimatorController == null)
+            if (animator == null || !animator.isActiveAndEnabled
+                || animator.runtimeAnimatorController == null)
                 return;
 
             int parameterHash = Animator.StringToHash(parameterName);

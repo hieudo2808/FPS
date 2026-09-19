@@ -16,10 +16,10 @@ namespace FPS
         public float damage = 25f;
         public DamageType damageType = DamageType.Bullet;
         public LayerMask hitMask = Physics.DefaultRaycastLayers;
-        public float bulletSpeed = 200f;
+        [Min(0.01f)] public float bulletSpeed = 200f;
         [FormerlySerializedAs("fireRate")]
         [SerializeField, HideInInspector, Min(0.001f)] private float bakedFireInterval = 0.1f;
-        public float bulletLiveTime = 2f;
+        [Min(0.01f)] public float bulletLiveTime = 5f;
         public int burstCount = 3;
         public FireMode fireMode = FireMode.Single;
         [Min(1)] public int projectileCount = 1;
@@ -27,7 +27,6 @@ namespace FPS
         public float hipSpreadAngle;
         [Min(0f), Tooltip("Aimed cone half-angle in degrees. Used only by weapons that support aim.")]
         public float aimedSpreadAngle;
-        [Min(0.01f)] public float maximumRange = 100f;
         [Min(0f)] public float falloffStartDistance = 100f;
         [Min(0f)] public float falloffEndDistance = 100f;
         [Range(0f, 1f)] public float minimumDamageMultiplier = 1f;
@@ -42,6 +41,7 @@ namespace FPS
 
         public float FireInterval => Mathf.Max(0.001f, bakedFireInterval);
         public float RoundsPerSecond => 1f / FireInterval;
+        public float MaximumTravelDistance => Mathf.Max(0.01f, bulletSpeed) * Mathf.Max(0.01f, bulletLiveTime);
 
         public float GetSpreadAngle(bool aimed)
         {
@@ -51,8 +51,9 @@ namespace FPS
         public float EvaluateDamageMultiplier(float distance)
         {
             float clampedDistance = Mathf.Max(0f, distance);
-            float start = Mathf.Clamp(falloffStartDistance, 0f, maximumRange);
-            float end = Mathf.Clamp(falloffEndDistance, start, maximumRange);
+            float maximumTravelDistance = MaximumTravelDistance;
+            float start = Mathf.Clamp(falloffStartDistance, 0f, maximumTravelDistance);
+            float end = Mathf.Clamp(falloffEndDistance, start, maximumTravelDistance);
             if (clampedDistance <= start || end <= start)
                 return 1f;
             if (clampedDistance >= end)
@@ -81,6 +82,9 @@ namespace FPS
         [Min(0)]
         [Tooltip("Frame that rewinds per-shell Reload back to Reload Loop Start Frame.")]
         public int reloadLoopEndFrame;
+
+        [Tooltip("Normalized start/end of the insert cycle in the third-person Reload clips. Authored separately from the first-person clip.")]
+        public Vector2 thirdPersonReloadInsertRange = new Vector2(0.1f, 0.32f);
 
         [FormerlySerializedAs("reloadTime")]
         [SerializeField, HideInInspector, Min(0f)] private float bakedReloadDuration = 1.5f;
@@ -158,9 +162,11 @@ namespace FPS
         private void OnValidate()
         {
             projectileCount = Mathf.Max(1, projectileCount);
-            maximumRange = Mathf.Max(0.01f, maximumRange);
-            falloffStartDistance = Mathf.Clamp(falloffStartDistance, 0f, maximumRange);
-            falloffEndDistance = Mathf.Clamp(falloffEndDistance, falloffStartDistance, maximumRange);
+            bulletSpeed = Mathf.Max(0.01f, bulletSpeed);
+            bulletLiveTime = Mathf.Max(0.01f, bulletLiveTime);
+            float maximumTravelDistance = MaximumTravelDistance;
+            falloffStartDistance = Mathf.Clamp(falloffStartDistance, 0f, maximumTravelDistance);
+            falloffEndDistance = Mathf.Clamp(falloffEndDistance, falloffStartDistance, maximumTravelDistance);
             minimumDamageMultiplier = Mathf.Clamp01(minimumDamageMultiplier);
             hipSpreadAngle = Mathf.Max(0f, hipSpreadAngle);
             aimedSpreadAngle = Mathf.Max(0f, aimedSpreadAngle);

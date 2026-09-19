@@ -42,12 +42,15 @@ namespace FPS
             float baseInterval,
             float minimumInterval,
             bool specialEnabled,
-            float random01)
+            float random01,
+            EnemyScalingProfile scalingProfile = null)
         {
             float adaptiveMultiplier = Math.Max(0.01f, dynamicMultiplier);
             float phaseMultiplier = Math.Max(0f, director.SpawnRateMultiplier);
-            int safePlayerCount = Math.Max(1, playerCount);
-            float playerScale = 1f + (safePlayerCount - 1) * 0.3f;
+            int safePlayerCount = Math.Max(1, Math.Min(4, playerCount));
+            float playerScale = EnemyScalingResolver.GetDirectorSpawnPressureMultiplier(
+                safePlayerCount,
+                scalingProfile);
 
             float interval = baseInterval * staticStats.spawnIntervalMultiplier;
             if (phaseMultiplier > 0f)

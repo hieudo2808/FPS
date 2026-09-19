@@ -63,6 +63,7 @@ namespace FPS
 
         private void Update()
         {
+            if (settingsPanel != null && settingsPanel.activeSelf && settingsPanel.TryGetComponent<SettingsUI>(out var settings) && settings.BlocksBack) return;
             if (InputManager.Instance != null && InputManager.Instance.GetPauseInputDown())
             {
                 if (settingsPanel != null && settingsPanel.activeSelf)

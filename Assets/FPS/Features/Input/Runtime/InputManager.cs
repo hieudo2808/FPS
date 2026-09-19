@@ -24,10 +24,11 @@ namespace FPS
 
         public static bool MatchInputBlocked { get; set; }
         public static bool CinematicInputBlocked { get; set; }
+        public static bool CampaignInputBlocked { get; set; }
 
         public static bool GameplayInputBlocked
         {
-            get => menuInputBlocked || MatchInputBlocked || CinematicInputBlocked;
+            get => menuInputBlocked || MatchInputBlocked || CinematicInputBlocked || CampaignInputBlocked;
             set => menuInputBlocked = value;
         }
 
@@ -106,6 +107,11 @@ namespace FPS
             if (gameplayMap == null)
                 gameplayMap = actionAsset.AddActionMap("Gameplay");
 
+            if (gameplayMap.FindAction("Journal") == null) AddButton(gameplayMap, "Journal", "<Keyboard>/j");
+            if (gameplayMap.FindAction("CycleGrenade") == null) AddButton(gameplayMap, "CycleGrenade", "<Keyboard>/3");
+            if (gameplayMap.FindAction("Medkit") == null) AddButton(gameplayMap, "Medkit", "<Keyboard>/4");
+            if (gameplayMap.FindAction("Antidote") == null) AddButton(gameplayMap, "Antidote", "<Keyboard>/5");
+
             actions.Clear();
             foreach (InputAction action in gameplayMap.actions)
                 actions[action.name] = action;
@@ -167,6 +173,9 @@ namespace FPS
             AddButton(map, "Jump", "<Keyboard>/space");
             AddButton(map, "Interact", "<Keyboard>/f");
             AddButton(map, "Grenade", "<Keyboard>/g");
+            AddButton(map, "CycleGrenade", "<Keyboard>/3");
+            AddButton(map, "Medkit", "<Keyboard>/4");
+            AddButton(map, "Antidote", "<Keyboard>/5");
             AddButton(map, "Sprint", "<Keyboard>/leftShift");
             AddButton(map, "Pause", "<Keyboard>/escape");
             return asset;
@@ -240,6 +249,9 @@ namespace FPS
         public bool GetInteractInputUp() => WasReleasedThisFrame("Interact");
         public bool GetJumpInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Jump");
         public bool GetGrenadeInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Grenade");
+        public bool GetCycleGrenadeInputDown() => !GameplayInputBlocked && WasPressedThisFrame("CycleGrenade");
+        public bool GetMedkitInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Medkit");
+        public bool GetAntidoteInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Antidote");
         public bool GetSprintInput() => !GameplayInputBlocked && IsPressed("Sprint");
         public bool GetPauseInputDown() => WasPressedThisFrame("Pause");
 
@@ -352,9 +364,9 @@ namespace FPS
             if (activeRebind == null)
                 return;
 
+            // Cancel invokes the operation callback synchronously. The callback
+            // disposes and clears activeRebind; do not dereference it again.
             activeRebind.Cancel();
-            activeRebind.Dispose();
-            activeRebind = null;
         }
 
         private static int FindFirstRebindableBinding(InputAction action)

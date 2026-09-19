@@ -1564,7 +1564,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7551779871915910048}
-  - component: {fileID: 2785872313752802193}
   m_Layer: 7
   m_Name: Bucky3P
   m_TagString: Untagged
@@ -1589,21 +1588,6 @@ Transform:
   - {fileID: 4339575646494128182}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2785872313752802193
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8864274872532014668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7cb27d4f7d6ebf4885465efaf5f56dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FPS::FPS.ThirdPersonWeaponGrip
-  leftHandTarget: {fileID: 38128370291741110}
-  handPositionOffset: {x: -0.020734, y: -0.003783, z: -0.09684}
-  handRotationOffset: {x: 310.085, y: 326.892, z: 115.489}
 --- !u!1 &8869369187974843246
 GameObject:
   m_ObjectHideFlags: 0

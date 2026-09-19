@@ -13,6 +13,12 @@ namespace FPS
         [SerializeField] private LayerMask playerSafetyMask = Physics.DefaultRaycastLayers;
 
         private int nextSpawnIndex;
+        public void SetCampaignSpawnPoints(Transform[] points)
+        {
+            if (points == null || points.Length == 0) return;
+            spawnPoints = points;
+            nextSpawnIndex = 0;
+        }
 
         private void Awake()
         {
