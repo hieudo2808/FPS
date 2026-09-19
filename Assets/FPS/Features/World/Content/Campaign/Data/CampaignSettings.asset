@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40aed0e7b90113f4682f7aea011deb68, type: 3}
+  m_Name: CampaignSettings
+  m_EditorClassIdentifier: FPS::FPS.CampaignSettings
+  insertionSeconds: 28
+  factoryEncounterSeconds: 60
+  asylumEncounterSeconds: 35
+  labEncounterSeconds: 90
+  preparationSeconds: 5
+  boardingSeconds: 5
+  transferSeconds: 6
+  endingSeconds: 10
+  disconnectGraceSeconds: 30
+  interactionRange: 2.5
+  bleedoutSeconds: 30
+  bleedoutDamageSeconds: 0.25
+  reviveSeconds: 4
+  reviveHealth: 30
+  reviveProtectionSeconds: 2
+  medicineSeconds: 3
+  medicineHealth: 50
+  medicineCapacity: 2
+  beatRestSeconds: 25
+  readingGraceSeconds: 25
