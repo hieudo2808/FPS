@@ -73,6 +73,16 @@ namespace FPS.UI.Editor
                     list.GetChild(0).GetComponent<PlayerRosterEntryView>().SetPlayer("Survivor_With_Long_Name24", true, true, PlayerCharacterId.Brimstone);
                     Find(clone.transform, "PlayerCountText").GetComponent<TMP_Text>().text = "1/4 Players";
                 }
+                if (screen == "survival")
+                {
+                    var probe = new GameObject("HUD inventory preview"); SceneManager.MoveGameObjectToScene(probe, preview);
+                    var inventory = probe.AddComponent<SurvivalInventory>();
+                    var bar = new GameObject("SurvivalHotbar", typeof(RectTransform)); bar.transform.SetParent(clone.transform, false);
+                    bar.AddComponent<SurvivalHotbar>().Bind(inventory);
+                    bar.GetComponent<SurvivalHotbar>().AdaptToCanvasScale(scale);
+                    foreach (var t in bar.GetComponentsInChildren<Transform>(true)) t.gameObject.layer = 5;
+                    foreach (string legacy in new[] { "FragSlot", "IncendiarySlot", "MedkitSlot", "AntidoteSlot", "TreatmentProgressFill" }) SetActive(clone.transform, legacy, false);
+                }
                 var cameraGo = new GameObject("UI verification camera"); SceneManager.MoveGameObjectToScene(cameraGo, preview);
                 var camera = cameraGo.AddComponent<Camera>(); camera.scene = preview;
                 camera.orthographic = true; camera.orthographicSize = rect.rect.height / 2;

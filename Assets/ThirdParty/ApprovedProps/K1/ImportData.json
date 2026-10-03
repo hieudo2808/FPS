@@ -1,0 +1,83 @@
+{
+  "code": "K1",
+  "source": "K1/source/fuse.blend",
+  "model": "Models/K1.fbx",
+  "materials": [
+    {
+      "name": "Material.001",
+      "color": [
+        0.10247273743152618,
+        0.10247273743152618,
+        0.10247273743152618,
+        1.0
+      ],
+      "metallic": 1.0,
+      "roughness": 0.4620853066444397,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Material.002",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.0,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Material.003",
+      "color": [
+        0.8000000715255737,
+        0.41967976093292236,
+        0.181085005402565,
+        1.0
+      ],
+      "metallic": 0.2606635093688965,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Material.004",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.6753554344177246,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Material.005",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "metallic": 1.0,
+      "roughness": 0.32258063554763794,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    }
+  ],
+  "issues": [
+    "Transmission material requires visual review: Material.002"
+  ],
+  "sourceMeshCount": 2,
+  "sourceTriangles": 126296,
+  "conversion": "Blender 5.1.1 FBX export"
+}

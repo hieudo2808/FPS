@@ -1,0 +1,36 @@
+{
+  "code": "K2",
+  "source": "K2/source/117a8266e3e74e7d9539f0fd2b5f306d.zip.zip.unpacked/Card_Model/Card_model.fbx",
+  "model": "Models/K2.fbx",
+  "materials": [
+    {
+      "name": "Card_Mat",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4343145787715912,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/Card_Diff.png",
+        "normal": "Textures/Card_Normal.png",
+        "roughness": "Textures/Card_Roughness.png",
+        "metallic": "Textures/Card_Metallic.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0,
+        "metallic": 0
+      },
+      "packedMask": "Textures/Card_Mat_MetallicSmoothness.png"
+    }
+  ],
+  "issues": [],
+  "sourceMeshCount": 1,
+  "sourceTriangles": 76,
+  "conversion": "Original FBX bytes"
+}

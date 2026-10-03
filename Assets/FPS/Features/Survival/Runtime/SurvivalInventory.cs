@@ -11,6 +11,10 @@ namespace FPS
     public sealed class SurvivalInventory : NetworkBehaviour
     {
         [SerializeField] private SurvivalProjectile projectilePrefab;
+        [SerializeField] private GrenadeThrowDefinition throwDefinition;
+        private readonly NetworkVariable<GrenadeThrowState> throwState = new();
+        private Vector3 pendingThrowDirection;
+        private bool throwReleased;
         public readonly NetworkVariable<byte> FragGrenadeCount = new(3);
         public readonly NetworkVariable<byte> IncendiaryGrenadeCount = new(3);
         public readonly NetworkVariable<byte> MedkitCount = new(2);
@@ -24,6 +28,7 @@ namespace FPS
         private PlayerHealth health;
         private PlayerMovement movement;
         private PlayerInfectionController infection;
+        private WeaponFireHandler weaponFire;
         private SurvivalInventory useTarget;
         private uint actorDamageRevision;
         private uint targetDamageRevision;
@@ -31,6 +36,10 @@ namespace FPS
         private double nextThrowTime;
         public event Action InventoryChanged;
         public bool IsUsingItem => activeUse.Value != 0;
+        public GrenadeThrowDefinition ThrowDefinition => throwDefinition;
+        public GrenadeThrowState ThrowState => throwState.Value;
+        public bool IsThrowing => throwState.Value.Active && ServerNow < throwState.Value.EndsAt;
+        public bool IsBusy => IsUsingItem || IsThrowing;
         public ConsumableKind ActiveConsumable => activeUse.Value == 2 ? ConsumableKind.Antidote : ConsumableKind.Medkit;
         public bool IsSelfUse => IsSpawned && useTargetId.Value == NetworkObjectId;
         public float UseProgress => IsUsingItem ? Mathf.Clamp01((float)((ServerNow - useStarted.Value) / Math.Max(.01, useDeadline.Value - useStarted.Value))) : 0f;
@@ -41,6 +50,7 @@ namespace FPS
             health = GetComponent<PlayerHealth>();
             movement = GetComponent<PlayerMovement>();
             infection = GetComponent<PlayerInfectionController>();
+            weaponFire = GetComponent<WeaponFireHandler>();
         }
         public override void OnNetworkSpawn()
         {
@@ -111,21 +121,38 @@ namespace FPS
         }
         [ServerRpc] private void RequestThrowServerRpc(ThrowableKind kind, Vector3 direction, uint sequence)
         {
-            if (!AcceptRequest(sequence) || !CanAct() || IsUsingItem || ServerNow < nextThrowTime
+            if (!AcceptRequest(sequence) || !CanAct() || IsBusy || ServerNow < nextThrowTime
                 || !SurvivalRules.ValidThrowDirection(direction, transform.forward) || projectilePrefab == null) return;
             if (kind != ThrowableKind.Frag && kind != ThrowableKind.Incendiary) return;
             var count = kind == ThrowableKind.Frag ? FragGrenadeCount : IncendiaryGrenadeCount;
             if (count.Value == 0) return;
+            if (throwDefinition != null && throwDefinition.IsValid)
+            {
+                double now = ServerNow;
+                pendingThrowDirection = direction.normalized;
+                throwReleased = false;
+                throwState.Value = new GrenadeThrowState { Active = true, Sequence = sequence, Kind = kind,
+                    StartedAt = now, ReleaseAt = now + throwDefinition.releaseTime, EndsAt = now + throwDefinition.duration };
+                return;
+            }
+            SpawnThrowableServer(kind, direction.normalized, false);
+            nextThrowTime = ServerNow + .5;
+            ThrowFeedbackClientRpc();
+        }
+        private void SpawnThrowableServer(ThrowableKind kind, Vector3 direction, bool authored)
+        {
+            if (!IsServer || projectilePrefab == null) return;
+            var count = kind == ThrowableKind.Frag ? FragGrenadeCount : IncendiaryGrenadeCount;
+            if (count.Value == 0) return;
             Vector3 eye = transform.position + Vector3.up * 1.45f;
-            Vector3 origin = eye + direction.normalized * .45f;
-            if (Physics.SphereCast(eye, .09f, direction.normalized, out RaycastHit hit, .45f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            Vector3 offset = authored ? Quaternion.LookRotation(direction) * throwDefinition.releaseOffset : direction * .45f;
+            Vector3 origin = eye + offset;
+            if (Physics.SphereCast(eye, .09f, offset.normalized, out RaycastHit hit, offset.magnitude, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
                 origin = hit.point + hit.normal * .11f;
             SurvivalProjectile projectile = Instantiate(projectilePrefab, origin, Quaternion.LookRotation(direction));
             projectile.InitializeServer(kind, OwnerClientId, NetworkObject, direction.normalized * 13f);
             projectile.NetworkObject.Spawn();
             count.Value--;
-            nextThrowTime = ServerNow + .5;
-            ThrowFeedbackClientRpc();
         }
         public void RequestUse(ConsumableKind kind, SurvivalInventory target = null)
         {
@@ -134,7 +161,7 @@ namespace FPS
         }
         [ServerRpc] private void RequestUseServerRpc(ConsumableKind kind, ulong targetId, uint sequence)
         {
-            if (!AcceptRequest(sequence) || !CanAct() || IsUsingItem || (kind != ConsumableKind.Medkit && kind != ConsumableKind.Antidote)) return;
+            if (!AcceptRequest(sequence) || !CanAct() || IsBusy || (kind != ConsumableKind.Medkit && kind != ConsumableKind.Antidote)) return;
             if (!NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(targetId, out NetworkObject targetObject)) return;
             var target = targetObject.GetComponent<SurvivalInventory>();
             if (!CanTreat(target, kind)) return;
@@ -167,10 +194,13 @@ namespace FPS
             useTarget = null;
         }
         private bool CanAct() => health != null && health.CanUseCombat && !(movement != null && movement.IsSprinting)
+            && !(weaponFire != null && weaponFire.IsServerReloading)
             && !NetworkMatchStateManager.IsGameplayBlocked && CampaignMissionController.Instance?.BlocksInput != true;
         private void Update()
         {
-            if (!IsServer || !IsSpawned || !IsUsingItem) return;
+            if (!IsServer || !IsSpawned) return;
+            UpdateThrowServer();
+            if (!IsUsingItem) return;
             if (!CanAct() || !CanTreat(useTarget, ActiveConsumable) || health.DamageRevision != actorDamageRevision
                 || useTarget.health.DamageRevision != targetDamageRevision || (useTarget.movement != null && useTarget.movement.IsSprinting))
             { CancelUseServer(); return; }
@@ -180,6 +210,25 @@ namespace FPS
             else { useTarget.infection.TreatInfectionServer(40f); AntidoteCount.Value--; }
             CompleteUseClientRpc(useTarget.transform.position + Vector3.up, kind);
             CancelUseServer();
+        }
+        private void UpdateThrowServer()
+        {
+            var state = throwState.Value;
+            if (!state.Active) return;
+            if (!CanAct()) { CancelThrowServer(); return; }
+            if (!throwReleased && ServerNow >= state.ReleaseAt)
+            {
+                throwReleased = true;
+                SpawnThrowableServer(state.Kind, pendingThrowDirection, true);
+                nextThrowTime = ServerNow + .5;
+            }
+            if (ServerNow >= state.EndsAt) CancelThrowServer();
+        }
+        public void CancelThrowServer()
+        {
+            if (!IsServer) return;
+            var state = throwState.Value; state.Active = false; throwState.Value = state;
+            throwReleased = false;
         }
         [ClientRpc] private void ThrowFeedbackClientRpc() { GetComponent<SurvivalPresentation>()?.PlayThrow(); }
         [ClientRpc] private void CompleteUseClientRpc(Vector3 point, ConsumableKind kind) => SurvivalEffects.Medical(point, kind);
@@ -196,6 +245,7 @@ namespace FPS
         {
             if (!IsServer) return;
             CancelUseServer();
+            CancelThrowServer();
             if (snapshot.survivalInventoryVersion == 0) return;
             FragGrenadeCount.Value = (byte)Mathf.Clamp((int)snapshot.fragCount, 0, 3);
             IncendiaryGrenadeCount.Value = (byte)Mathf.Clamp((int)snapshot.incendiaryCount, 0, 3);

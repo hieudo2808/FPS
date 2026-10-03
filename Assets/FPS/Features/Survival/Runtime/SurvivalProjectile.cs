@@ -9,6 +9,7 @@ namespace FPS
     {
         [SerializeField] private SurvivalFireZone fireZonePrefab;
         [SerializeField] private GameObject incendiaryCore;
+        [SerializeField] private GameObject fragVisual;
         private readonly NetworkVariable<ThrowableKind> kind = new();
         private Rigidbody body;
         private Vector3 launchVelocity;
@@ -23,7 +24,12 @@ namespace FPS
             body = GetComponent<Rigidbody>();
             body.isKinematic = !IsServer;
             if (incendiaryCore != null) incendiaryCore.SetActive(kind.Value == ThrowableKind.Incendiary);
-            if (!IsServer) return;
+            if (fragVisual != null) fragVisual.SetActive(kind.Value == ThrowableKind.Frag);
+            if (!IsServer)
+            {
+                foreach (var collider in GetComponentsInChildren<Collider>()) collider.enabled = false;
+                return;
+            }
             deadline = NetworkManager.ServerTime.Time + 2.2;
             if (thrower != null)
                 foreach (var own in GetComponentsInChildren<Collider>())

@@ -247,6 +247,18 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: EquipNormalizedTime
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: ReloadNormalizedTime
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -269,7 +281,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Equip
-  m_Speed: 2.25
+  m_Speed: 1.125
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1907742631826618425}
@@ -281,13 +293,13 @@ AnimatorState:
   m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
+  m_TimeParameterActive: 1
   m_Motion: {fileID: 7400000, guid: 9b8ed72edef4c034c942a4980ce926a4, type: 2}
   m_Tag: 
   m_SpeedParameter: EquipPlaybackSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_TimeParameter: EquipNormalizedTime
 --- !u!1101 &868346764953180652
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -399,7 +411,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Reload
-  m_Speed: 0.93846154
+  m_Speed: 1.1730769
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -5431233791517141583}
@@ -411,13 +423,13 @@ AnimatorState:
   m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
+  m_TimeParameterActive: 1
   m_Motion: {fileID: 7400000, guid: 4567409ca789b4240bc99f4d82020a12, type: 2}
   m_Tag: 
   m_SpeedParameter: ReloadPlaybackSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_TimeParameter: ReloadNormalizedTime
 --- !u!1101 &7779148317789875311
 AnimatorStateTransition:
   m_ObjectHideFlags: 1

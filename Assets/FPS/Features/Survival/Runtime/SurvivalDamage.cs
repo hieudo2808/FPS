@@ -20,6 +20,7 @@ namespace FPS
         public static void Apply(Vector3 center, float radius, ulong attacker, bool fire, HashSet<Component> damaged = null)
         {
             var seen = damaged ?? new HashSet<Component>();
+            var nearestVisiblePoints = new Dictionary<Component, Vector3>();
             foreach (Collider hit in Physics.OverlapSphere(center, radius, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
             {
                 Component target = hit.GetComponentInParent<PlayerHealth>();
@@ -29,6 +30,16 @@ namespace FPS
                 if (target is EnemyHealth e && (!e.IsServer || e.IsDead)) continue;
                 Vector3 point = hit.ClosestPoint(center);
                 if (!HasLineOfSight(center, hit.bounds.center, null, target.transform)) continue;
+                // A victim can have several hurtboxes. Choose the closest visible one
+                // before applying damage so overlap-query ordering cannot change falloff.
+                if (!nearestVisiblePoints.TryGetValue(target, out var previous)
+                    || (point - center).sqrMagnitude < (previous - center).sqrMagnitude)
+                    nearestVisiblePoints[target] = point;
+            }
+            foreach (var victim in nearestVisiblePoints)
+            {
+                var target = victim.Key;
+                var point = victim.Value;
                 seen.Add(target);
                 float damage = fire ? (target is PlayerHealth ? 4f : 12f) : SurvivalRules.FragDamage(Vector3.Distance(center, point));
                 if (target is PlayerHealth player) player.TakeDamage(damage);

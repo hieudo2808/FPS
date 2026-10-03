@@ -38,7 +38,8 @@ namespace FPS
                 GameObject go = source != null ? Instantiate(source, transform) : new GameObject("Survival Audio");
                 go.transform.SetParent(transform, false);
                 entry = new Entry { source = source, instance = go, particles = go.GetComponentsInChildren<ParticleSystem>(true) };
-                entry.audio = go.GetComponent<AudioSource>() ?? go.AddComponent<AudioSource>();
+                entry.audio = go.GetComponent<AudioSource>();
+                if (entry.audio == null) entry.audio = go.AddComponent<AudioSource>();
                 entry.audio.playOnAwake = false;
                 entry.audio.spatialBlend = 1f;
                 entry.audio.minDistance = 2f;

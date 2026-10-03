@@ -31,11 +31,11 @@ namespace FPS
             if (!IsValid || data == null) return 0f;
             double elapsed = Math.Max(0d, now - startedAt) / timingMultiplier;
             if (data.reloadMode != ReloadMode.PerShell)
-                return Mathf.Clamp01((float)(elapsed / Math.Max(.0001, data.ReloadDuration)));
+                return Mathf.Clamp01((float)(elapsed / Math.Max(.0001, data.ReloadAnimationDuration)));
 
-            float start = data.PerShellOpeningDuration / Mathf.Max(.0001f, data.ReloadDuration);
+            float start = data.PerShellOpeningDuration / Mathf.Max(.0001f, data.ReloadAnimationDuration);
             float end = (data.PerShellOpeningDuration + data.PerShellInterval)
-                / Mathf.Max(.0001f, data.ReloadDuration);
+                / Mathf.Max(.0001f, data.ReloadAnimationDuration);
             if (thirdPerson)
             {
                 start = data.thirdPersonReloadInsertRange.x;
@@ -51,8 +51,30 @@ namespace FPS
             if (elapsed < insertsEnd)
                 return Mathf.Lerp(start, end, (float)(((elapsed - opening) % interval) / interval));
             return Mathf.Lerp(end, 1f, Mathf.Clamp01((float)((elapsed - insertsEnd)
-                / Math.Max(.0001, data.PerShellClosingDuration))));
+                / Math.Max(.0001, data.ReloadAnimationDuration
+                    - data.PerShellOpeningDuration - data.PerShellInterval))));
         }
+
+        public double GameplayCompleteTime(WeaponData data) => startedAt + timingMultiplier
+            * Duration(data, false);
+
+        public double PresentationCompleteTime(WeaponData data) => startedAt + timingMultiplier
+            * Duration(data, true);
+
+        private float Duration(WeaponData data, bool presentation)
+        {
+            if (data == null) return 0f;
+            float duration = presentation ? data.ReloadAnimationDuration : data.ReloadDuration;
+            if (data.reloadMode == ReloadMode.PerShell)
+                duration += (Mathf.Max(1, rounds) - 1) * data.PerShellInterval;
+            return duration;
+        }
+
+        // A replicated reload end before its gameplay deadline is a cancellation.
+        // A natural end can retain the visual tail without retaining the ammo lock.
+        public bool ShouldContinueAfterGameplay(WeaponData data, double now) => IsValid
+            && now + .0001d >= GameplayCompleteTime(data)
+            && now < PresentationCompleteTime(data);
 
         public bool Equals(WeaponReloadTimeline other) => startedAt.Equals(other.startedAt)
             && timingMultiplier.Equals(other.timingMultiplier) && rounds == other.rounds;

@@ -1,0 +1,57 @@
+{
+  "code": "M2",
+  "source": "M2/source/AZvaccine.fbx",
+  "model": "Models/M2.fbx",
+  "materials": [
+    {
+      "name": "Glass",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4000000059604645,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Label",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/az.png"
+      },
+      "channels": {
+        "albedo": 0
+      }
+    },
+    {
+      "name": "aluminium",
+      "color": [
+        0.6295996904373169,
+        0.6295996904373169,
+        0.6295996904373169,
+        1.0
+      ],
+      "metallic": 1.0,
+      "roughness": 0.22272729873657227,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    }
+  ],
+  "issues": [],
+  "sourceMeshCount": 1,
+  "sourceTriangles": 1330,
+  "conversion": "Original FBX bytes"
+}

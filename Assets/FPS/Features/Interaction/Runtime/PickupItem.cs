@@ -10,6 +10,8 @@ namespace FPS
         [Header("Pickup Settings")]
         [SerializeField] private PickupType pickupType = PickupType.Ammo;
         [SerializeField] private int ammoAmount = 30;
+        [SerializeField, Tooltip("Required for ammo: the exact carried weapon this box refills.")]
+        private WeaponData ammoWeapon;
         [SerializeField] private float healthAmount = 25f;
         [SerializeField] private PrimaryWeaponId primaryWeaponId = PrimaryWeaponId.Vandal;
         [SerializeField] private string displayName = "Ammo Box";
@@ -23,6 +25,7 @@ namespace FPS
         public PickupType Type => pickupType;
         public byte ItemAmount => itemAmount;
         public PrimaryWeaponId PrimaryWeapon => primaryWeaponId;
+        public WeaponData AmmoWeapon => ammoWeapon;
 
         public string GetInteractText()
         {
@@ -32,7 +35,7 @@ namespace FPS
 
             return pickupType switch
             {
-                PickupType.Ammo   => $"[{interactKey}] Pick up {displayName} (+{ammoAmount} ammo)",
+                PickupType.Ammo   => $"[{interactKey}] {(ammoWeapon != null ? ammoWeapon.weaponName : "UNCONFIGURED")} AMMO +{ammoAmount}",
                 PickupType.Health => $"[{interactKey}] Pick up {displayName} (+{healthAmount} HP)",
                 PickupType.Weapon => $"[{interactKey}] Pick up {displayName} ({primaryWeaponId})",
                 PickupType.FragGrenade => $"[{interactKey}] Pick up {displayName} (+{itemAmount})",
@@ -80,7 +83,7 @@ namespace FPS
             if (actor == null || !actor.CanUseCombat || interactorObject.GetComponent<SurvivalInventory>()?.IsUsingItem == true)
                 return PickupResultCode.InvalidPlayer;
             if (!CanApply(interactorObject))
-                return PickupResultCode.InventoryFull;
+                return pickupType == PickupType.Ammo ? PickupResultCode.AmmoUnavailable : PickupResultCode.InventoryFull;
 
             // Unity gameplay and RPC callbacks run on the main thread. Set this before mutating
             // inventory so a second request can never observe the item as available.
@@ -127,7 +130,7 @@ namespace FPS
                 return player.GetComponent<SurvivalInventory>()?.CanAdd(pickupType, itemAmount) == true;
 
             WeaponFireHandler fireHandler = player.GetComponent<WeaponFireHandler>();
-            return fireHandler != null && fireHandler.CanReceiveAmmoServer();
+            return pickupType == PickupType.Ammo && fireHandler != null && fireHandler.CanReceiveAmmoServer(ammoWeapon, ammoAmount);
         }
 
         private bool ApplyPickup(NetworkObject player)
@@ -155,10 +158,7 @@ namespace FPS
 
         private bool GiveAmmo(NetworkObject player)
         {
-            WeaponManager weaponManager = player.GetComponent<WeaponManager>();
-            if (weaponManager == null) return false;
-
-            return weaponManager.GetComponent<WeaponFireHandler>()?.AddReserveAmmoServer(ammoAmount) == true;
+            return player.GetComponent<WeaponFireHandler>()?.AddReserveAmmoServer(ammoWeapon, ammoAmount) == true;
         }
 
         private bool GiveHealth(NetworkObject player)

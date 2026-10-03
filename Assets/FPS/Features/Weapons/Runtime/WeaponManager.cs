@@ -10,7 +10,8 @@ namespace FPS
         Vandal,
         Operator,
         Odin,
-        Bucky
+        Bucky,
+        Warden
     }
 
     [Serializable]
@@ -27,8 +28,10 @@ namespace FPS
     {
         private const int PrimarySlotIndex = 0;
 
-        [Tooltip("Owned weapon slots only. Sage starts with Vandal in slot 0 and Classic in slot 1.")]
+        [Tooltip("Owned weapon slots only. Slot 0 is the primary weapon and slot 1 is the sidearm.")]
         [SerializeField] private List<GameObject> weapons = new List<GameObject>();
+        [Tooltip("Primary candidate selected by the server when this player spawns.")]
+        [SerializeField] private PrimaryWeaponId defaultPrimaryWeapon = PrimaryWeaponId.Vandal;
         [Tooltip("Preconfigured primary replacements. These are not owned slots and must remain inactive until selected by the server.")]
         [SerializeField] private List<PrimaryWeaponCandidate> primaryWeaponCandidates = new List<PrimaryWeaponCandidate>();
         [SerializeField] private Animator characterAnimation;
@@ -44,11 +47,14 @@ namespace FPS
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
         private bool networkCallbacksRegistered;
+        private bool primaryWeaponSelectionPrepared;
         private bool thirdPersonReloadActive;
         private double thirdPersonReloadCompleteTime = -1d;
         private WeaponReloadTimeline thirdPersonReloadTimeline;
         private bool thirdPersonEquipCompletionPending;
         private double thirdPersonEquipCompleteTime = -1d;
+        private double thirdPersonEquipStartedAt = -1d;
+        private double lastAuthoritativeEquipCompleteTime = -1d;
         private PlayerHealth playerHealth;
 
         public static WeaponManager LocalInstance { get; private set; }
@@ -81,6 +87,15 @@ namespace FPS
                 characterAnimation = GetComponent<PlayerMovement>()?.CharacterAnimation;
 
             if (IsOwner) LocalInstance = this;
+
+            // The server chooses the prefab's loadout; clients use the replicated
+            // value so a late join never replaces an already selected primary.
+            if (IsServer && !primaryWeaponSelectionPrepared
+                && TryGetPrimaryCandidate(defaultPrimaryWeapon, out GameObject initialPrimary)
+                && initialPrimary.GetComponent<Weapon>()?.Data != null)
+            {
+                networkedPrimaryWeapon.Value = defaultPrimaryWeapon;
+            }
 
             playerHealth = GetComponent<PlayerHealth>();
             if (playerHealth != null)
@@ -120,6 +135,17 @@ namespace FPS
                 SetAnimatorFloatIfPresent(characterAnimation, "ReloadNormalizedTime", normalized);
                 GetComponent<PlayerVisibilityController>()?
                     .SetThirdPersonWeaponAnimationFloat("ReloadNormalizedTime", normalized);
+                if (GetPresentationTime() >= thirdPersonReloadTimeline.PresentationCompleteTime(data))
+                    TriggerAnimation("ReloadComplete");
+            }
+            if (thirdPersonEquipCompletionPending)
+            {
+                WeaponData data = GetWeapon(CurrentWeaponIndex)?.Data;
+                float normalized = Mathf.Clamp01((float)((GetPresentationTime() - thirdPersonEquipStartedAt)
+                    / Math.Max(.0001f, data != null ? data.EquipAnimationDuration : 0f)));
+                SetAnimatorFloatIfPresent(characterAnimation, "EquipNormalizedTime", normalized);
+                GetComponent<PlayerVisibilityController>()?
+                    .SetThirdPersonWeaponAnimationFloat("EquipNormalizedTime", normalized);
             }
             if (!thirdPersonEquipCompletionPending
                 || thirdPersonEquipCompleteTime < 0d
@@ -167,6 +193,9 @@ namespace FPS
                 return false;
             if (candidate == null || candidate.GetComponent<Weapon>()?.Data == null)
                 return false;
+            // Snapshot restoration may run in a sibling's OnNetworkSpawn before
+            // this manager. Preserve that selection instead of applying defaults.
+            primaryWeaponSelectionPrepared = true;
             if (networkedPrimaryWeapon.Value == weaponId && GetWeapon(PrimarySlotIndex) == candidate)
                 return true;
 
@@ -369,10 +398,11 @@ namespace FPS
         /// </summary>
         public void AddAmmoToCurrentWeapon(int amount)
         {
-            if (IsServer)
-                GetComponent<WeaponFireHandler>()?.AddReserveAmmoServer(amount);
-
-            AddAmmoToCurrentWeaponLocalOnly(amount);
+            if (IsSpawned)
+            {
+                if (IsServer) GetComponent<WeaponFireHandler>()?.AddReserveAmmoServer(amount);
+            }
+            else AddAmmoToCurrentWeaponLocalOnly(amount);
         }
 
         public void AddAmmoToCurrentWeaponLocalOnly(int amount)
@@ -432,15 +462,11 @@ namespace FPS
             // of first-person visibility. If Weapon already emitted the trigger,
             // resetting it again here is harmless because both calls are synchronous
             // and the Animator cannot evaluate between them.
-            double presentationTime = NetworkManager != null
-                && NetworkManager.IsListening
-                    ? NetworkManager.ServerTime.Time
-                    : Time.timeAsDouble;
             bool equipStarted = System.Math.Abs(
                     previous.equipCompleteTime - current.equipCompleteTime)
                 > 0.0001
                 && current.equipCompleteTime >= 0d
-                && presentationTime < current.equipCompleteTime;
+                && thirdPersonEquipCompletionPending;
             if (equipStarted)
                 TriggerAnimation("Equip");
 
@@ -450,7 +476,7 @@ namespace FPS
                 || !previous.reloadTimeline.Equals(current.reloadTimeline)))
                 TriggerAnimation("Reload");
             else if (previous.isReloading && !current.isReloading)
-                TriggerAnimation("ReloadComplete");
+                CompleteReloadPresentation();
         }
 
         public bool TryInspectCurrentWeapon()
@@ -466,7 +492,7 @@ namespace FPS
         {
             if (playerHealth == null)
                 playerHealth = GetComponent<PlayerHealth>();
-            return playerHealth != null && playerHealth.CanUseCombat;
+            return playerHealth != null && playerHealth.CanUseCombat && GetComponent<SurvivalInventory>()?.IsBusy != true;
         }
 
         private void HandleCombatAvailabilityChanged(bool canUseCombat)
@@ -486,12 +512,8 @@ namespace FPS
             if (string.IsNullOrWhiteSpace(triggerName))
                 return;
 
-            if (triggerName == "Fire"
-                && (thirdPersonReloadActive
-                    || thirdPersonEquipCompletionPending))
-            {
-                return;
-            }
+            if (triggerName == "Fire" || triggerName == "Inspect")
+                CompleteActionsForAcceptedShot();
 
             UpdateThirdPersonActionState(triggerName);
 
@@ -515,9 +537,9 @@ namespace FPS
                 return;
 
             float authoredDuration = actionName == "Reload"
-                ? data.ReloadDuration
+                ? data.ReloadAnimationDuration
                 : actionName == "Equip"
-                    ? data.EquipDuration
+                    ? data.EquipAnimationDuration
                     : 0f;
             if (authoredDuration <= 0f)
                 return;
@@ -529,7 +551,16 @@ namespace FPS
 
         public void SetReloadPresentationTimeline(WeaponReloadTimeline timeline)
         {
-            thirdPersonReloadTimeline = timeline;
+            WeaponData data = GetWeapon(CurrentWeaponIndex)?.Data;
+            if (timeline.IsValid || !thirdPersonReloadTimeline.ShouldContinueAfterGameplay(data, GetPresentationTime()))
+                thirdPersonReloadTimeline = timeline;
+        }
+
+        private void CompleteReloadPresentation()
+        {
+            WeaponData data = GetWeapon(CurrentWeaponIndex)?.Data;
+            if (!thirdPersonReloadTimeline.ShouldContinueAfterGameplay(data, GetPresentationTime()))
+                TriggerAnimation("ReloadComplete");
         }
 
         public void CompleteActionsForAcceptedShot()
@@ -546,6 +577,7 @@ namespace FPS
             double equipCompleteTime)
         {
             double now = GetPresentationTime();
+            WeaponData data = GetWeapon(CurrentWeaponIndex)?.Data;
             if (isReloading
                 && reloadCompleteTime > now
                 && (!thirdPersonReloadActive
@@ -553,22 +585,19 @@ namespace FPS
                         thirdPersonReloadCompleteTime - reloadCompleteTime)
                         > 0.0001d))
             {
-                ConfigureThirdPersonActionDuration(
-                    "Reload",
-                    (float)(reloadCompleteTime - now));
+                SetThirdPersonActionPlaybackSpeed("Reload",
+                    thirdPersonReloadTimeline.IsValid ? 1f / thirdPersonReloadTimeline.timingMultiplier : 1f);
                 thirdPersonReloadCompleteTime = reloadCompleteTime;
             }
 
-            if (equipCompleteTime > now
-                && (!thirdPersonEquipCompletionPending
-                    || System.Math.Abs(
-                        thirdPersonEquipCompleteTime - equipCompleteTime)
-                        > 0.0001d))
+            if (equipCompleteTime >= 0d && data != null
+                && equipCompleteTime - data.EquipDuration + data.EquipAnimationDuration > now
+                && System.Math.Abs(lastAuthoritativeEquipCompleteTime - equipCompleteTime) > .0001d)
             {
-                ConfigureThirdPersonActionDuration(
-                    "Equip",
-                    (float)(equipCompleteTime - now));
-                thirdPersonEquipCompleteTime = equipCompleteTime;
+                lastAuthoritativeEquipCompleteTime = equipCompleteTime;
+                thirdPersonEquipStartedAt = equipCompleteTime - data.EquipDuration;
+                thirdPersonEquipCompleteTime = thirdPersonEquipStartedAt + data.EquipAnimationDuration;
+                SetThirdPersonActionPlaybackSpeed("Equip", 1f);
                 thirdPersonEquipCompletionPending = true;
             }
         }
@@ -600,11 +629,13 @@ namespace FPS
 
                 case "ReloadComplete":
                     thirdPersonReloadActive = false;
+                    thirdPersonReloadTimeline = default;
                     thirdPersonReloadCompleteTime = -1d;
                     break;
 
                 case "Equip":
                     thirdPersonReloadActive = false;
+                    thirdPersonReloadTimeline = default;
                     thirdPersonReloadCompleteTime = -1d;
                     if (!thirdPersonEquipCompletionPending)
                     {
@@ -613,8 +644,9 @@ namespace FPS
                             : null;
                         if (data != null)
                         {
+                            thirdPersonEquipStartedAt = GetPresentationTime();
                             thirdPersonEquipCompleteTime =
-                                GetPresentationTime() + data.EquipDuration;
+                                thirdPersonEquipStartedAt + data.EquipAnimationDuration;
                             thirdPersonEquipCompletionPending = true;
                         }
                     }
@@ -634,6 +666,8 @@ namespace FPS
             thirdPersonReloadCompleteTime = -1d;
             thirdPersonEquipCompletionPending = false;
             thirdPersonEquipCompleteTime = -1d;
+            thirdPersonEquipStartedAt = -1d;
+            lastAuthoritativeEquipCompleteTime = -1d;
         }
 
         private double GetPresentationTime()

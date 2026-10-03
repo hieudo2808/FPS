@@ -232,12 +232,17 @@ namespace FPS
             magazineAmmo += bulletsToReload;
         }
 
-        public void AddReserveAmmo(int amount)
+        public bool CanReceiveAmmo(int amount, int capacity)
         {
-            if (amount <= 0)
-                return;
+            return amount > 0 && capacity >= reserveAmmo && amount <= capacity - reserveAmmo;
+        }
 
+        public bool AddReserveAmmo(int amount, int capacity = int.MaxValue)
+        {
+            // ponytail: whole packs only; partial packs need replicated remaining quantities and checkpoint support.
+            if (!CanReceiveAmmo(amount, capacity)) return false;
             reserveAmmo += amount;
+            return true;
         }
 
         public WeaponRuntimeSnapshot Capture(byte slotIndex, WeaponData weaponData)

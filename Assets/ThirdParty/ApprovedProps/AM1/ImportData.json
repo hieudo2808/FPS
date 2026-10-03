@@ -1,0 +1,113 @@
+{
+  "code": "AM1",
+  "source": "AM1/source/Handgun Ammo Box REMAKE.blend",
+  "model": "Models/AM1.fbx",
+  "materials": [
+    {
+      "name": "Box",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/9mm_Ammo_Col_Remake.jpg",
+        "normal": "Textures/9mm_ammo_box_REMAKE_Normal.jpg",
+        "roughness": "Textures/9mm_ammo_box_REMAKE_Roughness.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0
+      },
+      "packedMask": "Textures/Box_MetallicSmoothness.png"
+    },
+    {
+      "name": "ammo body",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 1.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "normal": "Textures/bullet_Normal.png",
+        "metallic": "Textures/Bullet_Metallic.png",
+        "albedo": "Textures/bullet_Diffuse.png",
+        "roughness": "Textures/Bullet_Roughness.png"
+      },
+      "channels": {
+        "normal": 0,
+        "metallic": 0,
+        "albedo": 0,
+        "roughness": 0
+      },
+      "packedMask": "Textures/ammo_body_MetallicSmoothness.png"
+    },
+    {
+      "name": "bullet bottom",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 1.0,
+      "roughness": 0.15454548597335815,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/bullet_Diffuse.png",
+        "metallic": "Textures/Bullet_Metallic.png",
+        "roughness": "Textures/Bullet_Roughness.png",
+        "normal": "Textures/bullet_Normal.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "metallic": 0,
+        "roughness": 0,
+        "normal": 0
+      },
+      "packedMask": "Textures/bullet_bottom_MetallicSmoothness.png"
+    },
+    {
+      "name": "bullet holder",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.3272727131843567,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/Bullet_holder_Diffuse.png",
+        "normal": "Textures/Bullet_holder_normal.jpg",
+        "roughness": "Textures/Bullet_holder_roughness.jpg"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0
+      },
+      "packedMask": "Textures/bullet_holder_MetallicSmoothness.png"
+    }
+  ],
+  "issues": [
+    "Missing source texture: 9mm bullet_N.png",
+    "Missing source texture: BlackPlastic007_4K_Color.png",
+    "Missing source texture: Metal042A_4K_Color.jpg",
+    "Missing source texture: Metal042A_4K_Roughness.jpg",
+    "Missing source texture: Plastic007_4K_NormalGL.jpg"
+  ],
+  "sourceMeshCount": 3,
+  "sourceTriangles": 1330,
+  "conversion": "Blender 5.1.1 FBX export"
+}

@@ -1,0 +1,21 @@
+{
+  "code": "LAB_Fridge",
+  "model": "Models/LAB_Fridge.obj",
+  "conversion": "Original OBJ bytes",
+  "materials": [
+    {
+      "name": "SM_Med_FridgeMat",
+      "metallic": 0,
+      "roughness": 0.5,
+      "textures": {
+        "albedo": "Textures/SM_Med_Fridge_Open_blinn1SG_BaseColor.png",
+        "metallic": "Textures/SM_Med_Fridge_Open_blinn1SG_Metallic.png",
+        "roughness": "Textures/SM_Med_Fridge_Open_blinn1SG_Roughness.png",
+        "normal": "Textures/SM_Med_Fridge_Open_blinn1SG_Normal.png",
+        "emission": "Textures/SM_Med_Fridge_Open_blinn1SG_Emissive.png"
+      },
+      "channels": {},
+      "packedMask": "Textures/SM_Med_FridgeMat_MetallicSmoothness.png"
+    }
+  ]
+}

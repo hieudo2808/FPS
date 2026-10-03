@@ -1,23 +1,39 @@
 using System;
 using System.Linq;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace FPS
 {
+    public static class CampaignCodename
+    {
+        public static string For(PlayerCharacterId character) => character switch
+        {
+            PlayerCharacterId.Brimstone => "MASON",
+            PlayerCharacterId.Sage => "DOC",
+            PlayerCharacterId.Gekko => "VEGA",
+            PlayerCharacterId.Clove => "RAVEN",
+            _ => "OPERATOR"
+        };
+    }
+
     /// <summary>Frozen server roster. Slots survive disconnects so a remaining actor never switches ropes.</summary>
     public struct CampaignInsertionParticipant : INetworkSerializable, IEquatable<CampaignInsertionParticipant>
     {
         public ulong clientId, playerId;
+        public FixedString64Bytes displayName;
         public PlayerCharacterId character;
         public Vector3 arrival;
         public Quaternion rotation;
         public bool connected;
+        public string Codename => CampaignCodename.For(character);
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref clientId);
             serializer.SerializeValue(ref playerId);
+            serializer.SerializeValue(ref displayName);
             serializer.SerializeValue(ref character);
             serializer.SerializeValue(ref arrival);
             serializer.SerializeValue(ref rotation);
@@ -25,7 +41,7 @@ namespace FPS
         }
 
         public bool Equals(CampaignInsertionParticipant other) => clientId == other.clientId && playerId == other.playerId
-            && character == other.character && arrival == other.arrival && rotation == other.rotation && connected == other.connected;
+            && displayName.Equals(other.displayName) && character == other.character && arrival == other.arrival && rotation == other.rotation && connected == other.connected;
     }
 
     public sealed partial class CampaignMissionController
@@ -58,6 +74,7 @@ namespace FPS
                     entries[slot] = new CampaignInsertionParticipant
                     {
                         clientId = player.OwnerClientId, playerId = player.StablePlayerId.Value,
+                        displayName = new FixedString64Bytes(NetworkGameManager.Instance != null && NetworkGameManager.Instance.TryGetApprovedPlayerName(player.OwnerClientId, out var playerName) ? playerName : "Operator"),
                         character = source.id, connected = true,
                         arrival = CampaignInsertionLayout.Arrival(chapters[0].arrivals, people.Length, slot),
                         rotation = chapters[0].arrivals[slot].rotation
@@ -96,7 +113,6 @@ namespace FPS
 
         private void ReconnectInsertionParticipant(PlayerHealth player)
         {
-            if (state.phase != CampaignPhase.Insertion) return;
             for (int i = 0; i < InsertionPartySize; i++)
             {
                 var entry = insertionRoster[i];
@@ -104,7 +120,8 @@ namespace FPS
                 entry.clientId = player.OwnerClientId;
                 entry.connected = true;
                 insertionRoster[i] = entry;
-                player.RelocateCampaign(entry.arrival, entry.rotation);
+                if (state.phase == CampaignPhase.Insertion)
+                    player.RelocateCampaign(entry.arrival, entry.rotation);
                 return;
             }
         }

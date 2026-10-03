@@ -1,0 +1,29 @@
+{
+  "code": "G2",
+  "model": "Models/G2.dae",
+  "materials": [
+    {
+      "name": "lambert1",
+      "color": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "metallic": 0,
+      "roughness": 0.5,
+      "alpha": 1,
+      "textures": {
+        "albedo": "Textures/lambert1_albedo.jpg",
+        "normal": "Textures/lambert1_normal.png",
+        "metallic": "Textures/lambert1_metallic.jpg",
+        "roughness": "Textures/lambert1_roughness.jpg",
+        "ao": "Textures/lambert1_AO.jpg"
+      },
+      "channels": {},
+      "packedMask": "Textures/lambert1_MetallicSmoothness.png"
+    }
+  ],
+  "issues": [],
+  "conversion": "Original DAE bytes"
+}

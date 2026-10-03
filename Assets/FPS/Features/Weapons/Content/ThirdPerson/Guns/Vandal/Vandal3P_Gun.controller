@@ -45,13 +45,13 @@ AnimatorState:
   m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
+  m_TimeParameterActive: 1
   m_Motion: {fileID: 7400000, guid: ae1373fa995db584cab9590144e11233, type: 2}
   m_Tag: 
   m_SpeedParameter: ReloadPlaybackSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_TimeParameter: ReloadNormalizedTime
 --- !u!1101 &-3956998391257348065
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -149,13 +149,13 @@ AnimatorState:
   m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
+  m_TimeParameterActive: 1
   m_Motion: {fileID: 7400000, guid: 8e1a061f56ff84b4c8fbe0a19b5c4af7, type: 2}
   m_Tag: 
   m_SpeedParameter: EquipPlaybackSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_TimeParameter: EquipNormalizedTime
 --- !u!1107 &-396752585891086581
 AnimatorStateMachine:
   serializedVersion: 7
@@ -238,6 +238,18 @@ AnimatorController:
   - m_Name: EquipPlaybackSpeed
     m_Type: 1
     m_DefaultFloat: 1
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: EquipNormalizedTime
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: ReloadNormalizedTime
+    m_Type: 1
+    m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}

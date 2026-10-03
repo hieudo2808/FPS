@@ -35,6 +35,7 @@ namespace FPS
         private Camera cachedCamera;
         private PlayerMovement cachedPlayerMovement;
         private PlayerHealth cachedPlayerHealth;
+        private SurvivalInventory cachedSurvivalInventory;
         private PlayerInfectionController cachedInfection;
         private MouseMovement cachedMouseMovement;
         private Camera cachedWeaponCamera;
@@ -162,11 +163,15 @@ namespace FPS
         {
             ConfigureFpLayer(true);
             if (playEquip)
+            {
+                InterruptReloadPresentation();
                 PlayEquipAtNormalizedTime(normalizedEquipTime);
+            }
         }
 
         private void OnEnable()
         {
+            reloadPresentationTimeline = default;
             canShoot    = weaponData != null;
             isReloading = false;
             burstCoroutine = null;
@@ -186,6 +191,7 @@ namespace FPS
 
         private void OnDisable()
         {
+            reloadPresentationTimeline = default;
             ForceExitAimPresentation();
             StopAllCoroutines();
             reloadCoroutine = null;
@@ -348,9 +354,11 @@ namespace FPS
 
         private void UpdatePerShellReloadPresentation()
         {
-            if (isReloading && reloadPresentationTimeline.IsValid)
+            if (reloadPresentationTimeline.IsValid)
             {
                 UpdateReloadClockPresentation();
+                if (!isReloading)
+                    CompleteReloadPresentation();
                 return;
             }
             if (weaponData == null || weaponData.reloadMode != ReloadMode.PerShell
@@ -567,6 +575,7 @@ namespace FPS
             if (aimed && weaponData.exitAimAfterShot)
                 BeginExitAimAfterShot();
 
+            InterruptReloadPresentation();
             PlayMuzzleEffect();
             if (weaponData.restartFireAnimationPerShot)
                 TriggerAnimation("Fire");
@@ -793,6 +802,10 @@ namespace FPS
 
         private void TriggerAnimation(string triggerName)
         {
+            if (triggerName == "Fire" || triggerName == "Equip" || triggerName == "Inspect")
+                InterruptReloadPresentation();
+            else if (triggerName == "ReloadComplete")
+                reloadPresentationTimeline = default;
             if (cachedWeaponManager == null)
                 cachedWeaponManager = GetComponentInParent<WeaponManager>();
 
@@ -865,13 +878,14 @@ namespace FPS
         private void ConfigureFpLayer(bool playIdle = false)
         {
             if (fpsArmsAnimator == null || fpsArmsAnimator.runtimeAnimatorController == null ||
-                fpsArmsAnimator.runtimeAnimatorController.name != "FPAnim")
+                !HasAnimatorParameter(fpsArmsAnimator, "ActiveWeaponLayer", AnimatorControllerParameterType.Int))
                 return;
 
             string selected = GetFirstPersonLayerName();
             for (int i = 0; i < fpsArmsAnimator.layerCount; i++)
             {
                 string layerName = fpsArmsAnimator.GetLayerName(i);
+                if (layerName == GrenadeThrowDefinition.LayerName) continue;
                 fpsArmsAnimator.SetLayerWeight(i, i == 0 || layerName == selected ? 1f : 0f);
             }
 
@@ -900,6 +914,7 @@ namespace FPS
         public void PlayShootSound()
         {
             if (weaponData == null) return;
+            InterruptReloadPresentation();
             if (weaponData.restartFireAnimationPerShot)
                 TriggerAnimation("Fire");
             else if (!continuousFirePresentationActive)
@@ -987,7 +1002,7 @@ namespace FPS
                 canShoot = true;
                 reloadCoroutine = null;
                 InsertMagazine();
-                TriggerAnimation("ReloadComplete");
+                CompleteReloadPresentation();
                 ReportCombatTelemetry();
                 yield break;
             }
@@ -1022,8 +1037,21 @@ namespace FPS
         {
             isReloading = false;
             canShoot    = true;
-            TriggerAnimation("ReloadComplete");
+            CompleteReloadPresentation();
             ReportCombatTelemetry();
+        }
+
+        private void CompleteReloadPresentation()
+        {
+            if (reloadPresentationTimeline.ShouldContinueAfterGameplay(weaponData, GetPresentationTime()))
+                return;
+            TriggerAnimation("ReloadComplete");
+        }
+
+        private void InterruptReloadPresentation()
+        {
+            if (reloadPresentationTimeline.IsValid)
+                TriggerAnimation("ReloadComplete");
         }
 
         public void GrabMagazine()
@@ -1040,6 +1068,7 @@ namespace FPS
 
         public void AddReserveAmmo(int amount)
         {
+            if (weaponData == null || amount <= 0 || amount > weaponData.ReserveCapacity - reservedAmmo) return;
             reservedAmmo += amount;
             ReportCombatTelemetry();
         }
@@ -1073,7 +1102,7 @@ namespace FPS
                 remainingPerShellPresentationInserts = 0;
                 InsertMagazine();
                 if (canPresentCombat)
-                    TriggerAnimation("ReloadComplete");
+                    CompleteReloadPresentation();
             }
             else if (isReloading && reloading && currentAmmo > previousMagazineAmmo)
             {
@@ -1081,7 +1110,7 @@ namespace FPS
             }
             // Network reconciliation owns ammo/reload state only.  The local
             // fire gate is owned by ShootCooldown/FireBurst; resetting it here
-            // lets every server response bypass the animator-baked fire interval.
+            // lets every server response bypass the configured fire interval.
             ReportCombatTelemetry();
         }
 
@@ -1102,18 +1131,23 @@ namespace FPS
             bool changed = System.Math.Abs(authoritativeEquipCompleteTime - equipCompleteTime) > 0.0001;
             authoritativeEquipCompleteTime = equipCompleteTime;
             authoritativeReloadCompleteTime = reloadCompleteTime;
-            reloadPresentationTimeline = reloading ? reloadTimeline : default;
+            if (reloading)
+                reloadPresentationTimeline = reloadTimeline;
             if (reloading && reloadPresentationTimeline.IsValid && isOwner)
                 UpdateReloadClockPresentation();
-            if (!gameObject.activeInHierarchy || !IsEquipping() || !changed)
+            double equipStartedAt = equipCompleteTime - (weaponData != null ? weaponData.EquipDuration : 0f);
+            double equipVisualEnd = equipStartedAt + (weaponData != null ? weaponData.EquipAnimationDuration : 0f);
+            if (!gameObject.activeInHierarchy || equipCompleteTime < 0d
+                || GetPresentationTime() >= equipVisualEnd || !changed)
                 return;
 
             ForceExitAimPresentation();
             if (cachedWeaponManager == null)
                 cachedWeaponManager = GetComponentInParent<WeaponManager>();
             cachedWeaponManager?.TriggerAnimation("Equip");
-            double duration = weaponData != null ? System.Math.Max(0.0001, weaponData.EquipDuration) : 0.0001;
-            float normalized = Mathf.Clamp01(1f - (float)((equipCompleteTime - GetPresentationTime()) / duration));
+            double duration = weaponData != null ? System.Math.Max(0.0001, weaponData.EquipAnimationDuration) : 0.0001;
+            double startedAt = equipCompleteTime - (weaponData != null ? weaponData.EquipDuration : 0f);
+            float normalized = Mathf.Clamp01((float)((GetPresentationTime() - startedAt) / duration));
             PrepareFirstPersonPresentation(true, normalized);
         }
 
@@ -1185,6 +1219,7 @@ namespace FPS
             cachedWeaponManager = GetComponentInParent<WeaponManager>();
             cachedPlayerMovement = GetComponentInParent<PlayerMovement>();
             cachedPlayerHealth = GetComponentInParent<PlayerHealth>();
+            cachedSurvivalInventory = GetComponentInParent<SurvivalInventory>();
             cachedInfection = GetComponentInParent<PlayerInfectionController>();
             cachedMouseMovement = GetComponentInParent<MouseMovement>();
             if (cachedCamera == null)
@@ -1202,7 +1237,10 @@ namespace FPS
         {
             if (cachedPlayerHealth == null)
                 cachedPlayerHealth = GetComponentInParent<PlayerHealth>();
-            return cachedPlayerHealth != null && cachedPlayerHealth.CanUseCombat;
+            if (cachedSurvivalInventory == null)
+                cachedSurvivalInventory = GetComponentInParent<SurvivalInventory>();
+            return cachedPlayerHealth != null && cachedPlayerHealth.CanUseCombat
+                && (cachedSurvivalInventory == null || !cachedSurvivalInventory.IsBusy);
         }
 
         public void SetCombatAvailability(bool canUseCombat)
@@ -1221,6 +1259,7 @@ namespace FPS
                 return;
 
             combatInputBlocked = true;
+            reloadPresentationTimeline = default;
             ForceExitAimPresentation();
             StopAllCoroutines();
             burstCoroutine = null;

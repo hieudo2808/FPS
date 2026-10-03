@@ -107,7 +107,7 @@ namespace FPS
             if (gameplayMap == null)
                 gameplayMap = actionAsset.AddActionMap("Gameplay");
 
-            if (gameplayMap.FindAction("Journal") == null) AddButton(gameplayMap, "Journal", "<Keyboard>/j");
+            if (gameplayMap.FindAction("Journal") == null) AddButton(gameplayMap, "Journal", "<Keyboard>/i");
             if (gameplayMap.FindAction("CycleGrenade") == null) AddButton(gameplayMap, "CycleGrenade", "<Keyboard>/3");
             if (gameplayMap.FindAction("Medkit") == null) AddButton(gameplayMap, "Medkit", "<Keyboard>/4");
             if (gameplayMap.FindAction("Antidote") == null) AddButton(gameplayMap, "Antidote", "<Keyboard>/5");

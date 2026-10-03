@@ -11,6 +11,11 @@ namespace FPS
         public bool chooseReward;
         [Range(1,4)] public int minimumPartySize = 1;
         public int ammo = 30;
+        [Tooltip("Set for a weapon-specific ammo box. Existing mixed equipment caches leave this empty.")]
+        public WeaponData ammoWeapon;
+        public string AmmoLabel => ammoWeapon != null ? ammoWeapon.weaponName + " AMMO" : "EQUIPPED WEAPON AMMO";
+        public bool TryGiveAmmoServer(WeaponFireHandler handler) => handler != null && (ammoWeapon != null
+            ? handler.AddReserveAmmoServer(ammoWeapon, ammo) : handler.AddReserveAmmoServer(ammo));
         public PickupType survivalReward = PickupType.Ammo;
         private Renderer[] visuals;
         private Collider[] colliders;
@@ -29,7 +34,7 @@ namespace FPS
                 PickupType.IncendiaryGrenade => "INCENDIARY +1",
                 PickupType.Medkit => "MEDKIT +1",
                 PickupType.Antidote => "ANTIDOTE +1",
-                _ => "Tiếp tế hữu hạn"
+                _ => $"{AmmoLabel} +{ammo}"
             };
             return $"[{SurvivalHotbar.Key("Interact", "F")}] {item}";
         }
@@ -53,9 +58,10 @@ namespace FPS
             bool value = !IsAvailable || CampaignMissionController.Instance.IsSupplyClaimed(supplyId);
             if (value == hidden) return;
             hidden = value;
-            GetComponent<SurvivalPickupPresentation>()?.SetAvailable(!hidden);
             foreach (var r in visuals) r.enabled = !hidden;
             foreach (var c in colliders) c.enabled = !hidden;
+            // Reapply outline state after revealing renderers, independent of Awake order.
+            GetComponent<SurvivalPickupPresentation>()?.SetAvailable(!hidden);
         }
     }
 }

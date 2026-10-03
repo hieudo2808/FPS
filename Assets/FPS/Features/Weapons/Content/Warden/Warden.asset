@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c8b7e004fa79d4d8b2a9f3e4fc1289, type: 3}
+  m_Name: Warden
+  m_EditorClassIdentifier: FPS::FPS.WeaponData
+  weaponName: Warden
+  weaponIcon: {fileID: 0}
+  damage: 45
+  damageType: 1
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  bulletSpeed: 200
+  bakedFireInterval: 0.15384616
+  bulletLiveTime: 5
+  burstCount: 3
+  fireMode: 2
+  projectileCount: 1
+  hipSpreadAngle: 1.5
+  aimedSpreadAngle: 0
+  falloffStartDistance: 50
+  falloffEndDistance: 80
+  minimumDamageMultiplier: 0.85
+  restartFireAnimationPerShot: 1
+  fireLoopStartFrame: 0
+  fireLoopEndFrame: 0
+  magazineSize: 15
+  totalAmmo: 60
+  maxReserveAmmo: 0
+  reloadMode: 0
+  reloadAmmoCommitFrame: 0
+  reloadLoopStartFrame: 0
+  reloadLoopEndFrame: 0
+  thirdPersonReloadInsertRange: {x: 0.1, y: 0.32}
+  bakedReloadDuration: 2.5
+  bakedReloadAmmoCommitDuration: 2.5
+  bakedPerShellOpeningDuration: 0
+  bakedPerShellInterval: 0
+  bakedPerShellClosingDuration: 0
+  firstPersonAnimatorLayer: Warden
+  bakedEquipDuration: 1
+  equipAnimationDuration: 2.3333333
+  reloadAnimationDuration: 3.8
+  supportsAim: 1
+  aimedWorldFov: 35
+  aimTransitionDuration: 0.15
+  aimedSensitivityMultiplier: 0.7
+  showScopeOverlay: 0
+  scopeOverlaySprite: {fileID: 0}
+  exitAimAfterShot: 0
+  hideViewmodelWhenAimed: 0
+  bulletPrefab: {fileID: 9127804531831411338, guid: 51be62899448f8c4cb83bff73baf4f61, type: 3}
+  shootSound: {fileID: 0}
+  reloadSound: {fileID: 0}
+  recoilPattern: {fileID: 0}
+  muzzleFlashPrefab: {fileID: 1000010254994808, guid: 9defeac88977c0d448aa4541073ee9e4, type: 3}
+  muzzleFlashLocalEulerAngles: {x: 0, y: 270, z: 0}
+  muzzleFlashScale: 0.01
+  surfaceImpactPrefab: {fileID: 4141317489459417463, guid: ba6ff69759a8e59468940736e0e069b4, type: 3}
+  maxConcurrentSurfaceImpacts: 64

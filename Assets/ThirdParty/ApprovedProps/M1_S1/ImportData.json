@@ -1,0 +1,36 @@
+{
+  "code": "M1_S1",
+  "source": "M1_S1/source/model.glb",
+  "model": "Models/M1_S1.fbx",
+  "materials": [
+    {
+      "name": "Material_0",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/Image_0.png",
+        "normal": "Textures/Image_2.png",
+        "metallic": "Textures/Image_1.png",
+        "roughness": "Textures/Image_1.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "metallic": 2,
+        "roughness": 1
+      },
+      "packedMask": "Textures/Material_0_MetallicSmoothness.png"
+    }
+  ],
+  "issues": [],
+  "sourceMeshCount": 1,
+  "sourceTriangles": 9983,
+  "conversion": "Blender 5.1.1 FBX export"
+}

@@ -312,24 +312,25 @@ namespace FPS
                     SetPresentationVisible(presentation?.WeaponObject, false);
             }
 
-            for (int i = 0; i < firstPersonWeaponSlots.Length; i++)
-            {
-                GameObject fpWeapon = firstPersonWeaponSlots[i];
-                if (fpWeapon != null)
-                {
-                    SetGroupVisible(fpWeapon, isLocalPlayer && i == index);
-                    if (isLocalPlayer && i == index)
-                        SetLayerRecursively(fpWeapon, weaponLayer);
-                }
-            }
-
             GameObject selectedThirdPersonWeapon = GetThirdPersonWeapon(index);
             ThirdPersonWeaponPresentation selectedPresentation =
                 GetThirdPersonWeaponPresentation(index);
-            GameObject selectedFirstPersonWeapon = index >= 0
+            GameObject authoredFirstPersonWeapon = index >= 0
                 && index < firstPersonWeaponSlots.Length
                 ? firstPersonWeaponSlots[index]
                 : null;
+            // A primary pickup replaces the manager's slot without replacing the
+            // authored fallback array. Display the actual equipped candidate.
+            GameObject selectedFirstPersonWeapon = weaponManager?.GetWeapon(index)?.gameObject
+                ?? authoredFirstPersonWeapon;
+            for (int i = 0; i < firstPersonWeaponSlots.Length; i++)
+            {
+                GameObject fpWeapon = firstPersonWeaponSlots[i];
+                SetGroupVisible(fpWeapon, isLocalPlayer && fpWeapon == selectedFirstPersonWeapon);
+            }
+            SetGroupVisible(selectedFirstPersonWeapon, isLocalPlayer);
+            if (isLocalPlayer && selectedFirstPersonWeapon != null)
+                SetLayerRecursively(selectedFirstPersonWeapon, weaponLayer);
             if (selectedThirdPersonWeapon != null
                 && selectedThirdPersonWeapon != selectedFirstPersonWeapon)
             {

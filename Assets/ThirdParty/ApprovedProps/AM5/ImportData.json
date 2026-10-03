@@ -1,0 +1,36 @@
+{
+  "code": "AM5",
+  "source": "AM5/source/005_AmmunitionBox_FinalRenderTest.fbx",
+  "model": "Models/AM5.fbx",
+  "materials": [
+    {
+      "name": "AmmoBoxAtlas",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/006_AmmunitionBox_FinalRenderLow_AmmoBoxTe_23F77C2DF8C1.png",
+        "normal": "Textures/006_AmmunitionBox_FinalRenderLow_AmmoBoxTe.png",
+        "metallic": "Textures/006_AmmunitionBox_FinalRenderLow_AmmoBoxTe_AF77D49E35CB.png",
+        "roughness": "Textures/006_AmmunitionBox_FinalRenderLow_AmmoBoxTe_F2C9EE199B0A.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "metallic": 0,
+        "roughness": 0
+      },
+      "packedMask": "Textures/AmmoBoxAtlas_MetallicSmoothness.png"
+    }
+  ],
+  "issues": [],
+  "sourceMeshCount": 11,
+  "sourceTriangles": 7492,
+  "conversion": "Blender 5.1.1 FBX export"
+}

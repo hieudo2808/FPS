@@ -7,6 +7,7 @@ namespace FPS
         [SerializeField] private Transform visual;
         [SerializeField] private Light glow;
         [SerializeField] private Material outlineMaterial;
+        [SerializeField] private bool animateIdle = true;
         private Renderer[] outlineRenderers;
         private Vector3 rest;
         private bool highlighted;
@@ -45,13 +46,13 @@ namespace FPS
         public void SetAvailable(bool value)
         {
             available = value;
-            if (!available) Highlight(false);
+            Highlight(highlighted);
             if (glow != null) glow.enabled = available;
         }
         private void OnDisable() => Highlight(false);
         private void Update()
         {
-            if (visual != null)
+            if (visual != null && animateIdle)
             {
                 visual.localPosition = rest + Vector3.up * (Mathf.Sin(Time.time * 1.5f) * .025f);
                 visual.Rotate(Vector3.up, Time.deltaTime * 12f, Space.Self);

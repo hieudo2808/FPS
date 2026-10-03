@@ -20,7 +20,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4091
   bulletSpeed: 200
-  bakedFireInterval: 0.79999995
+  bakedFireInterval: 0.9090909
   bulletLiveTime: 5
   burstCount: 3
   fireMode: 0
@@ -35,18 +35,21 @@ MonoBehaviour:
   fireLoopEndFrame: 0
   magazineSize: 5
   totalAmmo: 45
+  maxReserveAmmo: 0
   reloadMode: 1
   reloadAmmoCommitFrame: 0
   reloadLoopStartFrame: 13
   reloadLoopEndFrame: 41
   thirdPersonReloadInsertRange: {x: 0.13114753, y: 0.39344263}
-  bakedReloadDuration: 2.7083335
-  bakedReloadAmmoCommitDuration: 0.85416675
-  bakedPerShellOpeningDuration: 0.27083334
-  bakedPerShellInterval: 0.5833334
-  bakedPerShellClosingDuration: 1.8541667
+  bakedReloadDuration: 1.75
+  bakedReloadAmmoCommitDuration: 0.6833334
+  bakedPerShellOpeningDuration: 0.21666667
+  bakedPerShellInterval: 0.4666667
+  bakedPerShellClosingDuration: 1.0666666
   firstPersonAnimatorLayer: Bucky
-  bakedEquipDuration: 0.6666667
+  bakedEquipDuration: 0.75
+  equipAnimationDuration: 1.3333334
+  reloadAnimationDuration: 2.1666667
   supportsAim: 0
   aimedWorldFov: 25
   aimTransitionDuration: 0.12

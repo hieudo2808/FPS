@@ -141,7 +141,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Bucky Reload
-  m_Speed: 0.93846154
+  m_Speed: 1.1730769
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -9000504410786083328}
@@ -153,13 +153,13 @@ AnimatorState:
   m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
+  m_TimeParameterActive: 1
   m_Motion: {fileID: -2480771756570247469, guid: 14352b2ac472db34994a2573b78f096c, type: 3}
   m_Tag: 
   m_SpeedParameter: ReloadPlaybackSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_TimeParameter: ReloadNormalizedTime
 --- !u!1102 &-4770869185495373322
 AnimatorState:
   serializedVersion: 6
@@ -426,7 +426,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Bucky Equip
-  m_Speed: 2.25
+  m_Speed: 1.125
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -4367259471886112201}
@@ -438,13 +438,13 @@ AnimatorState:
   m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
+  m_TimeParameterActive: 1
   m_Motion: {fileID: -6649284292540575777, guid: 6ba5c2e1a13bd50498b7192162e06d8b, type: 3}
   m_Tag: 
   m_SpeedParameter: EquipPlaybackSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_TimeParameter: EquipNormalizedTime
 --- !u!1102 &-484775980618482907
 AnimatorState:
   serializedVersion: 6
@@ -586,6 +586,18 @@ AnimatorController:
   - m_Name: EquipPlaybackSpeed
     m_Type: 1
     m_DefaultFloat: 1
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: EquipNormalizedTime
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: ReloadNormalizedTime
+    m_Type: 1
+    m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}

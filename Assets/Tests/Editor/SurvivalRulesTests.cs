@@ -40,11 +40,17 @@ namespace FPS.Tests
             Assert.That(SurvivalRules.ValidThrowDirection(Vector3.back, Vector3.forward), Is.False);
             Assert.That(SurvivalRules.ValidThrowDirection(Vector3.forward, Vector3.forward), Is.True);
         }
-        [Test] public void InfectionTreatmentClampsAndResetsSepsisTimer()
+        [Test] public void InfectionTreatmentClampsToZero()
         {
             var go = new GameObject("InfectionTest");
             var infection = go.AddComponent<PlayerInfectionController>();
-            try { infection.SetInfectionServer(30f); infection.TreatInfectionServer(40f); Assert.That(infection.CurrentInfection, Is.EqualTo(0f).Within(.001f)); }
+            try
+            {
+                infection.SetInfectionServer(30f);
+                Assert.That(infection.CurrentInfection, Is.EqualTo(30f));
+                infection.TreatInfectionServer(40f);
+                Assert.That(infection.CurrentInfection, Is.EqualTo(0f).Within(.001f));
+            }
             finally { Object.DestroyImmediate(go); }
         }
     }

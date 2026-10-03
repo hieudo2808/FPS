@@ -8,7 +8,7 @@ namespace FPS
 {
     public static class NetworkProtocol
     {
-        public const ushort Version = 9;
+        public const ushort Version = 10;
         public const ushort SnapshotSchemaVersion = 8;
     }
 

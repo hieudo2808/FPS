@@ -71,6 +71,9 @@ namespace FPS
         [Header("Ammo")]
         public int magazineSize = 30;
         public int totalAmmo = 120;
+        [Min(0), Tooltip("Reserve capacity. Zero uses the starting reserve (Total Ammo minus Magazine Size). Never lower than the starting reserve.")]
+        public int maxReserveAmmo;
+        public int ReserveCapacity => Mathf.Max(maxReserveAmmo, Mathf.Max(0, totalAmmo - Mathf.Max(0, magazineSize)));
         [Tooltip("Magazine fills at once; PerShell inserts one round and repeats Reload until full.")]
         public ReloadMode reloadMode = ReloadMode.Magazine;
         [Min(0)]
@@ -122,6 +125,22 @@ namespace FPS
         [SerializeField, HideInInspector, Min(0f)] private float bakedEquipDuration = 0.75f;
 
         public float EquipDuration => Mathf.Max(0f, bakedEquipDuration);
+
+        [Min(0f), Tooltip("Full Equip clip duration. Zero falls back to the gameplay equip lock.")]
+        [SerializeField] private float equipAnimationDuration;
+        [Min(0f), Tooltip("Full Reload clip duration, including one insert for per-shell weapons. Zero falls back to the gameplay reload lock.")]
+        [SerializeField] private float reloadAnimationDuration;
+
+        public float EquipAnimationDuration => equipAnimationDuration > 0f
+            ? equipAnimationDuration : EquipDuration;
+        public float ReloadAnimationDuration => reloadAnimationDuration > 0f
+            ? reloadAnimationDuration : ReloadDuration;
+
+        public void ApplyPresentationTimings(float equip, float reload)
+        {
+            equipAnimationDuration = Mathf.Max(0f, equip);
+            reloadAnimationDuration = Mathf.Max(0f, reload);
+        }
 
         [Header("Aim / Scope")]
         public bool supportsAim;

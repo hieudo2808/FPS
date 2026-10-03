@@ -1,0 +1,57 @@
+{
+  "code": "AM2",
+  "source": "AM2/source/Assault Rifle Ammo Box REMAKE.fbx",
+  "model": "Models/AM2.fbx",
+  "materials": [
+    {
+      "name": "Box",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/7.62_x_39mm_Box_Diffuse_REMAKE.png",
+        "normal": "Textures/7.62_x_39mm_box_normal.jpeg",
+        "roughness": "Textures/7.62_x_39mm_box_Roughness.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0
+      },
+      "packedMask": "Textures/Box_MetallicSmoothness.png"
+    },
+    {
+      "name": "bullet",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.0,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/7.62_x_39mm_bullet_Diffuse.png",
+        "normal": "Textures/7.62_x_39mm_bullet_normal.png",
+        "metallic": "Textures/7.62_x_39mm_bullet_Metallic.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "metallic": 0
+      },
+      "packedMask": "Textures/bullet_MetallicSmoothness.png"
+    }
+  ],
+  "issues": [],
+  "sourceMeshCount": 2,
+  "sourceTriangles": 6724,
+  "conversion": "Original FBX bytes"
+}

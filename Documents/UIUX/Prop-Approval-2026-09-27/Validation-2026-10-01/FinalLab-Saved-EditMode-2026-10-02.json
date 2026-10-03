@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-02",
+  "scene": "Assets/FPS/Scenes/GameScene.unity",
+  "saveAuthorizedByUser": true,
+  "savedSceneSha256": "8983F11C070E305B746948623F1E7DF0F267AF909021140D23BFED5E778DD47A",
+  "testMode": "EditMode",
+  "passed": 12,
+  "total": 12,
+  "results": [
+    {
+      "success": true,
+      "jobId": "55f1a934",
+      "status": "completed",
+      "totalTests": 10,
+      "passedTests": 10,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "inconclusiveTests": 0,
+      "otherTests": 0,
+      "failedTestNames": [],
+      "failedTestDetails": [],
+      "elapsedSeconds": 26,
+      "resultSummary": "Test run completed: 10/10 passed.",
+      "error": null
+    },
+    {
+      "success": true,
+      "jobId": "71abad3a",
+      "status": "completed",
+      "totalTests": 1,
+      "passedTests": 1,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "inconclusiveTests": 0,
+      "otherTests": 0,
+      "failedTestNames": [],
+      "failedTestDetails": [],
+      "elapsedSeconds": 31,
+      "resultSummary": "Test run completed: 1/1 passed.",
+      "error": null
+    },
+    {
+      "success": true,
+      "jobId": "331e8a64",
+      "status": "completed",
+      "totalTests": 1,
+      "passedTests": 1,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "inconclusiveTests": 0,
+      "otherTests": 0,
+      "failedTestNames": [],
+      "failedTestDetails": [],
+      "elapsedSeconds": 17,
+      "resultSummary": "Test run completed: 1/1 passed.",
+      "error": null
+    }
+  ],
+  "postTestReadback": {
+    "labEquipment": 71,
+    "supplies": 108,
+    "sceneRoots": 8,
+    "sceneDirty": false
+  },
+  "limitations": [
+    "Not PlayMode or independent-peer acceptance",
+    "First-person/third-person/projectile and full visual QA remain pending"
+  ]
+}

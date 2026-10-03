@@ -84,6 +84,12 @@
                     "expectedControlType": "Button"
                 },
                 {
+                    "name": "Journal",
+                    "type": "Button",
+                    "id": "10000000-0000-0000-0000-00000000000e",
+                    "expectedControlType": "Button"
+                },
+                {
                     "name": "CycleGrenade",
                     "type": "Button",
                     "id": "b8104ab4-c781-411c-9458-815648a892d6",
@@ -270,6 +276,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Antidote",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "20000000-0000-0000-0000-000000000015",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Journal",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -141,7 +141,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Classic Reload
-  m_Speed: 1.1811023
+  m_Speed: 1.1811024
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -9000504410786083328}
@@ -153,13 +153,13 @@ AnimatorState:
   m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
+  m_TimeParameterActive: 1
   m_Motion: {fileID: -4125695360633829204, guid: aab3086f89b0bec4fb18724552e3877c, type: 3}
   m_Tag: 
   m_SpeedParameter: ReloadPlaybackSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_TimeParameter: ReloadNormalizedTime
 --- !u!1102 &-4770869185495373322
 AnimatorState:
   serializedVersion: 6
@@ -438,13 +438,13 @@ AnimatorState:
   m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
+  m_TimeParameterActive: 1
   m_Motion: {fileID: 4476181522508659778, guid: 6d2c3ab59e9c9614abe2ce8b243d3d9a, type: 3}
   m_Tag: 
   m_SpeedParameter: EquipPlaybackSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_TimeParameter: EquipNormalizedTime
 --- !u!1102 &-484775980618482907
 AnimatorState:
   serializedVersion: 6
@@ -586,6 +586,18 @@ AnimatorController:
   - m_Name: EquipPlaybackSpeed
     m_Type: 1
     m_DefaultFloat: 1
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: EquipNormalizedTime
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: ReloadNormalizedTime
+    m_Type: 1
+    m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}

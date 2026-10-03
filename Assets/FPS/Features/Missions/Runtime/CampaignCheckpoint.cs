@@ -69,7 +69,7 @@ namespace FPS
     [Serializable]
     public sealed class CampaignCheckpoint
     {
-        public int version = 1;
+        public int version = 2;
         public CampaignState state;
         public List<CampaignPlayerSave> players = new();
         public List<string> claimedSupplies = new();
@@ -105,6 +105,13 @@ namespace FPS
                 {
                     checkpoint = JsonUtility.FromJson<CampaignCheckpoint>(File.ReadAllText(path));
                     if (checkpoint == null) throw new InvalidDataException("Checkpoint trống.");
+                    if (checkpoint.version == 1)
+                    {
+                        checkpoint.version = 2;
+                        checkpoint.state ??= new CampaignState();
+                        checkpoint.state.discoveredFiles = 0;
+                        checkpoint.state.teamDownedCount = 0;
+                    }
                     checkpoint.Validate();
                     return true;
                 }
@@ -117,8 +124,9 @@ namespace FPS
 
         public void Validate()
         {
-            if (version != 1 || state == null || state.version != 1 || players == null || players.Count is < 1 or > 4
+            if (version is < 1 or > 2 || state == null || state.version != 1 || players == null || players.Count is < 1 or > 4
                 || !Enum.IsDefined(typeof(CampaignChapter), state.chapter) || state.phase != CampaignPhase.Exploring
+                || !Enum.IsDefined(typeof(CampaignTankStage), state.tankStage)
                 || state.checkpoint < 0 || state.checkpoint > 5 || state.checkpoint / 2 != (int)state.chapter
                 || claimedSupplies == null || claimedSupplies.Count > 128)
                 throw new InvalidDataException("Checkpoint không tương thích hoặc thiếu dữ liệu.");

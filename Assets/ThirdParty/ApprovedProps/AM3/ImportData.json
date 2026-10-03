@@ -1,0 +1,76 @@
+{
+  "code": "AM3",
+  "source": "AM3/source/Shotgun Ammo Box.fbx",
+  "model": "Models/AM3.fbx",
+  "materials": [
+    {
+      "name": "Material.001",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/Box_Art.jpg",
+        "normal": "Textures/box_art_N.jpg",
+        "roughness": "Textures/box_art_R.jpg"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0
+      },
+      "packedMask": "Textures/Material.001_MetallicSmoothness.png"
+    },
+    {
+      "name": "metal",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.4090900123119354,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/Metal042A_4K_Color.jpg",
+        "normal": "Textures/Metal042A_4K_NormalGL.jpg"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0
+      }
+    },
+    {
+      "name": "red",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.4681818187236786,
+      "roughness": 0.4727270007133484,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/Plastic007_4K_Color.jpg",
+        "normal": "Textures/Plastic007_4K_NormalGL.jpg"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0
+      }
+    }
+  ],
+  "issues": [
+    "Missing source texture: Metal042A_4K_Roughness.jpg"
+  ],
+  "sourceMeshCount": 2,
+  "sourceTriangles": 2732,
+  "conversion": "Original FBX bytes"
+}

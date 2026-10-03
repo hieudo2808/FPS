@@ -1,0 +1,131 @@
+{
+  "code": "LAB_C2",
+  "source": "LAB_C2/source/FUME CUPBOARDS.glb",
+  "model": "Models/LAB_C2.fbx",
+  "materials": [
+    {
+      "name": "Glass",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.0,
+      "alpha": 0.5,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Material",
+      "color": [
+        0.0,
+        0.005181517917662859,
+        0.013702083379030228,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {
+        "emission": "Textures/Web_1920___1.png"
+      },
+      "channels": {
+        "emission": 0
+      }
+    },
+    {
+      "name": "Material.001",
+      "color": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "air in",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "body",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/iPhone_12-12_Pro___1.png"
+      },
+      "channels": {
+        "albedo": 0
+      }
+    },
+    {
+      "name": "coat",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "door",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "frame",
+      "color": [
+        0.000303417444229126,
+        0.4072403609752655,
+        0.8069523572921753,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    }
+  ],
+  "issues": [],
+  "sourceMeshCount": 13,
+  "sourceTriangles": 3569,
+  "conversion": "Blender 5.1.1 FBX export"
+}

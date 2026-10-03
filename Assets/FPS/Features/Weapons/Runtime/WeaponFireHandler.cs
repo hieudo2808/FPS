@@ -589,27 +589,43 @@ namespace FPS
         {
             if (playerHealth == null)
                 playerHealth = GetComponent<PlayerHealth>();
-            return playerHealth != null && playerHealth.CanUseCombat && GetComponent<SurvivalInventory>()?.IsUsingItem != true;
+            return playerHealth != null && playerHealth.CanUseCombat && GetComponent<SurvivalInventory>()?.IsBusy != true;
         }
 
-        public bool CanReceiveAmmoServer()
+        private int FindOwnedAmmoSlot(WeaponData ammoWeapon)
         {
-            return IsServer && GetCurrentWeaponAndEnsureServerState() != null;
+            if (ammoWeapon == null) return -1;
+            if (weaponManager == null) weaponManager = GetComponent<WeaponManager>();
+            if (weaponManager == null) return -1;
+            // Only carried slots count, not the inactive primary replacement candidates.
+            for (int slot = 0; slot < weaponManager.WeaponCount; slot++)
+                if (weaponManager.GetWeapon(slot)?.Data == ammoWeapon) return slot;
+            return -1;
         }
 
+        public bool CanReceiveAmmoServer(WeaponData ammoWeapon, int amount)
+        {
+            if (!IsServer || amount <= 0) return false;
+            int slot = FindOwnedAmmoSlot(ammoWeapon);
+            return slot >= 0 && GetServerState(slot, true).CanReceiveAmmo(amount, ammoWeapon.ReserveCapacity);
+        }
+
+        // Legacy mixed equipment caches are not weapon-specific ammo boxes.
         public bool AddReserveAmmoServer(int amount)
         {
-            if (!IsServer || amount <= 0)
-                return false;
+            if (!IsServer || amount <= 0 || !CanUseCombat() || GetCurrentWeaponAndEnsureServerState() == null) return false;
+            if (!GetCurrentServerState(true).AddReserveAmmo(amount)) return false;
+            PublishOwnerState(FireRejectReason.None, 0, GetServerTick());
+            UpdateServerTelemetry();
+            return true;
+        }
 
-            if (GetCurrentWeaponAndEnsureServerState() == null)
-                return false;
-
-            WeaponServerState state = GetCurrentServerState(true);
-            if (state == null)
-                return false;
-
-            state.AddReserveAmmo(amount);
+        public bool AddReserveAmmoServer(WeaponData ammoWeapon, int amount)
+        {
+            if (!IsServer || amount <= 0 || !CanUseCombat()) return false;
+            int slot = FindOwnedAmmoSlot(ammoWeapon);
+            if (slot < 0 || !GetServerState(slot, true).AddReserveAmmo(amount, ammoWeapon.ReserveCapacity)) return false;
+            // Do not equip the recipient slot. Its authoritative state is published on the next switch.
             PublishOwnerState(FireRejectReason.None, 0, GetServerTick());
             UpdateServerTelemetry();
             return true;

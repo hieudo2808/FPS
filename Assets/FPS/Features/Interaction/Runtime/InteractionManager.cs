@@ -288,6 +288,8 @@ namespace FPS
             PickupResultCode code,
             ClientRpcParams rpcParams = default)
         {
+            if (code == PickupResultCode.AmmoUnavailable)
+                CampaignHUD.Instance?.ShowResult(CampaignResult.AmmoUnavailable);
             if (code == PickupResultCode.Accepted)
                 GameLog.Info(() => $"[Pickup] Accepted target={targetNetworkObjectId} seq={requestSequence}");
             else

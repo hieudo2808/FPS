@@ -1,0 +1,65 @@
+{
+  "code": "LAB_C1",
+  "source": "LAB_C1/source/SF_LafShelf_and_utilityCart_NakedSingularity.zip.unpacked/SF_LabShelf_and_utilityCart_NakedSingularity.fbx",
+  "model": "Models/LAB_C1.fbx",
+  "materials": [
+    {
+      "name": "metal",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5527864098548889,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/T_Utility_cart_metal_D.jpg",
+        "normal": "Textures/T_Utility_cart_metal_N.jpg",
+        "roughness": "Textures/T_Utility_cart_metal_R.png",
+        "metallic": "Textures/T_Utility_cart_metal_M.png",
+        "ao": "Textures/T_Utility_cart_metal_O.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0,
+        "metallic": 0,
+        "ao": 0
+      },
+      "packedMask": "Textures/metal_MetallicSmoothness.png"
+    },
+    {
+      "name": "metal.001",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5527864098548889,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/T_Lab_shelf_metal_D.jpg",
+        "normal": "Textures/T_Lab_shelf_metal_N.jpg",
+        "roughness": "Textures/T_Lab_shelf_metal_R.png",
+        "metallic": "Textures/T_Lab_shelf_metal_M.png",
+        "ao": "Textures/T_Lab_shelf_metal_o.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0,
+        "metallic": 0,
+        "ao": 0
+      },
+      "packedMask": "Textures/metal.001_MetallicSmoothness.png"
+    }
+  ],
+  "issues": [],
+  "sourceMeshCount": 2,
+  "sourceTriangles": 5264,
+  "conversion": "Original FBX bytes"
+}

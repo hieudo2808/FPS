@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="23" result="Passed" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-03 09:49:52Z" end-time="2026-10-03 09:50:01Z" duration="8.9383505">
+  <test-suite type="TestSuite" id="1000" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="722" result="Passed" start-time="2026-10-03 09:49:52Z" end-time="2026-10-03 09:50:01Z" duration="8.938351" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1080" name="FPS.RegressionTests.Editor.dll" fullname="E:/Unity/Project/FPS/Library/ScriptAssemblies/FPS.RegressionTests.Editor.dll" runstate="Runnable" testcasecount="63" result="Passed" start-time="2026-10-03 09:49:52Z" end-time="2026-10-03 09:50:01Z" duration="8.829433" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="25788" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1081" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="63" result="Passed" start-time="2026-10-03 09:49:52Z" end-time="2026-10-03 09:50:01Z" duration="8.726463" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1082" name="Tests" fullname="FPS.Tests" runstate="Runnable" testcasecount="63" result="Passed" start-time="2026-10-03 09:49:52Z" end-time="2026-10-03 09:50:01Z" duration="8.617111" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1030" name="ConsoleRegressionTests" fullname="FPS.Tests.ConsoleRegressionTests" classname="FPS.Tests.ConsoleRegressionTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-03 09:49:52Z" end-time="2026-10-03 09:50:00Z" duration="8.264384" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1035" name="HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings" fullname="FPS.Tests.ConsoleRegressionTests.HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings" classname="FPS.Tests.ConsoleRegressionTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-03 09:49:52Z" end-time="2026-10-03 09:50:00Z" duration="8.153297" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1031" name="HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings(&quot;Brimstone&quot;)" fullname="FPS.Tests.ConsoleRegressionTests.HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings(&quot;Brimstone&quot;)" methodname="HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings" classname="FPS.Tests.ConsoleRegressionTests" runstate="Runnable" seed="360377798" result="Passed" start-time="2026-10-03 09:49:52Z" end-time="2026-10-03 09:49:56Z" duration="3.514683" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[PlayerVisual] root=BrimstonePlayer firstPersonArms=Hand slots=True
+[PlayerVisual] root=BrimstonePlayer firstPersonArms=Hand slots=True
+]]></output>
+              </test-case>
+              <test-case id="1032" name="HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings(&quot;Clove&quot;)" fullname="FPS.Tests.ConsoleRegressionTests.HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings(&quot;Clove&quot;)" methodname="HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings" classname="FPS.Tests.ConsoleRegressionTests" runstate="Runnable" seed="78715083" result="Passed" start-time="2026-10-03 09:49:56Z" end-time="2026-10-03 09:50:00Z" duration="4.289948" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[PlayerVisual] root=ClovePlayer firstPersonArms=CloveHand slots=True
+[PlayerVisual] root=ClovePlayer firstPersonArms=CloveHand slots=True
+]]></output>
+              </test-case>
+              <test-case id="1033" name="HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings(&quot;Gekko&quot;)" fullname="FPS.Tests.ConsoleRegressionTests.HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings(&quot;Gekko&quot;)" methodname="HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings" classname="FPS.Tests.ConsoleRegressionTests" runstate="Runnable" seed="1204151675" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.136238" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[PlayerVisual] root=GekkoPlayer firstPersonArms=Hand slots=True
+[PlayerVisual] root=GekkoPlayer firstPersonArms=Hand slots=True
+]]></output>
+              </test-case>
+              <test-case id="1034" name="HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings(&quot;Sage&quot;)" fullname="FPS.Tests.ConsoleRegressionTests.HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings(&quot;Sage&quot;)" methodname="HiddenThirdPersonPresentationAcceptsNetworkUpdatesWithoutWarnings" classname="FPS.Tests.ConsoleRegressionTests" runstate="Runnable" seed="946977642" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.094986" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[PlayerVisual] root=SagePlayer firstPersonArms=Hand slots=True
+[PlayerVisual] root=SagePlayer firstPersonArms=Hand slots=True
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1052" name="WeaponTimingTests" fullname="FPS.Tests.WeaponTimingTests" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:01Z" duration="0.242844" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1063" name="BuckyKeepsInsertMarkersAndCanInterruptAfterTheFirstShell" fullname="FPS.Tests.WeaponTimingTests.BuckyKeepsInsertMarkersAndCanInterruptAfterTheFirstShell" methodname="BuckyKeepsInsertMarkersAndCanInterruptAfterTheFirstShell" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="1769116685" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.012731" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1062" name="DelayedSnapshotsKeepTheOriginalClockAndInfectionMultiplier" fullname="FPS.Tests.WeaponTimingTests.DelayedSnapshotsKeepTheOriginalClockAndInfectionMultiplier" methodname="DelayedSnapshotsKeepTheOriginalClockAndInfectionMultiplier" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="1082036151" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.000824" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1072" name="DisablingWeaponOrCombatClearsThePresentationClock" fullname="FPS.Tests.WeaponTimingTests.DisablingWeaponOrCombatClearsThePresentationClock" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.005404" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1070" name="DisablingWeaponOrCombatClearsThePresentationClock(False)" fullname="FPS.Tests.WeaponTimingTests.DisablingWeaponOrCombatClearsThePresentationClock(False)" methodname="DisablingWeaponOrCombatClearsThePresentationClock" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="1121929622" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.002969" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1071" name="DisablingWeaponOrCombatClearsThePresentationClock(True)" fullname="FPS.Tests.WeaponTimingTests.DisablingWeaponOrCombatClearsThePresentationClock(True)" methodname="DisablingWeaponOrCombatClearsThePresentationClock" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="1229453717" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.000564" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1069" name="FirstPersonCompletionRetainsOnlyTheNaturalVisualTail" fullname="FPS.Tests.WeaponTimingTests.FirstPersonCompletionRetainsOnlyTheNaturalVisualTail" methodname="FirstPersonCompletionRetainsOnlyTheNaturalVisualTail" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="820155793" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.002817" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1060" name="LegacyDefinitionsFallBackToGameplayTiming" fullname="FPS.Tests.WeaponTimingTests.LegacyDefinitionsFallBackToGameplayTiming" methodname="LegacyDefinitionsFallBackToGameplayTiming" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="1868977961" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.000415" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1068" name="NewActionsCancelTheFirstPersonReloadTail" fullname="FPS.Tests.WeaponTimingTests.NewActionsCancelTheFirstPersonReloadTail" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.098134" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1064" name="NewActionsCancelTheFirstPersonReloadTail(&quot;Fire&quot;)" fullname="FPS.Tests.WeaponTimingTests.NewActionsCancelTheFirstPersonReloadTail(&quot;Fire&quot;)" methodname="NewActionsCancelTheFirstPersonReloadTail" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="1024516174" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.000916" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1065" name="NewActionsCancelTheFirstPersonReloadTail(&quot;Equip&quot;)" fullname="FPS.Tests.WeaponTimingTests.NewActionsCancelTheFirstPersonReloadTail(&quot;Equip&quot;)" methodname="NewActionsCancelTheFirstPersonReloadTail" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="2011992764" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.000420" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1066" name="NewActionsCancelTheFirstPersonReloadTail(&quot;Inspect&quot;)" fullname="FPS.Tests.WeaponTimingTests.NewActionsCancelTheFirstPersonReloadTail(&quot;Inspect&quot;)" methodname="NewActionsCancelTheFirstPersonReloadTail" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="2025477565" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.000184" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1067" name="NewActionsCancelTheFirstPersonReloadTail(&quot;ReloadComplete&quot;)" fullname="FPS.Tests.WeaponTimingTests.NewActionsCancelTheFirstPersonReloadTail(&quot;ReloadComplete&quot;)" methodname="NewActionsCancelTheFirstPersonReloadTail" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="61237135" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.000170" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1074" name="OdinKeepsContinuousFireAndDistinctInspectDurations" fullname="FPS.Tests.WeaponTimingTests.OdinKeepsContinuousFireAndDistinctInspectDurations" methodname="OdinKeepsContinuousFireAndDistinctInspectDurations" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="885628022" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:00Z" duration="0.004829" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1059" name="SavedDefinitionsMatchSourceClocks" fullname="FPS.Tests.WeaponTimingTests.SavedDefinitionsMatchSourceClocks" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-03 09:50:00Z" end-time="2026-10-03 09:50:01Z" duration="0.107454" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1053" name="SavedDefinitionsMatchSourceClocks(&quot;Bucky&quot;,1.1f,0.75f,1.75f,1.333333f,2.166667f)" fullname="FPS.Tests.WeaponTimingTests.SavedDefinitionsMatchSourceClocks(&quot;Bucky&quot;,1.1f,0.75f,1.75f,1.333333f,2.166667f)" methodname="SavedDefinitionsMatchSourceClocks" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="1812070467" result="Passed" start-time="2026-10-03 09:50:01Z" end-time="2026-10-03 09:50:01Z" duration="0.003656" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1054" name="SavedDefinitionsMatchSourceClocks(&quot;Classic&quot;,6.75f,0.75f,1.75f,1.0f,2.116667f)" fullname="FPS.Tests.WeaponTimingTests.SavedDefinitionsMatchSourceClocks(&quot;Classic&quot;,6.75f,0.75f,1.75f,1.0f,2.116667f)" methodname="SavedDefinitionsMatchSourceClocks" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="368070828" result="Passed" start-time="2026-10-03 09:50:01Z" end-time="2026-10-03 09:50:01Z" duration="0.000241" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1055" name="SavedDefinitionsMatchSourceClocks(&quot;Odin&quot;,12.0f,1.25f,5.0f,2.833333f,6.0f)" fullname="FPS.Tests.WeaponTimingTests.SavedDefinitionsMatchSourceClocks(&quot;Odin&quot;,12.0f,1.25f,5.0f,2.833333f,6.0f)" methodname="SavedDefinitionsMatchSourceClocks" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="1844880698" result="Passed" start-time="2026-10-03 09:50:01Z" end-time="2026-10-03 09:50:01Z" duration="0.000142" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1056" name="SavedDefinitionsMatchSourceClocks(&quot;Operator&quot;,0.6f,1.5f,3.7f,2.333333f,4.5f)" fullname="FPS.Tests.WeaponTimingTests.SavedDefinitionsMatchSourceClocks(&quot;Operator&quot;,0.6f,1.5f,3.7f,2.333333f,4.5f)" methodname="SavedDefinitionsMatchSourceClocks" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="756044098" result="Passed" start-time="2026-10-03 09:50:01Z" end-time="2026-10-03 09:50:01Z" duration="0.000135" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1057" name="SavedDefinitionsMatchSourceClocks(&quot;Vandal&quot;,9.75f,1.0f,2.5f,1.65f,2.933333f)" fullname="FPS.Tests.WeaponTimingTests.SavedDefinitionsMatchSourceClocks(&quot;Vandal&quot;,9.75f,1.0f,2.5f,1.65f,2.933333f)" methodname="SavedDefinitionsMatchSourceClocks" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="47820844" result="Passed" start-time="2026-10-03 09:50:01Z" end-time="2026-10-03 09:50:01Z" duration="0.000113" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1058" name="SavedDefinitionsMatchSourceClocks(&quot;Warden&quot;,6.5f,1.0f,2.5f,2.333333f,3.8f)" fullname="FPS.Tests.WeaponTimingTests.SavedDefinitionsMatchSourceClocks(&quot;Warden&quot;,6.5f,1.0f,2.5f,2.333333f,3.8f)" methodname="SavedDefinitionsMatchSourceClocks" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="1732423280" result="Passed" start-time="2026-10-03 09:50:01Z" end-time="2026-10-03 09:50:01Z" duration="0.000107" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1061" name="ServerUnlocksAndCommitsWithoutCompressingTheVisualTail" fullname="FPS.Tests.WeaponTimingTests.ServerUnlocksAndCommitsWithoutCompressingTheVisualTail" methodname="ServerUnlocksAndCommitsWithoutCompressingTheVisualTail" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="168078370" result="Passed" start-time="2026-10-03 09:50:01Z" end-time="2026-10-03 09:50:01Z" duration="0.000717" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1073" name="ThirdPersonPreservesNaturalTailButCancelsOnAcceptedShotOrSwitch" fullname="FPS.Tests.WeaponTimingTests.ThirdPersonPreservesNaturalTailButCancelsOnAcceptedShotOrSwitch" methodname="ThirdPersonPreservesNaturalTailButCancelsOnAcceptedShotOrSwitch" classname="FPS.Tests.WeaponTimingTests" runstate="Runnable" seed="773908514" result="Passed" start-time="2026-10-03 09:50:01Z" end-time="2026-10-03 09:50:01Z" duration="0.003035" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/hieud/AppData/LocalLow/HieuDHM/FPS\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

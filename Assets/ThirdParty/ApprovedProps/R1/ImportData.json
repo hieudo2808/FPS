@@ -1,0 +1,41 @@
+{
+  "code": "R1",
+  "source": "R1/source/radio.fbx",
+  "model": "Models/R1.fbx",
+  "materials": [
+    {
+      "name": "dark",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.5,
+      "roughness": 0.5527864098548889,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/radio_low_dark_BaseColor.png",
+        "normal": "Textures/dark_Normal_DirectX.png",
+        "roughness": "Textures/radio_low_dark_Roughness.png",
+        "metallic": "Textures/radio_low_dark_Metallic.png",
+        "ao": "Textures/dark_Mixed_AO.png",
+        "emission": "Textures/radio_low_dark_Emissive.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0,
+        "metallic": 0,
+        "ao": 0,
+        "emission": 0
+      },
+      "flipNormalGreen": true,
+      "packedMask": "Textures/dark_MetallicSmoothness.png"
+    }
+  ],
+  "issues": [],
+  "sourceMeshCount": 2,
+  "sourceTriangles": 28807,
+  "conversion": "Original FBX bytes"
+}

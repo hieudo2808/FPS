@@ -1,0 +1,165 @@
+{
+  "code": "L2_R",
+  "source": "L2_R/source/ComputerDesk.fbx",
+  "model": "Models/L2_R.fbx",
+  "materials": [
+    {
+      "name": "Computer",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "normal": "Textures/Computer_Normal.png",
+        "metallic": "Textures/Computer_Metallic.png",
+        "roughness": "Textures/Computer_Roughness.png",
+        "albedo": "Textures/Computer_BaseColor.png",
+        "ao": "Textures/Computer_AO.png"
+      },
+      "channels": {
+        "normal": 0,
+        "metallic": 0,
+        "roughness": 0,
+        "albedo": 0,
+        "ao": 0
+      },
+      "packedMask": "Textures/Computer_MetallicSmoothness.png"
+    },
+    {
+      "name": "Keyboard",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.8590908646583557,
+      "alpha": 1.0,
+      "textures": {
+        "normal": "Textures/Keyboard_Normal.png",
+        "roughness": "Textures/Keyboard_Roughness.png",
+        "albedo": "Textures/Keyboard_BaseColor.png",
+        "ao": "Textures/Keyboard_AO.png"
+      },
+      "channels": {
+        "normal": 0,
+        "roughness": 0,
+        "albedo": 0,
+        "ao": 0
+      },
+      "packedMask": "Textures/Keyboard_MetallicSmoothness.png"
+    },
+    {
+      "name": "Loudspeaker01",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "normal": "Textures/Loudspeaker01_Normal.png",
+        "roughness": "Textures/Loudspeaker01_Roughness.png",
+        "albedo": "Textures/Loudspeaker01_BaseColor.png",
+        "ao": "Textures/Loudspeaker01_AO.png"
+      },
+      "channels": {
+        "normal": 0,
+        "roughness": 0,
+        "albedo": 0,
+        "ao": 0
+      },
+      "packedMask": "Textures/Loudspeaker01_MetallicSmoothness.png"
+    },
+    {
+      "name": "Loudspeaker02",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.44999998807907104,
+      "alpha": 1.0,
+      "textures": {
+        "normal": "Textures/Loudspeaker02_Normal.png",
+        "roughness": "Textures/Loudspeaker02_Roughness.png",
+        "albedo": "Textures/Loudspeaker02_BaseColor.png",
+        "ao": "Textures/Loudspeaker02_AO.png"
+      },
+      "channels": {
+        "normal": 0,
+        "roughness": 0,
+        "albedo": 0,
+        "ao": 0
+      },
+      "packedMask": "Textures/Loudspeaker02_MetallicSmoothness.png"
+    },
+    {
+      "name": "Monitor",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "normal": "Textures/Monitor_Normal.png",
+        "metallic": "Textures/Monitor_Metallic.png",
+        "roughness": "Textures/Monitor_Roughness.png",
+        "albedo": "Textures/Monitor_BaseColor.png",
+        "ao": "Textures/Monitor_AO.png"
+      },
+      "channels": {
+        "normal": 0,
+        "metallic": 0,
+        "roughness": 0,
+        "albedo": 0,
+        "ao": 0
+      },
+      "packedMask": "Textures/Monitor_MetallicSmoothness.png"
+    },
+    {
+      "name": "Mouse",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.8999999761581421,
+      "alpha": 1.0,
+      "textures": {
+        "normal": "Textures/Mouse_Normal.png",
+        "roughness": "Textures/Mouse_Roughness.png",
+        "albedo": "Textures/Mouse_BaseColor.png"
+      },
+      "channels": {
+        "normal": 0,
+        "roughness": 0,
+        "albedo": 0
+      },
+      "packedMask": "Textures/Mouse_MetallicSmoothness.png"
+    }
+  ],
+  "issues": [
+    "Missing source texture: Monitor_Emissive.png"
+  ],
+  "sourceMeshCount": 7,
+  "sourceTriangles": 772,
+  "conversion": "Blender 5.1.1 FBX export"
+}

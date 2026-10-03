@@ -240,22 +240,61 @@ namespace FPS
             if (!CapsuleClear(position, radius, height)) return false;
             foreach (var player in campaign.Players)
             {
-                if (player.LifeState != PlayerLifeState.Alive || !HasCompletePath(position, player.transform.position)) continue;
-                var corners = reusablePath.corners;
-                bool clear = true;
-                for (int segment = 1; segment < corners.Length && clear; segment++)
+                if (player.LifeState == PlayerLifeState.Alive && player.IsInputReady
+                    && HasCampaignSpecialRoute(position, player.transform.position, tank)) return true;
+            }
+            return false;
+        }
+
+        public bool HasCampaignSpecialRoute(Vector3 position, Vector3 target, bool tank)
+        {
+            if (!HasCompletePath(position, target)) return false;
+            float radius = tank ? .9f : .5f, height = tank ? 2.8f : 2f;
+            var corners = reusablePath.corners;
+            for (int segment = 1; segment < corners.Length; segment++)
+            {
+                Vector3 a = corners[segment - 1], b = corners[segment];
+                int steps = Mathf.Max(1, Mathf.CeilToInt(Vector3.Distance(a, b) / .45f));
+                for (int step = 0; step <= steps; step++)
                 {
-                    Vector3 a = corners[segment - 1], b = corners[segment];
-                    int steps = Mathf.Max(1, Mathf.CeilToInt(Vector3.Distance(a, b) / .45f));
-                    for (int step = 0; step <= steps; step++)
-                    {
-                        Vector3 point = Vector3.Lerp(a, b, (float)step / steps);
-                        // Stop outside the target's own body; the attack closes this gap.
-                        if (Vector3.Distance(point, player.transform.position) < radius + 1.5f) continue;
-                        if (!CapsuleClear(point, radius, height)) { clear = false; break; }
-                    }
+                    Vector3 point = Vector3.Lerp(a, b, (float)step / steps);
+                    // Stop outside the target's own body; the attack closes this gap.
+                    if (Vector3.Distance(point, target) < radius + 1.5f) continue;
+                    if (!CapsuleClear(point, radius, height)) return false;
                 }
-                if (clear) return true;
+            }
+            return true;
+        }
+
+        /// <summary>Tank staging must have standing room, not merely a point on a narrow NavMesh corridor.</summary>
+        public static bool HasTankArenaClearance(Vector3 position)
+        {
+            if (!NavMesh.SamplePosition(position, out var center, .5f, NavMesh.AllAreas)
+                || Mathf.Abs(center.position.y - position.y) > .25f
+                || !CapsuleClear(center.position, .9f, 2.8f)) return false;
+            for (int side = 0; side < 4; side++)
+            {
+                Vector3 direction = side switch { 0 => Vector3.forward, 1 => Vector3.back, 2 => Vector3.left, _ => Vector3.right };
+                Vector3 edge = center.position + direction * 1.5f;
+                if (!NavMesh.SamplePosition(edge, out var sampled, .3f, NavMesh.AllAreas)
+                    || Mathf.Abs(sampled.position.y - center.position.y) > .25f
+                    || NavMesh.Raycast(center.position, sampled.position, out _, NavMesh.AllAreas)
+                    || !CapsuleClear(sampled.position, .9f, 2.8f)) return false;
+            }
+            return true;
+        }
+
+        public bool TryGetCampaignTankPosition(out Vector3 position)
+        {
+            position = default;
+            // This is also allowed during Asylum preparation, where the ordinary Director is suppressed.
+            foreach (var anchor in anchors)
+            {
+                if (anchor == null || !anchor.isActiveAndEnabled || !IsAnchorValid(anchor)) continue;
+                if (!NavMesh.SamplePosition(anchor.SpawnPosition, out var hit, .5f, NavMesh.AllAreas)
+                    || !HasTankArenaClearance(hit.position) || !ValidateCampaignSpecialPosition(hit.position, true)) continue;
+                position = hit.position;
+                return true;
             }
             return false;
         }

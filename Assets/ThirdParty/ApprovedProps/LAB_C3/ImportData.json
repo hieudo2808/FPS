@@ -1,0 +1,648 @@
+{
+  "code": "LAB_C3",
+  "source": "LAB_C3/source/lab.glb",
+  "model": "Models/LAB_C3.fbx",
+  "materials": [
+    {
+      "name": "Cabinet_material",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Door_material",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Glass",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.0,
+      "alpha": 0.5,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Glass.001",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.0,
+      "alpha": 0.20000000298023224,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Material.001",
+      "color": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Material.002",
+      "color": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Material.003",
+      "color": [
+        0.0,
+        0.005181517917662859,
+        0.013702083379030228,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {
+        "emission": "Textures/Web_1920__1.png"
+      },
+      "channels": {
+        "emission": 0
+      }
+    },
+    {
+      "name": "Material.004",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.0,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "Material.005",
+      "color": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.0,
+      "alpha": 1.0,
+      "textures": {
+        "emission": "Textures/\u753b\u677f___1.png"
+      },
+      "channels": {
+        "emission": 0
+      }
+    },
+    {
+      "name": "Petri dish",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.0,
+      "alpha": 0.10000000149011612,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "air in",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "body",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/iPhone_12-12_Pro__1.png"
+      },
+      "channels": {
+        "albedo": 0
+      }
+    },
+    {
+      "name": "coat",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "coat logo.003",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/Instagram_Story__3.png"
+      },
+      "channels": {
+        "albedo": 0
+      }
+    },
+    {
+      "name": "coat.002",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "coat.007",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "coat.008",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "cover.003",
+      "color": [
+        0.05000000074505806,
+        0.05000000074505806,
+        0.05000000074505806,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4000000059604645,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "cylinder",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/Instagram_Story__2.png"
+      },
+      "channels": {
+        "albedo": 0
+      }
+    },
+    {
+      "name": "dest mid wall",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/WhiteStuccoWall03_1K_BaseColor.png",
+        "normal": "Textures/WhiteStuccoWall03_1K_Normal.png",
+        "metallic": "Textures/mid_desk_ao-WhiteStuccoWall03_1K_Roughness.png",
+        "roughness": "Textures/mid_desk_ao-WhiteStuccoWall03_1K_Roughness.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "metallic": 2,
+        "roughness": 1
+      },
+      "packedMask": "Textures/dest_mid_wall_MetallicSmoothness.png"
+    },
+    {
+      "name": "door",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "floor",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.10000000149011612,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "frame",
+      "color": [
+        0.000303417444229126,
+        0.4072403609752655,
+        0.8069523572921753,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "frame.001",
+      "color": [
+        0.000303417444229126,
+        0.4072403609752655,
+        0.8069523572921753,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "hood.001",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.0,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "joint cover.001",
+      "color": [
+        0.000303417444229126,
+        0.4072403609752655,
+        0.8069523572921753,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4000000059604645,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "joint cover.002",
+      "color": [
+        0.000303417444229126,
+        0.4072403609752655,
+        0.8069523572921753,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4000000059604645,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "joint cover.006",
+      "color": [
+        0.000303417444229126,
+        0.4072403609752655,
+        0.8069523572921753,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4000000059604645,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "joint cover.007",
+      "color": [
+        0.000303417444229126,
+        0.4072403609752655,
+        0.8069523572921753,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.4000000059604645,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "joit",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "joit.001",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "meta",
+      "color": [
+        0.42794257402420044,
+        0.2351263016462326,
+        0.11298812180757523,
+        1.0
+      ],
+      "metallic": 0.800000011920929,
+      "roughness": 0.10000000149011612,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "meta siver",
+      "color": [
+        0.30000001192092896,
+        0.30000001192092896,
+        0.30000001192092896,
+        1.0
+      ],
+      "metallic": 1.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "meta siver.005",
+      "color": [
+        0.4000000059604645,
+        0.4000000059604645,
+        0.4000000059604645,
+        1.0
+      ],
+      "metallic": 1.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "meta siver.006",
+      "color": [
+        0.4000000059604645,
+        0.4000000059604645,
+        0.4000000059604645,
+        1.0
+      ],
+      "metallic": 1.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "phone screen",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.20000000298023224,
+      "roughness": 0.10000000149011612,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/4.png",
+        "emission": "Textures/4.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "emission": 0
+      }
+    },
+    {
+      "name": "pip1",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "pip2",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.20000000298023224,
+      "alpha": 1.0,
+      "textures": {},
+      "channels": {}
+    },
+    {
+      "name": "wall",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/WhiteStuccoWall03_1K_BaseColor.png",
+        "normal": "Textures/WhiteStuccoWall03_1K_Normal.png",
+        "metallic": "Textures/WhiteStuccoWall03_1K_Roughness.png",
+        "roughness": "Textures/WhiteStuccoWall03_1K_Roughness.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "metallic": 2,
+        "roughness": 1
+      },
+      "packedMask": "Textures/wall_MetallicSmoothness.png"
+    },
+    {
+      "name": "wall.001",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/WhiteStuccoWall03_1K_BaseColor.png",
+        "normal": "Textures/WhiteStuccoWall03_1K_Normal.png",
+        "metallic": "Textures/wall_ao-WhiteStuccoWall03_1K_Roughness.png",
+        "roughness": "Textures/wall_ao-WhiteStuccoWall03_1K_Roughness.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "metallic": 2,
+        "roughness": 1
+      },
+      "packedMask": "Textures/wall.001_MetallicSmoothness.png"
+    },
+    {
+      "name": "watch",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.20000000298023224,
+      "roughness": 0.10000000149011612,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/Instagram_Story__1.png"
+      },
+      "channels": {
+        "albedo": 0
+      }
+    }
+  ],
+  "issues": [],
+  "sourceMeshCount": 302,
+  "sourceTriangles": 202764,
+  "conversion": "Blender 5.1.1 FBX export"
+}

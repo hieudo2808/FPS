@@ -28,7 +28,7 @@ namespace FPS
                 else if (InputManager.Instance.GetMedkitInputDown()) survivalInventory.RequestUse(ConsumableKind.Medkit);
                 else if (InputManager.Instance.GetAntidoteInputDown()) survivalInventory.RequestUse(ConsumableKind.Antidote);
             }
-            if (playerHealth == null || !playerHealth.CanUseCombat || survivalInventory?.IsUsingItem == true) return;
+            if (playerHealth == null || !playerHealth.CanUseCombat || survivalInventory?.IsBusy == true) return;
             if (InputManager.Instance.GetWeapon1InputDown()) weaponManager.RequestEquipWeaponServerRpc(0);
             else if (InputManager.Instance.GetWeapon2InputDown()) weaponManager.RequestEquipWeaponServerRpc(1);
             else if (InputManager.Instance.GetInspectInputDown()) weaponManager.TryInspectCurrentWeapon();

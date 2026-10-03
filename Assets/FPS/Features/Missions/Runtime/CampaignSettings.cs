@@ -5,6 +5,9 @@ namespace FPS
     [CreateAssetMenu(menuName = "FPS/Campaign/Settings")]
     public sealed class CampaignSettings : ScriptableObject
     {
+        [Header("Campaign Content")]
+        public CampaignContentCatalog contentCatalog;
+
         [Min(0)] public float insertionSeconds = 18;
         [Min(1)] public float factoryEncounterSeconds = 60;
         [Min(1)] public float asylumEncounterSeconds = 35;

@@ -140,6 +140,7 @@ namespace FPS
         public delegate void OnPlayerDeath();
         public event OnPlayerDeath PlayerDeathEvent;
         public event System.Action<bool> CombatAvailabilityChanged;
+        public event System.Action<PlayerLifeState, PlayerLifeState> LifeStateChanged;
 
         public override void OnNetworkSpawn()
         {
@@ -199,8 +200,11 @@ namespace FPS
         private void OnLifeStateChanged(PlayerLifeState oldState, PlayerLifeState newState)
         {
             RefreshCombatAvailability();
+            LifeStateChanged?.Invoke(oldState, newState);
             if (!IsServer || newState != PlayerLifeState.Downed || oldState == PlayerLifeState.Downed)
                 return;
+
+            CampaignMissionController.Instance?.RegisterTeamDowned(this);
 
             NetworkGameManager.Instance?.Telemetry?.RecordDowned(
                 StablePlayerId,
@@ -313,6 +317,7 @@ namespace FPS
             if (!IsServer) return;
 
             GetComponent<SurvivalInventory>()?.CancelUseServer();
+            GetComponent<SurvivalInventory>()?.CancelThrowServer();
             ApplyRespawnPose(position, rotation);
             networkIsDead.Value = false;
             networkLifeState.Value = PlayerLifeState.Alive;

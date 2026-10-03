@@ -1,0 +1,146 @@
+{
+  "code": "G1",
+  "source": "G1/source/granada_sketchfab.fbx",
+  "model": "Models/G1.fbx",
+  "materials": [
+    {
+      "name": "Sel_Blue",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5527864098548889,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/bomba_albedo.png",
+        "normal": "Textures/bomba_normal.png",
+        "roughness": "Textures/bomba_rough.png",
+        "metallic": "Textures/bomba_metal.png",
+        "ao": "Textures/bomba_ao.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0,
+        "metallic": 0,
+        "ao": 0
+      },
+      "packedMask": "Textures/Sel_Blue_MetallicSmoothness.png"
+    },
+    {
+      "name": "Sel_Green",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5527864098548889,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/segurar_albedo.png",
+        "normal": "Textures/segurar_normal.png",
+        "roughness": "Textures/segurar_rough.png",
+        "metallic": "Textures/segurar_metal.png",
+        "ao": "Textures/segurar_ao.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0,
+        "metallic": 0,
+        "ao": 0
+      },
+      "packedMask": "Textures/Sel_Green_MetallicSmoothness.png"
+    },
+    {
+      "name": "Sel_Red",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5527864098548889,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/base_albedo.png",
+        "normal": "Textures/base_normal.png",
+        "roughness": "Textures/base_rough.png",
+        "metallic": "Textures/base_metal.png",
+        "ao": "Textures/base_ao.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0,
+        "metallic": 0,
+        "ao": 0
+      },
+      "packedMask": "Textures/Sel_Red_MetallicSmoothness.png"
+    },
+    {
+      "name": "Sel_Yellow",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5527864098548889,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/pipe_albedo.png",
+        "roughness": "Textures/pipe_rough.png",
+        "metallic": "Textures/pipe_metal.png",
+        "ao": "Textures/pipe_ao.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "roughness": 0,
+        "metallic": 0,
+        "ao": 0
+      },
+      "packedMask": "Textures/Sel_Yellow_MetallicSmoothness.png"
+    },
+    {
+      "name": "lambert1",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5527864098548889,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/gatilho_albedo.png",
+        "normal": "Textures/gatilho_normal.png",
+        "roughness": "Textures/gatilho_rough.png",
+        "metallic": "Textures/gatilho_metal.png",
+        "ao": "Textures/gatilho_ao.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0,
+        "metallic": 0,
+        "ao": 0
+      },
+      "packedMask": "Textures/lambert1_MetallicSmoothness.png"
+    }
+  ],
+  "issues": [
+    "Missing source texture: pipe_normal.png"
+  ],
+  "sourceMeshCount": 5,
+  "sourceTriangles": 4747,
+  "conversion": "Original FBX bytes"
+}

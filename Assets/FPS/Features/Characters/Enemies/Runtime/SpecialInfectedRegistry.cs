@@ -261,14 +261,48 @@ namespace FPS
                     || !DirectorSpawnService.Instance.ValidateCampaignSpecialPosition(position, data.type == SpecialType.Tank)))
                 return null;
 
+            return SpawnRegisteredSpecial(data, position);
+        }
+
+        public bool HasLivingSpecial
+        {
+            get
+            {
+                foreach (var special in aliveSpecials)
+                    if (special != null && special.activeInHierarchy
+                        && (special.GetComponent<EnemyHealth>() == null || !special.GetComponent<EnemyHealth>().IsDead)) return true;
+                return false;
+            }
+        }
+
+        public GameObject TrySpawnCampaignTank(Vector3 position)
+        {
+            var campaign = CampaignMissionController.Instance;
+            if (campaign == null || !campaign.IsSpawned || !campaign.IsServer || campaign.ActivePlayerCount == 0
+                || campaign.State.phase is CampaignPhase.Insertion or CampaignPhase.Transitioning or CampaignPhase.Completed or CampaignPhase.Failed
+                || campaign.State.tankStage != CampaignTankStage.Pending || HasLivingSpecial
+                || DirectorSpawnService.Instance == null || !DirectorSpawnService.HasTankArenaClearance(position)
+                || !DirectorSpawnService.Instance.ValidateCampaignSpecialPosition(position, true)) return null;
+            var data = specialTypes.Find(entry => entry != null && entry.type == SpecialType.Tank && IsPlayableSpecial(entry));
+            if (data == null || data.prefab.GetComponent<NetworkObject>() == null || data.prefab.GetComponent<EnemyHealth>() == null) return null;
+            // Story encounters intentionally bypass random weight, peak budget and optional-health cooldown rules.
+            return SpawnRegisteredSpecial(data, position);
+        }
+
+        private GameObject SpawnRegisteredSpecial(SpecialInfectedData data, Vector3 position)
+        {
             GameObject special = ZombiePoolManager.Instance != null
                 ? ZombiePoolManager.Instance.GetZombie(data.prefab, position, Quaternion.identity)
                 : Instantiate(data.prefab, position, Quaternion.identity);
             if (special == null)
                 return null;
+            var networkObject = special.GetComponent<NetworkObject>();
+            if (networkObject != null && !networkObject.IsSpawned && NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
+                networkObject.Spawn(true);
             data.lastSpawnTime = Time.time;
             lastSpecialSpawnTime = Time.time;
             
+            aliveSpecials.RemoveAll(existing => existing == null || !existing.activeInHierarchy || existing == special);
             aliveSpecials.Add(special);
             OnSpecialSpawned?.Invoke(special);
             

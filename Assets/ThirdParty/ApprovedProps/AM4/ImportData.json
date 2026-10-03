@@ -1,0 +1,82 @@
+{
+  "code": "AM4",
+  "source": "AM4/source/Sniper Ammo Box.fbx",
+  "model": "Models/AM4.fbx",
+  "materials": [
+    {
+      "name": "Box",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/7mm_mag_ammo_box_Diffuse.png",
+        "normal": "Textures/7mm_mag_ammo_box_Normal.jpg",
+        "roughness": "Textures/7mm_mag_ammo_box_Roughness.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0
+      },
+      "packedMask": "Textures/Box_MetallicSmoothness.png"
+    },
+    {
+      "name": "ammo holder",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.5,
+      "alpha": 1.0,
+      "textures": {
+        "albedo": "Textures/ammo_holder_Diffuse.png",
+        "normal": "Textures/ammo_holder_Normal.png",
+        "roughness": "Textures/ammo_holder_Roughness.png"
+      },
+      "channels": {
+        "albedo": 0,
+        "normal": 0,
+        "roughness": 0
+      },
+      "packedMask": "Textures/ammo_holder_MetallicSmoothness.png"
+    },
+    {
+      "name": "bullets",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metallic": 0.0,
+      "roughness": 0.0,
+      "alpha": 1.0,
+      "textures": {
+        "normal": "Textures/Bullet_normal.png",
+        "metallic": "Textures/Bullet_Metallic.jpg",
+        "albedo": "Textures/Bullet_diffuseOriginal.png"
+      },
+      "channels": {
+        "normal": 0,
+        "metallic": 0,
+        "albedo": 0
+      },
+      "packedMask": "Textures/bullets_MetallicSmoothness.png"
+    }
+  ],
+  "issues": [
+    "Missing source texture: 7_diffuseOriginal.png"
+  ],
+  "sourceMeshCount": 3,
+  "sourceTriangles": 6000,
+  "conversion": "Blender 5.1.1 FBX re-export; repaired invalid leading-dot texture references; original geometry retained"
+}

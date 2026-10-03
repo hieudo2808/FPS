@@ -15,8 +15,10 @@ namespace FPS
         public CampaignChapterRoot[] chapters;
         public CampaignSupply[] supplies;
         public CampaignDoor[] doors;
+        public CampaignInteractable[] fileSources = Array.Empty<CampaignInteractable>();
         private readonly NetworkVariable<ulong> openDoorMask = new();
         private readonly NetworkVariable<FixedString4096Bytes> replicatedState = new();
+        private readonly NetworkVariable<FixedString4096Bytes> replicatedSummary = new();
         private readonly NetworkVariable<double> phaseStarted = new();
         private readonly NetworkVariable<int> readyCount = new();
         private readonly NetworkVariable<bool> transferLocked = new();
@@ -34,8 +36,17 @@ namespace FPS
         private float updateBudget;
         private bool initialized;
         private bool transferred;
+        private CampaignRunSummary runSummary = new();
+        private double campaignStartedAt;
+        private int attemptKillBaseline;
+        private ulong publishedFiles;
+        private readonly Dictionary<CampaignDialogueId, double> dialogueHistory = new();
+        private SpecialInfectedRegistry dialogueSpecialRegistry;
         public event Action Changed;
         public CampaignState State => state;
+        public CampaignRunSummary RunSummary => runSummary;
+        public CampaignContentCatalog ContentCatalog => settings != null ? settings.contentCatalog : null;
+        public CampaignDialogueDefinition Dialogue(CampaignDialogueId id) => ContentCatalog?.FindDialogue(id);
         public CampaignChapterRoot Current => chapters != null && chapters.Length > (int)state.chapter ? chapters[(int)state.chapter] : null;
         public double Now => IsSpawned && NetworkManager != null ? NetworkManager.ServerTime.Time : Time.timeAsDouble;
         public double PhaseStarted => phaseStarted.Value;
@@ -47,7 +58,8 @@ namespace FPS
         public bool BlocksInput => state.phase is CampaignPhase.Insertion or CampaignPhase.Completed or CampaignPhase.Failed || transferLocked.Value;
         public IEnumerable<PlayerHealth> Players => NetworkManager == null ? Array.Empty<PlayerHealth>()
             : IsServer ? NetworkManager.ConnectedClientsList.Select(c => c.PlayerObject != null ? c.PlayerObject.GetComponent<PlayerHealth>() : null).Where(p => p != null)
-            : FindObjectsByType<PlayerHealth>(FindObjectsSortMode.None).Where(p => p.IsSpawned);
+            : NetworkManager.SpawnManager.SpawnedObjectsList.Where(o => o.IsPlayerObject)
+                .Select(o => o.GetComponent<PlayerHealth>()).Where(p => p != null && p.IsSpawned);
         public int ActivePlayerCount => Players.Count(p => p.LifeState == PlayerLifeState.Alive && p.IsInputReady);
         public CampaignChapter SnapshotChapter => state.phase == CampaignPhase.Transitioning && transferred && state.chapter < CampaignChapter.Laboratory
             ? state.chapter + 1 : state.chapter;
@@ -71,18 +83,29 @@ namespace FPS
         }
         public override void OnNetworkSpawn()
         {
+            CampaignHUD.Instance?.ResetDialogue();
             replicatedState.OnValueChanged += OnState;
+            replicatedSummary.OnValueChanged += OnSummary;
             if (IsServer)
             {
                 initialized = false; insertionReady.Value = false; insertionRoster.Clear();
-                state = new CampaignState(); phaseStarted.Value = Now; Publish();
+                state = new CampaignState(); publishedFiles = 0; BeginAttempt(); phaseStarted.Value = Now; Publish();
                 NetworkManager.OnClientDisconnectCallback += OnDisconnected;
             }
-            else Decode(replicatedState.Value);
+            else
+            {
+                Decode(replicatedState.Value);
+                if (replicatedSummary.Value.Length > 0) OnSummary(default, replicatedSummary.Value);
+            }
         }
         public override void OnNetworkDespawn()
         {
+            ReleaseTankTracking();
+            CampaignHUD.Instance?.ResetDialogue();
+            if (dialogueSpecialRegistry != null) dialogueSpecialRegistry.OnSpecialSpawned -= OnSpecialSpawned;
+            dialogueSpecialRegistry = null;
             replicatedState.OnValueChanged -= OnState;
+            replicatedSummary.OnValueChanged -= OnSummary;
             if (IsServer && NetworkManager != null) NetworkManager.OnClientDisconnectCallback -= OnDisconnected;
         }
         public override void OnDestroy()
@@ -93,19 +116,98 @@ namespace FPS
             base.OnDestroy();
         }
         private void OnState(FixedString4096Bytes before, FixedString4096Bytes after) => Decode(after);
+        private void OnSummary(FixedString4096Bytes before, FixedString4096Bytes after)
+        {
+            runSummary = after.Length > 0 ? JsonUtility.FromJson<CampaignRunSummary>(after.ToString()) : null;
+            Changed?.Invoke();
+        }
         private void Decode(FixedString4096Bytes json)
         {
+            ulong previousFiles = state != null ? state.discoveredFiles : 0;
+            bool hadState = initialized;
             if (json.Length > 0) state = JsonUtility.FromJson<CampaignState>(json.ToString());
             if (!IsServer) initialized = true;
+            if (!IsServer && hadState && state != null && (state.discoveredFiles & ~previousFiles) != 0)
+                CampaignHUD.Instance?.ShowMessage("NEW FILE ADDED");
             Changed?.Invoke();
             ConfigureChapterServices();
+            RefreshDocuments();
         }
         private void Publish()
         {
+            DiscoverAutomaticFiles();
+            if ((state.discoveredFiles & ~publishedFiles) != 0) CampaignHUD.Instance?.ShowMessage("NEW FILE ADDED");
+            publishedFiles = state.discoveredFiles;
             state.revision++;
             replicatedState.Value = new FixedString4096Bytes(JsonUtility.ToJson(state));
             Changed?.Invoke();
             ConfigureChapterServices();
+            RefreshDocuments();
+        }
+
+        private void EmitDialogue(CampaignDialogueId id)
+        {
+            if (!IsServer || id == CampaignDialogueId.None) return;
+            CampaignDialogueDefinition definition = Dialogue(id);
+            if (!CampaignDialogue.TryRecord(definition, Now, dialogueHistory)) return;
+            DialogueRpc(id);
+        }
+
+        [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
+        private void DialogueRpc(CampaignDialogueId id)
+        {
+            CampaignHUD.Instance?.EnqueueDialogue(id);
+        }
+
+        [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
+        private void ResetDialogueRpc() => CampaignHUD.Instance?.ResetDialogue();
+
+        private void OnSpecialSpawned(GameObject special)
+        {
+            if (!IsServer || special == null || state.phase is CampaignPhase.Completed or CampaignPhase.Failed) return;
+            SpecialInfectedBase brain = special.GetComponent<SpecialInfectedBase>();
+            if (brain == null) return;
+            EmitDialogue(brain.Type switch
+            {
+                SpecialType.Tank => CampaignDialogueId.TankWarning,
+                SpecialType.Screamer => CampaignDialogueId.ScreamerWarning,
+                SpecialType.Infector => CampaignDialogueId.InfectorWarning,
+                _ => CampaignDialogueId.None
+            });
+        }
+
+        private void EmitPhaseDialogue(CampaignPhase phase, CampaignPhase previous)
+        {
+            if (phase == previous) return;
+            if (phase == CampaignPhase.Exploring)
+            {
+                EmitDialogue(state.chapter == CampaignChapter.Factory
+                    ? CampaignDialogueId.FactoryChapter
+                    : state.chapter == CampaignChapter.Asylum ? CampaignDialogueId.AsylumChapter : CampaignDialogueId.LaboratoryChapter);
+            }
+            else if (phase == CampaignPhase.Encounter)
+            {
+                EmitDialogue(state.chapter == CampaignChapter.Factory
+                    ? CampaignDialogueId.FactoryEncounter
+                    : state.chapter == CampaignChapter.Asylum ? CampaignDialogueId.AsylumEncounter : CampaignDialogueId.LabEncounter);
+            }
+            else if (phase == CampaignPhase.AwaitingParty) EmitDialogue(CampaignDialogueId.Boarding);
+            else if (phase == CampaignPhase.Transitioning && state.chapter == CampaignChapter.Asylum) EmitDialogue(CampaignDialogueId.AsylumTransition);
+            else if (phase == CampaignPhase.Completed) EmitDialogue(CampaignDialogueId.Completed);
+        }
+
+        private void DiscoverAutomaticFiles()
+        {
+            CampaignFileDefinition[] files = ContentCatalog?.files;
+            if (files == null) return;
+            for (int i = 0; i < files.Length; i++)
+            {
+                CampaignFileDefinition file = files[i];
+                if (file != null && file.required && file.id != CampaignFileId.None
+                    && file.autoDiscoverAfter != CampaignObjectiveId.None
+                    && state.Has(file.autoDiscoverAfter))
+                    state.discoveredFiles |= CampaignState.FileBit(file.id);
+            }
         }
         public void ConfigureChapterServices()
         {
@@ -117,11 +219,75 @@ namespace FPS
         }
         private void SetPhase(CampaignPhase phase)
         {
+            CampaignPhase previous = state.phase;
             state.phase = phase; phaseStarted.Value = Now; boardingSince = closingSince = countdownSince = -1;
             if (phase != CampaignPhase.Transitioning) transferLocked.Value = false;
             if (phase is CampaignPhase.Preparing or CampaignPhase.AwaitingParty or CampaignPhase.Completed or CampaignPhase.Failed)
                 AIDirector.Instance?.EndCampaignEncounter();
-            holds.Clear(); Publish();
+            holds.Clear();
+            if (phase == CampaignPhase.Failed) { ReleaseTankTracking(); ResetDialogueRpc(); }
+            if (phase is CampaignPhase.Completed or CampaignPhase.Failed) PublishRunSummary();
+            Publish();
+            EmitPhaseDialogue(phase, previous);
+        }
+
+        private void PublishRunSummary()
+        {
+            runSummary = new CampaignRunSummary
+            {
+                result = state.phase,
+                durationSeconds = Mathf.Max(0f, (float)(Now - campaignStartedAt)),
+                rosterSize = InsertionPartySize,
+                survivors = Players.Count(p => p != null && IsInsertionParticipant(p.StablePlayerId.Value) && p.LifeState == PlayerLifeState.Alive),
+                teamDowns = state.teamDownedCount,
+                zombieKills = Mathf.Max(0, (AIDirector.Instance != null ? AIDirector.Instance.TotalKills : 0) - attemptKillBaseline),
+                filesRecorded = CountBits(state.discoveredFiles),
+                optionalFilesFound = ContentCatalog?.files?.Count(f => f != null && !f.required && state.HasFile(f.id)) ?? 0,
+                optionalFilesTotal = ContentCatalog?.files?.Count(f => f != null && !f.required) ?? 0,
+                factoryCaseSecured = state.Has(CampaignObjectiveId.FactoryCase),
+                labCaseSecured = state.Has(CampaignObjectiveId.LabCase)
+            };
+            runSummary.members = InsertionPartyMembers();
+            if (IsServer) replicatedSummary.Value = new FixedString4096Bytes(JsonUtility.ToJson(runSummary));
+        }
+
+        private void BeginAttempt()
+        {
+            campaignStartedAt = Now;
+            attemptKillBaseline = AIDirector.Instance != null ? AIDirector.Instance.TotalKills : 0;
+            state.teamDownedCount = 0;
+            runSummary = null;
+            replicatedSummary.Value = default;
+            dialogueHistory.Clear();
+            ResetDialogueRpc();
+        }
+
+        private CampaignMemberResult[] InsertionPartyMembers()
+        {
+            if (insertionRoster == null || insertionRoster.Count == 0) return Array.Empty<CampaignMemberResult>();
+            var result = new CampaignMemberResult[insertionRoster.Count];
+            for (int i = 0; i < insertionRoster.Count; i++)
+            {
+                var entry = insertionRoster[i];
+                var player = Players.FirstOrDefault(p => p != null && p.StablePlayerId.Value == entry.playerId);
+                var life = player != null ? player.LifeState
+                    : rosterSnapshots.TryGetValue(entry.playerId, out var saved) ? saved.lifeState : PlayerLifeState.Dead;
+                result[i] = new CampaignMemberResult
+                {
+                    playerId = entry.playerId,
+                    character = entry.character,
+                    connected = entry.connected,
+                    lifeState = life
+                };
+            }
+            return result;
+        }
+
+        private static int CountBits(ulong value)
+        {
+            int count = 0;
+            while (value != 0) { count += (int)(value & 1); value >>= 1; }
+            return count;
         }
 
         private void Update()
@@ -135,6 +301,11 @@ namespace FPS
                 openDoorMask.Value=mask;
             }
             if (!IsServer || !NetworkMatchStateManager.IsGameplayActive) return;
+            if (dialogueSpecialRegistry == null && SpecialInfectedRegistry.Instance != null)
+            {
+                dialogueSpecialRegistry = SpecialInfectedRegistry.Instance;
+                dialogueSpecialRegistry.OnSpecialSpawned += OnSpecialSpawned;
+            }
             if (!initialized)
             {
                 if (state.phase == CampaignPhase.Insertion)
@@ -148,6 +319,7 @@ namespace FPS
                     if (state.phase == CampaignPhase.Insertion && !IsInsertionParticipant(p.StablePlayerId.Value)) p.SetCampaignSpectating();
                 }
                 initialized = true; phaseStarted.Value = Now; ConfigureChapterServices();
+                if (state.phase == CampaignPhase.Insertion) EmitDialogue(CampaignDialogueId.InsertionBriefing);
             }
             updateBudget += Time.deltaTime;
             if (updateBudget < .1f) return;
@@ -157,6 +329,7 @@ namespace FPS
             if (state.phase is not CampaignPhase.Insertion and not CampaignPhase.Transitioning and not CampaignPhase.Completed and not CampaignPhase.Failed
                 && Players.Any() && !Players.Any(p => p.LifeState == PlayerLifeState.Alive) && !HasDisconnectGrace())
             { SetPhase(CampaignPhase.Failed); return; }
+            UpdateTankEncounter();
             switch (state.phase)
             {
                 case CampaignPhase.Insertion:
@@ -204,15 +377,18 @@ namespace FPS
         public bool AllowsAnchor(DirectorSpawnAnchor anchor) => Current != null && Current.anchors != null && Array.IndexOf(Current.anchors, anchor) >= 0;
         public bool AllowsSpecial(string typeName)
         {
-            if (SuppressSpawns || state.chapter == CampaignChapter.Asylum) return false;
-            if (FindObjectsByType<EnemyAI>(FindObjectsSortMode.None).Any(e => e.isActiveAndEnabled && (e.GetComponent<SI_Tank>() != null || e.GetComponent<SI_Infector>() != null || e.GetComponent<SI_Screamer>() != null))) return false;
-            return typeName.IndexOf("tank", StringComparison.OrdinalIgnoreCase) < 0
-                || (state.chapter == CampaignChapter.Laboratory && state.phase == CampaignPhase.Encounter && Now - phaseStarted.Value >= 55 && Now - phaseStarted.Value < 75);
+            if (SuppressSpawns || state.chapter == CampaignChapter.Asylum
+                || CampaignRules.ShouldArmTank(state) || state.tankStage is CampaignTankStage.Pending or CampaignTankStage.Active
+                || SpecialInfectedRegistry.Instance?.HasLivingSpecial == true) return false;
+            return !string.IsNullOrEmpty(typeName) && typeName.IndexOf("tank", StringComparison.OrdinalIgnoreCase) < 0;
         }
         private void UpdatePreparation()
         {
+            if (state.tankStage == CampaignTankStage.Pending) { countdownSince = -1; return; }
             var people = Players.Where(p => p.LifeState != PlayerLifeState.Dead && p.LifeState != PlayerLifeState.Spectating).ToArray();
-            bool all = people.Length > 0 && !HasDisconnectGrace() && people.All(p => p.CanUseCombat && Current.Contains(Current.preparationArea, p.transform.position) && ready.Contains(p.OwnerClientId));
+            bool evadeTank = state.chapter == CampaignChapter.Asylum && state.tankStage == CampaignTankStage.Active;
+            bool all = people.Length > 0 && !HasDisconnectGrace() && people.All(p => p.CanUseCombat
+                && Current.Contains(Current.preparationArea, p.transform.position) && (evadeTank || ready.Contains(p.OwnerClientId)));
             if (!all) { countdownSince = -1; return; }
             if (countdownSince < 0) countdownSince = Now;
             if (Now - countdownSince < settings.preparationSeconds) return;
@@ -225,11 +401,12 @@ namespace FPS
         {
             double elapsed = Now - phaseStarted.Value;
             if (state.chapter == CampaignChapter.Laboratory && elapsed >= 55 && !state.evidenceTransmitted)
-            { state.evidenceTransmitted = true; Publish(); }
+            { state.evidenceTransmitted = true; Publish(); EmitDialogue(CampaignDialogueId.EvidenceTransmitted); }
             if (elapsed >= settings.Duration(state.chapter)) SetPhase(CampaignPhase.AwaitingParty);
         }
         private void UpdateBoarding()
         {
+            if (!CampaignRules.TankAllowsExit(state)) { boardingSince = -1; return; }
             var people = Players.Where(p => p.LifeState != PlayerLifeState.Dead && p.LifeState != PlayerLifeState.Spectating).ToArray();
             bool all = people.Length > 0 && !HasDisconnectGrace() && people.All(p => p.CanUseCombat && Current.Contains(Current.boardingArea, p.transform.position));
             if (!all) { boardingSince = -1; return; }
@@ -271,6 +448,7 @@ namespace FPS
                 return;
             }
             state.chapter++;
+            state.tankStage = CampaignTankStage.Dormant;
             SetPhase(CampaignPhase.Exploring);
             readingUntil = Now + settings.readingGraceSeconds;
             SaveCheckpoint((int)state.chapter * 2);
@@ -315,6 +493,67 @@ namespace FPS
         }
 
         public CampaignInteractable Objective(CampaignObjectiveId id) => chapters?.SelectMany(c => c.objectives ?? Array.Empty<CampaignInteractable>()).FirstOrDefault(o => o != null && o.objectiveId == id);
+        public CampaignInteractable Document(CampaignFileId id) => fileSources?.FirstOrDefault(o => o != null && o.fileId == id);
+
+        private CampaignInteractable ReachableFileSource(CampaignFileDefinition definition, PlayerHealth actor)
+        {
+            CampaignInteractable source = (fileSources ?? Array.Empty<CampaignInteractable>()).FirstOrDefault(item =>
+                item != null && item.isActiveAndEnabled && item.ProvidesFile(definition, ContentCatalog)
+                && item.InReach(actor, settings.interactionRange));
+            if (source != null || !definition.required) return source;
+            // Required clues may be surfaced by a terminal/console instead of a loose paper pickup.
+            // The catalog's objective.file link is the authority; never accept an ID without a reachable scene object.
+            return (Current != null ? Current.objectives ?? Array.Empty<CampaignInteractable>() : Array.Empty<CampaignInteractable>())
+                .FirstOrDefault(item => item != null && item.isActiveAndEnabled
+                    && item.ProvidesFile(definition, ContentCatalog)
+                    && item.InReach(actor, settings.interactionRange));
+        }
+
+        private void RefreshDocuments()
+        {
+            foreach (var item in fileSources ?? Array.Empty<CampaignInteractable>())
+                if (item != null) item.SetRecorded(state.HasFile(item.fileId));
+        }
+
+        public void RegisterTeamDowned(PlayerHealth player)
+        {
+            if (!IsServer || player == null || !IsInsertionParticipant(player.StablePlayerId.Value)) return;
+            if (state.teamDownedCount < ushort.MaxValue) state.teamDownedCount++;
+            Publish();
+            EmitDialogue(CampaignDialogueId.OperatorDowned);
+        }
+
+        public void RequestDiscoverFile(CampaignFileId id) { if (IsSpawned) DiscoverFileRpc((byte)id); }
+
+        [Rpc(SendTo.Server, RequireOwnership = false)]
+        private void DiscoverFileRpc(byte rawId, RpcParams rpc = default)
+        {
+            if (!Enum.IsDefined(typeof(CampaignFileId), rawId)) return;
+            CampaignFileId id = (CampaignFileId)rawId;
+            CampaignFileDefinition definition = ContentCatalog?.FindFile(id);
+            if (definition == null || BlocksInput || settings == null) return;
+            if (!TryPlayer(rpc.Receive.SenderClientId, out var actor) || !actor.CanUseCombat) return;
+            // The client sends only an ID. The server chooses a registered, reachable source;
+            // optional lore never receives the objective/console fallback.
+            CampaignInteractable document = ReachableFileSource(definition, actor);
+            CampaignResult result = CampaignRules.CanDiscover(state, definition, actor.LifeState == PlayerLifeState.Alive,
+                document != null && IsInsertionParticipant(actor.StablePlayerId.Value), document != null);
+            if (result == CampaignResult.Accepted)
+            {
+                state.discoveredFiles |= CampaignState.FileBit(id);
+                Publish();
+            }
+            if (result == CampaignResult.Accepted || result == CampaignResult.AlreadyDone)
+                FileDiscoveryFeedbackRpc(id, result, state.revision, RpcTarget.Single(rpc.Receive.SenderClientId, RpcTargetUse.Temp));
+            else Feedback(rpc.Receive.SenderClientId, result);
+        }
+
+        [Rpc(SendTo.SpecifiedInParams, InvokePermission = RpcInvokePermission.Server)]
+        private void FileDiscoveryFeedbackRpc(CampaignFileId id, CampaignResult result, uint revision, RpcParams rpc = default)
+        {
+            TeamInventoryUI.Instance?.AcknowledgeFile(id, revision);
+            CampaignHUD.Instance?.ShowMessage(result == CampaignResult.AlreadyDone ? "FILE ALREADY RECORDED" : "NEW FILE ADDED");
+        }
         public void RequestPowerSelection(int mask) => PowerSelectionRpc(mask);
         [Rpc(SendTo.Server, RequireOwnership = false)]
         private void PowerSelectionRpc(int mask, RpcParams rpc = default)
@@ -377,6 +616,12 @@ namespace FPS
                 }
                 else readingUntil = Math.Max(readingUntil, Now + settings.readingGraceSeconds);
                 Publish();
+                EmitDialogue(CampaignDialogue.ForObjective(h.objective));
+                if (h.objective == CampaignObjectiveId.LabTransmit)
+                {
+                    EmitDialogue(CampaignDialogueId.ClientSuppressionOrder);
+                    EmitDialogue(CampaignDialogueId.MiraRejectsOrder);
+                }
             }
         }
         public void RequestAid(ulong target, bool medicine, bool held) => AidRpc(target, medicine, held);
@@ -397,12 +642,13 @@ namespace FPS
             if (target == null || target.LifeState != PlayerLifeState.Downed || Vector3.Distance(actor.transform.position, target.transform.position) > settings.interactionRange
                 || Physics.Linecast(actor.transform.position + Vector3.up * 1.4f, target.transform.position + Vector3.up * .8f, out var hit, ~0, QueryTriggerInteraction.Ignore) && hit.collider.GetComponentInParent<PlayerHealth>() != target)
             { holds.Remove(client); releaseRequired.Add(client); Feedback(client, CampaignResult.Interrupted); return; }
-            if (Now - h.started >= settings.reviveSeconds) { target.ReviveCampaign(settings.reviveHealth); holds.Remove(client); Feedback(client, CampaignResult.Accepted); }
+            if (Now - h.started >= settings.reviveSeconds) { target.ReviveCampaign(settings.reviveHealth); holds.Remove(client); Feedback(client, CampaignResult.Accepted); EmitDialogue(CampaignDialogueId.Revived); }
         }
         public void RequestReady(bool value) => ReadyRpc(value);
         [Rpc(SendTo.Server, RequireOwnership = false)]
         private void ReadyRpc(bool value, RpcParams rpc = default)
         {
+            if (state.tankStage is CampaignTankStage.Active or CampaignTankStage.Pending) return;
             if (state.phase != CampaignPhase.Preparing || !TryPlayer(rpc.Receive.SenderClientId, out var actor) || !actor.CanUseCombat) return;
             if (value) ready.Add(rpc.Receive.SenderClientId); else ready.Remove(rpc.Receive.SenderClientId);
             readyCount.Value = ready.Count;
@@ -431,13 +677,15 @@ namespace FPS
             PickupType reward = medicine || item.medicineOnly ? PickupType.Medkit : item.survivalReward;
             bool granted = SurvivalRules.Capacity(reward) > 0
                 ? inventory != null && inventory.TryAdd(reward, 1)
-                : p.GetComponent<WeaponFireHandler>() != null && p.GetComponent<WeaponFireHandler>().AddReserveAmmoServer(item.ammo);
+                : reward == PickupType.Ammo && item.TryGiveAmmoServer(p.GetComponent<WeaponFireHandler>());
             if (granted)
             {
                 claimedSupplies.Add(id);
                 SupplyFeedbackRpc(item.transform.position, (int)reward - (int)PickupType.FragGrenade);
                 Feedback(rpc.Receive.SenderClientId, CampaignResult.Accepted);
             }
+            else if (reward == PickupType.Ammo)
+                Feedback(rpc.Receive.SenderClientId, CampaignResult.AmmoUnavailable);
         }
         [Rpc(SendTo.ClientsAndHost)]
         private void SupplyFeedbackRpc(Vector3 point, int index)
@@ -451,10 +699,12 @@ namespace FPS
             state.checkpoint = index;
             if(index % 2 == 0) state.supplyPartySize = Mathf.Clamp(Players.Count(p=>p.LifeState!=PlayerLifeState.Spectating),1,4);
             var saved = state.Copy(); saved.phase = CampaignPhase.Exploring;
+            if (saved.tankStage == CampaignTankStage.Active) saved.tankStage = CampaignTankStage.Pending;
             if (preparing)
             {
                 var last = state.chapter == CampaignChapter.Factory ? CampaignObjectiveId.FactoryRoute : state.chapter == CampaignChapter.Asylum ? CampaignObjectiveId.AsylumLift : CampaignObjectiveId.LabTransmit;
                 saved.completed &= ~CampaignState.Bit(last);
+                if (state.chapter == CampaignChapter.Laboratory) saved.tankStage = CampaignTankStage.Dormant;
             }
             var connected = Players.Where(p => p.LifeState != PlayerLifeState.Spectating)
                 .OrderBy(p => p.OwnerClientId == Unity.Netcode.NetworkManager.ServerClientId ? 0 : 1).ToArray();
@@ -485,6 +735,8 @@ namespace FPS
             if (checkpoint == null) return;
             ClearEnemies(); holds.Clear(); releaseRequired.Clear(); ready.Clear(); readyCount.Value = 0;
             state = checkpoint.state.Copy(); claimedSupplies.Clear();
+            if (state.Has(CampaignObjectiveId.FactoryCase)) state.factoryTankDefeated = true; // Old checkpoints predate scripted Tanks.
+            if (state.tankStage == CampaignTankStage.Active) state.tankStage = CampaignTankStage.Pending;
             transferLocked.Value = false; transferred = false;
             rosterSnapshots.Clear();
             foreach (var savedPlayer in checkpoint.players)
@@ -507,10 +759,20 @@ namespace FPS
                 slot++;
             }
             transferLocked.Value = false; transferred = false; disconnected.Clear();
+            BeginAttempt();
             phaseStarted.Value = Now; readingUntil = Now + settings.readingGraceSeconds; Publish();
+            CheckpointRestoredRpc();
+        }
+
+        [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
+        private void CheckpointRestoredRpc()
+        {
+            TeamInventoryUI.Instance?.CancelPendingFile();
+            CampaignHUD.Instance?.ShowMessage("CHECKPOINT RESTORED");
         }
         private void ClearEnemies()
         {
+            ReleaseTankTracking();
             AIDirector.Instance?.EndCampaignEncounter();
             foreach (var enemy in FindObjectsByType<EnemyAI>(FindObjectsSortMode.None))
                 if (enemy != null && enemy.gameObject.activeInHierarchy) ZombiePoolManager.Instance?.ReturnZombie(enemy.gameObject);

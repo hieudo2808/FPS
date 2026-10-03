@@ -1,0 +1,1320 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa1461e70d960014db2fb207bc242805, type: 3}
+  m_Name: CampaignContentCatalog
+  m_EditorClassIdentifier: FPS:FPS:CampaignContentCatalog
+  files:
+  - id: 1
+    chapter: 0
+    required: 1
+    title: Factory Utilities Procedure
+    summary: "Night operator \u2014 Maya Reed. Isolate the PRODUCTION branch at the
+      west breaker before touching the backup feed. Then engage BACKUP COLD STORE
+      at the east breaker and start the generator. Do not isolate the cold store
+      itself: its monitor and sealed cargo must remain refrigerated. The green generator
+      lamp shares an alarm return and can light before the contactor closes; check
+      the physical lever. Logistics must reconcile the shipment and seal independently.
+      Keep the T9-17 case sealed until both checks are complete. Report any instruction
+      to bypass this sequence in the shift ledger."
+    body: "Night operator \u2014 Maya Reed. Isolate the PRODUCTION branch at the
+      west breaker before touching the backup feed. Then engage BACKUP COLD STORE
+      at the east breaker and start the generator. Do not isolate the cold store
+      itself: its monitor and sealed cargo must remain refrigerated. The green generator
+      lamp shares an alarm return and can light before the contactor closes; check
+      the physical lever. Logistics must reconcile the shipment and seal independently.
+      Keep the T9-17 case sealed until both checks are complete. Report any instruction
+      to bypass this sequence in the shift ledger."
+    bodyVietnamese: "Nh\xE2n vi\xEAn ca \u0111\xEAm \u2014 Maya Reed. Ng\u1EAFt nh\xE1nh
+      PRODUCTION \u1EDF c\u1EA7u dao ph\xEDa t\xE2y tr\u01B0\u1EDBc khi thao t\xE1c
+      ngu\u1ED3n d\u1EF1 ph\xF2ng. Sau \u0111\xF3 b\u1EADt BACKUP COLD STORE t\u1EA1i
+      c\u1EA7u dao ph\xEDa \u0111\xF4ng v\xE0 kh\u1EDFi \u0111\u1ED9ng m\xE1y ph\xE1t.
+      Kh\xF4ng ng\u1EAFt ch\xEDnh kho l\u1EA1nh: thi\u1EBFt b\u1ECB gi\xE1m s\xE1t
+      v\xE0 h\xE0ng ni\xEAm phong ph\u1EA3i \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1nh.
+      \u0110\xE8n xanh m\xE1y ph\xE1t d\xF9ng chung \u0111\u01B0\u1EDDng h\u1ED3i
+      v\u1EDBi b\xE1o \u0111\u1ED9ng n\xEAn c\xF3 th\u1EC3 s\xE1ng tr\u01B0\u1EDBc
+      khi c\xF4ng t\u1EAFc \u0111\xF3ng; h\xE3y ki\u1EC3m tra c\u1EA7n g\u1EA1t th\u1EF1c
+      t\u1EBF. B\u1ED9 ph\u1EADn v\u1EADn chuy\u1EC3n ph\u1EA3i \u0111\u1ED1i chi\u1EBFu
+      l\xF4 h\xE0ng v\xE0 ni\xEAm phong ri\xEAng. Gi\u1EEF k\xEDn ki\u1EC7n T9-17
+      cho t\u1EDBi khi ho\xE0n t\u1EA5t c\u1EA3 hai b\u01B0\u1EDBc ki\u1EC3m tra.
+      Ghi v\xE0o s\u1ED5 ca m\u1ECDi ch\u1EC9 th\u1ECB b\u1ECF qua quy tr\xECnh."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 3
+    order: 1
+  - id: 2
+    chapter: 0
+    required: 1
+    title: AL-04 Delivery Manifest
+    summary: 'Dispatch copy. Shipment AL-04; security seal K6; lot T9-17. Destination:
+      An Lac Care Institute, service receiving entrance. Scheduled intake: 02:40,
+      group C12. Security release: Marcus Hale. The public cargo description is temperature-controlled
+      medical stock. Do not replace this page with the contractor''s abbreviated
+      receipt: that copy omits the receiving group and service entrance. A return
+      instruction has been added in blue ink: if receiving refuses the sealed case,
+      retain it in factory cold storage and leave the delivery record attached. Neither
+      the seal number nor the destination may be changed by telephone.'
+    body: 'Dispatch copy. Shipment AL-04; security seal K6; lot T9-17. Destination:
+      An Lac Care Institute, service receiving entrance. Scheduled intake: 02:40,
+      group C12. Security release: Marcus Hale. The public cargo description is temperature-controlled
+      medical stock. Do not replace this page with the contractor''s abbreviated
+      receipt: that copy omits the receiving group and service entrance. A return
+      instruction has been added in blue ink: if receiving refuses the sealed case,
+      retain it in factory cold storage and leave the delivery record attached. Neither
+      the seal number nor the destination may be changed by telephone.'
+    bodyVietnamese: "B\u1EA3n l\u01B0u xu\u1EA5t h\xE0ng. Chuy\u1EBFn AL-04; ni\xEAm
+      phong K6; l\xF4 T9-17. \u0110i\u1EC3m \u0111\u1EBFn: An Lac Care Institute,
+      c\u1EEDa nh\u1EADn h\xE0ng d\u1ECBch v\u1EE5. Gi\u1EDD ti\u1EBFp nh\u1EADn:
+      02:40, nh\xF3m C12. Ng\u01B0\u1EDDi duy\u1EC7t an ninh: Marcus Hale. M\xF4
+      t\u1EA3 c\xF4ng khai l\xE0 v\u1EADt t\u01B0 y t\u1EBF b\u1EA3o qu\u1EA3n l\u1EA1nh.
+      Kh\xF4ng thay trang n\xE0y b\u1EB1ng bi\xEAn nh\u1EADn r\xFAt g\u1ECDn c\u1EE7a
+      nh\xE0 th\u1EA7u v\xEC b\u1EA3n \u0111\xF3 b\u1ECF nh\xF3m ti\u1EBFp nh\u1EADn
+      v\xE0 c\u1EEDa d\u1ECBch v\u1EE5. Ch\u1EC9 th\u1ECB vi\u1EBFt th\xEAm b\u1EB1ng
+      m\u1EF1c xanh: n\u1EBFu n\u01A1i nh\u1EADn t\u1EEB ch\u1ED1i ki\u1EC7n ni\xEAm
+      phong, gi\u1EEF n\xF3 trong kho l\u1EA1nh nh\xE0 m\xE1y c\xF9ng h\u1ED3 s\u01A1
+      giao h\xE0ng. Kh\xF4ng \u0111\u01B0\u1EE3c \u0111\u1ED5i s\u1ED1 ni\xEAm phong
+      hay \u0111\u1ECBa ch\u1EC9 qua \u0111i\u1EC7n tho\u1EA1i."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 0d58bdec2258a564facd2e9f32be26ed, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 4
+    order: 2
+  - id: 3
+    chapter: 0
+    required: 1
+    title: B2 Transfer Addendum
+    summary: 'Route amendment to AL-04, seal K6. Receiving authority: Dr. Adrian
+      Cole, technical level B2 beneath An Lac. The sample case was returned unopened
+      to factory cold storage after the internal quarantine shutters closed. Its
+      movement record remains valid and must travel with it. Patient-linked records
+      stayed at the institute under group C12; they are not included in this case.
+      B2 is absent from the public visitor directory. Any recovery team must retain
+      this addendum with the original seal receipt. The contractor requested a sample-only
+      return. Security has not authorized removal of the supporting records.'
+    body: 'Route amendment to AL-04, seal K6. Receiving authority: Dr. Adrian Cole,
+      technical level B2 beneath An Lac. The sample case was returned unopened to
+      factory cold storage after the internal quarantine shutters closed. Its movement
+      record remains valid and must travel with it. Patient-linked records stayed
+      at the institute under group C12; they are not included in this case. B2 is
+      absent from the public visitor directory. Any recovery team must retain this
+      addendum with the original seal receipt. The contractor requested a sample-only
+      return. Security has not authorized removal of the supporting records.'
+    bodyVietnamese: "Ph\u1EE5 l\u1EE5c tuy\u1EBFn AL-04, ni\xEAm phong K6. Ng\u01B0\u1EDDi
+      ph\u1EE5 tr\xE1ch nh\u1EADn: Dr. Adrian Cole, t\u1EA7ng k\u1EF9 thu\u1EADt
+      B2 d\u01B0\u1EDBi An Lac. Ki\u1EC7n m\u1EABu \u0111\u01B0\u1EE3c tr\u1EA3 nguy\xEAn
+      ni\xEAm phong v\u1EC1 kho l\u1EA1nh nh\xE0 m\xE1y sau khi c\u1EEDa phong t\u1ECFa
+      n\u1ED9i b\u1ED9 \u0111\xF3ng. H\u1ED3 s\u01A1 di chuy\u1EC3n v\u1EABn c\xF3
+      hi\u1EC7u l\u1EF1c v\xE0 ph\u1EA3i \u0111i c\xF9ng ki\u1EC7n. H\u1ED3 s\u01A1
+      li\xEAn quan b\u1EC7nh nh\xE2n c\xF2n t\u1EA1i vi\u1EC7n, thu\u1ED9c nh\xF3m
+      C12, kh\xF4ng n\u1EB1m trong ki\u1EC7n n\xE0y. B2 kh\xF4ng c\xF3 tr\xEAn danh
+      m\u1EE5c d\xE0nh cho kh\xE1ch. \u0110\u1ED9i thu h\u1ED3i ph\u1EA3i gi\u1EEF
+      ph\u1EE5 l\u1EE5c c\xF9ng bi\xEAn nh\u1EADn g\u1ED1c. Nh\xE0 th\u1EA7u y\xEAu
+      c\u1EA7u ch\u1EC9 tr\u1EA3 m\u1EABu. An ninh ch\u01B0a cho ph\xE9p t\xE1ch
+      h\u1ED3 s\u01A1 ch\u1EE9ng minh."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 0d58bdec2258a564facd2e9f32be26ed, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 6
+    order: 3
+  - id: 4
+    chapter: 1
+    required: 1
+    title: An Lac Security Desk Log
+    summary: "02:40 \u2014 Received AL-04 under seal K6 for group C12. Public admissions
+      are suspended; technical intake continues through the service entrance. Record
+      P046 against the receiving time, not the earlier appointment time. The upper
+      records room holds the intake sheet. Access requires lower service power; the
+      replacement fuse is in ground-floor maintenance storage. No patient has been
+      discharged through this desk tonight. Staff asking for the public lift must
+      be redirected to security. Marcus Hale instructed us to keep both the public
+      log and technical supplement. The contractor asked for only the public log."
+    body: "02:40 \u2014 Received AL-04 under seal K6 for group C12. Public admissions
+      are suspended; technical intake continues through the service entrance. Record
+      P046 against the receiving time, not the earlier appointment time. The upper
+      records room holds the intake sheet. Access requires lower service power; the
+      replacement fuse is in ground-floor maintenance storage. No patient has been
+      discharged through this desk tonight. Staff asking for the public lift must
+      be redirected to security. Marcus Hale instructed us to keep both the public
+      log and technical supplement. The contractor asked for only the public log."
+    bodyVietnamese: "02:40 \u2014 Nh\u1EADn AL-04, ni\xEAm phong K6 cho nh\xF3m C12.
+      Ng\u1EEBng ti\u1EBFp nh\u1EADn c\xF4ng khai; ti\u1EBFp nh\u1EADn k\u1EF9 thu\u1EADt
+      v\u1EABn ti\u1EBFp t\u1EE5c qua c\u1EEDa d\u1ECBch v\u1EE5. Ghi P046 theo gi\u1EDD
+      nh\u1EADn th\u1EF1c t\u1EBF, kh\xF4ng theo gi\u1EDD h\u1EB9n tr\u01B0\u1EDBc
+      \u0111\xF3. Phi\u1EBFu ti\u1EBFp nh\u1EADn n\u1EB1m trong ph\xF2ng h\u1ED3
+      s\u01A1 t\u1EA7ng tr\xEAn. C\u1EA7n ngu\u1ED3n d\u1ECBch v\u1EE5 t\u1EA7ng
+      d\u01B0\u1EDBi \u0111\u1EC3 v\xE0o; c\u1EA7u ch\xEC thay th\u1EBF \u1EDF kho
+      b\u1EA3o tr\xEC t\u1EA7ng tr\u1EC7t. \u0110\xEAm nay kh\xF4ng b\u1EC7nh nh\xE2n
+      n\xE0o \u0111\u01B0\u1EE3c xu\u1EA5t vi\u1EC7n qua qu\u1EA7y. Nh\xE2n vi\xEAn
+      h\u1ECFi thang c\xF4ng c\u1ED9ng ph\u1EA3i t\u1EDBi an ninh. Marcus Hale y\xEAu
+      c\u1EA7u gi\u1EEF c\u1EA3 s\u1ED5 c\xF4ng khai v\xE0 ph\u1EE5 l\u1EE5c k\u1EF9
+      thu\u1EADt. Nh\xE0 th\u1EA7u ch\u1EC9 y\xEAu c\u1EA7u s\u1ED5 c\xF4ng khai."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 8
+    order: 4
+  - id: 5
+    chapter: 1
+    required: 1
+    title: P046 Intake Record
+    summary: 'Patient reference P046. Intake group C12. Receiving time 02:40. Linked
+      consignment AL-04, lot T9-17. Observation status: fever and disorientation
+      following the T-9 exposure protocol. Dr. Adrian Cole has requested immediate
+      suspension of further exposure; approval remains unsigned. The public status
+      reads RECOVERY TRANSFER. The internal destination reads B2 TECHNICAL OBSERVATION.
+      Do not substitute P041, whose C08 intake was logged at 01:20. Family contact
+      requests are held by administration. This sheet must accompany any movement
+      order so that the receiving team can reconcile the patient reference with the
+      original identity register.'
+    body: 'Patient reference P046. Intake group C12. Receiving time 02:40. Linked
+      consignment AL-04, lot T9-17. Observation status: fever and disorientation
+      following the T-9 exposure protocol. Dr. Adrian Cole has requested immediate
+      suspension of further exposure; approval remains unsigned. The public status
+      reads RECOVERY TRANSFER. The internal destination reads B2 TECHNICAL OBSERVATION.
+      Do not substitute P041, whose C08 intake was logged at 01:20. Family contact
+      requests are held by administration. This sheet must accompany any movement
+      order so that the receiving team can reconcile the patient reference with the
+      original identity register.'
+    bodyVietnamese: "M\xE3 b\u1EC7nh nh\xE2n P046. Nh\xF3m C12. Gi\u1EDD nh\u1EADn
+      02:40. Chuy\u1EBFn li\xEAn quan AL-04, l\xF4 T9-17. Theo d\xF5i: s\u1ED1t v\xE0
+      m\u1EA5t \u0111\u1ECBnh h\u01B0\u1EDBng sau quy tr\xECnh ph\u01A1i nhi\u1EC5m
+      T-9. Dr. Adrian Cole y\xEAu c\u1EA7u d\u1EEBng ngay vi\u1EC7c ph\u01A1i nhi\u1EC5m
+      b\u1ED5 sung; ph\xEA duy\u1EC7t ch\u01B0a \u0111\u01B0\u1EE3c k\xFD. Tr\u1EA1ng
+      th\xE1i c\xF4ng khai ghi CHUY\u1EC2N PH\u1EE4C H\u1ED2I. \u0110\u1ECBa ch\u1EC9
+      n\u1ED9i b\u1ED9 ghi THEO D\xD5I K\u1EF8 THU\u1EACT B2. Kh\xF4ng nh\u1EA7m
+      v\u1EDBi P041 thu\u1ED9c C08, ti\u1EBFp nh\u1EADn l\xFAc 01:20. Y\xEAu c\u1EA7u
+      li\xEAn h\u1EC7 gia \u0111\xECnh do h\xE0nh ch\xEDnh gi\u1EEF. Phi\u1EBFu n\xE0y
+      ph\u1EA3i \u0111i c\xF9ng l\u1EC7nh chuy\u1EC3n \u0111\u1EC3 n\u01A1i nh\u1EADn
+      \u0111\u1ED1i chi\u1EBFu m\xE3 b\u1EC7nh nh\xE2n v\u1EDBi danh t\xEDnh g\u1ED1c."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 12
+    order: 5
+  - id: 6
+    chapter: 1
+    required: 1
+    title: Mortuary Transfer Discrepancy
+    summary: "P046 / C12. Mortuary entry: deceased, 03:05. Freight movement entry:
+      living subject for B2 observation, 03:50. Both entries use the same patient
+      reference and receiving wristband; this is not a second patient. The assigned
+      mortuary drawer is empty. Maya Reed's lift note confirms the later trip carried
+      an occupied observation trolley. The B2 access card is retained with this discrepancy
+      report for an independent check. Do not resolve the conflict by deleting either
+      entry. Whoever examines the records must see that a live transfer was logged
+      after the reported death. \u2014 Security review copy."
+    body: "P046 / C12. Mortuary entry: deceased, 03:05. Freight movement entry: living
+      subject for B2 observation, 03:50. Both entries use the same patient reference
+      and receiving wristband; this is not a second patient. The assigned mortuary
+      drawer is empty. Maya Reed's lift note confirms the later trip carried an occupied
+      observation trolley. The B2 access card is retained with this discrepancy report
+      for an independent check. Do not resolve the conflict by deleting either entry.
+      Whoever examines the records must see that a live transfer was logged after
+      the reported death. \u2014 Security review copy."
+    bodyVietnamese: "P046 / C12. S\u1ED5 nh\xE0 x\xE1c: t\u1EED vong, 03:05. S\u1ED5
+      v\u1EADn chuy\u1EC3n: \u0111\u1ED1i t\u01B0\u1EE3ng c\xF2n s\u1ED1ng \u0111i
+      theo d\xF5i t\u1EA1i B2, 03:50. Hai m\u1EE5c d\xF9ng c\xF9ng m\xE3 b\u1EC7nh
+      nh\xE2n v\xE0 v\xF2ng nh\u1EADn d\u1EA1ng, kh\xF4ng ph\u1EA3i hai ng\u01B0\u1EDDi.
+      Ng\u0103n nh\xE0 x\xE1c \u0111\u01B0\u1EE3c ch\u1EC9 \u0111\u1ECBnh \u0111ang
+      tr\u1ED1ng. Ghi ch\xFA thang c\u1EE7a Maya Reed x\xE1c nh\u1EADn chuy\u1EBFn
+      sau ch\u1EDF xe theo d\xF5i c\xF3 ng\u01B0\u1EDDi. Th\u1EBB B2 \u0111\u01B0\u1EE3c
+      gi\u1EEF c\xF9ng b\xE1o c\xE1o \u0111\u1EC3 ki\u1EC3m tra \u0111\u1ED9c l\u1EADp.
+      Kh\xF4ng gi\u1EA3i quy\u1EBFt m\xE2u thu\u1EABn b\u1EB1ng c\xE1ch x\xF3a m\u1ED9t
+      m\u1EE5c. Ng\u01B0\u1EDDi xem ph\u1EA3i bi\u1EBFt l\u1EA7n chuy\u1EC3n c\xF2n
+      s\u1ED1ng \u0111\u01B0\u1EE3c ghi sau gi\u1EDD t\u1EED vong. \u2014 B\u1EA3n
+      th\u1EA9m tra an ninh."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 0d58bdec2258a564facd2e9f32be26ed, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 13
+    order: 6
+  - id: 7
+    chapter: 2
+    required: 1
+    title: B2 Archive Index
+    summary: Restricted index, revision before contractor export. Trace lot T9-17
+      to intake group C12 and patient P046. The corresponding original archive is
+      E-02. E-01 belongs to an earlier shipment and cannot establish this chain.
+      E-03 is an equipment record without patient identities. The contractor export
+      of E-02 excludes the identity table and Adrian Cole's stop-work request. Preserve
+      the original directory, not just its export. Power the data path before opening
+      the archive terminal. Security has placed the original under hold so that an
+      outside investigator can compare what was recorded with what the client intended
+      to receive.
+    body: Restricted index, revision before contractor export. Trace lot T9-17 to
+      intake group C12 and patient P046. The corresponding original archive is E-02.
+      E-01 belongs to an earlier shipment and cannot establish this chain. E-03 is
+      an equipment record without patient identities. The contractor export of E-02
+      excludes the identity table and Adrian Cole's stop-work request. Preserve the
+      original directory, not just its export. Power the data path before opening
+      the archive terminal. Security has placed the original under hold so that an
+      outside investigator can compare what was recorded with what the client intended
+      to receive.
+    bodyVietnamese: "Ch\u1EC9 m\u1EE5c h\u1EA1n ch\u1EBF, phi\xEAn b\u1EA3n tr\u01B0\u1EDBc
+      khi xu\u1EA5t cho nh\xE0 th\u1EA7u. \u0110\u1ED1i chi\u1EBFu l\xF4 T9-17 v\u1EDBi
+      nh\xF3m C12 v\xE0 b\u1EC7nh nh\xE2n P046. H\u1ED3 s\u01A1 g\u1ED1c t\u01B0\u01A1ng
+      \u1EE9ng l\xE0 E-02. E-01 thu\u1ED9c l\xF4 tr\u01B0\u1EDBc, kh\xF4ng ch\u1EE9ng
+      minh chu\u1ED7i n\xE0y. E-03 l\xE0 h\u1ED3 s\u01A1 thi\u1EBFt b\u1ECB kh\xF4ng
+      c\xF3 danh t\xEDnh b\u1EC7nh nh\xE2n. B\u1EA3n E-02 c\u1EE7a nh\xE0 th\u1EA7u
+      lo\u1EA1i b\u1EA3ng danh t\xEDnh v\xE0 y\xEAu c\u1EA7u d\u1EEBng c\u1EE7a Adrian
+      Cole. Ph\u1EA3i gi\u1EEF th\u01B0 m\u1EE5c g\u1ED1c, kh\xF4ng ch\u1EC9 b\u1EA3n
+      xu\u1EA5t. C\u1EA5p ngu\u1ED3n \u0111\u01B0\u1EDDng d\u1EEF li\u1EC7u tr\u01B0\u1EDBc
+      khi m\u1EDF m\xE1y l\u01B0u tr\u1EEF. An ninh gi\u1EEF b\u1EA3n g\u1ED1c \u0111\u1EC3
+      \u0111i\u1EC1u tra vi\xEAn b\xEAn ngo\xE0i so s\xE1nh d\u1EEF li\u1EC7u th\u1EF1c
+      t\u1EBF v\u1EDBi th\u1EE9 kh\xE1ch h\xE0ng \u0111\u1ECBnh nh\u1EADn."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 0d58bdec2258a564facd2e9f32be26ed, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 16
+    order: 7
+  - id: 8
+    chapter: 2
+    required: 1
+    title: Emergency Power Allocation
+    summary: "Maya Reed \u2014 B2 maintenance. Available emergency capacity: six
+      units. SAFETY uses two, TEST RIG uses four, DATA uses two, and FREIGHT LIFT
+      uses two. SAFETY must remain online throughout any switch. For records recovery,
+      turn TEST RIG off, then enable DATA and FREIGHT LIFT. The resulting load is
+      six; no reserve remains for experiments. The test indicator is not a safety
+      interlock. An overload refuses the selection without damaging the archive.
+      If interrupted, return to the panel and check its actual switches. Keep the
+      escape lift powered until the last occupied trip is clear."
+    body: "Maya Reed \u2014 B2 maintenance. Available emergency capacity: six units.
+      SAFETY uses two, TEST RIG uses four, DATA uses two, and FREIGHT LIFT uses two.
+      SAFETY must remain online throughout any switch. For records recovery, turn
+      TEST RIG off, then enable DATA and FREIGHT LIFT. The resulting load is six;
+      no reserve remains for experiments. The test indicator is not a safety interlock.
+      An overload refuses the selection without damaging the archive. If interrupted,
+      return to the panel and check its actual switches. Keep the escape lift powered
+      until the last occupied trip is clear."
+    bodyVietnamese: "Maya Reed \u2014 b\u1EA3o tr\xEC B2. C\xF4ng su\u1EA5t kh\u1EA9n
+      c\u1EA5p: s\xE1u \u0111\u01A1n v\u1ECB. SAFETY d\xF9ng hai, TEST RIG b\u1ED1n,
+      DATA hai, FREIGHT LIFT hai. SAFETY ph\u1EA3i lu\xF4n b\u1EADt khi chuy\u1EC3n
+      m\u1EA1ch. \u0110\u1EC3 thu h\u1ED3i h\u1ED3 s\u01A1, t\u1EAFt TEST RIG r\u1ED3i
+      b\u1EADt DATA v\xE0 FREIGHT LIFT. T\u1ED5ng t\u1EA3i l\xE0 s\xE1u, kh\xF4ng
+      c\xF2n c\xF4ng su\u1EA5t cho th\u1EED nghi\u1EC7m. \u0110\xE8n th\u1EED nghi\u1EC7m
+      kh\xF4ng ph\u1EA3i kh\xF3a an to\xE0n. H\u1EC7 th\u1ED1ng t\u1EEB ch\u1ED1i
+      l\u1EF1a ch\u1ECDn qu\xE1 t\u1EA3i m\xE0 kh\xF4ng l\xE0m h\u1ECFng h\u1ED3
+      s\u01A1. N\u1EBFu b\u1ECB gi\xE1n \u0111o\u1EA1n, quay l\u1EA1i b\u1EA3ng v\xE0
+      ki\u1EC3m tra c\xF4ng t\u1EAFc th\u1EF1c t\u1EBF. Gi\u1EEF ngu\u1ED3n thang
+      tho\xE1t cho t\u1EDBi khi chuy\u1EBFn c\xF3 ng\u01B0\u1EDDi cu\u1ED1i c\xF9ng
+      ra ngo\xE0i."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 0d58bdec2258a564facd2e9f32be26ed, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 17
+    order: 8
+  - id: 9
+    chapter: 2
+    required: 1
+    title: E-02 Original Incident Archive
+    summary: 'Original E-02: lot T9-17, group C12, patient P046. The identity table,
+      movement history and stop-work request are retained without redaction. Adrian
+      Cole suspended the trial before containment failed. The later sample-only export
+      was prepared under the client''s instruction, not medical authority. Final
+      incident ledger confirms the deaths of Dr. Adrian Cole, security chief Marcus
+      Hale and technician Maya Reed during the breach; their signed records remain
+      attached. Patient outcomes beyond the documented transfers are unresolved.
+      Copy this complete archive to independent custody. Removing the identity fields
+      would erase the link between the material and the people exposed.'
+    body: 'Original E-02: lot T9-17, group C12, patient P046. The identity table,
+      movement history and stop-work request are retained without redaction. Adrian
+      Cole suspended the trial before containment failed. The later sample-only export
+      was prepared under the client''s instruction, not medical authority. Final
+      incident ledger confirms the deaths of Dr. Adrian Cole, security chief Marcus
+      Hale and technician Maya Reed during the breach; their signed records remain
+      attached. Patient outcomes beyond the documented transfers are unresolved.
+      Copy this complete archive to independent custody. Removing the identity fields
+      would erase the link between the material and the people exposed.'
+    bodyVietnamese: "B\u1EA3n g\u1ED1c E-02: l\xF4 T9-17, nh\xF3m C12, b\u1EC7nh
+      nh\xE2n P046. Gi\u1EEF nguy\xEAn b\u1EA3ng danh t\xEDnh, l\u1ECBch s\u1EED
+      chuy\u1EC3n v\xE0 y\xEAu c\u1EA7u d\u1EEBng. Adrian Cole \u0111\xECnh ch\u1EC9
+      th\u1EED nghi\u1EC7m tr\u01B0\u1EDBc khi phong t\u1ECFa th\u1EA5t b\u1EA1i.
+      B\u1EA3n xu\u1EA5t ch\u1EC9 c\xF3 m\u1EABu sau \u0111\xF3 \u0111\u01B0\u1EE3c
+      l\u1EADp theo kh\xE1ch h\xE0ng, kh\xF4ng ph\u1EA3i ch\u1EC9 th\u1ECB y t\u1EBF.
+      S\u1ED5 s\u1EF1 c\u1ED1 cu\u1ED1i x\xE1c nh\u1EADn Dr. Adrian Cole, tr\u01B0\u1EDFng
+      an ninh Marcus Hale v\xE0 k\u1EF9 thu\u1EADt vi\xEAn Maya Reed t\u1EED vong
+      trong v\u1EE5 m\u1EA5t ki\u1EC3m so\xE1t; h\u1ED3 s\u01A1 h\u1ECD k\xFD \u0111\u01B0\u1EE3c
+      \u0111\xEDnh k\xE8m. S\u1ED1 ph\u1EADn b\u1EC7nh nh\xE2n ngo\xE0i c\xE1c l\u1EA7n
+      chuy\u1EC3n c\xF3 ch\u1EE9ng t\u1EEB ch\u01B0a \u0111\u01B0\u1EE3c x\xE1c \u0111\u1ECBnh.
+      Sao ch\xE9p \u0111\u1EA7y \u0111\u1EE7 cho b\xEAn \u0111\u1ED9c l\u1EADp. X\xF3a
+      danh t\xEDnh s\u1EBD x\xF3a li\xEAn h\u1EC7 gi\u1EEFa v\u1EADt li\u1EC7u v\xE0
+      ng\u01B0\u1EDDi ph\u01A1i nhi\u1EC5m."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 20477921fd0efc146aa9752d76a2acc7, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 18
+    order: 9
+  - id: 10
+    chapter: 0
+    required: 0
+    title: Unsent Factory Letter
+    summary: Ellie, I traded shifts again. Please do not wait at the bus stop tonight.
+      They keep adding a sealed delivery after the ordinary trucks leave, and somebody
+      has to stay with the temperature recorder until security signs. I used to know
+      every driver by name. Now they speak to a caller before they speak to us. There
+      is soup in the blue container, not the one with the cracked lid. Tell Ben I
+      have not forgotten his Saturday match. I will come home when they let the last
+      truck through.
+    body: Ellie, I traded shifts again. Please do not wait at the bus stop tonight.
+      They keep adding a sealed delivery after the ordinary trucks leave, and somebody
+      has to stay with the temperature recorder until security signs. I used to know
+      every driver by name. Now they speak to a caller before they speak to us. There
+      is soup in the blue container, not the one with the cracked lid. Tell Ben I
+      have not forgotten his Saturday match. I will come home when they let the last
+      truck through.
+    bodyVietnamese: "Ellie, anh l\u1EA1i \u0111\u1ED5i ca. \u0110\u1EEBng \u0111\u1EE3i
+      \u1EDF tr\u1EA1m xe bu\xFDt t\u1ED1i nay. H\u1ECD c\u1EE9 th\xEAm chuy\u1EBFn
+      ni\xEAm phong sau khi xe th\u01B0\u1EDDng \u0111i h\u1EBFt, v\xE0 ph\u1EA3i
+      c\xF3 ng\u01B0\u1EDDi tr\xF4ng m\xE1y ghi nhi\u1EC7t t\u1EDBi l\xFAc an ninh
+      k\xFD. Tr\u01B0\u1EDBc \u0111\xE2y anh bi\u1EBFt t\xEAn m\u1ECDi t\xE0i x\u1EBF.
+      Gi\u1EDD h\u1ECD n\xF3i v\u1EDBi m\u1ED9t ng\u01B0\u1EDDi g\u1ECDi \u0111i\u1EC7n
+      tr\u01B0\u1EDBc khi n\xF3i v\u1EDBi b\u1ECDn anh. S\xFAp \u1EDF h\u1ED9p xanh,
+      kh\xF4ng ph\u1EA3i h\u1ED9p n\u1EE9t n\u1EAFp. N\xF3i v\u1EDBi Ben anh ch\u01B0a
+      qu\xEAn tr\u1EADn th\u1EE9 b\u1EA3y. Anh s\u1EBD v\u1EC1 khi h\u1ECD cho chi\u1EBFc
+      xe cu\u1ED1i qua."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 0
+    order: 10
+  - id: 11
+    chapter: 0
+    required: 0
+    title: Night Shift Handover
+    summary: 'To the morning crew: the kettle trips the socket behind the time clock.
+      Use the canteen socket until maintenance replaces it. Do not stack empty pallets
+      against the service door, even if dispatch says the corridor is unused. We
+      had to move all of them during yesterday''s alarm. Maya left a proper electrical
+      procedure beside the generator; read it instead of copying the last operator''s
+      switch positions. The spare locker keys are with security. If nobody relieves
+      you, write your departure time honestly. We are not signing another complete
+      shift that nobody actually worked.'
+    body: 'To the morning crew: the kettle trips the socket behind the time clock.
+      Use the canteen socket until maintenance replaces it. Do not stack empty pallets
+      against the service door, even if dispatch says the corridor is unused. We
+      had to move all of them during yesterday''s alarm. Maya left a proper electrical
+      procedure beside the generator; read it instead of copying the last operator''s
+      switch positions. The spare locker keys are with security. If nobody relieves
+      you, write your departure time honestly. We are not signing another complete
+      shift that nobody actually worked.'
+    bodyVietnamese: "G\u1EEDi ca s\xE1ng: \u1EA5m n\u01B0\u1EDBc l\xE0m nh\u1EA3y
+      \u1ED5 sau \u0111\u1ED3ng h\u1ED3 ch\u1EA5m c\xF4ng. D\xF9ng \u1ED5 c\u0103n
+      tin t\u1EDBi khi b\u1EA3o tr\xEC thay. \u0110\u1EEBng x\u1EBFp pallet ch\u1EAFn
+      c\u1EEDa d\u1ECBch v\u1EE5 d\xF9 \u0111i\u1EC1u ph\u1ED1i b\u1EA3o h\xE0nh
+      lang kh\xF4ng d\xF9ng. H\xF4m qua b\xE1o \u0111\u1ED9ng ph\u1EA3i d\u1ECDn
+      h\u1EBFt. Maya \u0111\u1EC3 quy tr\xECnh \u0111i\u1EC7n c\u1EA1nh m\xE1y ph\xE1t;
+      \u0111\u1ECDc n\xF3 thay v\xEC ch\xE9p v\u1ECB tr\xED c\xF4ng t\u1EAFc c\u1EE7a
+      ca tr\u01B0\u1EDBc. Ch\xECa t\u1EE7 d\u1EF1 ph\xF2ng \u1EDF an ninh. N\u1EBFu
+      kh\xF4ng c\xF3 ng\u01B0\u1EDDi thay, ghi \u0111\xFAng gi\u1EDD r\u1EDDi ca.
+      Ch\xFAng ta kh\xF4ng k\xFD th\xEAm m\u1ED9t ca \u0111\u1EE7 gi\u1EDD m\xE0
+      ch\u1EB3ng ai th\u1EF1c s\u1EF1 l\xE0m."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 0
+    order: 11
+  - id: 12
+    chapter: 0
+    required: 0
+    title: Cold Store Return Memo
+    summary: "Security desk \u2014 Marcus Hale. The returned T9-17 case remains sealed.
+      Photograph the seal before storage and attach the failed delivery receipt;
+      do not classify it as unused stock. A caller asked whether destroying the temperature
+      strip would simplify the return. I declined and recorded the call reference.
+      Refrigeration is a custody requirement, not proof that the contents are safe.
+      No factory employee is authorized to inspect the sample. If the client sends
+      a replacement manifest, keep both versions. A cleaner document is not necessarily
+      a more truthful one."
+    body: "Security desk \u2014 Marcus Hale. The returned T9-17 case remains sealed.
+      Photograph the seal before storage and attach the failed delivery receipt;
+      do not classify it as unused stock. A caller asked whether destroying the temperature
+      strip would simplify the return. I declined and recorded the call reference.
+      Refrigeration is a custody requirement, not proof that the contents are safe.
+      No factory employee is authorized to inspect the sample. If the client sends
+      a replacement manifest, keep both versions. A cleaner document is not necessarily
+      a more truthful one."
+    bodyVietnamese: "B\xE0n an ninh \u2014 Marcus Hale. Ki\u1EC7n T9-17 tr\u1EA3
+      v\u1EC1 v\u1EABn ni\xEAm phong. Ch\u1EE5p ni\xEAm phong tr\u01B0\u1EDBc khi
+      l\u01B0u kho, k\xE8m bi\xEAn nh\u1EADn giao th\u1EA5t b\u1EA1i; kh\xF4ng x\u1EBFp
+      v\xE0o h\xE0ng ch\u01B0a d\xF9ng. C\xF3 ng\u01B0\u1EDDi h\u1ECFi h\u1EE7y d\u1EA3i
+      nhi\u1EC7t c\xF3 \u0111\u01A1n gi\u1EA3n h\xF3a vi\u1EC7c tr\u1EA3 h\xE0ng
+      kh\xF4ng. T\xF4i t\u1EEB ch\u1ED1i v\xE0 ghi m\xE3 cu\u1ED9c g\u1ECDi. Gi\u1EEF
+      l\u1EA1nh l\xE0 y\xEAu c\u1EA7u b\u1EA3o qu\u1EA3n ch\u1EE9ng c\u1EE9, kh\xF4ng
+      ch\u1EE9ng minh n\u1ED9i dung an to\xE0n. Nh\xE2n vi\xEAn nh\xE0 m\xE1y kh\xF4ng
+      \u0111\u01B0\u1EE3c ki\u1EC3m tra m\u1EABu. N\u1EBFu kh\xE1ch g\u1EEDi v\u1EADn
+      \u0111\u01A1n thay th\u1EBF, gi\u1EEF c\u1EA3 hai. H\u1ED3 s\u01A1 s\u1EA1ch
+      h\u01A1n ch\u01B0a ch\u1EAFc th\u1EADt h\u01A1n."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 0
+    order: 12
+  - id: 13
+    chapter: 1
+    required: 0
+    title: 'Ward Notice: Visiting Hours'
+    summary: Visiting hours are suspended until further notice. Please leave letters
+      with reception; staff will record the recipient and delivery time. Do not tell
+      families that a patient has been discharged unless a named clinician has signed
+      the discharge sheet. Administrative transfer is not discharge. The new technical
+      observation stamps have caused repeated mistakes at this desk. If an outside
+      caller asks for a room that no longer appears on the ward list, retain the
+      request for review. Families should not have to provide the same name every
+      time someone moves a folder.
+    body: Visiting hours are suspended until further notice. Please leave letters
+      with reception; staff will record the recipient and delivery time. Do not tell
+      families that a patient has been discharged unless a named clinician has signed
+      the discharge sheet. Administrative transfer is not discharge. The new technical
+      observation stamps have caused repeated mistakes at this desk. If an outside
+      caller asks for a room that no longer appears on the ward list, retain the
+      request for review. Families should not have to provide the same name every
+      time someone moves a folder.
+    bodyVietnamese: "T\u1EA1m ng\u1EEBng th\u0103m b\u1EC7nh. \u0110\u1EC3 th\u01B0
+      t\u1EA1i l\u1EC5 t\xE2n; nh\xE2n vi\xEAn ghi ng\u01B0\u1EDDi nh\u1EADn v\xE0
+      gi\u1EDD giao. Kh\xF4ng b\xE1o gia \u0111\xECnh r\u1EB1ng b\u1EC7nh nh\xE2n
+      xu\u1EA5t vi\u1EC7n n\u1EBFu ch\u01B0a c\xF3 b\xE1c s\u0129 k\xFD phi\u1EBFu.
+      Chuy\u1EC3n h\xE0nh ch\xEDnh kh\xF4ng ph\u1EA3i xu\u1EA5t vi\u1EC7n. D\u1EA5u
+      theo d\xF5i k\u1EF9 thu\u1EADt m\u1EDBi g\xE2y nh\u1EA7m l\u1EABn li\xEAn t\u1EE5c.
+      N\u1EBFu ng\u01B0\u1EDDi g\u1ECDi h\u1ECFi ph\xF2ng \u0111\xE3 bi\u1EBFn m\u1EA5t
+      kh\u1ECFi danh s\xE1ch khoa, gi\u1EEF y\xEAu c\u1EA7u \u0111\u1EC3 ki\u1EC3m
+      tra. Gia \u0111\xECnh kh\xF4ng n\xEAn ph\u1EA3i \u0111\u1ECDc l\u1EA1i c\xF9ng
+      m\u1ED9t c\xE1i t\xEAn m\u1ED7i l\u1EA7n ai \u0111\xF3 chuy\u1EC3n m\u1ED9t
+      t\u1EADp h\u1ED3 s\u01A1."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 0
+    order: 13
+  - id: 14
+    chapter: 1
+    required: 0
+    title: A Letter Never Delivered
+    summary: Dear Daniel, the receptionist said your room changed and that visiting
+      would resume next week. I left the photograph anyway. Your brother insists
+      the dog recognizes you in it, which sounds impossible, but I am choosing to
+      believe him. They would not let me leave your own blanket because everything
+      has to be issued by the ward. I have written our number again on the back.
+      You do not need to explain why you missed the call. Just ask someone to tell
+      us which room you are in now. Love, Anna.
+    body: Dear Daniel, the receptionist said your room changed and that visiting
+      would resume next week. I left the photograph anyway. Your brother insists
+      the dog recognizes you in it, which sounds impossible, but I am choosing to
+      believe him. They would not let me leave your own blanket because everything
+      has to be issued by the ward. I have written our number again on the back.
+      You do not need to explain why you missed the call. Just ask someone to tell
+      us which room you are in now. Love, Anna.
+    bodyVietnamese: "Daniel th\xE2n m\u1EBFn, l\u1EC5 t\xE2n n\xF3i con \u0111\u1ED5i
+      ph\xF2ng v\xE0 tu\u1EA7n sau s\u1EBD \u0111\u01B0\u1EE3c th\u0103m. M\u1EB9
+      v\u1EABn \u0111\u1EC3 l\u1EA1i \u1EA3nh. Em con kh\u0103ng kh\u0103ng con ch\xF3
+      nh\u1EADn ra con trong \u1EA3nh; nghe kh\xF3 tin nh\u01B0ng m\u1EB9 mu\u1ED1n
+      tin. H\u1ECD kh\xF4ng cho \u0111\u1EC3 ch\u0103n c\u1EE7a con v\xEC m\u1ECDi
+      th\u1EE9 ph\u1EA3i do khoa c\u1EA5p. M\u1EB9 ghi l\u1EA1i s\u1ED1 nh\xE0 ph\xEDa
+      sau. Con kh\xF4ng c\u1EA7n gi\u1EA3i th\xEDch v\xEC sao l\u1EE1 cu\u1ED9c g\u1ECDi.
+      Ch\u1EC9 c\u1EA7n nh\u1EDD ai n\xF3i cho nh\xE0 m\xECnh bi\u1EBFt gi\u1EDD
+      con \u1EDF ph\xF2ng n\xE0o. Y\xEAu con, Anna."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 0
+    order: 14
+  - id: 15
+    chapter: 1
+    required: 0
+    title: B2 Lift Maintenance Card
+    summary: "Service entry \u2014 Maya Reed. The freight lift answered a lower-floor
+      call after the public closure notice went up. That is not a fault: B2 remains
+      connected to the emergency circuit. I replaced the landing lamp, not the card
+      reader. Stop requesting a master bypass; the card is held by security for a
+      reason. On descent, wait for the receiving door to finish opening before unloading.
+      The cabin cannot safely carry a trolley across a half-open threshold. Leave
+      this card at the panel so the next shift knows what was actually repaired."
+    body: "Service entry \u2014 Maya Reed. The freight lift answered a lower-floor
+      call after the public closure notice went up. That is not a fault: B2 remains
+      connected to the emergency circuit. I replaced the landing lamp, not the card
+      reader. Stop requesting a master bypass; the card is held by security for a
+      reason. On descent, wait for the receiving door to finish opening before unloading.
+      The cabin cannot safely carry a trolley across a half-open threshold. Leave
+      this card at the panel so the next shift knows what was actually repaired."
+    bodyVietnamese: "Ghi b\u1EA3o tr\xEC \u2014 Maya Reed. Thang h\xE0ng nh\u1EADn
+      l\u1EC7nh t\u1EA7ng d\u01B0\u1EDBi sau th\xF4ng b\xE1o \u0111\xF3ng c\u1EEDa
+      c\xF4ng khai. Kh\xF4ng ph\u1EA3i l\u1ED7i: B2 v\u1EABn n\u1ED1i m\u1EA1ch kh\u1EA9n
+      c\u1EA5p. T\xF4i thay \u0111\xE8n s\u1EA3nh, kh\xF4ng thay \u0111\u1EA7u \u0111\u1ECDc
+      th\u1EBB. \u0110\u1EEBng y\xEAu c\u1EA7u m\u1EDF kh\xF3a t\u1ED5ng n\u1EEFa;
+      an ninh gi\u1EEF th\u1EBB c\xF3 l\xFD do. Khi xu\u1ED1ng, \u0111\u1EE3i c\u1EEDa
+      nh\u1EADn m\u1EDF h\u1EBFt m\u1EDBi d\u1EE1 h\xE0ng. Kh\xF4ng th\u1EC3 an to\xE0n
+      \u0111\u1EA9y xe qua ng\u01B0\u1EE1ng c\u1EEDa m\u1EDF n\u1EEDa ch\u1EEBng.
+      \u0110\u1EC3 phi\u1EBFu t\u1EA1i b\u1EA3ng \u0111\u1EC3 ca sau bi\u1EBFt th\u1EE9
+      g\xEC th\u1EF1c s\u1EF1 \u0111\u01B0\u1EE3c s\u1EEDa."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 0
+    order: 15
+  - id: 16
+    chapter: 1
+    required: 0
+    title: Night Nurse Audio Transcript
+    summary: Recorded ward handover, transcript complete. I checked the trolley wristband
+      twice. P046 was breathing when the doors closed. The screen upstairs had already
+      changed to deceased. I asked whether we were taking the patient to emergency
+      care, and security told me the receiving team would explain. Nobody did. I
+      am leaving this recording with the paper handover because the electronic entry
+      no longer accepts corrections from our ward. If you hear this on the next shift,
+      preserve both times. Please do not sign my name under a report I did not write.
+    body: Recorded ward handover, transcript complete. I checked the trolley wristband
+      twice. P046 was breathing when the doors closed. The screen upstairs had already
+      changed to deceased. I asked whether we were taking the patient to emergency
+      care, and security told me the receiving team would explain. Nobody did. I
+      am leaving this recording with the paper handover because the electronic entry
+      no longer accepts corrections from our ward. If you hear this on the next shift,
+      preserve both times. Please do not sign my name under a report I did not write.
+    bodyVietnamese: "B\u1EA3n ch\xE9p \u0111\u1EA7y \u0111\u1EE7 b\xE0n giao ghi
+      \xE2m. T\xF4i ki\u1EC3m tra v\xF2ng nh\u1EADn d\u1EA1ng hai l\u1EA7n. P046
+      c\xF2n th\u1EDF khi c\u1EEDa \u0111\xF3ng. M\xE0n h\xECnh tr\xEAn t\u1EA7ng
+      \u0111\xE3 \u0111\u1ED5i th\xE0nh t\u1EED vong. T\xF4i h\u1ECFi c\xF3 chuy\u1EC3n
+      b\u1EC7nh nh\xE2n t\u1EDBi c\u1EA5p c\u1EE9u kh\xF4ng, an ninh n\xF3i \u0111\u1ED9i
+      nh\u1EADn s\u1EBD gi\u1EA3i th\xEDch. Kh\xF4ng ai gi\u1EA3i th\xEDch. T\xF4i
+      \u0111\u1EC3 ghi \xE2m c\xF9ng gi\u1EA5y b\xE0n giao v\xEC h\u1ED3 s\u01A1
+      \u0111i\u1EC7n t\u1EED kh\xF4ng nh\u1EADn s\u1EEDa t\u1EEB khoa n\u1EEFa. N\u1EBFu
+      ca sau nghe \u0111\u01B0\u1EE3c, gi\u1EEF c\u1EA3 hai m\u1ED1c gi\u1EDD. Xin
+      \u0111\u1EEBng k\xFD t\xEAn t\xF4i d\u01B0\u1EDBi b\xE1o c\xE1o t\xF4i kh\xF4ng
+      vi\u1EBFt."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 0
+    order: 16
+  - id: 17
+    chapter: 2
+    required: 0
+    title: Operator Shutdown Checklist
+    summary: 'Before leaving the operations desk, record the active run, preserve
+      its index and place any unsigned stop-work request with the original archive.
+      Do not mark the trial complete merely because the sample has moved. Completion
+      requires an authorized review of the incident record. Dr. Cole has returned
+      this checklist twice with the same annotation: unresolved patient outcomes
+      are not empty fields. The client export tool offers a clean summary automatically.
+      That summary is a delivery convenience only. It must never replace the underlying
+      record or become the only copy available to the next operator.'
+    body: 'Before leaving the operations desk, record the active run, preserve its
+      index and place any unsigned stop-work request with the original archive. Do
+      not mark the trial complete merely because the sample has moved. Completion
+      requires an authorized review of the incident record. Dr. Cole has returned
+      this checklist twice with the same annotation: unresolved patient outcomes
+      are not empty fields. The client export tool offers a clean summary automatically.
+      That summary is a delivery convenience only. It must never replace the underlying
+      record or become the only copy available to the next operator.'
+    bodyVietnamese: "Tr\u01B0\u1EDBc khi r\u1EDDi b\xE0n v\u1EADn h\xE0nh, ghi l\u01B0\u1EE3t
+      ch\u1EA1y, gi\u1EEF ch\u1EC9 m\u1EE5c v\xE0 \u0111\u1EB7t y\xEAu c\u1EA7u d\u1EEBng
+      ch\u01B0a k\xFD c\xF9ng h\u1ED3 s\u01A1 g\u1ED1c. Kh\xF4ng \u0111\xE1nh d\u1EA5u
+      ho\xE0n t\u1EA5t ch\u1EC9 v\xEC m\u1EABu \u0111\xE3 chuy\u1EC3n. Ho\xE0n t\u1EA5t
+      c\u1EA7n th\u1EA9m tra c\xF3 th\u1EA9m quy\u1EC1n. Dr. Cole tr\u1EA3 phi\u1EBFu
+      hai l\u1EA7n v\u1EDBi c\xF9ng ghi ch\xFA: s\u1ED1 ph\u1EADn b\u1EC7nh nh\xE2n
+      ch\u01B0a r\xF5 kh\xF4ng ph\u1EA3i \xF4 tr\u1ED1ng. C\xF4ng c\u1EE5 xu\u1EA5t
+      cho kh\xE1ch t\u1EF1 t\u1EA1o b\u1EA3n t\xF3m t\u1EAFt s\u1EA1ch. B\u1EA3n
+      \u0111\xF3 ch\u1EC9 ti\u1EC7n giao nh\u1EADn, kh\xF4ng \u0111\u01B0\u1EE3c
+      thay d\u1EEF li\u1EC7u g\u1ED1c ho\u1EB7c tr\u1EDF th\xE0nh b\u1EA3n duy nh\u1EA5t
+      cho ng\u01B0\u1EDDi v\u1EADn h\xE0nh ti\u1EBFp theo."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 0
+    order: 17
+  - id: 18
+    chapter: 2
+    required: 0
+    title: Contractor Export Email
+    summary: 'From: Contract Liaison. Subject: delivery scope. The receiving client
+      expects material identifiers, storage condition and a confirmation of sample
+      custody. Patient names, ward correspondence and internal objections fall outside
+      the requested export. Please use the abbreviated profile already installed
+      on the archive terminal. Reply from Adrian Cole: those fields establish what
+      happened here. Omitting them changes the meaning of the result. I will not
+      certify a sample-only record as the original. Forwarded response: certification
+      can be resolved after collection. Keep this discussion off the public incident
+      channel until our client has reviewed the package.'
+    body: 'From: Contract Liaison. Subject: delivery scope. The receiving client
+      expects material identifiers, storage condition and a confirmation of sample
+      custody. Patient names, ward correspondence and internal objections fall outside
+      the requested export. Please use the abbreviated profile already installed
+      on the archive terminal. Reply from Adrian Cole: those fields establish what
+      happened here. Omitting them changes the meaning of the result. I will not
+      certify a sample-only record as the original. Forwarded response: certification
+      can be resolved after collection. Keep this discussion off the public incident
+      channel until our client has reviewed the package.'
+    bodyVietnamese: "T\u1EEB: li\xEAn l\u1EA1c h\u1EE3p \u0111\u1ED3ng. Ch\u1EE7
+      \u0111\u1EC1: ph\u1EA1m vi giao. Kh\xE1ch ch\u1EC9 c\u1EA7n m\xE3 v\u1EADt
+      li\u1EC7u, \u0111i\u1EC1u ki\u1EC7n l\u01B0u v\xE0 x\xE1c nh\u1EADn gi\u1EEF
+      m\u1EABu. T\xEAn b\u1EC7nh nh\xE2n, th\u01B0 khoa v\xE0 ph\u1EA3n \u0111\u1ED1i
+      n\u1ED9i b\u1ED9 n\u1EB1m ngo\xE0i b\u1EA3n xu\u1EA5t \u0111\u01B0\u1EE3c y\xEAu
+      c\u1EA7u. D\xF9ng c\u1EA5u h\xECnh r\xFAt g\u1ECDn \u0111\xE3 c\xE0i tr\xEAn
+      m\xE1y l\u01B0u tr\u1EEF. Adrian Cole tr\u1EA3 l\u1EDDi: c\xE1c tr\u01B0\u1EDDng
+      \u0111\xF3 ch\u1EE9ng minh chuy\u1EC7n x\u1EA3y ra; b\u1ECF ch\xFAng l\xE0m
+      \u0111\u1ED5i \xFD ngh\u0129a. T\xF4i kh\xF4ng x\xE1c nh\u1EADn h\u1ED3 s\u01A1
+      ch\u1EC9 c\xF3 m\u1EABu l\xE0 b\u1EA3n g\u1ED1c. Ph\u1EA3n h\u1ED3i chuy\u1EC3n
+      ti\u1EBFp: c\xF3 th\u1EC3 x\u1EED l\xFD ch\u1EE9ng nh\u1EADn sau thu h\u1ED3i.
+      \u0110\u1EEBng \u0111\u01B0a th\u1EA3o lu\u1EADn l\xEAn k\xEAnh s\u1EF1 c\u1ED1
+      c\xF4ng khai tr\u01B0\u1EDBc khi kh\xE1ch xem g\xF3i."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 0
+    order: 18
+  - id: 19
+    chapter: 2
+    required: 0
+    title: Calibration Bench Note
+    summary: "Bench note \u2014 do not discard with consumables. The replacement
+      display arrives with its brightness set to maximum, which makes an unlit warning
+      look active through the scratched cover. Check the diagnostic page before logging
+      a fault. This is a display problem, not evidence that containment is operating.
+      I have tagged the affected unit and attached yesterday's reading so nobody
+      has to reconstruct the comparison from memory. If the archive later shows a
+      perfect sequence with no interruptions, compare it with the paper sheet. The
+      instruments did not become more reliable when the reporting template changed."
+    body: "Bench note \u2014 do not discard with consumables. The replacement display
+      arrives with its brightness set to maximum, which makes an unlit warning look
+      active through the scratched cover. Check the diagnostic page before logging
+      a fault. This is a display problem, not evidence that containment is operating.
+      I have tagged the affected unit and attached yesterday's reading so nobody
+      has to reconstruct the comparison from memory. If the archive later shows a
+      perfect sequence with no interruptions, compare it with the paper sheet. The
+      instruments did not become more reliable when the reporting template changed."
+    bodyVietnamese: "Ghi t\u1EA1i b\xE0n \u2014 kh\xF4ng v\u1EE9t c\xF9ng v\u1EADt
+      t\u01B0. M\xE0n thay th\u1EBF \u0111\u1EC3 \u0111\u1ED9 s\xE1ng t\u1ED1i \u0111a
+      khi\u1EBFn \u0111\xE8n c\u1EA3nh b\xE1o t\u1EAFt tr\xF4ng nh\u01B0 b\u1EADt
+      qua l\u1EDBp ph\u1EE7 x\u01B0\u1EDBc. Ki\u1EC3m tra trang ch\u1EA9n \u0111o\xE1n
+      tr\u01B0\u1EDBc khi ghi l\u1ED7i. \u0110\xE2y l\xE0 l\u1ED7i hi\u1EC3n th\u1ECB,
+      kh\xF4ng ch\u1EE9ng minh h\u1EC7 phong t\u1ECFa ho\u1EA1t \u0111\u1ED9ng. T\xF4i
+      \u0111\xE1nh d\u1EA5u m\xE1y v\xE0 \u0111\xEDnh s\u1ED1 \u0111o h\xF4m qua
+      \u0111\u1EC3 kh\xF4ng ph\u1EA3i nh\u1EDB l\u1EA1i. N\u1EBFu h\u1ED3 s\u01A1
+      sau n\xE0y cho chu\u1ED7i ho\xE0n h\u1EA3o kh\xF4ng gi\xE1n \u0111o\u1EA1n,
+      so v\u1EDBi gi\u1EA5y. Thi\u1EBFt b\u1ECB kh\xF4ng \u0111\xE1ng tin h\u01A1n
+      ch\u1EC9 v\xEC m\u1EABu b\xE1o c\xE1o \u0111\u1ED5i."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 0
+    order: 19
+  - id: 20
+    chapter: 2
+    required: 0
+    title: Emergency Drill Review
+    summary: 'Drill review, security copy. Staff reached the freight landing, but
+      two teams waited for contradictory clearance messages while the lift stood
+      open. A local alarm did not reach the outside coordinator. Corrective action:
+      confirm receipt beyond the facility before describing a transmission as delivered.
+      A progress bar is not an acknowledgement. Marcus Hale requested an independent
+      receiving contact and a printed boarding roster. The client declined the additional
+      reporting step as unnecessary delay. This review remains open. Do not close
+      it simply because the next drill has been removed from the calendar.'
+    body: 'Drill review, security copy. Staff reached the freight landing, but two
+      teams waited for contradictory clearance messages while the lift stood open.
+      A local alarm did not reach the outside coordinator. Corrective action: confirm
+      receipt beyond the facility before describing a transmission as delivered.
+      A progress bar is not an acknowledgement. Marcus Hale requested an independent
+      receiving contact and a printed boarding roster. The client declined the additional
+      reporting step as unnecessary delay. This review remains open. Do not close
+      it simply because the next drill has been removed from the calendar.'
+    bodyVietnamese: "B\u1EA3n an ninh, \u0111\xE1nh gi\xE1 di\u1EC5n t\u1EADp. Nh\xE2n
+      vi\xEAn t\u1EDBi s\u1EA3nh thang h\xE0ng nh\u01B0ng hai \u0111\u1ED9i \u0111\u1EE3i
+      ch\u1EC9 th\u1ECB tr\xE1i nhau khi c\u1EEDa m\u1EDF. B\xE1o \u0111\u1ED9ng
+      c\u1EE5c b\u1ED9 kh\xF4ng t\u1EDBi \u0111i\u1EC1u ph\u1ED1i ngo\xE0i. Kh\u1EAFc
+      ph\u1EE5c: x\xE1c nh\u1EADn b\xEAn ngo\xE0i \u0111\xE3 nh\u1EADn tr\u01B0\u1EDBc
+      khi b\xE1o truy\u1EC1n th\xE0nh c\xF4ng. Thanh ti\u1EBFn tr\xECnh kh\xF4ng
+      ph\u1EA3i x\xE1c nh\u1EADn. Marcus Hale y\xEAu c\u1EA7u \u0111\u1EA7u nh\u1EADn
+      \u0111\u1ED9c l\u1EADp v\xE0 danh s\xE1ch l\xEAn thang b\u1EA3n in. Kh\xE1ch
+      t\u1EEB ch\u1ED1i v\xEC cho l\xE0 ch\u1EADm tr\u1EC5 kh\xF4ng c\u1EA7n thi\u1EBFt.
+      \u0110\xE1nh gi\xE1 v\u1EABn m\u1EDF. Kh\xF4ng \u0111\xF3ng ch\u1EC9 v\xEC
+      bu\u1ED5i di\u1EC5n t\u1EADp sau b\u1ECB x\xF3a kh\u1ECFi l\u1ECBch."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 0
+    order: 20
+  - id: 21
+    chapter: 2
+    required: 0
+    title: Maya's Final Shift Recording
+    summary: Personal recorder, final intact segment. This is Maya Reed. I have left
+      the power note at the panel and the original maintenance sheets with the archive.
+      Cole is still trying to stop the trial. Hale has ordered security to preserve
+      the records, even if the client calls again. I can hear the shutters closing
+      behind operations. If somebody reaches this desk later, do not trust the small
+      export marked complete. The full directory is still here. Take the names with
+      the numbers. We worked beside these people; they were never just a shipment.
+      End of recovered segment.
+    body: Personal recorder, final intact segment. This is Maya Reed. I have left
+      the power note at the panel and the original maintenance sheets with the archive.
+      Cole is still trying to stop the trial. Hale has ordered security to preserve
+      the records, even if the client calls again. I can hear the shutters closing
+      behind operations. If somebody reaches this desk later, do not trust the small
+      export marked complete. The full directory is still here. Take the names with
+      the numbers. We worked beside these people; they were never just a shipment.
+      End of recovered segment.
+    bodyVietnamese: "M\xE1y c\xE1 nh\xE2n, \u0111o\u1EA1n nguy\xEAn v\u1EB9n cu\u1ED1i.
+      T\xF4i l\xE0 Maya Reed. Ghi ch\xFA \u0111i\u1EC7n \u1EDF b\u1EA3ng, gi\u1EA5y
+      b\u1EA3o tr\xEC g\u1ED1c c\xF9ng h\u1ED3 s\u01A1. Cole v\u1EABn c\u1ED1 d\u1EEBng
+      th\u1EED nghi\u1EC7m. Hale l\u1EC7nh an ninh gi\u1EEF h\u1ED3 s\u01A1 d\xF9
+      kh\xE1ch g\u1ECDi n\u1EEFa. T\xF4i nghe c\u1EEDa phong t\u1ECFa \u0111\xF3ng
+      sau ph\xF2ng v\u1EADn h\xE0nh. N\u1EBFu ai t\u1EDBi b\xE0n n\xE0y sau, \u0111\u1EEBng
+      tin b\u1EA3n xu\u1EA5t nh\u1ECF \u0111\xE1nh d\u1EA5u ho\xE0n t\u1EA5t. Th\u01B0
+      m\u1EE5c \u0111\u1EA7y \u0111\u1EE7 v\u1EABn \u1EDF \u0111\xE2y. Mang theo
+      t\xEAn c\xF9ng c\xE1c con s\u1ED1. Ch\xFAng t\xF4i l\xE0m vi\u1EC7c b\xEAn
+      h\u1ECD; h\u1ECD ch\u01B0a bao gi\u1EDD ch\u1EC9 l\xE0 m\u1ED9t chuy\u1EBFn
+      h\xE0ng. H\u1EBFt \u0111o\u1EA1n kh\xF4i ph\u1EE5c."
+    audio: {fileID: 0}
+    icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
+    preview: {fileID: 0}
+    autoDiscoverAfter: 0
+    order: 21
+  keyItems:
+  - id: 1
+    chapter: 0
+    title: T9-17 FACTORY EVIDENCE CASE
+    description: Returned under seal K6. Contains the T9-17 material and its custody
+      records. Retained by Vanguard through extraction; never dropped when an operator
+      dies.
+    icon: {fileID: 21300000, guid: 20477921fd0efc146aa9752d76a2acc7, type: 3}
+    acquiredAfter: 6
+    consumedAfter: 0
+    persistAfterUse: 1
+    order: 1
+  - id: 2
+    chapter: 1
+    title: SERVICE FUSE
+    description: Replacement fuse for An Lac's lower service panel. Any living squad
+      member may install it at the panel. Consumed only after a successful installation.
+    icon: {fileID: 21300000, guid: afb7d6c1e0ece31498ae94abe1ad230d, type: 3}
+    acquiredAfter: 9
+    consumedAfter: 10
+    persistAfterUse: 0
+    order: 2
+  - id: 3
+    chapter: 1
+    title: B2 ACCESS CARD
+    description: Security card retained with the P046 transfer discrepancy. Enables
+      the freight lift's B2 call at its reader. Removed from team items once the
+      lift authorization is committed.
+    icon: {fileID: 21300000, guid: 63641263d1b2ca64eaf1c0865d0cfcff, type: 3}
+    acquiredAfter: 13
+    consumedAfter: 14
+    persistAfterUse: 0
+    order: 3
+  - id: 4
+    chapter: 2
+    title: E-02 LABORATORY EVIDENCE CASE
+    description: 'Sealed original archive: T9-17, C12, P046 and the unredacted identity
+      table. The transmitted copy supplements this original; it does not consume
+      the case.'
+    icon: {fileID: 21300000, guid: 20477921fd0efc146aa9752d76a2acc7, type: 3}
+    acquiredAfter: 19
+    consumedAfter: 0
+    persistAfterUse: 1
+    order: 4
+  dialogue:
+  - id: 1
+    speaker: Mira Shaw
+    english: Vanguard, this is Mira Shaw, BRT coordination. The helicopter leaves
+      after insertion. Recover the T9-17 case and its records. We need evidence,
+      not a sample-only receipt.
+    vietnamese: "Vanguard, \u0111\xE2y l\xE0 Mira Shaw, \u0111i\u1EC1u ph\u1ED1i
+      BRT. Tr\u1EF1c th\u0103ng r\u1EDDi \u0111i sau khi th\u1EA3 \u0111\u1ED9i.
+      Thu h\u1ED3i ki\u1EC7n T9-17 c\xF9ng h\u1ED3 s\u01A1. Ta c\u1EA7n b\u1EB1ng
+      ch\u1EE9ng, kh\xF4ng ph\u1EA3i bi\xEAn nh\u1EADn ch\u1EC9 c\xF3 m\u1EABu."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: Insertion
+    audio: {fileID: 0}
+  - id: 2
+    speaker: Mira Shaw
+    english: Cold Ledger. Restore cold-store power and reconcile the logistics release.
+      Both branches are required; take them in either order.
+    vietnamese: "Cold Ledger. Kh\xF4i ph\u1EE5c \u0111i\u1EC7n kho l\u1EA1nh v\xE0
+      \u0111\u1ED1i chi\u1EBFu v\u1EADn chuy\u1EC3n. C\u1EA7n c\u1EA3 hai nh\xE1nh,
+      th\u1EE9 t\u1EF1 t\xF9y \u0111\u1ED9i."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: Factory/Exploring
+    audio: {fileID: 0}
+  - id: 3
+    speaker: Mira Shaw
+    english: An Lac Care Institute. Those Who Never Left. The factory case stays
+      with Vanguard. Start with the security desk; find who received that shipment.
+    vietnamese: "An Lac Care Institute. Those Who Never Left. Gi\u1EEF ki\u1EC7n
+      nh\xE0 m\xE1y c\xF9ng Vanguard. B\u1EAFt \u0111\u1EA7u t\u1EA1i b\xE0n an ninh,
+      t\xECm ng\u01B0\u1EDDi nh\u1EADn chuy\u1EBFn \u0111\xF3."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: Asylum/Exploring
+    audio: {fileID: 0}
+  - id: 4
+    speaker: Mira Shaw
+    english: The Unmapped Floor. B2 is below the institute, absent from its public
+      plans. Trace P046 and find the unredacted E-02 archive.
+    vietnamese: "The Unmapped Floor. B2 d\u01B0\u1EDBi vi\u1EC7n, kh\xF4ng c\xF3
+      tr\xEAn s\u01A1 \u0111\u1ED3 c\xF4ng khai. Theo d\u1EA5u P046 v\xE0 t\xECm
+      E-02 nguy\xEAn b\u1EA3n."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: Laboratory/Exploring
+    audio: {fileID: 0}
+  - id: 5
+    speaker: Mira Shaw
+    english: Backup power is stable. Preserve the seal and verify the logistics release
+      before collecting T9-17.
+    vietnamese: "Ngu\u1ED3n d\u1EF1 ph\xF2ng \u1ED5n \u0111\u1ECBnh. Gi\u1EEF ni\xEAm
+      phong, ki\u1EC3m tra v\u1EADn chuy\u1EC3n tr\u01B0\u1EDBc khi l\u1EA5y T9-17."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: FactoryGenerator
+    audio: {fileID: 0}
+  - id: 6
+    speaker: Mira Shaw
+    english: AL-04, K6, An Lac at 02:40. That destination was missing from the client's
+      recovery order. Keep the original manifest.
+    vietnamese: "AL-04, K6, An Lac l\xFAc 02:40. L\u1EC7nh thu h\u1ED3i c\u1EE7a
+      kh\xE1ch thi\u1EBFu \u0111\u1ECBa ch\u1EC9 \u0111\xF3. Gi\u1EEF v\u1EADn \u0111\u01A1n
+      g\u1ED1c."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: FactoryShipping
+    audio: {fileID: 0}
+  - id: 7
+    speaker: Mira Shaw
+    english: T9-17 is secured. The addendum names B2 beneath An Lac. Use the service
+      route and keep the case sealed.
+    vietnamese: "\u0110\xE3 gi\u1EEF T9-17. Ph\u1EE5 l\u1EE5c ch\u1EC9 t\u1EDBi B2
+      d\u01B0\u1EDBi An Lac. \u0110i tuy\u1EBFn d\u1ECBch v\u1EE5, gi\u1EEF ki\u1EC7n
+      ni\xEAm phong."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: FactoryCase
+    audio: {fileID: 0}
+  - id: 8
+    speaker: Mira Shaw
+    english: C12 and 02:40 match the factory manifest. Restore service power and
+      check the upper patient records.
+    vietnamese: "C12 v\xE0 02:40 kh\u1EDBp v\u1EADn \u0111\u01A1n nh\xE0 m\xE1y.
+      Kh\xF4i ph\u1EE5c ngu\u1ED3n d\u1ECBch v\u1EE5, ki\u1EC3m tra h\u1ED3 s\u01A1
+      b\u1EC7nh nh\xE2n t\u1EA7ng tr\xEAn."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: AsylumAccess
+    audio: {fileID: 0}
+  - id: 9
+    speaker: Mira Shaw
+    english: Service power is restored. The records room is accessible. The freight
+      lift still needs security's B2 card.
+    vietnamese: "Ngu\u1ED3n d\u1ECBch v\u1EE5 \u0111\xE3 c\xF3. C\xF3 th\u1EC3 v\xE0o
+      ph\xF2ng h\u1ED3 s\u01A1. Thang h\xE0ng v\u1EABn c\u1EA7n th\u1EBB B2 c\u1EE7a
+      an ninh."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: AsylumPower
+    audio: {fileID: 0}
+  - id: 10
+    speaker: Mira Shaw
+    english: P046 matches the intake. The public recovery entry points somewhere
+      else internally. Cross-check the mortuary transfer.
+    vietnamese: "P046 kh\u1EDBp ti\u1EBFp nh\u1EADn. M\u1EE5c ph\u1EE5c h\u1ED3i
+      c\xF4ng khai l\u1EA1i ch\u1EC9 n\u01A1i kh\xE1c trong n\u1ED9i b\u1ED9. \u0110\u1ED1i
+      chi\u1EBFu h\u1ED3 s\u01A1 nh\xE0 x\xE1c."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: AsylumPatient
+    audio: {fileID: 0}
+  - id: 11
+    speaker: Mira Shaw
+    english: Death at 03:05, live transfer at 03:50. Preserve both entries. The B2
+      card gives you the route they concealed.
+    vietnamese: "T\u1EED vong 03:05, chuy\u1EC3n c\xF2n s\u1ED1ng 03:50. Gi\u1EEF
+      c\u1EA3 hai m\u1EE5c. Th\u1EBB B2 m\u1EDF tuy\u1EBFn h\u1ECD che gi\u1EA5u."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: AsylumTransfer
+    audio: {fileID: 0}
+  - id: 12
+    speaker: Mira Shaw
+    english: Safety, data and freight lift are live. The test rig stays off. Recover
+      the original record.
+    vietnamese: "An to\xE0n, d\u1EEF li\u1EC7u v\xE0 thang h\xE0ng \u0111\xE3 b\u1EADt.
+      Gi\u1EEF gi\xE0n th\u1EED t\u1EAFt. Thu h\u1ED3i h\u1ED3 s\u01A1 g\u1ED1c."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: LabPower
+    audio: {fileID: 0}
+  - id: 13
+    speaker: Mira Shaw
+    english: E-02 confirms T9-17, C12 and P046. Cole, Hale and Reed are confirmed
+      dead in the incident ledger. Their records are what we can bring out.
+    vietnamese: "E-02 x\xE1c nh\u1EADn T9-17, C12 v\xE0 P046. S\u1ED5 s\u1EF1 c\u1ED1
+      x\xE1c nh\u1EADn Cole, Hale v\xE0 Reed t\u1EED vong. H\u1ED3 s\u01A1 c\u1EE7a
+      h\u1ECD l\xE0 th\u1EE9 ta c\xF3 th\u1EC3 \u0111\u01B0a ra."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: LabArchive
+    audio: {fileID: 0}
+  - id: 14
+    speaker: Mira Shaw
+    english: Both cases are secured. Copy the full archive to BRT custody before
+      you leave.
+    vietnamese: "\u0110\xE3 gi\u1EEF c\u1EA3 hai ki\u1EC7n. Sao ch\xE9p to\xE0n b\u1ED9
+      h\u1ED3 s\u01A1 t\u1EDBi BRT tr\u01B0\u1EDBc khi r\u1EDDi \u0111i."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: LabCase
+    audio: {fileID: 0}
+  - id: 15
+    speaker: Mira Shaw
+    english: Service interlock is cycling. Hold the control room; the route will
+      wait for the living squad.
+    vietnamese: "Kh\xF3a d\u1ECBch v\u1EE5 \u0111ang ch\u1EA1y chu tr\xECnh. Gi\u1EEF
+      ph\xF2ng \u0111i\u1EC1u khi\u1EC3n, tuy\u1EBFn s\u1EBD \u0111\u1EE3i c\xE1c
+      th\xE0nh vi\xEAn c\xF2n s\u1ED1ng."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: Factory/Encounter
+    audio: {fileID: 0}
+  - id: 16
+    speaker: Mira Shaw
+    english: The B2 lift is cycling. You can evade the Tank. Keep the route to the
+      landing clear and recover anyone downed.
+    vietnamese: "Thang B2 \u0111ang ch\u1EA1y. C\xF3 th\u1EC3 n\xE9 Tank. Gi\u1EEF
+      tuy\u1EBFn t\u1EDBi s\u1EA3nh th\xF4ng v\xE0 c\u1EE9u ng\u01B0\u1EDDi b\u1ECB
+      h\u1EA1."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: Asylum/Encounter
+    audio: {fileID: 0}
+  - id: 17
+    speaker: Mira Shaw
+    english: Transmission is running. Keep moving and cover the data path. You do
+      not need to kill the Tank to leave.
+    vietnamese: "\u0110ang truy\u1EC1n. Ti\u1EBFp t\u1EE5c di chuy\u1EC3n, b\u1EA3o
+      v\u1EC7 \u0111\u01B0\u1EDDng d\u1EEF li\u1EC7u. Kh\xF4ng c\u1EA7n h\u1EA1 Tank
+      \u0111\u1EC3 tho\xE1t."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: Laboratory/Encounter
+    audio: {fileID: 0}
+  - id: 18
+    speaker: Mira Shaw
+    english: The route is ready. Bring every living operator into the boarding zone
+      and hold together. Revive anyone downed first.
+    vietnamese: "Tuy\u1EBFn s\u1EB5n s\xE0ng. \u0110\u01B0a m\u1ECDi ng\u01B0\u1EDDi
+      c\xF2n s\u1ED1ng v\xE0o v\xF9ng l\xEAn thang v\xE0 gi\u1EEF c\xF9ng nhau. C\u1EE9u
+      ng\u01B0\u1EDDi b\u1ECB h\u1EA1 tr\u01B0\u1EDBc."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 0
+    trigger: AwaitingParty
+    audio: {fileID: 0}
+  - id: 19
+    speaker: Mira Shaw
+    english: Cabin secured. Descending to B2. Wait for the receiving door before
+      moving out.
+    vietnamese: "Khoang \u0111\xE3 kh\xF3a. \u0110ang xu\u1ED1ng B2. \u0110\u1EE3i
+      c\u1EEDa nh\u1EADn r\u1ED3i m\u1EDBi ra."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: Asylum/Transitioning
+    audio: {fileID: 0}
+  - id: 20
+    speaker: Mira Shaw
+    english: Vanguard is clear with both cases. The complete copy is in BRT custody.
+      The facility remains quarantined. We have the evidence; the investigation starts
+      now.
+    vietnamese: "Vanguard ra ngo\xE0i c\xF9ng hai ki\u1EC7n. BRT gi\u1EEF b\u1EA3n
+      sao \u0111\u1EA7y \u0111\u1EE7. C\u01A1 s\u1EDF v\u1EABn phong t\u1ECFa. \u0110\xE3
+      c\xF3 b\u1EB1ng ch\u1EE9ng; \u0111i\u1EC1u tra b\u1EAFt \u0111\u1EA7u."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: Completed
+    audio: {fileID: 0}
+  - id: 21
+    speaker: Mira Shaw
+    english: Complete copy received outside the facility. Patient records included.
+      Keep both cases and board the freight lift.
+    vietnamese: "\u0110\xE3 nh\u1EADn b\u1EA3n sao \u0111\u1EA7y \u0111\u1EE7 b\xEAn
+      ngo\xE0i, g\u1ED3m h\u1ED3 s\u01A1 b\u1EC7nh nh\xE2n. Gi\u1EEF hai ki\u1EC7n
+      v\xE0 l\xEAn thang h\xE0ng."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: EvidenceTransmitted
+    audio: {fileID: 0}
+  - id: 22
+    speaker: Anonymous Client
+    english: Retain the sample. Remove patient identities and internal objections
+      before transmission. Deliver the abbreviated package. That is the contract.
+    vietnamese: "Gi\u1EEF m\u1EABu. X\xF3a danh t\xEDnh b\u1EC7nh nh\xE2n v\xE0 ph\u1EA3n
+      \u0111\u1ED1i n\u1ED9i b\u1ED9 tr\u01B0\u1EDBc khi truy\u1EC1n. Giao g\xF3i
+      r\xFAt g\u1ECDn. H\u1EE3p \u0111\u1ED3ng y\xEAu c\u1EA7u v\u1EADy."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: LabTransmit
+    audio: {fileID: 0}
+  - id: 23
+    speaker: Mira Shaw
+    english: That is a concealment order, not a BRT directive. Preserve the original
+      and transmit everything, including patient data. I will confirm receipt outside.
+    vietnamese: "\u0110\xF3 l\xE0 l\u1EC7nh che gi\u1EA5u, kh\xF4ng ph\u1EA3i ch\u1EC9
+      th\u1ECB BRT. Gi\u1EEF b\u1EA3n g\u1ED1c, truy\u1EC1n t\u1EA5t c\u1EA3 k\u1EC3
+      c\u1EA3 d\u1EEF li\u1EC7u b\u1EC7nh nh\xE2n. T\xF4i x\xE1c nh\u1EADn nh\u1EADn
+      b\xEAn ngo\xE0i."
+    priority: 2
+    cooldown: 0
+    oncePerRun: 1
+    trigger: LabTransmit/AfterClientOrder
+    audio: {fileID: 0}
+  - id: 24
+    speaker: Mira Shaw
+    english: Operator down. Cover the approach and get them back on their feet.
+    vietnamese: "C\xF3 \u0111\u1EB7c v\u1EE5 b\u1ECB h\u1EA1. Y\u1EC3m tr\u1EE3 \u0111\u01B0\u1EDDng
+      t\u1EDBi v\xE0 c\u1EE9u h\u1ECD."
+    priority: 1
+    cooldown: 12
+    oncePerRun: 0
+    trigger: LifeState/Downed
+    audio: {fileID: 0}
+  - id: 25
+    speaker: Mira Shaw
+    english: Tank contact. Make room; do not let it pin the squad in a corridor.
+    vietnamese: "G\u1EB7p Tank. Gi\xE3n \u0111\u1ED9i h\xECnh, \u0111\u1EEBng \u0111\u1EC3
+      n\xF3 \xE9p c\u1EA3 \u0111\u1ED9i trong h\xE0nh lang."
+    priority: 1
+    cooldown: 12
+    oncePerRun: 0
+    trigger: Special/Tank
+    audio: {fileID: 0}
+  - id: 26
+    speaker: Mira Shaw
+    english: Screamer nearby. Watch the flanks and listen for the call.
+    vietnamese: "C\xF3 Screamer g\u1EA7n \u0111\xE2y. C\u1EA3nh gi\u1EDBi hai b\xEAn
+      v\xE0 nghe ti\u1EBFng g\u1ECDi."
+    priority: 1
+    cooldown: 12
+    oncePerRun: 0
+    trigger: Special/Screamer
+    audio: {fileID: 0}
+  - id: 27
+    speaker: Mira Shaw
+    english: Infector contact. Avoid exposure and keep a clear retreat.
+    vietnamese: "G\u1EB7p Infector. Tr\xE1nh ph\u01A1i nhi\u1EC5m, gi\u1EEF \u0111\u01B0\u1EDDng
+      r\xFAt."
+    priority: 1
+    cooldown: 12
+    oncePerRun: 0
+    trigger: Special/Infector
+    audio: {fileID: 0}
+  - id: 28
+    speaker: Mira Shaw
+    english: Operator recovered. Regroup before pushing forward.
+    vietnamese: "\u0110\u1EB7c v\u1EE5 \u0111\xE3 \u0111\u01B0\u1EE3c c\u1EE9u. T\u1EADp
+      h\u1EE3p tr\u01B0\u1EDBc khi ti\u1EBFn."
+    priority: 1
+    cooldown: 12
+    oncePerRun: 0
+    trigger: LifeState/Revived
+    audio: {fileID: 0}
+  objectives:
+  - id: 1
+    title: ISOLATE PRODUCTION
+    instructions: Open the production breaker. Keep the cold store connected to its
+      backup circuit.
+    hint: Start with the west breaker marked PRODUCTION.
+    choices: []
+    secondaryChoices: []
+    file: 1
+  - id: 2
+    title: BACKUP COLD STORE
+    instructions: Engage the cold-store backup feed after isolating production.
+    hint: The east breaker feeds the cold store; do not restart production.
+    choices: []
+    secondaryChoices: []
+    file: 1
+  - id: 3
+    title: START GENERATOR
+    instructions: Start the generator only after the backup cold-store feed is engaged.
+    hint: Check the physical switch, not just the green lamp.
+    choices: []
+    secondaryChoices: []
+    file: 1
+  - id: 4
+    title: READ DELIVERY MANIFEST
+    instructions: Record the AL-04 manifest before reconciling the shipping release.
+    hint: Compare shipment, seal and receiving time.
+    choices: []
+    secondaryChoices: []
+    file: 2
+  - id: 5
+    title: VERIFY SHIPPING RELEASE
+    instructions: Select the shipment and seal, then its destination and receiving
+      time.
+    hint: Match AL-04 / K6 with AN LAC / 02:40.
+    choices:
+    - AL-03 / K9
+    - AL-04 / K6
+    - AL-07 / K2
+    secondaryChoices:
+    - NORTH DEPOT / 06:10
+    - AN LAC / 02:40
+    - AN LAC / 04:20
+    file: 2
+  - id: 6
+    title: SECURE T9-17 CASE
+    instructions: Secure the returned case and its B2 transfer addendum. Preserve
+      the seal.
+    hint: Complete Utilities and Logistics, then clear the Tank threat before collection.
+    choices: []
+    secondaryChoices: []
+    file: 3
+  - id: 7
+    title: OPEN SERVICE ROUTE
+    instructions: Activate the service interlock. Prepare with the squad before beginning
+      the hold.
+    hint: Gather living operators at the panel and confirm readiness.
+    choices: []
+    secondaryChoices: []
+    file: 0
+  - id: 8
+    title: READ SECURITY DESK LOG
+    instructions: Record the technical intake hidden behind the public admissions
+      log.
+    hint: Group C12 arrived at 02:40; the upper room holds the patient sheet.
+    choices: []
+    secondaryChoices: []
+    file: 4
+  - id: 9
+    title: RECOVER SERVICE FUSE
+    instructions: Recover the spare fuse from ground-floor maintenance storage.
+    hint: The fuse is shared by the squad and can be installed by any living operator.
+    choices: []
+    secondaryChoices: []
+    file: 0
+  - id: 10
+    title: INSTALL SERVICE FUSE
+    instructions: Install the recovered fuse at the lower service panel.
+    hint: Read the desk log and recover the fuse; neither is consumed by a wrong
+      interaction.
+    choices: []
+    secondaryChoices: []
+    file: 0
+  - id: 11
+    title: RESTORE SERVICE POWER
+    instructions: Bring the lower service circuit online after fitting the replacement
+      fuse.
+    hint: The upper records room needs this circuit.
+    choices: []
+    secondaryChoices: []
+    file: 0
+  - id: 12
+    title: IDENTIFY PATIENT
+    instructions: Select the record matching the desk log's group and receiving time.
+    hint: 'Match all three fields: P046 / C12 / 02:40.'
+    choices:
+    - P041 / C08 / 01:20
+    - P046 / C12 / 02:40
+    - P064 / C12 / 04:20
+    secondaryChoices: []
+    file: 5
+  - id: 13
+    title: VERIFY MORTUARY TRANSFER
+    instructions: Select the discrepancy that requires independent review. Retain
+      the B2 card with the report.
+    hint: The same reference is listed dead before its live transfer.
+    choices:
+    - 'CONTRADICTION: DEATH 03:05 / LIVE TRANSFER 03:50'
+    - 'CONSISTENT: DEATH FOLLOWED BY BODY COLLECTION'
+    - UNRELATED PATIENTS WITH SIMILAR REFERENCES
+    secondaryChoices: []
+    file: 6
+  - id: 14
+    title: CALL B2 FREIGHT LIFT
+    instructions: Scan the B2 card. Prepare for the lift cycle and board with the
+      squad.
+    hint: The card is spent at this panel; it cannot be used remotely from Inventory.
+    choices: []
+    secondaryChoices: []
+    file: 0
+  - id: 15
+    title: TRACE B2 TRANSFER
+    instructions: Trace the institute transfer into the laboratory index.
+    hint: Follow T9-17, C12 and P046 together, not a sample identifier alone.
+    choices: []
+    secondaryChoices: []
+    file: 7
+  - id: 16
+    title: READ ARCHIVE INDEX
+    instructions: Record the original-archive directory before searching the terminal.
+    hint: E-02 is the unredacted original, not the contractor export.
+    choices: []
+    secondaryChoices: []
+    file: 7
+  - id: 17
+    title: ALLOCATE EMERGENCY POWER
+    instructions: 'Keep SAFETY online. Disable TEST RIG before enabling DATA and
+      FREIGHT LIFT. Capacity: six units.'
+    hint: SAFETY + DATA + FREIGHT LIFT = 2 + 2 + 2. TEST RIG stays off.
+    choices: []
+    secondaryChoices: []
+    file: 8
+  - id: 18
+    title: VERIFY ORIGINAL ARCHIVE
+    instructions: Select the archive matching all three identifiers and preserve
+      its identity table.
+    hint: Choose E-02 / T9-17 / C12 / P046.
+    choices:
+    - E-01 / T9-03 / C08
+    - E-02 / T9-17 / C12 / P046
+    - E-03 / EQUIPMENT ONLY
+    secondaryChoices: []
+    file: 9
+  - id: 19
+    title: SECURE E-02 CASE
+    instructions: Secure the original archive in the laboratory evidence case. Retain
+      the factory case as well.
+    hint: The original must be verified before the sealed case is released.
+    choices: []
+    secondaryChoices: []
+    file: 9
+  - id: 20
+    title: TRANSMIT COMPLETE EVIDENCE
+    instructions: Prepare the squad, transmit a complete copy to BRT custody and
+      call the freight lift. Do not delete patient fields.
+    hint: Keep both original cases. Transmission does not require eliminating every
+      infected.
+    choices: []
+    secondaryChoices: []
+    file: 9

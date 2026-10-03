@@ -15,7 +15,8 @@ namespace FPS
         InventoryFull,
         RateLimited,
         InvalidSequence,
-        ServerUnavailable
+        ServerUnavailable,
+        AmmoUnavailable
     }
 
     public readonly struct PickupTransactionResult

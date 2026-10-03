@@ -1,0 +1,53 @@
+{
+  "scene": "Assets/FPS/Scenes/GameScene.unity",
+  "sceneDirty": true,
+  "verifiedBy": "In-place Editor assertions; not Unity Test Runner or multiplayer acceptance",
+  "consoleErrorsAtVerification": 0,
+  "objectives": [
+    {
+      "id": "AsylumFuse",
+      "visual": "CampaignWorld/Asylum/CampaignObjectives/AsylumFuse/Approved_ServiceFuse",
+      "asset": "K1_LOD",
+      "interactionBody": "Approved_ServiceFuse",
+      "interactionPoint": { "x": 154.1, "y": 1.015, "z": 244.05 },
+      "reader": { "x": 153.875, "y": 0.093, "z": 245.375 },
+      "legacyEquipmentPedestalActive": false,
+      "legacyControlFaceActive": false,
+      "support": "SmallMetalicCase top; four bounds corners supported",
+      "stage": "STAGED_LOCAL_CHECKS_PASS",
+      "finalStatus": null
+    },
+    {
+      "id": "LabTrace",
+      "visual": "CampaignWorld/Laboratory/CampaignObjectives/LabTrace/Approved_LabTrace_Workstation",
+      "asset": "L2-R monitor + keyboard + mouse + tower on approved C3 workbench",
+      "interactionBody": "Approved_LabTrace_Workstation",
+      "interactionPoint": { "x": 180.19, "y": -17.042, "z": 244.085 },
+      "reader": { "x": 180.64, "y": -17.96, "z": 245.6 },
+      "legacyEquipmentPedestalActive": false,
+      "legacyControlFaceActive": false,
+      "support": "C3 Plane.001 MeshCollider; tabletop 0.78 m above floor; old ControlDesk Visuals inactive",
+      "stage": "STAGED_LOCAL_CHECKS_PASS",
+      "finalStatus": null
+    },
+    {
+      "id": "LabTransmit",
+      "visual": "CampaignWorld/Laboratory/CampaignObjectives/LabTransmit/Approved_LabTransmit_Radio",
+      "asset": "R1",
+      "interactionBody": "Approved_LabTransmit_Radio",
+      "interactionPoint": { "x": 168.915, "y": -17.284, "z": 301.885 },
+      "reader": { "x": 170.24, "y": -17.96, "z": 301.885 },
+      "legacyEquipmentPedestalActive": false,
+      "legacyControlFaceActive": false,
+      "support": "ApprovedTable_Laboratory_2 Plane.001 MeshCollider; actual surface y=-17.354; four corners supported and no supply overlap",
+      "stage": "STAGED_LOCAL_CHECKS_PASS",
+      "finalStatus": null
+    }
+  ],
+  "notes": [
+    "Only visual, interaction body and interaction point were changed; objective owner/state authority remains CampaignMissionController.",
+    "Legacy objects remain in scene for rollback but are inactive as complete subtrees.",
+    "Acceptance remains pending: targeted Test Runner, independent peers, latency/loss and full visual matrix.",
+    "Corrected-AsylumFuse.png, Corrected-LabTrace.png and Corrected-LabTransmit.png supersede the older Eye-Validated and Close-Validated images."
+  ]
+}
