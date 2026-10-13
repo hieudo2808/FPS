@@ -670,6 +670,9 @@ namespace FPS
 
             if (agent != null && agent.enabled)
                 agent.speed = runSpeed;
+
+            if (CanRunServerLogic() && RubberBandingSystem.HasInstance)
+                RubberBandingSystem.Instance.UpdateZombieBaseSpeed(this, runSpeed);
         }
 
         protected void PlayLocalSound(
@@ -997,7 +1000,9 @@ namespace FPS
             if (!IsValidTarget(target)) return;
 
             IDamageable damageable = GetDamageable(target);
-            damageable?.TakeDamage(damage);
+            if (damageable is IAttributedDamageable attributed)
+                attributed.TakeDamage(new DamageInfo(damage, damageType: DamageType.Melee, sourcePosition: transform.position));
+            else damageable?.TakeDamage(damage);
         }
 
         private bool IsAttackMovementLocked()

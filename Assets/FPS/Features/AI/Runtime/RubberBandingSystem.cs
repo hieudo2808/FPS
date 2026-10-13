@@ -79,6 +79,15 @@ namespace FPS
             }
         }
 
+        public void UpdateZombieBaseSpeed(EnemyAI zombie, float speed)
+        {
+            if (zombie == null || !trackedZombies.TryGetValue(zombie, out var data)) return;
+
+            // SetStats replaces the agent's speed, including any active boost.
+            data.originalSpeed = speed;
+            data.isSpeedBoosted = false;
+        }
+
         public void UnregisterZombie(EnemyAI zombie)
         {
             trackedZombies.Remove(zombie);

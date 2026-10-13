@@ -20,7 +20,6 @@ namespace FPS
         [SerializeField] private Image infectionFill;
         [SerializeField] private Image infectionIcon;
         [SerializeField] private TextMeshProUGUI infectionStageText;
-        [SerializeField] private Image treatmentProgressFill;
         [SerializeField] private GameObject sepsisWarning;
 
         [Header("Ammo")]
@@ -54,8 +53,15 @@ namespace FPS
         [SerializeField] private TextMeshProUGUI respawnCountdownText;
 
         [Header("Hit Feedback")]
-        [SerializeField] private TextMeshProUGUI hitMarkerText;
+        [SerializeField] private Image hitMarker;
         [SerializeField] private float hitMarkerDuration = 0.18f;
+        [SerializeField] private Image[] directionalDamageIndicators = new Image[4];
+
+        [Header("Weapon Prompts")]
+        [SerializeField] private Image firePromptIcon;
+        [SerializeField] private Image aimPromptIcon;
+        [SerializeField] private TextMeshProUGUI firePromptText;
+        [SerializeField] private TextMeshProUGUI aimPromptText;
 
         [Header("Aiming")]
         [SerializeField] private GameObject crosshairRoot;
@@ -64,6 +70,7 @@ namespace FPS
 
         [Header("Prompts")]
         [SerializeField] private TextMeshProUGUI interactionPromptText;
+        private bool interactionPromptRequested;
         [SerializeField] private GameObject waveAnnouncementPanel;
         [SerializeField] private TextMeshProUGUI waveAnnouncementText;
 
@@ -73,10 +80,6 @@ namespace FPS
         private static readonly Color TextColor = TacticalUiTheme.Text;
         private static readonly Color MutedColor = TacticalUiTheme.Muted;
         private static readonly Color AccentColor = TacticalUiTheme.Accent;
-        // Unity's sprite pivot uses bottom-left normalized coordinates. The
-        // reticle crossing in HUDScope.png is at image-space y = 486 from top.
-        private static readonly Vector2 OperatorScopeReticleNormalizedPosition =
-            new Vector2(0.5f, 538f / 1024f);
         private static readonly Color WarningColor = new Color(0.94f, 0.68f, 0.23f, 1f);
         private static readonly Color CriticalColor = new Color(0.95f, 0.24f, 0.24f, 1f);
 
@@ -86,7 +89,10 @@ namespace FPS
         private PlayerHealth playerHealth;
         private PlayerInfectionController playerInfection;
         private SurvivalInventory survivalInventory;
-        private float hitMarkerTimer;
+        private float hitMarkerUntil;
+        private float vignetteTargetAlpha, vignetteAlpha, vignetteVelocity;
+        private struct DamageCue { public Vector3 source; public float until; }
+        private readonly DamageCue[] damageCues = new DamageCue[4];
         private float specialThreatWarningUntil;
         private Vector3 specialThreatWorldPosition;
         private int validatedCrosshairScreenWidth = -1;
@@ -97,6 +103,10 @@ namespace FPS
         private Sprite adsReticleSprite;
         private Texture2D adsReticleTexture;
         private SurvivalHotbar survivalHotbar;
+        private RectTransform peripheralRoot;
+        private GameObject centerHudRoot;
+        private InputManager promptInput;
+        private TMP_Text primaryKeyLabel, secondaryKeyLabel;
 
         private void Start()
         {
@@ -135,15 +145,7 @@ namespace FPS
                 waveAnnouncementText.text = "INCOMING HORDE";
             }
 
-            if (ammoTypeUI != null)
-            {
-                ammoTypeUI.enabled = false;
-            }
-
-            if (hitMarkerText != null)
-            {
-                hitMarkerText.gameObject.SetActive(false);
-            }
+            ClearCombatFeedback();
 
             if (respawnCountdownText != null)
             {
@@ -159,6 +161,24 @@ namespace FPS
 
         private void Update()
         {
+            if (promptInput != InputManager.Instance)
+            {
+                if (promptInput != null) promptInput.PromptBindingsChanged -= UpdateWeaponPromptBindings;
+                promptInput = InputManager.Instance;
+                if (promptInput != null) promptInput.PromptBindingsChanged += UpdateWeaponPromptBindings;
+                UpdateWeaponPromptBindings();
+            }
+            if (healthText != null)
+            {
+                peripheralRoot ??= HudLayout.PeripheralRoot(healthText.canvas.rootCanvas);
+                peripheralRoot.gameObject.SetActive(HudLayout.GameplayVisible);
+                if (centerHudRoot == null && healthText.canvas.rootCanvas.transform.Find("MinimalHUDRoot") is Transform center)
+                    centerHudRoot = center.gameObject;
+                if (centerHudRoot != null) centerHudRoot.SetActive(HudLayout.GameplayVisible);
+                if (adsReticleRect != null) adsReticleRect.GetComponent<Image>().enabled = HudLayout.GameplayVisible;
+                if (scopeOverlayImage != null) scopeOverlayImage.enabled = HudLayout.GameplayVisible;
+                if (interactionPromptText != null) HudLayout.CentralBand(interactionPromptText.rectTransform, healthText.canvas, HudLayout.InteractionBottom, 52);
+            }
             TryAcquireLocalPlayerHealth();
             TryAcquireWeaponManager();
             TryAcquireSurvivalInventory();
@@ -171,15 +191,23 @@ namespace FPS
 
             UpdateCombatInfo();
             UpdateMatchFlowInfo();
-            UpdateHitMarkerTimer();
-            UpdateTreatmentUI();
-            UpdateSurvivalInventoryUI();
+            UpdateCombatFeedback();
             UpdateSpecialThreatWarning();
+        }
+
+        private void LateUpdate() => UpdateInteractionPromptVisibility();
+
+        private void UpdateInteractionPromptVisibility()
+        {
+            if (interactionPromptText != null)
+                interactionPromptText.gameObject.SetActive(interactionPromptRequested && HudLayout.GameplayVisible
+                    && CampaignHUD.Instance?.HasInteractionMessage != true);
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
+            if (promptInput != null) promptInput.PromptBindingsChanged -= UpdateWeaponPromptBindings;
 
             if (disconnectButton != null)
             {
@@ -232,12 +260,8 @@ namespace FPS
                 typeof(RectTransform),
                 typeof(TextMeshProUGUI));
             RectTransform rect = warning.GetComponent<RectTransform>();
-            rect.SetParent(healthText != null && healthText.canvas != null ? healthText.canvas.transform : transform, false);
-            rect.anchorMin = new Vector2(0.5f, 1f);
-            rect.anchorMax = new Vector2(0.5f, 1f);
-            rect.pivot = new Vector2(0.5f, 1f);
-            rect.anchoredPosition = new Vector2(0f, -144f);
-            rect.sizeDelta = new Vector2(520f, 52f);
+            rect.SetParent(healthText != null && healthText.canvas != null ? HudLayout.PeripheralRoot(healthText.canvas) : transform, false);
+            HudLayout.Corner(rect, Vector2.zero, new Vector2(28, 272), new Vector2(HudLayout.VitalsWidth, 48));
 
             specialThreatWarningText = warning.GetComponent<TextMeshProUGUI>();
             specialThreatWarningText.alignment = TextAlignmentOptions.Center;
@@ -245,6 +269,7 @@ namespace FPS
             specialThreatWarningText.fontStyle = FontStyles.Bold;
             specialThreatWarningText.raycastTarget = false;
             specialThreatWarningText.color = WarningColor;
+            var outline = warning.AddComponent<Outline>(); outline.effectColor = Color.black; outline.effectDistance = new Vector2(1, -1);
             warning.SetActive(false);
         }
 
@@ -278,30 +303,37 @@ namespace FPS
 
         private void TryAcquireWeaponManager()
         {
-            if (weaponManager != null) return;
-
-            weaponManager = WeaponManager.LocalInstance;
-            if (weaponManager != null)
-            {
-                UpdateWeaponUI();
-            }
+            var local = playerHealth != null ? playerHealth.GetComponent<WeaponManager>() : null;
+            if (weaponManager == local) return;
+            weaponManager = local;
+            if (weaponManager != null) UpdateWeaponUI();
+            else { currentWeapon = unusedWeapon = null; SetAmmoUnavailable(); }
         }
 
         private void TryAcquireLocalPlayerHealth()
         {
-            if (playerHealth != null) return;
-            if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsConnectedClient) return;
-
-            NetworkClient localClient = NetworkManager.Singleton.LocalClient;
-            if (localClient == null || localClient.PlayerObject == null) return;
-
-            playerHealth = localClient.PlayerObject.GetComponent<PlayerHealth>();
-            if (playerHealth == null) return;
+            var network = NetworkManager.Singleton;
+            var player = network != null && network.IsConnectedClient ? network.LocalClient?.PlayerObject : null;
+            var localHealth = player != null ? player.GetComponent<PlayerHealth>() : null;
+            if (localHealth != null && !localHealth.IsOwner) localHealth = null;
+            if (playerHealth == localHealth) return;
+            UnsubscribeHealth();
+            UnsubscribeInfection();
+            if (survivalInventory != null) survivalInventory.InventoryChanged -= UpdateSurvivalInventoryUI;
+            survivalInventory = null;
+            if (survivalHotbar != null) survivalHotbar.Bind(null);
+            ClearCombatFeedback();
+            playerHealth = localHealth;
+            if (playerHealth == null) { UpdateHealthUI(0, 100); return; }
 
             playerHealth.HealthChangedEvent += UpdateHealthUI;
+            playerHealth.DirectionalDamageReceived += OnDirectionalDamageReceived;
+            playerHealth.LifeStateChanged += OnLocalLifeStateChanged;
+            playerHealth.PlayerDeathEvent += ClearCombatFeedback;
+            playerHealth.CombatFeedbackReset += ClearCombatFeedback;
             UpdateHealthUI(playerHealth.CurrentHealth, playerHealth.MaxHealth);
 
-            playerInfection = localClient.PlayerObject.GetComponent<PlayerInfectionController>();
+            playerInfection = player.GetComponent<PlayerInfectionController>();
             if (playerInfection != null)
             {
                 playerInfection.OnInfectionChanged += UpdateInfectionUI;
@@ -314,11 +346,8 @@ namespace FPS
 
         private void TryAcquireSurvivalInventory()
         {
-            if (survivalInventory != null) return;
-            NetworkClient client = NetworkManager.Singleton?.LocalClient;
-            NetworkObject player = client?.PlayerObject;
-            if (player == null) return;
-            survivalInventory = player.GetComponent<SurvivalInventory>();
+            if (survivalInventory != null || playerHealth == null) return;
+            survivalInventory = playerHealth.GetComponent<SurvivalInventory>();
             if (survivalInventory == null) return;
             survivalInventory.InventoryChanged += UpdateSurvivalInventoryUI;
             EnsureSurvivalInventoryLabels();
@@ -331,7 +360,7 @@ namespace FPS
             Canvas canvas = healthText != null ? healthText.canvas : GetComponentInParent<Canvas>();
             if (canvas == null) return;
             var root = new GameObject("SurvivalHotbar", typeof(RectTransform));
-            root.transform.SetParent(canvas.transform, false);
+            root.transform.SetParent(HudLayout.PeripheralRoot(canvas), false);
             survivalHotbar = root.AddComponent<SurvivalHotbar>();
             survivalHotbar.Bind(survivalInventory);
             if (grenadeCount != null) grenadeCount.transform.parent.gameObject.SetActive(false);
@@ -358,6 +387,10 @@ namespace FPS
             if (playerHealth != null)
             {
                 playerHealth.HealthChangedEvent -= UpdateHealthUI;
+                playerHealth.DirectionalDamageReceived -= OnDirectionalDamageReceived;
+                playerHealth.LifeStateChanged -= OnLocalLifeStateChanged;
+                playerHealth.PlayerDeathEvent -= ClearCombatFeedback;
+                playerHealth.CombatFeedbackReset -= ClearCombatFeedback;
                 playerHealth = null;
             }
         }
@@ -383,6 +416,7 @@ namespace FPS
 
         public void UpdateAmmoInfo()
         {
+            if (ammoTypeUI != null) ammoTypeUI.enabled = currentWeapon != null;
             if (currentWeapon == null)
             {
                 SetAmmoUnavailable();
@@ -429,6 +463,7 @@ namespace FPS
 
         private void SetAmmoUnavailable()
         {
+            if (ammoTypeUI != null) ammoTypeUI.enabled = false;
             if (currentAmmo != null)
             {
                 currentAmmo.text = "--";
@@ -461,6 +496,7 @@ namespace FPS
 
         private void UpdateWeaponVisuals()
         {
+            UpdateWeaponPromptBindings();
             SetWeaponIcon(weaponIcon, currentWeapon);
             SetWeaponIcon(unusedWeaponIcon, unusedWeapon);
 
@@ -473,8 +509,44 @@ namespace FPS
             if (unusedWeaponNameText != null)
             {
                 unusedWeaponNameText.text = GetWeaponName(unusedWeapon, "EMPTY");
-                unusedWeaponNameText.color = unusedWeapon != null ? MutedColor : new Color(0.35f, 0.43f, 0.48f, 1f);
+                unusedWeaponNameText.color = MutedColor;
             }
+        }
+
+        private void UpdateWeaponPromptBindings()
+        {
+            if (weaponNameText == null) return;
+            if (primaryKeyLabel == null)
+                foreach (var text in weaponNameText.transform.parent.GetComponentsInChildren<TMP_Text>(true))
+                {
+                    if (text.name == "PrimaryWeaponKeyText") primaryKeyLabel = text;
+                    else if (text.name == "SlotKey") secondaryKeyLabel = text;
+                }
+            bool second = weaponManager != null && weaponManager.CurrentWeaponIndex == 1;
+            if (primaryKeyLabel != null) primaryKeyLabel.text = SurvivalHotbar.Key(second ? "Weapon2" : "Weapon1", second ? "2" : "1");
+            if (secondaryKeyLabel != null) secondaryKeyLabel.text = SurvivalHotbar.Key(second ? "Weapon1" : "Weapon2", second ? "1" : "2");
+            UpdateActionPrompt("Fire", "FIRE", firePromptIcon, firePromptText);
+            UpdateActionPrompt("Aim", "AIM", aimPromptIcon, aimPromptText);
+        }
+
+        private void UpdateActionPrompt(string action, string caption, Image icon, TMP_Text label)
+        {
+            string path = promptInput != null ? promptInput.GetPromptBindingPath(action) : string.Empty;
+            string sprite = path.ToLowerInvariant() switch
+            {
+                "<mouse>/leftbutton" => "FPSSample/UI_HUD_LMB",
+                "<mouse>/rightbutton" => "FPSSample/UI_HUD_RMB",
+                _ => null
+            };
+            if (icon != null)
+            {
+                icon.enabled = sprite != null;
+                icon.sprite = sprite != null ? HudSkin.Get(sprite) : null;
+            }
+            if (label == null) return;
+            label.text = sprite != null ? caption : (promptInput != null ? promptInput.GetPromptDisplayName(action) : "--") + " " + caption;
+            label.rectTransform.anchoredPosition = new Vector2(sprite != null ? 28 : 0, 0);
+            label.rectTransform.sizeDelta = new Vector2(sprite != null ? 148 : 176, 24);
         }
 
         private void SetWeaponIcon(Image target, Weapon weapon)
@@ -503,7 +575,8 @@ namespace FPS
 
             if (!string.IsNullOrEmpty(text))
                 interactionPromptText.text = text;
-            interactionPromptText.gameObject.SetActive(visible);
+            interactionPromptRequested = visible;
+            UpdateInteractionPromptVisibility();
         }
 
         private void UpdateHealthUI(float current, float max)
@@ -516,7 +589,7 @@ namespace FPS
             if (healthText != null)
             {
                 int maxRounded = Mathf.CeilToInt(max);
-                healthText.text = $"{currentRounded}/{maxRounded}";
+                healthText.text = $"{currentRounded}<size=65%> / {maxRounded}</size>";
                 healthText.color = healthColor;
             }
 
@@ -532,14 +605,7 @@ namespace FPS
                 healthFill.color = healthColor;
             }
 
-            if (healthDangerBackground != null)
-            {
-                bool showDanger = percent <= 0.45f;
-                healthDangerBackground.enabled = showDanger;
-                healthDangerBackground.color = percent <= 0.25f
-                    ? new Color(0.78f, 0.05f, 0.05f, 0.42f)
-                    : new Color(0.78f, 0.18f, 0.05f, 0.30f);
-            }
+            vignetteTargetAlpha = Mathf.Clamp01((.45f - percent) / .45f) * .35f;
         }
 
         private void UpdateInfectionUI(float previous, float current, InfectionStage stage)
@@ -557,15 +623,6 @@ namespace FPS
             }
             if (sepsisWarning != null)
                 sepsisWarning.SetActive(stage == InfectionStage.Sepsis);
-        }
-
-        private void UpdateTreatmentUI()
-        {
-            if (treatmentProgressFill == null)
-                return;
-            float progress = survivalInventory != null && survivalInventory.IsUsingItem ? survivalInventory.UseProgress : (playerInfection != null ? playerInfection.ActiveTreatmentProgress : 0f);
-            treatmentProgressFill.fillAmount = progress;
-            treatmentProgressFill.gameObject.SetActive(progress > 0f && progress < 1f);
         }
 
         private void UpdateCombatInfo()
@@ -648,15 +705,10 @@ namespace FPS
 
         public void ShowHitConfirmed(HitboxZone zone, float finalDamage)
         {
-            if (hitMarkerText == null)
-                return;
-
-            hitMarkerText.text = zone == HitboxZone.Head
-                ? $"HEADSHOT {Mathf.CeilToInt(finalDamage)}"
-                : $"+{Mathf.CeilToInt(finalDamage)}";
-            hitMarkerText.color = zone == HitboxZone.Head ? WarningColor : AccentColor;
-            hitMarkerText.gameObject.SetActive(true);
-            hitMarkerTimer = hitMarkerDuration;
+            if (hitMarker == null || !LocalPlayerAlive) return;
+            hitMarker.color = zone == HitboxZone.Head ? WarningColor : TextColor;
+            hitMarkerUntil = Time.unscaledTime + hitMarkerDuration;
+            hitMarker.enabled = HudLayout.GameplayVisible;
         }
 
         public void SetAimHudVisible(
@@ -667,9 +719,21 @@ namespace FPS
         {
             EnsureCrosshairReference();
             if (showScopeOverlay)
-                EnsureScopeOverlay(scopeSprite);
-            if (scopeOverlayImage != null && scopeSprite != null)
+                EnsureScopeOverlay();
+            if (scopeOverlayImage != null && scopeSprite != null && scopeOverlayImage.sprite != scopeSprite)
+            {
                 scopeOverlayImage.sprite = scopeSprite;
+                // Each sprite's authored pivot marks its optical center.
+                Vector2 center = scopeSprite.pivot / scopeSprite.rect.size;
+                RectTransform artworkRect = scopeOverlayImage.rectTransform;
+                artworkRect.anchorMin = Vector2.one * .5f - center;
+                artworkRect.anchorMax = Vector2.one * 1.5f - center;
+                artworkRect.pivot = center;
+                artworkRect.offsetMin = artworkRect.offsetMax = Vector2.zero;
+                var fitter = artworkRect.parent.GetComponent<AspectRatioFitter>();
+                if (fitter != null)
+                    fitter.aspectRatio = scopeSprite.rect.width / scopeSprite.rect.height;
+            }
             if (scopeOverlayRoot != null)
                 scopeOverlayRoot.SetActive(showScopeOverlay);
             if (crosshairRoot != null)
@@ -832,7 +896,7 @@ namespace FPS
                 $"[HUD] Crosshair is {pixelError:F2}px away from screen center at {Screen.width}x{Screen.height}; allowed error is 0.5px.");
         }
 
-        private void EnsureScopeOverlay(Sprite scopeSprite)
+        private void EnsureScopeOverlay()
         {
             if (scopeOverlayRoot != null)
             {
@@ -848,7 +912,7 @@ namespace FPS
                 return;
 
             GameObject root = new GameObject(
-                "OperatorScopeOverlay",
+                "ScopeOverlay",
                 typeof(RectTransform),
                 typeof(CanvasGroup));
             root.transform.SetParent(canvas.transform, false);
@@ -857,7 +921,8 @@ namespace FPS
             rootRect.anchorMax = Vector2.one;
             rootRect.offsetMin = Vector2.zero;
             rootRect.offsetMax = Vector2.zero;
-            rootRect.SetAsLastSibling();
+            // The opaque optic frame must stay behind ammo, prompts and health text.
+            rootRect.SetAsFirstSibling();
             root.GetComponent<CanvasGroup>().blocksRaycasts = false;
 
             // AspectRatioFitter owns the fitted frame's anchors and position, so
@@ -879,36 +944,99 @@ namespace FPS
                 typeof(RectTransform),
                 typeof(Image));
             artwork.transform.SetParent(frameRect, false);
-            RectTransform artworkRect = (RectTransform)artwork.transform;
-            artworkRect.anchorMin = Vector2.one * 0.5f - OperatorScopeReticleNormalizedPosition;
-            artworkRect.anchorMax = Vector2.one * 1.5f - OperatorScopeReticleNormalizedPosition;
-            artworkRect.pivot = OperatorScopeReticleNormalizedPosition;
-            artworkRect.offsetMin = Vector2.zero;
-            artworkRect.offsetMax = Vector2.zero;
-
             scopeOverlayImage = artwork.GetComponent<Image>();
-            scopeOverlayImage.sprite = scopeSprite;
             scopeOverlayImage.preserveAspect = true;
             scopeOverlayImage.raycastTarget = false;
 
             AspectRatioFitter fitter = artworkFrame.GetComponent<AspectRatioFitter>();
             fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-            fitter.aspectRatio = scopeSprite != null && scopeSprite.rect.height > 0f
-                ? scopeSprite.rect.width / scopeSprite.rect.height
-                : 1.5f;
 
             scopeOverlayRoot = root;
             scopeOverlayRoot.SetActive(false);
         }
 
-        private void UpdateHitMarkerTimer()
-        {
-            if (hitMarkerText == null || hitMarkerTimer <= 0f)
-                return;
+        private bool LocalPlayerAlive => playerHealth != null && playerHealth.IsOwner && playerHealth.IsSpawned
+            && !playerHealth.IsDead && playerHealth.LifeState == PlayerLifeState.Alive;
 
-            hitMarkerTimer -= Time.deltaTime;
-            if (hitMarkerTimer <= 0f)
-                hitMarkerText.gameObject.SetActive(false);
+        private void OnLocalLifeStateChanged(PlayerLifeState previous, PlayerLifeState current)
+        {
+            ClearCombatFeedback();
+            UpdateHealthUI(playerHealth.CurrentHealth, playerHealth.MaxHealth);
+        }
+
+        private void ClearCombatFeedback()
+        {
+            hitMarkerUntil = 0;
+            vignetteAlpha = vignetteVelocity = 0;
+            if (hitMarker != null) hitMarker.enabled = false;
+            if (healthDangerBackground != null) healthDangerBackground.enabled = false;
+            for (int i = 0; i < damageCues.Length; i++)
+            {
+                damageCues[i] = default;
+                if (i < directionalDamageIndicators.Length && directionalDamageIndicators[i] != null)
+                    directionalDamageIndicators[i].enabled = false;
+            }
+        }
+
+        private bool TryDamageBearing(Vector3 source, out float angle)
+        {
+            angle = 0;
+            if (playerHealth == null || !float.IsFinite(source.x) || !float.IsFinite(source.y) || !float.IsFinite(source.z)) return false;
+            Vector3 direction = source - playerHealth.transform.position;
+            direction.y = 0;
+            if (direction.sqrMagnitude < .0001f || !float.IsFinite(direction.sqrMagnitude)) return false;
+            Transform view = Camera.main != null ? Camera.main.transform : playerHealth.transform;
+            Vector3 forward = Vector3.ProjectOnPlane(view.forward, Vector3.up);
+            // At vertical pitch, camera right still describes the owner's yaw.
+            if (forward.sqrMagnitude < .0001f) forward = Vector3.Cross(view.right, Vector3.up);
+            angle = Vector3.SignedAngle(forward, direction, Vector3.up);
+            return true;
+        }
+
+        private void OnDirectionalDamageReceived(Vector3 source)
+        {
+            if (!LocalPlayerAlive || !TryDamageBearing(source, out float bearing)) return;
+            float now = Time.unscaledTime;
+            int slot = -1, oldest = 0;
+            for (int i = 0; i < damageCues.Length; i++)
+            {
+                if (damageCues[i].until > now && TryDamageBearing(damageCues[i].source, out float existing)
+                    && Mathf.Abs(Mathf.DeltaAngle(existing, bearing)) <= 30f)
+                { slot = i; break; }
+                if (slot < 0 && damageCues[i].until <= now) slot = i;
+                if (damageCues[i].until < damageCues[oldest].until) oldest = i;
+            }
+            damageCues[slot < 0 ? oldest : slot] = new DamageCue { source = source, until = now + 1f };
+        }
+
+        private void UpdateCombatFeedback()
+        {
+            bool alive = LocalPlayerAlive;
+            if (!alive) ClearCombatFeedback();
+            bool visible = alive && HudLayout.GameplayVisible;
+            float now = Time.unscaledTime;
+            if (hitMarker != null) hitMarker.enabled = visible && now < hitMarkerUntil;
+            vignetteAlpha = Mathf.SmoothDamp(vignetteAlpha, alive ? vignetteTargetAlpha : 0,
+                ref vignetteVelocity, .15f, Mathf.Infinity, Time.unscaledDeltaTime);
+            if (healthDangerBackground != null)
+            {
+                healthDangerBackground.color = new Color(.78f, .05f, .05f, vignetteAlpha);
+                healthDangerBackground.enabled = visible && vignetteAlpha > .001f;
+            }
+            for (int i = 0; i < damageCues.Length; i++)
+            {
+                if (i >= directionalDamageIndicators.Length || directionalDamageIndicators[i] == null) continue;
+                Image image = directionalDamageIndicators[i];
+                float remaining = damageCues[i].until - now;
+                bool valid = remaining > 0 && TryDamageBearing(damageCues[i].source, out _);
+                image.enabled = visible && valid;
+                if (!valid) continue;
+                TryDamageBearing(damageCues[i].source, out float angle);
+                float radians = angle * Mathf.Deg2Rad;
+                image.rectTransform.anchoredPosition = new Vector2(Mathf.Sin(radians), Mathf.Cos(radians)) * 128;
+                image.rectTransform.localRotation = Quaternion.Euler(0, 0, -angle);
+                Color tint = CriticalColor; tint.a = Mathf.Clamp01(remaining / .3f); image.color = tint;
+            }
         }
 
         private static string FormatKeyName(KeyCode key)

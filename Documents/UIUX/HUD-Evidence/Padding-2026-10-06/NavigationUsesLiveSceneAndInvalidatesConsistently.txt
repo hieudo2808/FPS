@@ -1,0 +1,60 @@
+PASS Available objective can be tracked manually
+PASS Camera rotation keeps tracked objective
+PASS Marker remains in safe area during 360 degree turn
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Camera rotation keeps tracked objective
+PASS Marker remains in safe area during 360 degree turn
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Camera rotation keeps tracked objective
+PASS Marker remains in safe area during 360 degree turn
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Camera rotation keeps tracked objective
+PASS Marker remains in safe area during 360 degree turn
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Camera rotation keeps tracked objective
+PASS Marker remains in safe area during 360 degree turn
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Camera rotation keeps tracked objective
+PASS Marker remains in safe area during 360 degree turn
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Camera rotation keeps tracked objective
+PASS Marker remains in safe area during 360 degree turn
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Camera rotation keeps tracked objective
+PASS Marker remains in safe area during 360 degree turn
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Shared completion automatically selects a valid objective
+PASS Unlocked objective can be tracked
+PASS Checkpoint rollback invalidates a locked objective
+PASS Chapter change selects a matching objective
+PASS Locked progression door keeps its NavMesh blocker
+PASS Gate sampling stays on the actual floor
+PASS Closed door blocks the direct NavMesh crossing
+PASS Completed prerequisites open the door and remove its blocker
+PASS Opening the authored door updates the live NavMesh crossing
+PASS An interaction in reach with line of sight suppresses its marker
+PASS Missing target hides marker while tracker survives
+PASS Disconnected islands cannot claim a complete route
+PASS Partial path labels straight distance explicitly
+PASS Partial path reports unavailable route
+PASS Sampling an upper floor does not invent a route from the lower floor
+PASS Invalid elevated target preserves objective and height cue
+PASS Lower destinations use a height cue without guessing storey numbers
+PASS Missing camera hides marker while tracker survives
+PASS Navigation never completes an objective by proximity

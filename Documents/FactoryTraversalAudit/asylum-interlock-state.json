@@ -1,0 +1,185 @@
+{
+  "success": true,
+  "gameObject": "AsylumInterlock",
+  "component": "CampaignDoor",
+  "fullTypeName": "FPS.CampaignDoor",
+  "properties": [
+    {
+      "name": "IsOpen",
+      "type": "Boolean",
+      "fullType": "System.Boolean",
+      "value": "false",
+      "canWrite": false
+    },
+    {
+      "name": "IsClosed",
+      "type": "Boolean",
+      "fullType": "System.Boolean",
+      "value": "true",
+      "canWrite": false
+    },
+    {
+      "name": "CanInteract",
+      "type": "Boolean",
+      "fullType": "System.Boolean",
+      "value": "false",
+      "canWrite": false
+    },
+    {
+      "name": "destroyCancellationToken",
+      "type": "CancellationToken",
+      "fullType": "System.Threading.CancellationToken",
+      "value": "System.Threading.CancellationToken",
+      "canWrite": false
+    },
+    {
+      "name": "useGUILayout",
+      "type": "Boolean",
+      "fullType": "System.Boolean",
+      "value": "true",
+      "canWrite": true
+    },
+    {
+      "name": "didStart",
+      "type": "Boolean",
+      "fullType": "System.Boolean",
+      "value": "false",
+      "canWrite": false
+    },
+    {
+      "name": "didAwake",
+      "type": "Boolean",
+      "fullType": "System.Boolean",
+      "value": "false",
+      "canWrite": false
+    },
+    {
+      "name": "runInEditMode",
+      "type": "Boolean",
+      "fullType": "System.Boolean",
+      "value": "false",
+      "canWrite": true
+    },
+    {
+      "name": "enabled",
+      "type": "Boolean",
+      "fullType": "System.Boolean",
+      "value": "true",
+      "canWrite": true
+    },
+    {
+      "name": "isActiveAndEnabled",
+      "type": "Boolean",
+      "fullType": "System.Boolean",
+      "value": "true",
+      "canWrite": false
+    },
+    {
+      "name": "transform",
+      "type": "Transform",
+      "fullType": "UnityEngine.Transform",
+      "value": "AsylumInterlock",
+      "canWrite": false
+    },
+    {
+      "name": "transformHandle",
+      "type": "TransformHandle",
+      "fullType": "UnityEngine.TransformHandle",
+      "value": "UnityEngine.TransformHandle",
+      "canWrite": false
+    },
+    {
+      "name": "gameObject",
+      "type": "GameObject",
+      "fullType": "UnityEngine.GameObject",
+      "value": "AsylumInterlock",
+      "canWrite": false
+    },
+    {
+      "name": "tag",
+      "type": "String",
+      "fullType": "System.String",
+      "value": "Untagged",
+      "canWrite": true
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "fullType": "System.String",
+      "value": "AsylumInterlock",
+      "canWrite": true
+    },
+    {
+      "name": "hideFlags",
+      "type": "HideFlags",
+      "fullType": "UnityEngine.HideFlags",
+      "value": "None",
+      "canWrite": true
+    }
+  ],
+  "fields": [
+    {
+      "name": "rule",
+      "type": "CampaignDoorRule",
+      "fullType": "FPS.CampaignDoorRule",
+      "value": "Manual",
+      "isSerializable": true
+    },
+    {
+      "name": "leaf",
+      "type": "Transform",
+      "fullType": "UnityEngine.Transform",
+      "value": "AuthoredSlidingGate",
+      "isSerializable": true
+    },
+    {
+      "name": "openOffset",
+      "type": "Vector3",
+      "fullType": "UnityEngine.Vector3",
+      "value": "(6, 0, 0)",
+      "isSerializable": true
+    },
+    {
+      "name": "closedLocalPosition",
+      "type": "Vector3",
+      "fullType": "UnityEngine.Vector3",
+      "value": "(0, 0, 0)",
+      "isSerializable": true
+    },
+    {
+      "name": "safetyVolume",
+      "type": "BoxCollider",
+      "fullType": "UnityEngine.BoxCollider",
+      "value": "Safety",
+      "isSerializable": true
+    },
+    {
+      "name": "navigationBlocker",
+      "type": "NavMeshObstacle",
+      "fullType": "UnityEngine.AI.NavMeshObstacle",
+      "value": "NavigationBlocker",
+      "isSerializable": true
+    },
+    {
+      "name": "speed",
+      "type": "Single",
+      "fullType": "System.Single",
+      "value": "4",
+      "isSerializable": true
+    },
+    {
+      "name": "accessObjective",
+      "type": "CampaignObjectiveId",
+      "fullType": "FPS.CampaignObjectiveId",
+      "value": "FactoryRoute",
+      "isSerializable": true
+    },
+    {
+      "name": "displayName",
+      "type": "String",
+      "fullType": "System.String",
+      "value": "cổng phía viện",
+      "isSerializable": true
+    }
+  ]
+}

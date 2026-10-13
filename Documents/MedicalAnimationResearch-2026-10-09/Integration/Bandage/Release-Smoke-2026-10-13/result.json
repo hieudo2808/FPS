@@ -1,0 +1,21 @@
+{
+  "startupAliveAfterSeconds": 12,
+  "startupPassed": true,
+  "termination": "controlled process termination after smoke check",
+  "exitCode": 1,
+  "runtimeErrorLines": [],
+  "medicalRuntimeIncluded": true,
+  "validationAndBenchmarkHarnessExcluded": true,
+  "editorAssemblyExcluded": true,
+  "command": [
+    "E:\\Unity\\Project\\FPS\\Builds\\MedicalAnimation\\Release-2026-10-13\\FPS.exe",
+    "-screen-width",
+    "1280",
+    "-screen-height",
+    "720",
+    "-screen-fullscreen",
+    "0",
+    "-logFile",
+    "E:\\Unity\\Project\\FPS\\Documents\\MedicalAnimationResearch-2026-10-09\\Integration\\Bandage\\Release-Smoke-2026-10-13\\Player.log"
+  ]
+}

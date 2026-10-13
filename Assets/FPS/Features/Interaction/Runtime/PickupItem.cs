@@ -29,9 +29,7 @@ namespace FPS
 
         public string GetInteractText()
         {
-            string interactKey = FormatKeyName(InputManager.Instance != null
-                ? InputManager.Instance.GetKeyForAction("Interact")
-                : KeyCode.F);
+            string interactKey = SurvivalHotbar.Key("Interact", "F");
 
             return pickupType switch
             {

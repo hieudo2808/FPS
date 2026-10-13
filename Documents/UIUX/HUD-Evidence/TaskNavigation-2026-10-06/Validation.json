@@ -1,0 +1,91 @@
+{
+  "projection": {
+    "success": true,
+    "jobId": "b00d07eb",
+    "status": "completed",
+    "totalTests": 1,
+    "passedTests": 1,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "inconclusiveTests": 0,
+    "otherTests": 0,
+    "failedTestNames": [],
+    "failedTestDetails": [],
+    "elapsedSeconds": 453,
+    "resultSummary": "Test run completed: 1/1 passed.",
+    "error": null
+  },
+  "navigation": {
+    "success": true,
+    "jobId": "1730693d",
+    "status": "completed",
+    "totalTests": 1,
+    "passedTests": 1,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "inconclusiveTests": 0,
+    "otherTests": 0,
+    "failedTestNames": [],
+    "failedTestDetails": [],
+    "elapsedSeconds": 246,
+    "resultSummary": "Test run completed: 1/1 passed.",
+    "error": null
+  },
+  "gameplay": {
+    "success": true,
+    "jobId": "8e93c789",
+    "status": "completed",
+    "totalTests": 1,
+    "passedTests": 1,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "inconclusiveTests": 0,
+    "otherTests": 0,
+    "failedTestNames": [],
+    "failedTestDetails": [],
+    "elapsedSeconds": 144,
+    "resultSummary": "Test run completed: 1/1 passed.",
+    "error": null
+  },
+  "compile": {
+    "success": true,
+    "isCompiling": false,
+    "isUpdating": false
+  },
+  "console": {
+    "success": true,
+    "count": 0,
+    "logs": []
+  },
+  "editor": {
+    "success": true,
+    "isPlaying": false,
+    "isPaused": false,
+    "isCompiling": false,
+    "timeSinceStartup": 568.418332,
+    "unityVersion": "6000.5.6f1",
+    "platform": "WindowsEditor"
+  },
+  "scenes": {
+    "success": true,
+    "count": 2,
+    "scenes": [
+      {
+        "name": "GameScene",
+        "path": "Assets/FPS/Scenes/GameScene.unity",
+        "isLoaded": true,
+        "isDirty": false,
+        "isActive": true,
+        "rootCount": 8
+      },
+      {
+        "name": "MainMenu",
+        "path": "Assets/FPS/Scenes/MainMenu.unity",
+        "isLoaded": true,
+        "isDirty": false,
+        "isActive": false,
+        "rootCount": 7
+      }
+    ]
+  }
+}

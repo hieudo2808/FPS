@@ -42,8 +42,8 @@ namespace FPS
                 var point = victim.Value;
                 seen.Add(target);
                 float damage = fire ? (target is PlayerHealth ? 4f : 12f) : SurvivalRules.FragDamage(Vector3.Distance(center, point));
-                if (target is PlayerHealth player) player.TakeDamage(damage);
-                else ((EnemyHealth)target).TakeDamage(new DamageInfo(damage, attacker, -1, point, false, 0, fire ? DamageType.Environment : DamageType.Explosion));
+                ((IAttributedDamageable)target).TakeDamage(new DamageInfo(damage, attacker, -1, point,
+                    damageType: fire ? DamageType.Environment : DamageType.Explosion, sourcePosition: center));
             }
         }
     }

@@ -349,6 +349,24 @@ namespace FPS
         {
             AudioManager.Instance?.ResetToDefault();
 
+            int defaultQuality = Mathf.Clamp(SettingsManager.DefaultGraphicsQuality,
+                0, Mathf.Max(0, QualitySettings.names.Length - 1));
+            if (SettingsManager.Instance != null)
+            {
+                SettingsManager.Instance.SetGraphicsQuality(defaultQuality);
+            }
+            else if (QualitySettings.names.Length > 0)
+            {
+                PlayerPrefs.SetInt(GraphicsQualityKey, defaultQuality);
+                QualitySettings.SetQualityLevel(defaultQuality, true);
+            }
+
+            if (qualityDropdown != null)
+            {
+                qualityDropdown.SetValueWithoutNotify(defaultQuality);
+                qualityDropdown.RefreshShownValue();
+            }
+
             if (SettingsManager.Instance != null)
             {
                 SettingsManager.Instance.SetMouseSensitivity(2.0f);
@@ -370,17 +388,7 @@ namespace FPS
 
             if (InputManager.Instance != null)
             {
-                InputManager.Instance.RebindKey("Fire", KeyCode.Mouse0);
-                InputManager.Instance.RebindKey("Aim", KeyCode.Mouse1);
-                InputManager.Instance.RebindKey("Reload", KeyCode.R);
-                InputManager.Instance.RebindKey("Weapon1", KeyCode.Alpha1);
-                InputManager.Instance.RebindKey("Weapon2", KeyCode.Alpha2);
-                InputManager.Instance.RebindKey("Jump", KeyCode.Space);
-                InputManager.Instance.RebindKey("Interact", KeyCode.F);
-                InputManager.Instance.RebindKey("Grenade", KeyCode.G);
-                InputManager.Instance.RebindKey("CycleGrenade", KeyCode.Alpha3);
-                InputManager.Instance.RebindKey("Medkit", KeyCode.Alpha4);
-                InputManager.Instance.RebindKey("Antidote", KeyCode.Alpha5);
+                InputManager.Instance.ResetBindingsToDefault();
             }
 
             RefreshKeybindingText(fireKeyBtn, "Fire");

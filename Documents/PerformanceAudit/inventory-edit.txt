@@ -1,0 +1,64 @@
+playing=False; scene=Assets/FPS/Scenes/GameScene.unity
+resolution=640x480; quality=Low; target=-1; vsync=0; fixedDelta=0.01999999
+allocatedMB=2433.3; reservedMB=3152.5; monoUsedMB=880.8
+ROOT -------- Manager --------: active=True; objects=10
+ROOT Canvas: active=True; objects=218
+ROOT SpawnPosition: active=True; objects=10
+ROOT PlayerSpawnPosition: active=True; objects=5
+ROOT UIManager: active=True; objects=1
+ROOT CampaignWorld: active=True; objects=16001
+ROOT CampaignSystems: active=True; objects=4
+ROOT NetworkGameManager: active=True; objects=1
+BEHAVIOUR Unity.AI.Navigation.NavMeshModifier: total=1118; activeEnabled=1085
+BEHAVIOUR UnityEngine.Light: total=316; activeEnabled=316
+BEHAVIOUR UnityEngine.UI.Image: total=133; activeEnabled=25
+BEHAVIOUR FPS.DirectorSpawnAnchor: total=124; activeEnabled=124
+BEHAVIOUR FPS.CampaignSupply: total=108; activeEnabled=108
+BEHAVIOUR FPS.SurvivalPickupPresentation: total=72; activeEnabled=72
+BEHAVIOUR TMPro.TextMeshProUGUI: total=69; activeEnabled=10
+BEHAVIOUR UnityEngine.ReflectionProbe: total=46; activeEnabled=46
+BEHAVIOUR FPS.CampaignInteractable: total=41; activeEnabled=41
+BEHAVIOUR FPS.CampaignInteractionProxy: total=33; activeEnabled=19
+BEHAVIOUR UnityEngine.LightProbeGroup: total=28; activeEnabled=28
+BEHAVIOUR FPS.DirectorZone: total=21; activeEnabled=21
+BEHAVIOUR FPS.MapRecoveryPoint: total=19; activeEnabled=19
+BEHAVIOUR UnityEngine.UI.Button: total=18; activeEnabled=0
+BEHAVIOUR FPS.ButtonAudioFeedback: total=15; activeEnabled=0
+BEHAVIOUR UnityEngine.AI.NavMeshObstacle: total=13; activeEnabled=13
+BEHAVIOUR UnityEngine.UI.Shadow: total=10; activeEnabled=0
+BEHAVIOUR TMPro.TextMeshPro: total=10; activeEnabled=10
+BEHAVIOUR FPS.CampaignDoor: total=10; activeEnabled=10
+BEHAVIOUR Unity.Netcode.NetworkObject: total=8; activeEnabled=8
+BEHAVIOUR UnityEngine.Animation: total=7; activeEnabled=7
+BEHAVIOUR Unity.AI.Navigation.NavMeshSurface: total=6; activeEnabled=6
+BEHAVIOUR UnityEngine.Canvas: total=4; activeEnabled=2
+BEHAVIOUR FPS.HelicopterRappellerPose: total=4; activeEnabled=0
+BEHAVIOUR UnityEngine.UI.Slider: total=4; activeEnabled=0
+BEHAVIOUR FPS.OutOfBoundsRecoveryVolume: total=3; activeEnabled=3
+BEHAVIOUR FPS.CampaignChapterRoot: total=3; activeEnabled=3
+BEHAVIOUR Unity.AI.Navigation.NavMeshModifierVolume: total=3; activeEnabled=3
+BEHAVIOUR FPS.SurvivalMenuItem: total=3; activeEnabled=0
+BEHAVIOUR UnityEngine.UI.GraphicRaycaster: total=3; activeEnabled=1
+BEHAVIOUR UnityEngine.Playables.PlayableDirector: total=3; activeEnabled=1
+BEHAVIOUR UnityEngine.Camera: total=2; activeEnabled=0
+BEHAVIOUR Unity.AI.Navigation.NavMeshLink: total=2; activeEnabled=2
+BEHAVIOUR FPS.ColdLedgerHelicopterRig: total=2; activeEnabled=0
+BEHAVIOUR FPS.AttackSlotManager: total=1; activeEnabled=1
+BEHAVIOUR FPS.FactoryPitFillLighting: total=1; activeEnabled=1
+BEHAVIOUR FPS.AIDirector: total=1; activeEnabled=1
+BEHAVIOUR FPS.DifficultyManager: total=1; activeEnabled=1
+BEHAVIOUR FPS.UiSafeArea: total=1; activeEnabled=1
+BEHAVIOUR UnityEngine.UI.Toggle: total=1; activeEnabled=0
+BEHAVIOUR FPS.InteractionManager: total=1; activeEnabled=1
+BEHAVIOUR FPS.NetworkGameManager: total=1; activeEnabled=1
+BEHAVIOUR UnityEngine.UI.ScrollRect: total=1; activeEnabled=0
+BEHAVIOUR FPS.InfluenceMapManager: total=1; activeEnabled=1
+BEHAVIOUR FPS.DirectorSpawnService: total=1; activeEnabled=1
+LIGHT Point/Baked/Soft: total=242; active=242
+LIGHT Point/Realtime/None: total=72; active=72
+LIGHT Point/Baked/None: total=1; active=1
+LIGHT Directional/Mixed/Soft: total=1; active=1
+CAMERA EndingShotCamera: enabled=False; path=UsePlayerSettings; actual=Forward; occlusion=True; far=120; hdr=True
+CAMERA InsertionCamera: enabled=False; path=UsePlayerSettings; actual=Forward; occlusion=True; far=800; hdr=True
+RENDERER MeshRenderer: active=6974; enabled=6962; static=6037
+RENDERER ParticleSystemRenderer: active=10; enabled=10; static=0

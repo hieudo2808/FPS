@@ -1,0 +1,388 @@
+{
+  "source": "E:\\Unity\\Project\\FPS\\Assets\\FPS\\Features\\Characters\\Content\\Players\\Gekko\\Models\\Hand.fbx",
+  "treated_arm": "left",
+  "path_scale": [
+    1.0,
+    0.45,
+    1.0
+  ],
+  "lateral_path_center_from_camera_m": 0.2,
+  "lateral_source_center": "median per clip",
+  "prefab_reference": "Assets/FPS/Features/Characters/Content/Players/Gekko/GekkoPlayer.prefab",
+  "prefab_hand_position_unity": [
+    0.09,
+    -1.69,
+    0.11
+  ],
+  "prefab_hand_rotation_xyzw": [
+    -0.012340715,
+    0.7069991,
+    -0.012340715,
+    0.7069991
+  ],
+  "camera_alignment_pitch_deg": -12,
+  "path_offset": [
+    -0.16891321539878845,
+    0.09000001102685928,
+    1.6851316690444946
+  ],
+  "source_bone_mapping": {
+    "Bandage": [
+      [
+        "r_upperarm",
+        "L_Shoulder"
+      ],
+      [
+        "r_forearm",
+        "L_Elbow"
+      ],
+      [
+        "r_hand",
+        "L_Hand"
+      ],
+      [
+        "bip01_r_finger1",
+        "L_Index1"
+      ],
+      [
+        "bip01_r_finger11",
+        "L_Index2"
+      ],
+      [
+        "bip01_r_finger12",
+        "L_Index3"
+      ],
+      [
+        "bip01_r_finger2",
+        "L_Middle1"
+      ],
+      [
+        "bip01_r_finger21",
+        "L_Middle2"
+      ],
+      [
+        "bip01_r_finger22",
+        "L_Middle3"
+      ],
+      [
+        "bip01_r_finger3",
+        "L_Ring1"
+      ],
+      [
+        "bip01_r_finger31",
+        "L_Ring2"
+      ],
+      [
+        "bip01_r_finger32",
+        "L_Ring3"
+      ],
+      [
+        "bip01_r_finger4",
+        "L_Pinky1"
+      ],
+      [
+        "bip01_r_finger41",
+        "L_Pinky2"
+      ],
+      [
+        "bip01_r_finger42",
+        "L_Pinky3"
+      ],
+      [
+        "r_finger0",
+        "L_Thumb1"
+      ],
+      [
+        "r_finger01",
+        "L_Thumb2"
+      ],
+      [
+        "r_finger02",
+        "L_Thumb3"
+      ],
+      [
+        "l_upperarm",
+        "R_Shoulder"
+      ],
+      [
+        "l_forearm",
+        "R_Elbow"
+      ],
+      [
+        "l_hand",
+        "R_Hand"
+      ],
+      [
+        "bip01_l_finger1",
+        "R_Index1"
+      ],
+      [
+        "bip01_l_finger11",
+        "R_Index2"
+      ],
+      [
+        "bip01_l_finger12",
+        "R_Index3"
+      ],
+      [
+        "bip01_l_finger2",
+        "R_Middle1"
+      ],
+      [
+        "bip01_l_finger21",
+        "R_Middle2"
+      ],
+      [
+        "bip01_l_finger22",
+        "R_Middle3"
+      ],
+      [
+        "bip01_l_finger3",
+        "R_Ring1"
+      ],
+      [
+        "bip01_l_finger31",
+        "R_Ring2"
+      ],
+      [
+        "bip01_l_finger32",
+        "R_Ring3"
+      ],
+      [
+        "bip01_l_finger4",
+        "R_Pinky1"
+      ],
+      [
+        "bip01_l_finger41",
+        "R_Pinky2"
+      ],
+      [
+        "bip01_l_finger42",
+        "R_Pinky3"
+      ],
+      [
+        "l_finger0",
+        "R_Thumb1"
+      ],
+      [
+        "l_finger01",
+        "R_Thumb2"
+      ],
+      [
+        "l_finger02",
+        "R_Thumb3"
+      ]
+    ],
+    "Medkit": [
+      [
+        "l_upperarm",
+        "L_Shoulder"
+      ],
+      [
+        "l_forearm",
+        "L_Elbow"
+      ],
+      [
+        "l_hand",
+        "L_Hand"
+      ],
+      [
+        "bip01_l_finger1",
+        "L_Index1"
+      ],
+      [
+        "bip01_l_finger11",
+        "L_Index2"
+      ],
+      [
+        "bip01_l_finger12",
+        "L_Index3"
+      ],
+      [
+        "bip01_l_finger2",
+        "L_Middle1"
+      ],
+      [
+        "bip01_l_finger21",
+        "L_Middle2"
+      ],
+      [
+        "bip01_l_finger22",
+        "L_Middle3"
+      ],
+      [
+        "bip01_l_finger3",
+        "L_Ring1"
+      ],
+      [
+        "bip01_l_finger31",
+        "L_Ring2"
+      ],
+      [
+        "bip01_l_finger32",
+        "L_Ring3"
+      ],
+      [
+        "bip01_l_finger4",
+        "L_Pinky1"
+      ],
+      [
+        "bip01_l_finger41",
+        "L_Pinky2"
+      ],
+      [
+        "bip01_l_finger42",
+        "L_Pinky3"
+      ],
+      [
+        "l_finger0",
+        "L_Thumb1"
+      ],
+      [
+        "l_finger01",
+        "L_Thumb2"
+      ],
+      [
+        "l_finger02",
+        "L_Thumb3"
+      ],
+      [
+        "r_upperarm",
+        "R_Shoulder"
+      ],
+      [
+        "r_forearm",
+        "R_Elbow"
+      ],
+      [
+        "r_hand",
+        "R_Hand"
+      ],
+      [
+        "bip01_r_finger1",
+        "R_Index1"
+      ],
+      [
+        "bip01_r_finger11",
+        "R_Index2"
+      ],
+      [
+        "bip01_r_finger12",
+        "R_Index3"
+      ],
+      [
+        "bip01_r_finger2",
+        "R_Middle1"
+      ],
+      [
+        "bip01_r_finger21",
+        "R_Middle2"
+      ],
+      [
+        "bip01_r_finger22",
+        "R_Middle3"
+      ],
+      [
+        "bip01_r_finger3",
+        "R_Ring1"
+      ],
+      [
+        "bip01_r_finger31",
+        "R_Ring2"
+      ],
+      [
+        "bip01_r_finger32",
+        "R_Ring3"
+      ],
+      [
+        "bip01_r_finger4",
+        "R_Pinky1"
+      ],
+      [
+        "bip01_r_finger41",
+        "R_Pinky2"
+      ],
+      [
+        "bip01_r_finger42",
+        "R_Pinky3"
+      ],
+      [
+        "r_finger0",
+        "R_Thumb1"
+      ],
+      [
+        "r_finger01",
+        "R_Thumb2"
+      ],
+      [
+        "r_finger02",
+        "R_Thumb3"
+      ]
+    ]
+  },
+  "motions": [
+    {
+      "label": "Bandage",
+      "mirrored": true,
+      "source_chunk": 17,
+      "source_frames": 171,
+      "fps": 60,
+      "duration": 2.85,
+      "max_joint_length_error_m": 4.7529556451708643e-07,
+      "max_wrist_target_error_m": 2.9950963321688443e-07,
+      "max_wrist_step_m": 0.10838940611393277,
+      "max_wrist_rotation_step_deg": 23.795846313569164,
+      "max_wrist_bend_deg": 54.021998126908926,
+      "max_scale_error": 6.794929504394531e-05,
+      "max_reach_adjustment_m": 0,
+      "max_hand_orientation_adjustment_deg": 0
+    },
+    {
+      "label": "Medkit",
+      "mirrored": false,
+      "source_chunk": 16,
+      "source_frames": 261,
+      "fps": 60,
+      "duration": 4.35,
+      "max_joint_length_error_m": 3.683546289656725e-07,
+      "max_wrist_target_error_m": 4.060438259643751e-07,
+      "max_wrist_step_m": 0.052169423748406,
+      "max_wrist_rotation_step_deg": 37.52021350820502,
+      "max_wrist_bend_deg": 41.07260491344132,
+      "max_scale_error": 5.2988529205322266e-05,
+      "max_reach_adjustment_m": 0,
+      "max_hand_orientation_adjustment_deg": 0
+    }
+  ],
+  "mesh_geometry_modified": false,
+  "contact_path": {
+    "axial_scale": "target/source forearm length",
+    "radial_scale": 1.6,
+    "radial_clearance_quadrature_m": 0.18,
+    "wrist_pose_offset_model_m": {
+      "Bandage": [
+        0.15,
+        0,
+        0.04
+      ],
+      "Medkit": [
+        0.15,
+        0,
+        0.08
+      ]
+    },
+    "medkit_middle_finger_clearance": "12 mm directional target; cosine envelope frames 77-91; wrists unchanged",
+    "bandage_working_forearm_body_direction_weight": 0.35,
+    "forearm_routing": "source treated forearm preserved; working Bandage forearm fitted toward body; original Gekko segment lengths",
+    "bandage_wrap_axial_limit_m": 0.08,
+    "bandage_wrap_axial_envelope_frames": [
+      48,
+      60,
+      138,
+      150
+    ],
+    "upper_arm_fit": "toward body hint below camera; original segment length preserved",
+    "common_contact_rotation": true,
+    "mesh_rest_rig_unchanged": true
+  }
+}

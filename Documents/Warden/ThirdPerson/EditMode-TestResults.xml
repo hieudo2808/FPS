@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 17:20:32Z" end-time="2026-10-07 17:20:35Z" duration="2.875948">
+  <test-suite type="TestSuite" id="1000" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="756" result="Passed" start-time="2026-10-07 17:20:32Z" end-time="2026-10-07 17:20:35Z" duration="2.875948" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1104" name="FPS.RegressionTests.Editor.dll" fullname="E:/Unity/Project/FPS/Library/ScriptAssemblies/FPS.RegressionTests.Editor.dll" runstate="Runnable" testcasecount="80" result="Passed" start-time="2026-10-07 17:20:32Z" end-time="2026-10-07 17:20:35Z" duration="2.781180" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="44684" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1105" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="80" result="Passed" start-time="2026-10-07 17:20:32Z" end-time="2026-10-07 17:20:35Z" duration="2.679502" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1106" name="Tests" fullname="FPS.Tests" runstate="Runnable" testcasecount="80" result="Passed" start-time="2026-10-07 17:20:32Z" end-time="2026-10-07 17:20:35Z" duration="2.569712" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1063" name="WardenThirdPersonTests" fullname="FPS.Tests.WardenThirdPersonTests" classname="FPS.Tests.WardenThirdPersonTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-07 17:20:32Z" end-time="2026-10-07 17:20:35Z" duration="2.460725" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1068" name="WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine" fullname="FPS.Tests.WardenThirdPersonTests.WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine" classname="FPS.Tests.WardenThirdPersonTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-07 17:20:33Z" end-time="2026-10-07 17:20:35Z" duration="2.349409" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1064" name="WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine(&quot;Brimstone&quot;)" fullname="FPS.Tests.WardenThirdPersonTests.WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine(&quot;Brimstone&quot;)" methodname="WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine" classname="FPS.Tests.WardenThirdPersonTests" runstate="Runnable" seed="917485026" result="Passed" start-time="2026-10-07 17:20:33Z" end-time="2026-10-07 17:20:33Z" duration="0.657350" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+]]></output>
+              </test-case>
+              <test-case id="1065" name="WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine(&quot;Clove&quot;)" fullname="FPS.Tests.WardenThirdPersonTests.WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine(&quot;Clove&quot;)" methodname="WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine" classname="FPS.Tests.WardenThirdPersonTests" runstate="Runnable" seed="1601786126" result="Passed" start-time="2026-10-07 17:20:33Z" end-time="2026-10-07 17:20:34Z" duration="0.496298" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+]]></output>
+              </test-case>
+              <test-case id="1066" name="WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine(&quot;Gekko&quot;)" fullname="FPS.Tests.WardenThirdPersonTests.WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine(&quot;Gekko&quot;)" methodname="WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine" classname="FPS.Tests.WardenThirdPersonTests" runstate="Runnable" seed="310827472" result="Passed" start-time="2026-10-07 17:20:34Z" end-time="2026-10-07 17:20:34Z" duration="0.538477" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+]]></output>
+              </test-case>
+              <test-case id="1067" name="WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine(&quot;Sage&quot;)" fullname="FPS.Tests.WardenThirdPersonTests.WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine(&quot;Sage&quot;)" methodname="WardenUsesItsOwnBodyAndGunClocksWithoutASpareMagazine" classname="FPS.Tests.WardenThirdPersonTests" runstate="Runnable" seed="202349002" result="Passed" start-time="2026-10-07 17:20:34Z" end-time="2026-10-07 17:20:35Z" duration="0.530770" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+NetworkVariable is written to, but doesn't know its NetworkBehaviour yet. Are you modifying a NetworkVariable before the NetworkObject is spawned?
+Saving results to: C:/Users/hieud/AppData/LocalLow/HieuDHM/FPS\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

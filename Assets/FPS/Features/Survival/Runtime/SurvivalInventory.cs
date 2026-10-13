@@ -150,7 +150,7 @@ namespace FPS
             if (Physics.SphereCast(eye, .09f, offset.normalized, out RaycastHit hit, offset.magnitude, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
                 origin = hit.point + hit.normal * .11f;
             SurvivalProjectile projectile = Instantiate(projectilePrefab, origin, Quaternion.LookRotation(direction));
-            projectile.InitializeServer(kind, OwnerClientId, NetworkObject, direction.normalized * 13f);
+            projectile.InitializeServer(kind, OwnerClientId, NetworkObject, direction);
             projectile.NetworkObject.Spawn();
             count.Value--;
         }

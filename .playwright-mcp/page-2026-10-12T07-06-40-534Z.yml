@@ -1,0 +1,474 @@
+- generic [active] [ref=e1]:
+  - generic:
+    - generic:
+      - link "Bỏ qua để đến phần nội dung chính" [ref=e2] [cursor=pointer]
+      - link "Hỗ trợ truy cập" [ref=e3] [cursor=pointer]:
+        - /url: https://support.google.com/websearch/answer/181196?hl=vi
+  - generic [ref=e8]:
+    - search [ref=e9]:
+      - generic [ref=e11]:
+        - link "Đến trang chủ Google" [ref=e13] [cursor=pointer]:
+          - /url: https://www.google.com/webhp?hl=vi&sa=X&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQPHoECAYQBA
+        - generic [ref=e22]:
+          - combobox "Tìm kiếm" [ref=e24]: "\"bandage\" animation fbx download \"bandage\" animation fbx download"
+          - generic [ref=e25]:
+            - button "Xóa" [ref=e29] [cursor=pointer]
+            - generic [ref=e34]:
+              - button "Công cụ nhập" [ref=e37] [cursor=pointer]
+              - button "Tìm kiếm bằng giọng nói" [ref=e43] [cursor=pointer]
+              - button "Tìm kiếm bằng hình ảnh" [ref=e48] [cursor=pointer]
+    - generic [ref=e51]:
+      - button "Cài đặt" [ref=e53] [cursor=pointer]
+      - button "Chia sẻ" [ref=e58] [cursor=pointer]
+      - generic [ref=e64]:
+        - button "Các ứng dụng của Google" [ref=e66] [cursor=pointer]
+        - link "Đăng nhập" [ref=e71] [cursor=pointer]:
+          - /url: https://accounts.google.com/ServiceLogin?hl=vi&passive=true&continue=https://www.google.com/search%3Fq%3D%2522bandage%2522%2Banimation%2Bfbx%2Bdownload&ec=futura_srp_og_si_72236_p
+  - generic [ref=e74]:
+    - navigation [ref=e80]:
+      - generic [ref=e86]:
+        - list [ref=e87]:
+          - listitem [ref=e88]:
+            - link "Chế độ AI" [ref=e91] [cursor=pointer]:
+              - /url: /search?q=%22bandage%22+animation+fbx+download&sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&udm=50&fbs=ABfTbFW4UnGvBVgqDYjq_ksvF_WzL0qSsUjsQCJMDr-_PEHsElEq-XkTNsyVCf0qvOFQ8LmSfmVsU-20zaCVXpAm3ifSPtxTS_H-CtvMOJmSL6Gb6YkxxJCbc-3taJK_ly9f6J7EWRxgq6Vi13D_zNKoK4Pre55zlJIHhFe-S3qNY_mM9xABHwAYcUfUGLaJuryzdyFaYNDWnMkWWUw81LieOVEjHXz3wW-tNB_NM9MkbEZfjKUzL2rJ21_we2RnbBHoKCS05zbG&vsint=&aep=1&ntc=1&cs=0&sa=X&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQ2J8OegQIEhAD
+          - listitem [ref=e95]:
+            - link "Tất cả" [disabled] [ref=e96]
+          - listitem [ref=e99]:
+            - link "Hình ảnh" [ref=e100] [cursor=pointer]:
+              - /url: /search?sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&udm=2&fbs=ABfTbFW4UnGvBVgqDYjq_ksvF_WzL0qSsUjsQCJMDr-_PEHsElEq-XkTNsyVCf0qvOFQ8LmSfmVsU-20zaCVXpAm3ifSPtxTS_H-CtvMOJmSL6Gb6YkxxJCbc-3taJK_ly9f6J7EWRxgq6Vi13D_zNKoK4Pre55zlJIHhFe-S3qNY_mM9xABHwAYcUfUGLaJuryzdyFaYNDWnMkWWUw81LieOVEjHXz3wW-tNB_NM9MkbEZfjKUzL2rJ21_we2RnbBHoKCS05zbG&q=%22bandage%22+animation+fbx+download&sa=X&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQtKgLegQIGRAB
+          - listitem [ref=e103]:
+            - link "Video" [ref=e104] [cursor=pointer]:
+              - /url: /search?sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&udm=vids&fbs=ABfTbFW4UnGvBVgqDYjq_ksvF_WzL0qSsUjsQCJMDr-_PEHsElEq-XkTNsyVCf0qvOFQ8LmSfmVsU-20zaCVXpAm3ifSPtxTS_H-CtvMOJmSL6Gb6YkxxJCbc-3taJK_ly9f6J7EWRxgq6Vi13D_zNKoK4Pre55zlJIHhFe-S3qNY_mM9xABHwAYcUfUGLaJuryzdyFaYNDWnMkWWUw81LieOVEjHXz3wW-tNB_NM9MkbEZfjKUzL2rJ21_we2RnbBHoKCS05zbG&q=%22bandage%22+animation+fbx+download&sa=X&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQtKgLegQIGBAB
+          - listitem [ref=e107]:
+            - link "Video ngắn" [ref=e108] [cursor=pointer]:
+              - /url: /search?sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&udm=39&fbs=ABfTbFW4UnGvBVgqDYjq_ksvF_WzL0qSsUjsQCJMDr-_PEHsElEq-XkTNsyVCf0qvOFQ8LmSfmVsU-20zaCVXpAm3ifSPtxTS_H-CtvMOJmSL6Gb6YkxxJCbc-3taJK_ly9f6J7EWRxgq6Vi13D_zNKoK4Pre55zlJIHhFe-S3qNY_mM9xABHwAYcUfUGLaJuryzdyFaYNDWnMkWWUw81LieOVEjHXz3wW-tNB_NM9MkbEZfjKUzL2rJ21_we2RnbBHoKCS05zbG&q=%22bandage%22+animation+fbx+download&sa=X&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQs6gLegQIFhAB
+          - listitem [ref=e111]:
+            - link "Mua sắm" [ref=e112] [cursor=pointer]:
+              - /url: /search?sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&udm=28&fbs=ABfTbFW4UnGvBVgqDYjq_ksvF_WzL0qSsUjsQCJMDr-_PEHsElEq-XkTNsyVCf0qvOFQ8LmSfmVsU-20zaCVXpAm3ifSPtxTS_H-CtvMOJmSL6Gb6YkxxJCbc-3taJK_ly9f6J7EWRxgq6Vi13D_zNKoK4Pre55zlJIHhFe-S3qNY_mM9xABHwAYcUfUGLaJuryzdyFaYNDWnMkWWUw81LieOVEjHXz3wW-tNB_NM9MkbEZfjKUzL2rJ21_we2RnbBHoKCS05zbG&q=%22bandage%22+animation+fbx+download&ved=1t:220175&ictx=111
+          - listitem [ref=e115]:
+            - link "Tin tức" [ref=e116] [cursor=pointer]:
+              - /url: /search?sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&q=%22bandage%22+animation+fbx+download&tbm=nws&source=lnms&fbs=ABfTbFW4UnGvBVgqDYjq_ksvF_WzL0qSsUjsQCJMDr-_PEHsElEq-XkTNsyVCf0qvOFQ8LmSfmVsU-20zaCVXpAm3ifSPtxTS_H-CtvMOJmSL6Gb6YkxxJCbc-3taJK_ly9f6J7EWRxgq6Vi13D_zNKoK4Pre55zlJIHhFe-S3qNY_mM9xABHwAYcUfUGLaJuryzdyFaYNDWnMkWWUw81LieOVEjHXz3wW-tNB_NM9MkbEZfjKUzL2rJ21_we2RnbBHoKCS05zbG&sa=X&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQ0pQJegQIFxAB
+          - listitem [ref=e119]:
+            - button [ref=e120] [cursor=pointer]:
+              - generic "Các bộ lọc khác" [ref=e121]: Thêm
+        - button "Công cụ" [ref=e128] [cursor=pointer]
+    - heading "Kết quả tìm kiếm" [level=1] [ref=e135]
+    - generic [ref=e141]:
+      - generic [ref=e142]: Looking for results in English?
+      - link [ref=e143] [cursor=pointer]:
+        - /url: "#"
+      - link "Change to English" [ref=e147] [cursor=pointer]:
+        - /url: /setprefs?sig=0_ZmCmJ98eLLEfsKsucAOpSzMxlEk%3D&source=en_ignored_notification&prev=https://www.google.com/search?q%3D%2522bandage%2522%2Banimation%2Bfbx%2Bdownload&hl=en&sa=X&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQhoQCKAF6BAgMEAQ
+      - link "Tiếp tục sử dụng Tiếng Việt" [ref=e148] [cursor=pointer]:
+        - /url: "#"
+      - link "Cài đặt ngôn ngữ" [ref=e150] [cursor=pointer]:
+        - /url: /preferences?lang=1&hl=vi&sa=X&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQiIQCKAN6BAgMEAY#languages
+    - generic [ref=e151]:
+      - generic [ref=e168]:
+        - generic [ref=e186]:
+          - heading [level=2] [ref=e192]:
+            - strong [ref=e193]: Thông tin tổng quan do AI tạo
+          - generic [ref=e195]:
+            - generic [ref=e198]:
+              - generic [ref=e199]:
+                - text: Bạn có thể tải mô hình 3D và hoạt ảnh băng bó (bandage animation) ở định dạng FBX
+                - mark [ref=e200]: từ các kho lưu trữ tài sản 3D uy tín sau
+                - text: ":"
+              - list [ref=e201]:
+                - listitem [ref=e202]:
+                  - generic [ref=e203]:
+                    - strong [ref=e204]: CGTrader
+                    - text: ": Cung cấp hàng trăm mẫu mô hình băng bó kèm hoạt ảnh và rigging hỗ trợ định dạng FBX tại"
+                    - link "CGTrader Bandage 3D Models" [ref=e207] [cursor=pointer]:
+                      - /url: /goto?url=CAESZQHrOzAVBMX19-lE3RnTLkFkBrR6DFluqzXscd4Orx3eXNFv2mT3UaSPfZhSuOY5MO3SilbWjoiFHj_c4Ssj9eoB6FioGquhVtEAtxWlc6O_CRCzkXC7fAssfSSMlAOPfYCor2NX
+                    - text: .
+                - listitem [ref=e209]:
+                  - generic [ref=e210]:
+                    - strong [ref=e211]: Sketchfab
+                    - text: ": Nơi lưu trữ nhiều mẫu vật liệu y tế và băng bó dạng low-poly hoặc hoạt hình do cộng đồng thiết kế tại"
+                    - link "Sketchfab Bandage 3D Models" [ref=e214] [cursor=pointer]:
+                      - /url: /goto?url=CAESXQHrOzAV_ZvF8Ggj2EUDzjeevluCKgRyx6lpcYzz-dbZcXQEaCI236Dhl8q9JqELv8k_Rb-cVDPdFsDBpZ1E9rSEi35ZIPiEuaw9lky3jmdmAdxQV49QDR9794NTvA
+                    - text: .
+                - listitem [ref=e216]:
+                  - generic [ref=e217]:
+                    - strong [ref=e218]: IconScout
+                    - text: ": Cung cấp các file hoạt ảnh 3D và mô hình hỗ trợ định dạng FBX, glTF/GLB tại"
+                    - link [ref=e221] [cursor=pointer]:
+                      - /url: /goto?url=CAESfAHrOzAVPrtsW49UASeoPdl7UfZLUNGn1uWQYYk93obbhqE9zbjf9EdQVi_RJuTq3_gJQV4H9J-kKB7dUxYadMvSSVNmORhUG_1KnQkrYzEt771jlP7aF6nzt0quvCSWGn1OaV4KUII8VGnSebZXkpR9cCB222hiU7msKtU
+                      - text: IconScout Bandages Animation
+                    - text: .
+                - listitem [ref=e223]:
+                  - generic [ref=e224]:
+                    - strong [ref=e225]: TurboSquid
+                    - text: ": Kho tài sản 3D lớn với các tùy chọn định dạng FBX, Maya, Blender có rigged và animation tại"
+                    - link [ref=e228] [cursor=pointer]:
+                      - /url: /goto?url=CAESbgHrOzAV_b9wlNyHkjqUSUylmWvBMsiv0iMsQ7jBv8rtDb_8xqfKd22prknzgbPVg2v482dgQUGkbkx4YIfR08ayVGFUHXIzEiDiU9sB_BWxIcq9XhszS8jdf3W-RAQsVG49HhLpzkrTAcR5RFSc
+                      - text: TurboSquid Bandage 3D Models
+                    - text: .
+                  - button [ref=e233] [cursor=pointer]
+              - generic [ref=e239]:
+                - generic [ref=e240]: "Xem hoạt ảnh mô phỏng băng bó và y tế dạng chuyển động tại đây:"
+                - generic [ref=e243]:
+                  - link [ref=e246] [cursor=pointer]:
+                    - /url: /goto?url=CAESfAHrOzAVPrtsW49UASeoPdl7UfZLUNGn1uWQYYk93obbhqE9zbjf9EdQVi_RJuTq3_gJQV4H9J-kKB7dUxYadMvSSVNmORhUG_1KnQkrYzEt771jlP7aF6nzt0quvCSWGn1OaV4KUII8VGnSebZXkpR9cCB222hiU7msKtU
+                    - generic [ref=e247]: 0:07
+                  - generic [ref=e255]:
+                    - link [ref=e256] [cursor=pointer]:
+                      - /url: /goto?url=CAESfAHrOzAVPrtsW49UASeoPdl7UfZLUNGn1uWQYYk93obbhqE9zbjf9EdQVi_RJuTq3_gJQV4H9J-kKB7dUxYadMvSSVNmORhUG_1KnQkrYzEt771jlP7aF6nzt0quvCSWGn1OaV4KUII8VGnSebZXkpR9cCB222hiU7msKtU
+                    - generic [ref=e257]:
+                      - generic [ref=e258]: Bandages Animation - Download Lottie JSON
+                      - generic [ref=e259]:
+                        - generic [ref=e260]:
+                          - generic [ref=e261]: 2 năm trước
+                          - generic [ref=e262]: IconScout
+                        - button [ref=e268] [cursor=pointer]
+              - generic [ref=e274]:
+                - generic [ref=e275]: "Nếu bạn cần, hãy cho tôi biết:"
+                - list [ref=e276]:
+                  - listitem [ref=e277]:
+                    - generic [ref=e278]:
+                      - text: Bạn đang cần
+                      - strong [ref=e279]: loại băng nào
+                      - text: (băng cuộn gạc, băng cá nhân, hay băng bó vết thương cho nhân vật/mummy)?
+                  - listitem [ref=e280]:
+                    - generic [ref=e281]:
+                      - text: Bạn sử dụng file FBX cho
+                      - strong [ref=e282]: phần mềm nào
+                      - text: (Blender, Unity, Unreal Engine, Maya)?
+                - generic [ref=e283]: Tôi có thể tìm giúp bạn mẫu miễn phí hoặc hướng dẫn cách tự làm rigging.
+            - generic [ref=e288]:
+              - list [ref=e290]:
+                - listitem [ref=e291]:
+                  - generic [ref=e292]:
+                    - link "Bandage 3D models - Sketchfab. Mở trong thẻ mới." [ref=e293] [cursor=pointer]:
+                      - /url: /goto?url=CAESXQHrOzAV_ZvF8Ggj2EUDzjeevluCKgRyx6lpcYzz-dbZcXQEaCI236Dhl8q9JqELv8k_Rb-cVDPdFsDBpZ1E9rSEi35ZIPiEuaw9lky3jmdmAdxQV49QDR9794NTvA
+                    - generic [ref=e294]:
+                      - generic [ref=e295]:
+                        - generic [ref=e298]: Sketchfab
+                        - button "Thông tin về kết quả này" [ref=e304] [cursor=pointer]
+                      - generic [ref=e310]:
+                        - generic [ref=e311]: Bandage 3D models - Sketchfab
+                        - generic [ref=e312]: "Sketchfab 3D Models Catalog: Bandage and Medical Assets: Free-to-view and download 3D assets including First Aid and Pills (PSX), ..."
+                - listitem [ref=e316]:
+                  - generic [ref=e317]:
+                    - link "Bandage 3D Models – Free & Premium Downloads | CGTrader. Mở trong thẻ mới." [ref=e318] [cursor=pointer]:
+                      - /url: /goto?url=CAESZQHrOzAVBMX19-lE3RnTLkFkBrR6DFluqzXscd4Orx3eXNFv2mT3UaSPfZhSuOY5MO3SilbWjoiFHj_c4Ssj9eoB6FioGquhVtEAtxWlc6O_CRCzkXC7fAssfSSMlAOPfYCor2NX
+                    - generic [ref=e319]:
+                      - generic [ref=e320]:
+                        - generic [ref=e323]: CGTrader
+                        - button "Thông tin về kết quả này" [ref=e329] [cursor=pointer]
+                      - generic [ref=e335]:
+                        - generic [ref=e336]: Bandage 3D Models – Free & Premium Downloads | CGTrader
+                        - generic [ref=e338]: CGTrader offers 399 free and premium 3D bandage models and related medical assets for animation, games, and VR/AR projects. Format...
+              - button [ref=e341] [cursor=pointer]:
+                - generic [ref=e342]: Hiện tất cả
+          - generic [ref=e347]:
+            - generic [ref=e350]:
+              - text: Câu trả lời của AI có thể chứa thông tin không chính xác.
+              - link [ref=e351] [cursor=pointer]:
+                - /url: https://support.google.com/websearch?p=ai_overviews
+                - text: Tìm hiểu thêm
+            - generic [ref=e352]:
+              - generic [ref=e353]:
+                - status [ref=e354]
+                - button [ref=e356] [cursor=pointer]
+              - button [ref=e366] [cursor=pointer]
+              - generic [ref=e372]:
+                - button [ref=e374] [cursor=pointer]
+                - button [ref=e379] [cursor=pointer]
+              - button [ref=e386] [cursor=pointer]
+        - button "Hiện thêm Thông tin tổng quan do AI tạo" [ref=e394]:
+          - generic [ref=e395] [cursor=pointer]: Hiện thêm
+      - main [ref=e402]:
+        - generic [ref=e406]:
+          - generic [ref=e409]:
+            - heading "Web results" [level=2] [ref=e410]
+            - generic [ref=e411]:
+              - generic [ref=e414]:
+                - link "Free & Premium Bandage 3D Models - CGTrader CGTrader https://www.cgtrader.com › bandage" [ref=e416] [cursor=pointer]:
+                  - /url: /goto?url=CAESZQHrOzAVKIq9D8I4-dxd19IkLxdLnDge_r4EmADa2Z5wdwjpl2LCQ4EKcgJD7e0nkhLm0xnU5qtXQRLieKPCiuXrm1Ek9-6Kq3ugqPYGnQmjLrfIuoIQYKBuN-AHweJHW_kL_K-O
+                  - heading "Free & Premium Bandage 3D Models - CGTrader" [level=3] [ref=e417]
+                  - generic [ref=e423]:
+                    - generic [ref=e424]: CGTrader
+                    - generic [ref=e426]: https://www.cgtrader.com › bandage
+                - generic [ref=e428]:
+                  - generic [ref=e429]: ·
+                  - link "Dịch trang này" [ref=e430] [cursor=pointer]:
+                    - /url: /goto?url=CAESrgEB6zswFdemQ4cLU1ATkEBYb9SoiIlvOFWgQxsNI6hXkgyf-HBebf9DLQ1HLebdShZyJ_DN7uvSakH3AcpHdiwWJYD-T_tr69pYpERwQvSfhV2x9I997A9ukniTykM6JUMMvHaYa1w5V0iEP11yVyqHuO-DymTNW2nB2KrmO4LcEc4jXku07mn_o6i9iEP3LLE0B2hA_RdMNa6Y2c-ytBS875nSZsVVM1MbPerVsRE
+                - button "Thông tin về kết quả này" [ref=e435] [cursor=pointer]
+              - generic [ref=e442]:
+                - emphasis [ref=e443]: Download
+                - text: 402 free and premium
+                - emphasis [ref=e444]: Bandage
+                - text: 3D models, available in MAX, OBJ,
+                - emphasis [ref=e445]: FBX
+                - text: ", 3DS, and C4D file formats, ready for VR / AR,"
+                - emphasis [ref=e446]: animation
+                - text: ", games, ..."
+              - link [aria-hidden] [ref=e449] [cursor=pointer]:
+                - /url: /goto?url=CAESZQHrOzAVKIq9D8I4-dxd19IkLxdLnDge_r4EmADa2Z5wdwjpl2LCQ4EKcgJD7e0nkhLm0xnU5qtXQRLieKPCiuXrm1Ek9-6Kq3ugqPYGnQmjLrfIuoIQYKBuN-AHweJHW_kL_K-O
+              - generic [ref=e452]: 5,00 US$
+          - generic [ref=e458]:
+            - generic [ref=e461]:
+              - link "Bandage 3D models Sketchfab https://sketchfab.com › tags › bandage" [ref=e463] [cursor=pointer]:
+                - /url: /goto?url=CAESXQHrOzAVG5B9JJXx_1HIvACuYNXenXp5Evj7gRj3wM6r48GZopjUd4NAKS8kYoOxSfMhPwg6fwVbYIla87XXLyFibTaU0FpHAOxAvdySsGJ9zESq-UewvTgC4LW1_Q
+                - heading "Bandage 3D models" [level=3] [ref=e464]
+                - generic [ref=e470]:
+                  - generic [ref=e471]: Sketchfab
+                  - generic [ref=e473]: https://sketchfab.com › tags › bandage
+              - generic [ref=e475]:
+                - generic [ref=e476]: ·
+                - link "Dịch trang này" [ref=e477] [cursor=pointer]:
+                  - /url: /goto?url=CAESpgEB6zswFWbr6CeaAfTMpRZ07mvzdbx9edVeZIDet3UuOeCAAK_hdNWLq_ij4aH4kwhcFCopNDdJo0EY9U4IkH9P22EI_WeMYxpajjCh2486o7ipsZD6ybLNmx66B9mgPzIc0m0sqDn0mbJECQU1zvPv-uZj7TUYzaDYd7NmYnSGrG17L3Q_eMLlkPqSEDc_cnxLmG0xgBaPQRwXIYuHHeC01wQD4DWf
+              - button "Thông tin về kết quả này" [ref=e482] [cursor=pointer]
+            - generic [ref=e489]:
+              - emphasis [ref=e490]: Bandage
+              - text: 3D models ready to view and
+              - emphasis [ref=e491]: download
+              - text: for free. Popular
+              - emphasis [ref=e492]: Bandage
+              - text: 3D models. View all · Mad Syrup True Form 3D
+              - emphasis [ref=e493]: Model
+              - text: ·
+              - emphasis [ref=e494]: Download
+              - text: 3D
+              - emphasis [ref=e495]: model
+              - text: .
+            - link [aria-hidden] [ref=e498] [cursor=pointer]:
+              - /url: /goto?url=CAESXQHrOzAVG5B9JJXx_1HIvACuYNXenXp5Evj7gRj3wM6r48GZopjUd4NAKS8kYoOxSfMhPwg6fwVbYIla87XXLyFibTaU0FpHAOxAvdySsGJ9zESq-UewvTgC4LW1_Q
+          - generic [ref=e504]:
+            - generic [ref=e507]:
+              - link "Free Bandage 3D Models - Download Instantly Meshy https://www.meshy.ai › tags › bandage" [ref=e509] [cursor=pointer]:
+                - /url: /goto?url=CAESXAHrOzAV0cMouqUVr5z5IDpxA9fnWFiIpkrlC7qMMcdkX9MjLFE0KhvDk0oCzEyWJbW4PSV_SGAO25l6G8XKrE2gfWENhsGX6MuvVYO_ZVHXICx8a2nVop72gPhO
+                - heading "Free Bandage 3D Models - Download Instantly" [level=3] [ref=e510]
+                - generic [ref=e516]:
+                  - generic [ref=e517]: Meshy
+                  - generic [ref=e519]: https://www.meshy.ai › tags › bandage
+              - generic [ref=e521]:
+                - generic [ref=e522]: ·
+                - link "Dịch trang này" [ref=e523] [cursor=pointer]:
+                  - /url: /goto?url=CAESpQEB6zswFUS8Q2BfFlGxui3pyHoyzdnZmXOCLVzjKnnLwCeSZh18mMw5A9I_qEx9DeGuSQ4THKDuZ4qCFHQbxTyVYjhbIxULjW7a3-Xuv_e1OgQKHnXGV331xAMIRmhk_XGcu0pPvXUdKfOtPnV32u9jhSgda30NFiZQuBjuND2twIi-XPCTVtv0mGmOAJgwsFXFqrqK7EoTWA0BSaOjEA5fTrMZQOE
+              - button "Thông tin về kết quả này" [ref=e528] [cursor=pointer]
+            - generic [ref=e535]:
+              - emphasis [ref=e536]: Download
+              - text: 68+ free
+              - emphasis [ref=e537]: Bandage
+              - text: 3D models in STL, GLB,
+              - emphasis [ref=e538]: FBX
+              - text: ", OBJ formats for 3D Printing, Games,"
+              - emphasis [ref=e539]: Animation
+              - text: and more. Ready to use – instant
+              - emphasis [ref=e540]: download
+              - text: on Meshy.
+            - link [aria-hidden] [ref=e543] [cursor=pointer]:
+              - /url: /goto?url=CAESXAHrOzAV0cMouqUVr5z5IDpxA9fnWFiIpkrlC7qMMcdkX9MjLFE0KhvDk0oCzEyWJbW4PSV_SGAO25l6G8XKrE2gfWENhsGX6MuvVYO_ZVHXICx8a2nVop72gPhO
+          - generic [ref=e549]:
+            - generic [ref=e552]:
+              - link "Download Free & Premium Stretching Bandage 3D Models TurboSquid https://www.turbosquid.com › Search" [ref=e554] [cursor=pointer]:
+                - /url: /goto?url=CAESeQHrOzAV7j_BP_AU_6hJ9qYaTDNU10e4B45Jib9ftLJXjDWHISagaTJTeT-e16FWX3_vvKsHn4SItTOuj8GIQiAnX4H05QrIg0bY3jDWDOfBYn-WxJAvGRvKQU0TOvcgaL--ukSEfdpyTklgGetdWvMm9YaIaSzpvv8
+                - heading "Download Free & Premium Stretching Bandage 3D Models" [level=3] [ref=e555]
+                - generic [ref=e561]:
+                  - generic [ref=e562]: TurboSquid
+                  - generic [ref=e564]: https://www.turbosquid.com › Search
+              - generic [ref=e566]:
+                - generic [ref=e567]: ·
+                - link "Dịch trang này" [ref=e568] [cursor=pointer]:
+                  - /url: /goto?url=CAESwwEB6zswFYgMHmV1Up_Q9iFrTeGWudN84YwIMykTRZ5wZF3AfJzRo76H3xDwPWGCzRuOxs-Q68ok_zV3eWA9njtDEy_0Vs6cn-eADuW1lh4FMYDREi1qtfDxhVbtbQ0QJMivsWqGEqktFqbhh4taiXOvrTO6D_ELB5_gblZuCGCT80ljlJfpZVx_lK_D-EyGqnbUOFoBBiPiQJo3v1UTW4lLiRUi8ZR1Ud2p87IvC41mVQV8ix23HVzoPGopDiPmC6yfJA0
+              - button "Thông tin về kết quả này" [ref=e573] [cursor=pointer]
+            - generic [ref=e580]:
+              - text: Explore 40+ free and premium Stretching
+              - emphasis [ref=e581]: Bandage
+              - text: 3D models for games, VR/AR & film.
+              - emphasis [ref=e582]: Download FBX
+              - text: ", OBJ, Blender, Maya, rigged,"
+              - emphasis [ref=e583]: animated
+              - text: "& low poly formats."
+          - generic [ref=e587]:
+            - generic [ref=e590]:
+              - link "Bandages 3D Models download Free3D.com https://free3d.com › bandages" [ref=e592] [cursor=pointer]:
+                - /url: /goto?url=CAESaAHrOzAVL151yEsbSUjPyM-eZh6Yja5fSk4ZhP7mbT78Cwa3t2mrA03IJonpzv54gTU1Hr9FqCdvlAx-PgcTQLE8q--kwagrHAD57A48d_SvoOg58aRufn2sKVFrmyW1SyNKO4aht29r
+                - heading "Bandages 3D Models download" [level=3] [ref=e593]
+                - generic [ref=e599]:
+                  - generic [ref=e600]: Free3D.com
+                  - generic [ref=e602]: https://free3d.com › bandages
+              - generic [ref=e604]:
+                - generic [ref=e605]: ·
+                - link "Dịch trang này" [ref=e606] [cursor=pointer]:
+                  - /url: /goto?url=CAESsQEB6zswFQYJnRIfrRbbo33iGQKhOebQSpAaztDVUNfPnCN6kroNn0qHhh-Z15h29OvZOuWutYos3amCXO2sy5-mkbJIIekxml3QdfJYiXF397n5QCYoAtudxeJ03HBHPfhThcoUan5E4HZM-btOUfk9EZw-kIPs_FPOCwT8XZGwGNPH2kdQdfOcA-WkYA_HLs-AcSWFs1B792BXsOENVJjpDSL1BeeRDkb0G21zRpW-NJQ
+              - button "Thông tin về kết quả này" [ref=e611] [cursor=pointer]
+            - generic [ref=e618]:
+              - emphasis [ref=e619]: Bandage
+              - text: 3d
+              - emphasis [ref=e620]: model
+              - text: ·
+              - emphasis [ref=e621]: Bandage
+              - text: .ztl .ma .obj ; Elastic
+              - emphasis [ref=e622]: Bandage
+              - text: 3d
+              - emphasis [ref=e623]: model
+              - text: · Elastic
+              - emphasis [ref=e624]: Bandage
+              - text: .blend .
+              - emphasis [ref=e625]: fbx
+              - text: ;
+              - emphasis [ref=e626]: Bandage
+              - text: Collection 3d
+              - emphasis [ref=e627]: model
+              - text: ·
+              - emphasis [ref=e628]: Bandage
+              - text: Collection .blend .
+              - emphasis [ref=e629]: fbx
+              - text: .
+          - generic [ref=e633]:
+            - generic [ref=e636]:
+              - link "Elastic Bandage_ Medical Bandage - Download Free 3D ... Sketchfab https://sketchfab.com › elastic-bandag..." [ref=e638] [cursor=pointer]:
+                - /url: /goto?url=CAESnAEB6zswFWgJwoHTjjVvVjGAt0BQQsu4mGm94WXAYZZHvtfn_F7es9h2u7jTx4g5DxlxeRqZRDFu65S6eswRt5lBTo6ZjT6L4TaSFoOd7bT1F_79dUVXWFZjlMVFbsEC3u1aFrGxPYBjJt87ly6eguILZ9j6oRGXzsqDayELWQFCSV5r-r4fnCJ6FnH_zSGPuvFHQqQ9NoIGJHWbwGg
+                - heading "Elastic Bandage_ Medical Bandage - Download Free 3D ..." [level=3] [ref=e639]
+                - generic [ref=e645]:
+                  - generic [ref=e646]: Sketchfab
+                  - generic [ref=e648]: https://sketchfab.com › elastic-bandag...
+              - generic [ref=e650]:
+                - generic [ref=e651]: ·
+                - link "Dịch trang này" [ref=e652] [cursor=pointer]:
+                  - /url: /goto?url=CAES5gEB6zswFb5VdtW8a-R8hXNxC5jnKr3bX4xzQEZQs50IlwgsxJUg0rBYcD5J-lzM180pStn-XEdoIuBDPBwwzbJIKHJs51ftovG9kOZVNhIDOysfqO7A4GUZ9VROFRnpZo3Od5S46rmfMef2X5GndOSg-9j-4EyDdfkuc3Wk9YjVCOdOQAUrKF9hkiOBRwqS2XHSQyz5BQnw3ohQo-slUCtnvu-tgmIHXLfHVZcGPHOSIimx2r_OgHQ7P4RZ9eVsZtuK8RzJ1yFaSkkKlT90xsWyHQUrVTq_W-nYWn3Q8j5yX1CnD9K5zg
+              - button "Thông tin về kết quả này" [ref=e657] [cursor=pointer]
+            - generic [ref=e663]:
+              - generic [ref=e664]: 1 thg 3, 2023 —
+              - generic [ref=e665]:
+                - text: The
+                - emphasis [ref=e666]: bandage
+                - text: on his right leg、A
+                - emphasis [ref=e667]: bandage
+                - text: that runs from knee to ankle - Elastic Bandage_ Medical
+                - emphasis [ref=e668]: Bandage
+                - text: "-"
+                - emphasis [ref=e669]: Download
+                - text: Free 3D
+                - emphasis [ref=e670]: model
+                - text: by ZYXWu.
+            - link [aria-hidden] [ref=e673] [cursor=pointer]:
+              - /url: /goto?url=CAESnAEB6zswFWgJwoHTjjVvVjGAt0BQQsu4mGm94WXAYZZHvtfn_F7es9h2u7jTx4g5DxlxeRqZRDFu65S6eswRt5lBTo6ZjT6L4TaSFoOd7bT1F_79dUVXWFZjlMVFbsEC3u1aFrGxPYBjJt87ly6eguILZ9j6oRGXzsqDayELWQFCSV5r-r4fnCJ6FnH_zSGPuvFHQqQ9NoIGJHWbwGg
+          - generic [ref=e679]:
+            - generic [ref=e682]:
+              - link "Wrapped Bandages 3D Models for Free Download and Print Tripo Studio https://studio.tripo3d.ai › wrapped-ba..." [ref=e684] [cursor=pointer]:
+                - /url: /goto?url=CAESdgHrOzAVOajOHTptYj9QVlunooU_ILQPus235k-91VXBQjpC_uADklcUW3ythUmaUFeTAkwKHUoJdFzcI0835i1vKGHmwWK1AWCLwlcB9HS6AUNdwHbLz2jT3mORFxHM4Ua3jOncoiu3HdZD1MQE-GuM2yLM99s
+                - heading "Wrapped Bandages 3D Models for Free Download and Print" [level=3] [ref=e685]
+                - generic [ref=e691]:
+                  - generic [ref=e692]: Tripo Studio
+                  - generic [ref=e694]: https://studio.tripo3d.ai › wrapped-ba...
+              - generic [ref=e696]:
+                - generic [ref=e697]: ·
+                - link "Dịch trang này" [ref=e698] [cursor=pointer]:
+                  - /url: /goto?url=CAESwAEB6zswFRj33Fo0WctfwGkk18sRXyx4ei5RvH-JMvKMqe9CRsrb54jHBZvmu-JHFPs31p2rMfY2HTd3txyISJ_weWrHbaUjrA5Vj74NaR392jMB97bHdtluijMos3hn1taZ5SsqtRWWWo2lJkF51B3dFruZQuQSKHya4kzrL22RPYVQqN9cXNvMo3Vlaor54adOW6GylQ7tIYjpSF0ZretFLueYD-RPouJZilIn1WirGhesHiLL9TJgA97RPrNhLos
+              - button "Thông tin về kết quả này" [ref=e703] [cursor=pointer]
+            - generic [ref=e710]:
+              - emphasis [ref=e711]: Download
+              - text: . 0.
+              - emphasis [ref=e712]: bandage
+              - text: roll 3d
+              - emphasis [ref=e713]: model
+              - text: ": create me a 3d stylized"
+              - emphasis [ref=e714]: bandage
+              - text: roll.
+              - emphasis [ref=e715]: Download
+              - text: . 0.
+            - link [aria-hidden] [ref=e718] [cursor=pointer]:
+              - /url: /goto?url=CAESdgHrOzAVOajOHTptYj9QVlunooU_ILQPus235k-91VXBQjpC_uADklcUW3ythUmaUFeTAkwKHUoJdFzcI0835i1vKGHmwWK1AWCLwlcB9HS6AUNdwHbLz2jT3mORFxHM4Ua3jOncoiu3HdZD1MQE-GuM2yLM99s
+          - generic [ref=e724]:
+            - generic [ref=e727]:
+              - link "Bandaid 3D Models & Renders Envato https://elements.envato.com › 3D" [ref=e729] [cursor=pointer]:
+                - /url: /goto?url=CAESogEB6zswFe0wlsY84814_h3wTMsJ7NJHFGHr2X521m0wMg1FUvW63LQqp9BZhVcJbSWHrSuF0Rkr24uq-sYgEVE_X0r-fpbiV0fVadqc1XL3OvBJdCiOCP-ac-WYt_b6PAR8rSSw0TrW5TvjeH9hgfRW1d6fxDLkaZOTVvnwUzWF-ZwG4Mn31tAKNtsY-EfZcVuGNMq_G97HlnSrLkEx2qsNd3o
+                - heading "Bandaid 3D Models & Renders" [level=3] [ref=e730]
+                - generic [ref=e736]:
+                  - generic [ref=e737]: Envato
+                  - generic [ref=e739]: https://elements.envato.com › 3D
+              - generic [ref=e741]:
+                - generic [ref=e742]: ·
+                - link "Dịch trang này" [ref=e743] [cursor=pointer]:
+                  - /url: /goto?url=CAESqgEB6zswFeFfDYA2J-WY-JST7iX1DrmELvCr9Pj6uZYXY4fXOQtu3YJNGX2v9l7Mmr-e3_rJmC4wAA7ZbA5YwiFO62yeyOLi6uDm-yja9Bu3crLfNiWz-19mAeSutk7oOW46OWe1MG-wQwhh3dGqjZAbIeoRTYA-Qxm2b3BcH0kBwKqFHSl-8x9IfOTJaD-ZbszS0aqARVNDzLWFA5y7RkEi7nvzbQSf573fPA
+              - button "Thông tin về kết quả này" [ref=e748] [cursor=pointer]
+            - generic [ref=e755]:
+              - text: "Bandaid 3D Objects ; Preview: Band-aid with distinctive design · Band-aid with distinctive design ; Preview: Cartoon first aid"
+              - emphasis [ref=e756]: bandage
+              - text: strips. Cartoon first aid ...
+            - link [aria-hidden] [ref=e759] [cursor=pointer]:
+              - /url: /goto?url=CAESogEB6zswFe0wlsY84814_h3wTMsJ7NJHFGHr2X521m0wMg1FUvW63LQqp9BZhVcJbSWHrSuF0Rkr24uq-sYgEVE_X0r-fpbiV0fVadqc1XL3OvBJdCiOCP-ac-WYt_b6PAR8rSSw0TrW5TvjeH9hgfRW1d6fxDLkaZOTVvnwUzWF-ZwG4Mn31tAKNtsY-EfZcVuGNMq_G97HlnSrLkEx2qsNd3o
+          - generic [ref=e765]:
+            - generic [ref=e768]:
+              - link "Download Free & Premium Bandage 3D Models TurboSquid https://www.turbosquid.com › Search" [ref=e770] [cursor=pointer]:
+                - /url: /goto?url=CAESbgHrOzAV_gz92ry1BojDNPWqAfnbFSQCy8XwuKQe2di8VQYyH0iSTPCPOKE6yyXz8luQe1SIffzGY1T94yDLjTLHQ1IwPQd5mPLqzmi9JSPkts7aSpMVn4ypXPld3fPFXerV_9OG7IIjd5OpOPqU
+                - heading "Download Free & Premium Bandage 3D Models" [level=3] [ref=e771]
+                - generic [ref=e777]:
+                  - generic [ref=e778]: TurboSquid
+                  - generic [ref=e780]: https://www.turbosquid.com › Search
+              - generic [ref=e782]:
+                - generic [ref=e783]: ·
+                - link "Dịch trang này" [ref=e784] [cursor=pointer]:
+                  - /url: /goto?url=CAEStwEB6zswFQDTIzfrnWO11BUOW380w7qff0gMVmvBGRSDVGAbxJ478z5aLAF82xhha8cm3orxfG8yUArvPCC7L8C3lISQJDKmCrcojuHXiSWjV7kBf2mfs5dRksrVJzdTQhiYdqU361dU7-Ky2Rb4oNy96QlKht2IZ08OxAhod3bu26Co7CYoNKVU7qqYio00LlnvHhXmUWicnDOoUbJxezDLTObKUKGeCFexLDYSdHZQyM1XCn6EBnU
+              - button "Thông tin về kết quả này" [ref=e789] [cursor=pointer]
+            - generic [ref=e796]:
+              - text: Explore 400+ free and premium
+              - emphasis [ref=e797]: Bandage
+              - text: 3D models for games, VR/AR & film.
+              - emphasis [ref=e798]: Download FBX
+              - text: ", OBJ, Blender, Maya, rigged,"
+              - emphasis [ref=e799]: animated
+              - text: "& low poly formats."
+            - link [aria-hidden] [ref=e802] [cursor=pointer]:
+              - /url: /goto?url=CAESbgHrOzAV_gz92ry1BojDNPWqAfnbFSQCy8XwuKQe2di8VQYyH0iSTPCPOKE6yyXz8luQe1SIffzGY1T94yDLjTLHQ1IwPQd5mPLqzmi9JSPkts7aSpMVn4ypXPld3fPFXerV_9OG7IIjd5OpOPqU
+        - navigation [ref=e807]:
+          - heading "Điều hướng trang" [level=1] [ref=e808]
+          - text: "1"
+          - link "Page 2" [ref=e811] [cursor=pointer]:
+            - /url: /search?q=%22bandage%22+animation+fbx+download&sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&ei=_YbMaqifJIG2vr0P0sDpOQ&start=10&sa=N&sstk=AS6-VmLolukC36uyaROKO_0kol3oFvafV1Ue0zCo6mPXtrUkgFSoE3HCzweDQYTIdTUOO9RiDUj-rAQAQOjdubpuNMRtCLcneL08mg&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQ8tMDegQIKhAE
+            - text: "2"
+          - link "Page 3" [ref=e813] [cursor=pointer]:
+            - /url: /search?q=%22bandage%22+animation+fbx+download&sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&ei=_YbMaqifJIG2vr0P0sDpOQ&start=20&sa=N&sstk=AS6-VmLolukC36uyaROKO_0kol3oFvafV1Ue0zCo6mPXtrUkgFSoE3HCzweDQYTIdTUOO9RiDUj-rAQAQOjdubpuNMRtCLcneL08mg&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQ8tMDegQIKhAG
+            - text: "3"
+          - link "Page 4" [ref=e815] [cursor=pointer]:
+            - /url: /search?q=%22bandage%22+animation+fbx+download&sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&ei=_YbMaqifJIG2vr0P0sDpOQ&start=30&sa=N&sstk=AS6-VmLolukC36uyaROKO_0kol3oFvafV1Ue0zCo6mPXtrUkgFSoE3HCzweDQYTIdTUOO9RiDUj-rAQAQOjdubpuNMRtCLcneL08mg&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQ8tMDegQIKhAI
+            - text: "4"
+          - link "Page 5" [ref=e817] [cursor=pointer]:
+            - /url: /search?q=%22bandage%22+animation+fbx+download&sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&ei=_YbMaqifJIG2vr0P0sDpOQ&start=40&sa=N&sstk=AS6-VmLolukC36uyaROKO_0kol3oFvafV1Ue0zCo6mPXtrUkgFSoE3HCzweDQYTIdTUOO9RiDUj-rAQAQOjdubpuNMRtCLcneL08mg&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQ8tMDegQIKhAK
+            - text: "5"
+          - link "Page 6" [ref=e819] [cursor=pointer]:
+            - /url: /search?q=%22bandage%22+animation+fbx+download&sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&ei=_YbMaqifJIG2vr0P0sDpOQ&start=50&sa=N&sstk=AS6-VmLolukC36uyaROKO_0kol3oFvafV1Ue0zCo6mPXtrUkgFSoE3HCzweDQYTIdTUOO9RiDUj-rAQAQOjdubpuNMRtCLcneL08mg&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQ8tMDegQIKhAM
+            - text: "6"
+          - link "Page 7" [ref=e821] [cursor=pointer]:
+            - /url: /search?q=%22bandage%22+animation+fbx+download&sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&ei=_YbMaqifJIG2vr0P0sDpOQ&start=60&sa=N&sstk=AS6-VmLolukC36uyaROKO_0kol3oFvafV1Ue0zCo6mPXtrUkgFSoE3HCzweDQYTIdTUOO9RiDUj-rAQAQOjdubpuNMRtCLcneL08mg&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQ8tMDegQIKhAO
+            - text: "7"
+          - link "Page 8" [ref=e823] [cursor=pointer]:
+            - /url: /search?q=%22bandage%22+animation+fbx+download&sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&ei=_YbMaqifJIG2vr0P0sDpOQ&start=70&sa=N&sstk=AS6-VmLolukC36uyaROKO_0kol3oFvafV1Ue0zCo6mPXtrUkgFSoE3HCzweDQYTIdTUOO9RiDUj-rAQAQOjdubpuNMRtCLcneL08mg&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQ8tMDegQIKhAQ
+            - text: "8"
+          - link "Page 9" [ref=e825] [cursor=pointer]:
+            - /url: /search?q=%22bandage%22+animation+fbx+download&sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&ei=_YbMaqifJIG2vr0P0sDpOQ&start=80&sa=N&sstk=AS6-VmLolukC36uyaROKO_0kol3oFvafV1Ue0zCo6mPXtrUkgFSoE3HCzweDQYTIdTUOO9RiDUj-rAQAQOjdubpuNMRtCLcneL08mg&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQ8tMDegQIKhAS
+            - text: "9"
+          - link "Page 10" [ref=e827] [cursor=pointer]:
+            - /url: /search?q=%22bandage%22+animation+fbx+download&sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&ei=_YbMaqifJIG2vr0P0sDpOQ&start=90&sa=N&sstk=AS6-VmLolukC36uyaROKO_0kol3oFvafV1Ue0zCo6mPXtrUkgFSoE3HCzweDQYTIdTUOO9RiDUj-rAQAQOjdubpuNMRtCLcneL08mg&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQ8tMDegQIKhAU
+            - text: "10"
+          - heading [level=2] [ref=e829]:
+            - link "Tiếp" [ref=e830] [cursor=pointer]:
+              - /url: /search?q=%22bandage%22+animation+fbx+download&sca_esv=fc0f256cdcff5789&sxsrf=APpeQnsidZOkQrmtoGIHDD8o_DSpQxrN7w:1791788797600&ei=_YbMaqifJIG2vr0P0sDpOQ&start=10&sa=N&sstk=AS6-VmLolukC36uyaROKO_0kol3oFvafV1Ue0zCo6mPXtrUkgFSoE3HCzweDQYTIdTUOO9RiDUj-rAQAQOjdubpuNMRtCLcneL08mg&ved=2ahUKEwjokay29bOXAxUBm68BHVJgOgcQ8NMDegQIKhAW
+        - navigation
+    - contentinfo [ref=e833]:
+      - heading "Đường liên kết ở chân trang" [level=1] [ref=e834]
+      - generic [ref=e838]:
+        - generic [ref=e840]:
+          - text: Việt Nam
+          - generic [ref=e842]:
+            - button "Hà Đông, Hà Nội - Dựa trên địa chỉ IP của bạn" [ref=e844] [cursor=pointer]:
+              - generic [ref=e845]: Hà Đông, Hà Nội
+              - generic [ref=e847]:
+                - text: "-"
+                - generic [ref=e848]: Dựa trên địa chỉ IP của bạn
+            - text: "-"
+            - button "Cập nhật vị trí" [ref=e850] [cursor=pointer]
+        - generic [ref=e853]:
+          - link "Trợ giúp" [ref=e854] [cursor=pointer]:
+            - /url: https://support.google.com/websearch/?p=ws_results_help&hl=vi&fg=1
+          - link "Gửi phản hồi" [ref=e855] [cursor=pointer]:
+            - /url: "#"
+          - link "Quyền riêng tư" [ref=e856] [cursor=pointer]:
+            - /url: https://policies.google.com/privacy?hl=vi&fg=1
+          - link "Điều khoản" [ref=e857] [cursor=pointer]:
+            - /url: https://policies.google.com/terms?hl=vi&fg=1

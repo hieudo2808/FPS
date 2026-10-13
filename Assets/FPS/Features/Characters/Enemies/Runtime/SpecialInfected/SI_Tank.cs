@@ -364,7 +364,7 @@ namespace FPS
 
             if (closest == null)
                 return;
-            closest.TakeDamage(ScaleDamage(heavySwingDamage));
+            closest.TakeDamage(new DamageInfo(ScaleDamage(heavySwingDamage), damageType: DamageType.Melee, sourcePosition: transform.position));
             ApplyKnockback(closest, heavySwingKnockbackForce, 0.25f);
         }
 
@@ -385,7 +385,7 @@ namespace FPS
                     continue;
                 }
 
-                player.TakeDamage(ScaleDamage(slamDamage));
+                player.TakeDamage(new DamageInfo(ScaleDamage(slamDamage), damageType: DamageType.Melee, sourcePosition: transform.position));
                 ApplyKnockback(player, slamKnockbackForce, 0.35f);
             }
         }

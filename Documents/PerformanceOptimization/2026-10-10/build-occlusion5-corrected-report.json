@@ -1,0 +1,45 @@
+{
+  "jobId": "005c09ef",
+  "kind": "build_player",
+  "status": "completed",
+  "progress": 100,
+  "currentStage": "completed",
+  "progressStage": "completed",
+  "startedAt": 1791628166,
+  "updatedAt": 1791628281,
+  "processedItems": 0,
+  "totalItems": 0,
+  "resultSummary": "Player build succeeded for StandaloneWindows64: E:\\Unity\\Project\\FPS\\Builds\\PerformanceOptimization\\Occlusion5Corrected\\FPS.exe",
+  "error": null,
+  "warnings": [],
+  "reportId": null,
+  "relatedWorkflowId": null,
+  "canCancel": false,
+  "recentProgress": [
+    {
+      "timestamp": 1791628166,
+      "progress": 0,
+      "stage": "queued",
+      "description": "Player build queued for StandaloneWindows64."
+    },
+    {
+      "timestamp": 1791628166,
+      "progress": 5,
+      "stage": "scheduled",
+      "description": "Player build accepted; BuildPipeline will start on the next Editor update."
+    },
+    {
+      "timestamp": 1791628167,
+      "progress": 10,
+      "stage": "building",
+      "description": "Building StandaloneWindows64 player."
+    },
+    {
+      "timestamp": 1791628281,
+      "progress": 100,
+      "stage": "completed",
+      "description": "Player build succeeded for StandaloneWindows64: E:\\Unity\\Project\\FPS\\Builds\\PerformanceOptimization\\Occlusion5Corrected\\FPS.exe"
+    }
+  ],
+  "terminal": true
+}

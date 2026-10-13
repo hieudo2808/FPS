@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 03:40:19Z" end-time="2026-10-05 03:40:20Z" duration="0.7649616">
+  <test-suite type="TestSuite" id="1040" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="21" result="Passed" start-time="2026-10-05 03:40:19Z" end-time="2026-10-05 03:40:20Z" duration="0.764962" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1028" name="FPS.Survival.PlayModeTests.dll" fullname="E:/Unity/Project/FPS/Library/ScriptAssemblies/FPS.Survival.PlayModeTests.dll" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-05 03:40:19Z" end-time="2026-10-05 03:40:20Z" duration="0.720063" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13644" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1029" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-05 03:40:19Z" end-time="2026-10-05 03:40:20Z" duration="0.715262" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1030" name="Tests" fullname="FPS.Tests" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-05 03:40:19Z" end-time="2026-10-05 03:40:20Z" duration="0.710903" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="CampaignLifecycleTests" fullname="FPS.Tests.CampaignLifecycleTests" classname="FPS.Tests.CampaignLifecycleTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-05 03:40:19Z" end-time="2026-10-05 03:40:20Z" duration="0.703313" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1003" name="StateRestoreDoesNotReplayDialogue_QueueResetClearsPresentation" fullname="FPS.Tests.CampaignLifecycleTests.StateRestoreDoesNotReplayDialogue_QueueResetClearsPresentation" methodname="StateRestoreDoesNotReplayDialogue_QueueResetClearsPresentation" classname="FPS.Tests.CampaignLifecycleTests" runstate="Runnable" seed="1710428491" result="Passed" start-time="2026-10-05 03:40:19Z" end-time="2026-10-05 03:40:20Z" duration="0.592340" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1002" name="TankDespawnDoesNotCountAsKill_DeathUnlocksFactory" fullname="FPS.Tests.CampaignLifecycleTests.TankDespawnDoesNotCountAsKill_DeathUnlocksFactory" methodname="TankDespawnDoesNotCountAsKill_DeathUnlocksFactory" classname="FPS.Tests.CampaignLifecycleTests" runstate="Runnable" seed="1232520866" result="Passed" start-time="2026-10-05 03:40:20Z" end-time="2026-10-05 03:40:20Z" duration="0.083773" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[EnemyHealth] Tracked Tank health took 100 damage. HP: 0/100
+[EnemyHealth] Tracked Tank health died!
+Saving results to: C:/Users/hieud/AppData/LocalLow/HieuDHM/FPS\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

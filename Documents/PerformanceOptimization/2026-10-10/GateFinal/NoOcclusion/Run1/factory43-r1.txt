@@ -1,0 +1,25 @@
+valid=True
+variant=no-occlusion
+qpcStart=739789090538; qpcEnd=740389260316; qpcFrequency=10000000; nativeQpc=True
+frames=5025; fps=83.738; averageMs=11.942; p95Ms=14.815; p99Ms=17.435; maxMs=29.988
+over33ms=0; over50ms=0; unfocusedFrames=0; rosterFailures=0; enemies=43; renderedCameraFrames=10050
+resolution=1920x1080; quality=Low; seed=1701; warmup=30; seconds=60; chapter=Factory; phase=Exploring
+playerPosition=(-125.00, 0.08, -137.00); playerRotation=(0.00, 0.00, 0.00); cameraPosition=(-125.00, 1.68, -137.00); cameraRotation=(0.00, 0.00, 0.00); fov=60
+allocatedMB=370.9; reservedMB=587.8; monoUsedMB=24.6
+textureCurrentMB=2828.7; textureDesiredMB=2828.7; textureNonStreamingMB=2785.0; streamingActive=False; streamingBudgetMB=512
+cpu=11th Gen Intel(R) Core(TM) i5-11400H @ 2.70GHz; gpu=NVIDIA GeForce RTX 3050 Laptop GPU; graphicsAPI=Direct3D11; vramMB=3962; ramMB=16110; frameTimingEnabled=False; developmentBuild=False
+gpuMs=unavailable
+cpuTimingMs=unavailable
+mainThreadNs=11934576.951
+renderThreadNs=unavailable
+gcBytes=unavailable
+draws=unavailable
+setPass=846.139
+triangles=1714470.886
+CAMERA InsertionCamera: enabled=False; mask=3775; occlusion=False
+CAMERA Camera: enabled=True; mask=191; occlusion=False
+CAMERA EndingShotCamera: enabled=False; mask=-1; occlusion=False
+CAMERA WeaponCamera: enabled=True; mask=320; occlusion=False
+CAMERA AudioListenerFallback: enabled=False; mask=-1; occlusion=False
+CAMERA SpectatorCamera: enabled=False; mask=-1; occlusion=False
+ENEMY_ANIMATORS AlwaysAnimate=43

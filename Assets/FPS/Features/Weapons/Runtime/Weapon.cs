@@ -1308,7 +1308,7 @@ namespace FPS
                 return;
             }
 
-            bool wantsAim = ResolveHeldAimRequest(aimButtonPressed)
+            bool wantsAim = ResolveToggleAimRequest(aimButtonPressed, input != null && input.GetAimInputDown())
                 && !isReloading
                 && !IsEquipping();
             if (wantsAim && !aimRequested)
@@ -1318,7 +1318,7 @@ namespace FPS
                 {
                     aimRequested = false;
                     aimBlockedUntilRelease = true;
-                    GameLog.Error($"[Weapon] {name} cannot enter physical ADS: assign an authored aimSight and first-person arms Animator.");
+                    GameLog.Error($"[Weapon] {name} cannot enter physical ADS: bind the first-person arms/camera and assign aimSight plus a child aimSightEnd.");
                 }
             }
             else if (!wantsAim)
@@ -1329,15 +1329,12 @@ namespace FPS
             ApplyAimPresentation(wantsAim && aimRequested, Time.unscaledDeltaTime);
         }
 
-        private bool ResolveHeldAimRequest(bool aimButtonPressed)
+        private bool ResolveToggleAimRequest(bool aimButtonPressed, bool aimButtonDown)
         {
             if (!aimButtonPressed)
-            {
                 aimBlockedUntilRelease = false;
-                return false;
-            }
 
-            return !aimBlockedUntilRelease;
+            return aimButtonDown && !aimBlockedUntilRelease ? !aimRequested : aimRequested;
         }
 
         private void ApplyAimPresentation(bool wantsAim, float unscaledDeltaTime)
@@ -1357,10 +1354,15 @@ namespace FPS
             }
 
             float duration = Mathf.Max(0.01f, weaponData.aimTransitionDuration);
-            aimBlend = Mathf.MoveTowards(
-                aimBlend,
-                aimRequested ? 1f : 0f,
-                Mathf.Max(0f, unscaledDeltaTime) / duration);
+            // Hand the HUD back to the centered physical optic before lowering.
+            // Single-shot scopes retain their existing post-shot lowering behavior.
+            bool handOffToPhysicalScope = weaponData.showScopeOverlay
+                && scopePresentationVisible && !aimRequested && !weaponData.exitAimAfterShot;
+            if (!handOffToPhysicalScope)
+                aimBlend = Mathf.MoveTowards(
+                    aimBlend,
+                    aimRequested ? 1f : 0f,
+                    Mathf.Max(0f, unscaledDeltaTime) / duration);
             float easedBlend = Mathf.SmoothStep(0f, 1f, aimBlend);
 
             cachedCamera.fieldOfView = Mathf.Lerp(
@@ -1379,11 +1381,12 @@ namespace FPS
             bool reachedFullScope = aimRequested && aimBlend >= 0.999f;
             bool retainScopeWhileLowering = !aimRequested
                 && scopePresentationVisible
+                && !handOffToPhysicalScope
                 && aimBlend > 0.55f;
             SetScopePresentationVisible(reachedFullScope || retainScopeWhileLowering);
 
             // Keep the physical raise-to-scope animation visible. Once the
-            // Operator HUD takes over, stop only the viewmodel camera so the
+            // scope HUD takes over, stop only the viewmodel camera so the
             // opaque 3D optic cannot block the target behind the transparent HUD.
             bool scopeHudOwnsView = weaponData.showScopeOverlay && scopePresentationVisible;
             if (cachedWeaponCamera != null)

@@ -1,0 +1,101 @@
+{
+  "distinct_tests": {
+    "FPS.Tests.SurvivalUiRegressionTests.CancellingRebindTwiceCompletesOnceAndPreservesBinding": {
+      "result": "Passed",
+      "receipt": "SurvivalUiRegressionTests.xml"
+    },
+    "FPS.Tests.SurvivalUiRegressionTests.LongPlayerNamesCannotOverwriteReadinessOrInjectMarkup": {
+      "result": "Passed",
+      "receipt": "SurvivalUiRegressionTests.xml"
+    },
+    "FPS.Tests.SurvivalUiRegressionTests.MainMenuModalBlocksBackgroundAndRestoresItOnBack": {
+      "result": "Passed",
+      "receipt": "SurvivalUiRegressionTests.xml"
+    },
+    "FPS.Tests.SurvivalUiRegressionTests.MissingMatchManagerClearsAuthoredPhaseLabel": {
+      "result": "Passed",
+      "receipt": "SurvivalUiRegressionTests.xml"
+    },
+    "FPS.Tests.SurvivalUiRegressionTests.PrimaryButtonAndMutedTextHaveReadableContrast": {
+      "result": "Passed",
+      "receipt": "SurvivalUiRegressionTests.xml"
+    },
+    "FPS.Tests.SurvivalUiRegressionTests.ScopeOpticalCentersStayOnTheCrosshairWhenSwitchingSprites": {
+      "result": "Passed",
+      "receipt": "SurvivalUiRegressionTests.xml"
+    },
+    "FPS.Tests.SurvivalUiRegressionTests.SettingsBindingsStayInsideContentAndDoNotOverlap": {
+      "result": "Passed",
+      "receipt": "SurvivalUiRegressionTests.xml"
+    },
+    "FPS.Tests.HudGameplayAcceptanceTests.GameplayStatesAndLayoutRemainReadable": {
+      "result": "Passed",
+      "receipt": "gameplay-acceptance.xml"
+    },
+    "FPS.Tests.HudGameplayAcceptanceTests.NavigationUsesLiveSceneAndInvalidatesConsistently": {
+      "result": "Passed",
+      "receipt": "acceptance-first.xml"
+    },
+    "FPS.Tests.HudInputPlayModeTests.InventoryBackClosesOnlyTheTopOverlayAndRestoresFocus": {
+      "result": "Passed",
+      "receipt": "input-playmode.xml"
+    },
+    "FPS.Tests.HudInputPlayModeTests.PromptsSwitchOnDerivedGamepadAndReportUnboundActions": {
+      "result": "Passed",
+      "receipt": "input-playmode.xml"
+    },
+    "FPS.Tests.HudRegressionTests.ProjectionHandlesBehindCameraAndAvoidsOccupiedCorner": {
+      "result": "Passed",
+      "receipt": "hud-regression.xml"
+    },
+    "FPS.Tests.HudRegressionTests.PromptsFollowOverridesAndReset": {
+      "result": "Passed",
+      "receipt": "hud-regression.xml"
+    },
+    "FPS.Tests.HudRegressionTests.TrackingInvalidatesOnChapterPhaseAndCheckpointRollback": {
+      "result": "Passed",
+      "receipt": "hud-regression.xml"
+    },
+    "FPS.Tests.HudRegressionTests.TrackingUsesNearestCompleteRouteThenKeepsManualSelection": {
+      "result": "Passed",
+      "receipt": "hud-regression.xml"
+    }
+  },
+  "total_passed": 15,
+  "source_texture_contrast": [
+    {
+      "asset": "Panel",
+      "tint": [
+        0.66,
+        0.7,
+        0.68
+      ],
+      "opaque_inner_texture_max_luminance": 0.029922356028007066,
+      "text_source_contrast": 10.690043806835527,
+      "muted_source_contrast": 5.774111827274549
+    },
+    {
+      "asset": "Button",
+      "tint": [
+        0.78,
+        0.81,
+        0.79
+      ],
+      "opaque_inner_texture_max_luminance": 0.05029873465623094,
+      "text_source_contrast": 8.518287793093549,
+      "muted_source_contrast": 4.60106124754879
+    },
+    {
+      "asset": "ButtonSelected",
+      "tint": [
+        0.46,
+        0.39,
+        0.27
+      ],
+      "opaque_inner_texture_max_luminance": 0.04498610158353121,
+      "text_source_contrast": 8.994721046989817,
+      "muted_source_contrast": 4.858401529397802
+    }
+  ],
+  "contrast_scope": "Source RGB multiplied by UI tint, excluding frame edges; runtime appearance also reviewed in captures."
+}

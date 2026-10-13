@@ -52,8 +52,8 @@ namespace FPS
                 : CampaignMissionController.Instance.State.chapter == CampaignRules.ChapterOf(objectiveId));
         public Vector3 Point => interactionPoint != null ? interactionPoint.position : transform.position;
         public string GetInteractText() => documentOnly
-            ? $"[{InputManager.Instance?.GetKeyForAction("Interact") ?? KeyCode.F}] READ {Title}"
-            : $"[{InputManager.Instance?.GetKeyForAction("Interact") ?? KeyCode.F}] {Title}";
+            ? $"[{SurvivalHotbar.Key("Interact", "F")}] READ {Title}"
+            : $"[{SurvivalHotbar.Key("Interact", "F")}] {Title}";
         public void Interact(NetworkObject interactorObject) => RequestNetworkInteraction(interactorObject);
         public void RequestNetworkInteraction(NetworkObject interactorObject)
         {

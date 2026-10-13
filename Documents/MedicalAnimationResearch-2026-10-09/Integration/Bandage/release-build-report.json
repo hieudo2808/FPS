@@ -1,0 +1,129 @@
+{
+  "status": "success",
+  "result": {
+    "success": true,
+    "jobId": "1961f551",
+    "kind": "build_player",
+    "status": "completed",
+    "progress": 100,
+    "currentStage": "completed",
+    "progressStage": "completed",
+    "recentProgress": [
+      {
+        "timestamp": 1791871194,
+        "progress": 0,
+        "stage": "queued",
+        "description": "Player build queued for StandaloneWindows64."
+      },
+      {
+        "timestamp": 1791871194,
+        "progress": 5,
+        "stage": "scheduled",
+        "description": "Player build accepted; BuildPipeline will start on the next Editor update."
+      },
+      {
+        "timestamp": 1791871194,
+        "progress": 10,
+        "stage": "building",
+        "description": "Building StandaloneWindows64 player."
+      },
+      {
+        "timestamp": 1791871477,
+        "progress": 100,
+        "stage": "completed",
+        "description": "Player build succeeded for StandaloneWindows64: E:\\Unity\\Project\\FPS\\Builds\\MedicalAnimation\\Release-2026-10-13\\FPS.exe"
+      }
+    ],
+    "startedAt": 1791871194,
+    "updatedAt": 1791871477,
+    "warnings": [],
+    "resultSummary": "Player build succeeded for StandaloneWindows64: E:\\Unity\\Project\\FPS\\Builds\\MedicalAnimation\\Release-2026-10-13\\FPS.exe",
+    "workflowId": null,
+    "reportId": null,
+    "canCancel": false,
+    "error": null,
+    "resultAvailable": true,
+    "resultHint": null,
+    "details": {
+      "platform": "StandaloneWindows64",
+      "outputPath": "E:\\Unity\\Project\\FPS\\Builds\\MedicalAnimation\\Release-2026-10-13\\FPS.exe",
+      "scenes": [
+        "Assets/FPS/Scenes/MainMenu.unity",
+        "Assets/FPS/Scenes/LobbyScene.unity",
+        "Assets/FPS/Scenes/GameScene.unity"
+      ],
+      "result": "Succeeded",
+      "totalErrors": 0,
+      "totalWarnings": 16,
+      "totalSize": 1941742195,
+      "totalTimeSeconds": 283.3122762,
+      "buildGuid": "716cef4fff6b477b9e0c04d2c4196ee5",
+      "diagnostics": [
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Missions\\Runtime\\CampaignMissionController.cs(528,29): warning CS0618: 'RpcAttribute.RequireOwnership' is obsolete: 'RequireOwnership is deprecated. Please use InvokePermission = RpcInvokePermission.Owner or InvokePermission = RpcInvokePermission.Everyone instead.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Missions\\Runtime\\CampaignMissionController.cs(558,29): warning CS0618: 'RpcAttribute.RequireOwnership' is obsolete: 'RequireOwnership is deprecated. Please use InvokePermission = RpcInvokePermission.Owner or InvokePermission = RpcInvokePermission.Everyone instead.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Missions\\Runtime\\CampaignMissionController.cs(568,29): warning CS0618: 'RpcAttribute.RequireOwnership' is obsolete: 'RequireOwnership is deprecated. Please use InvokePermission = RpcInvokePermission.Owner or InvokePermission = RpcInvokePermission.Everyone instead.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Missions\\Runtime\\CampaignMissionController.cs(628,29): warning CS0618: 'RpcAttribute.RequireOwnership' is obsolete: 'RequireOwnership is deprecated. Please use InvokePermission = RpcInvokePermission.Owner or InvokePermission = RpcInvokePermission.Everyone instead.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Missions\\Runtime\\CampaignMissionController.cs(648,29): warning CS0618: 'RpcAttribute.RequireOwnership' is obsolete: 'RequireOwnership is deprecated. Please use InvokePermission = RpcInvokePermission.Owner or InvokePermission = RpcInvokePermission.Everyone instead.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Missions\\Runtime\\CampaignMissionController.cs(669,29): warning CS0618: 'RpcAttribute.RequireOwnership' is obsolete: 'RequireOwnership is deprecated. Please use InvokePermission = RpcInvokePermission.Owner or InvokePermission = RpcInvokePermission.Everyone instead.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Missions\\Runtime\\CampaignMissionController.cs(729,29): warning CS0618: 'RpcAttribute.RequireOwnership' is obsolete: 'RequireOwnership is deprecated. Please use InvokePermission = RpcInvokePermission.Owner or InvokePermission = RpcInvokePermission.Everyone instead.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Missions\\Runtime\\CampaignMissionController.cs(216,28): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\UI\\Runtime\\CampaignStatusUI.cs(114,407): warning CS0618: 'TMP_Text.enableWordWrapping' is obsolete: 'The enabledWordWrapping property is now obsolete. Please use the textWrappingMode property instead.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Missions\\Runtime\\CampaignMissionController.cs(777,62): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Missions\\Runtime\\CampaignMissionController.cs(777,35): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\UI\\Runtime\\TeamInventoryUI.cs(310,13): warning CS0618: 'TMP_Text.enableWordWrapping' is obsolete: 'The enabledWordWrapping property is now obsolete. Please use the textWrappingMode property instead.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\UI\\Runtime\\TeamInventoryUI.cs(375,137): warning CS0618: 'TMP_Text.enableWordWrapping' is obsolete: 'The enabledWordWrapping property is now obsolete. Please use the textWrappingMode property instead.'"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Characters\\Player\\Runtime\\PlayerInfectionController.cs(97,29): warning CS0067: The event 'PlayerInfectionController.OnSepsisExpiredServer' is never used"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Characters\\Enemies\\Runtime\\SpecialInfected\\SI_Tank.cs(41,40): warning CS0414: The field 'SI_Tank.staggerDuration' is assigned but its value is never used"
+        },
+        {
+          "type": "Warning",
+          "message": "Assets\\FPS\\Features\\Networking\\Runtime\\LagCompensatedTarget.cs(26,39): warning CS0414: The field 'LagCompensatedTarget.autoRefreshSegments' is assigned but its value is never used"
+        }
+      ]
+    }
+  }
+}

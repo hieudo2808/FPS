@@ -1,0 +1,321 @@
+{
+  "status": "success",
+  "result": {
+    "success": true,
+    "gameObject": "AIManager",
+    "component": "SpecialInfectedRegistry",
+    "fullTypeName": "FPS.SpecialInfectedRegistry",
+    "properties": [
+      {
+        "propertyPath": "m_Script",
+        "name": "m_Script",
+        "displayName": "Script",
+        "propertyType": "ObjectReference",
+        "type": "PPtr<MonoScript>",
+        "isArray": false,
+        "editable": true,
+        "value": "568105584918827654:UnityEditor.MonoScript:SpecialInfectedRegistry"
+      },
+      {
+        "propertyPath": "specialTypes",
+        "name": "specialTypes",
+        "displayName": "Special Types",
+        "propertyType": "Generic",
+        "type": "SpecialInfectedData",
+        "isArray": true,
+        "editable": true,
+        "value": "Generic"
+      },
+      {
+        "propertyPath": "specialTypes.Array.size",
+        "name": "size",
+        "displayName": "Size",
+        "propertyType": "ArraySize",
+        "type": "ArraySize",
+        "isArray": false,
+        "editable": true,
+        "value": "3"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[0]",
+        "name": "data",
+        "displayName": "Screamer",
+        "propertyType": "Generic",
+        "type": "SpecialInfectedData",
+        "isArray": false,
+        "editable": true,
+        "value": "Generic"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[0].displayName",
+        "name": "displayName",
+        "displayName": "Display Name",
+        "propertyType": "String",
+        "type": "string",
+        "isArray": true,
+        "editable": true,
+        "value": "Screamer"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[0].type",
+        "name": "type",
+        "displayName": "Type",
+        "propertyType": "Enum",
+        "type": "Enum",
+        "isArray": false,
+        "editable": true,
+        "value": "2"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[0].prefab",
+        "name": "prefab",
+        "displayName": "Prefab",
+        "propertyType": "ObjectReference",
+        "type": "PPtr<$GameObject>",
+        "isArray": false,
+        "editable": true,
+        "value": "568105584918844156:UnityEngine.GameObject:BookHeadMonster_withBlood"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[0].implementationState",
+        "name": "implementationState",
+        "displayName": "Implementation State",
+        "propertyType": "Enum",
+        "type": "Enum",
+        "isArray": false,
+        "editable": true,
+        "value": "1"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[0].allowedInSolo",
+        "name": "allowedInSolo",
+        "displayName": "Allowed In Solo",
+        "propertyType": "Boolean",
+        "type": "bool",
+        "isArray": false,
+        "editable": true,
+        "value": "True"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[0].spawnWeight",
+        "name": "spawnWeight",
+        "displayName": "Spawn Weight",
+        "propertyType": "Float",
+        "type": "float",
+        "isArray": false,
+        "editable": true,
+        "value": "5"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[0].cooldown",
+        "name": "cooldown",
+        "displayName": "Cooldown",
+        "propertyType": "Float",
+        "type": "float",
+        "isArray": false,
+        "editable": true,
+        "value": "60"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[1]",
+        "name": "data",
+        "displayName": "Infector",
+        "propertyType": "Generic",
+        "type": "SpecialInfectedData",
+        "isArray": false,
+        "editable": true,
+        "value": "Generic"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[1].displayName",
+        "name": "displayName",
+        "displayName": "Display Name",
+        "propertyType": "String",
+        "type": "string",
+        "isArray": true,
+        "editable": true,
+        "value": "Infector"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[1].type",
+        "name": "type",
+        "displayName": "Type",
+        "propertyType": "Enum",
+        "type": "Enum",
+        "isArray": false,
+        "editable": true,
+        "value": "6"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[1].prefab",
+        "name": "prefab",
+        "displayName": "Prefab",
+        "propertyType": "ObjectReference",
+        "type": "PPtr<$GameObject>",
+        "isArray": false,
+        "editable": true,
+        "value": "568105584918844170:UnityEngine.GameObject:Infector"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[1].implementationState",
+        "name": "implementationState",
+        "displayName": "Implementation State",
+        "propertyType": "Enum",
+        "type": "Enum",
+        "isArray": false,
+        "editable": true,
+        "value": "1"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[1].allowedInSolo",
+        "name": "allowedInSolo",
+        "displayName": "Allowed In Solo",
+        "propertyType": "Boolean",
+        "type": "bool",
+        "isArray": false,
+        "editable": true,
+        "value": "True"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[1].spawnWeight",
+        "name": "spawnWeight",
+        "displayName": "Spawn Weight",
+        "propertyType": "Float",
+        "type": "float",
+        "isArray": false,
+        "editable": true,
+        "value": "4"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[1].cooldown",
+        "name": "cooldown",
+        "displayName": "Cooldown",
+        "propertyType": "Float",
+        "type": "float",
+        "isArray": false,
+        "editable": true,
+        "value": "45"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[2]",
+        "name": "data",
+        "displayName": "Tank",
+        "propertyType": "Generic",
+        "type": "SpecialInfectedData",
+        "isArray": false,
+        "editable": true,
+        "value": "Generic"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[2].displayName",
+        "name": "displayName",
+        "displayName": "Display Name",
+        "propertyType": "String",
+        "type": "string",
+        "isArray": true,
+        "editable": true,
+        "value": "Tank"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[2].type",
+        "name": "type",
+        "displayName": "Type",
+        "propertyType": "Enum",
+        "type": "Enum",
+        "isArray": false,
+        "editable": true,
+        "value": "5"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[2].prefab",
+        "name": "prefab",
+        "displayName": "Prefab",
+        "propertyType": "ObjectReference",
+        "type": "PPtr<$GameObject>",
+        "isArray": false,
+        "editable": true,
+        "value": "568105584918844168:UnityEngine.GameObject:Tank"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[2].implementationState",
+        "name": "implementationState",
+        "displayName": "Implementation State",
+        "propertyType": "Enum",
+        "type": "Enum",
+        "isArray": false,
+        "editable": true,
+        "value": "1"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[2].allowedInSolo",
+        "name": "allowedInSolo",
+        "displayName": "Allowed In Solo",
+        "propertyType": "Boolean",
+        "type": "bool",
+        "isArray": false,
+        "editable": true,
+        "value": "True"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[2].spawnWeight",
+        "name": "spawnWeight",
+        "displayName": "Spawn Weight",
+        "propertyType": "Float",
+        "type": "float",
+        "isArray": false,
+        "editable": true,
+        "value": "2"
+      },
+      {
+        "propertyPath": "specialTypes.Array.data[2].cooldown",
+        "name": "cooldown",
+        "displayName": "Cooldown",
+        "propertyType": "Float",
+        "type": "float",
+        "isArray": false,
+        "editable": true,
+        "value": "120"
+      },
+      {
+        "propertyPath": "minTimeBetweenSpecials",
+        "name": "minTimeBetweenSpecials",
+        "displayName": "Min Time Between Specials",
+        "propertyType": "Float",
+        "type": "float",
+        "isArray": false,
+        "editable": true,
+        "value": "30"
+      },
+      {
+        "propertyPath": "maxSpecialsAlive",
+        "name": "maxSpecialsAlive",
+        "displayName": "Max Specials Alive",
+        "propertyType": "Integer",
+        "type": "int",
+        "isArray": false,
+        "editable": true,
+        "value": "2"
+      },
+      {
+        "propertyPath": "showDebugLogs",
+        "name": "showDebugLogs",
+        "displayName": "Show Debug Logs",
+        "propertyType": "Boolean",
+        "type": "bool",
+        "isArray": false,
+        "editable": true,
+        "value": "False"
+      },
+      {
+        "propertyPath": "aliveCleanupInterval",
+        "name": "aliveCleanupInterval",
+        "displayName": "Alive Cleanup Interval",
+        "propertyType": "Float",
+        "type": "float",
+        "isArray": false,
+        "editable": true,
+        "value": "0.5"
+      }
+    ]
+  }
+}

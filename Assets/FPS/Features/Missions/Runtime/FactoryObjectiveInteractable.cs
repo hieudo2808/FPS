@@ -26,7 +26,7 @@ namespace FPS
 
         public string GetInteractText()
         {
-            return $"[F] {prompt}";
+            return $"[{SurvivalHotbar.Key("Interact", "F")}] {prompt}";
         }
 
         public void Interact(NetworkObject interactorObject)

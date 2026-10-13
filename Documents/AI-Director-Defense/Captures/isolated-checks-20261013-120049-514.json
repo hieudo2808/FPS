@@ -1,0 +1,69 @@
+{
+    "capturedUtc": "2026-10-13T12:00:49.4809801Z",
+    "scope": "Isolated real C# domain execution plus read-only live observations. No gameplay session or player telemetry is modified. These are NOT end-to-end gameplay or user-experience tests.",
+    "editorPlaying": false,
+    "scene": "Assets/FPS/Scenes/GameScene.unity",
+    "sceneDirty": false,
+    "directorFound": true,
+    "adaptiveEnabled": true,
+    "observeOnly": false,
+    "phase": "BUILD",
+    "adaptivePhase": "Calm",
+    "multiplier": 1.0,
+    "telemetryPlayers": 0,
+    "passed": 8,
+    "failed": 0,
+    "discrepancies": 1,
+    "checks": [
+        {
+            "name": "Five phase order and durations",
+            "status": "pass",
+            "evidence": "Calm(3s) -> BuildUp(15s) -> Combat(60s) -> Peak(15s) -> Relax(20s) -> Calm."
+        },
+        {
+            "name": "Weak HP and recent down trigger Relax",
+            "status": "pass",
+            "evidence": "HP boundary 0.20/0.21 and down grace boundary 20/20.01 seconds verified in domain."
+        },
+        {
+            "name": "Relax boundary is required for DDA",
+            "status": "pass",
+            "evidence": "A high performance fixture outside Relax leaves multiplier 1.0."
+        },
+        {
+            "name": "Both evidence thresholds are required",
+            "status": "pass",
+            "evidence": "19 shots/8 kills: hold; 20 shots/7 kills: hold; no samples: hold; 20 shots/8 kills: eligible."
+        },
+        {
+            "name": "Weakest eligible player limits team score",
+            "status": "pass",
+            "evidence": "Synthetic eligible scores [0.05,0.95,0.95,0.95] -> team=0.30, target=0.94."
+        },
+        {
+            "name": "Tier limits, step limits and actual reachable default range",
+            "status": "pass",
+            "evidence": "From 1.0 with synthetic score endpoints: Easy 0.85-1; Medium 0.85-1.15; Hard 0.90-1.15; Pandemonium 1-1.15. Every update <=0.10."
+        },
+        {
+            "name": "Spawn pressure outputs and Relax gate",
+            "status": "pass",
+            "evidence": "DDA 1->1.1: interval 2->1.81818s, cap 30->33, chance .15->.165. Relax/cap block new spawn. Factory/gameplay NOT exercised."
+        },
+        {
+            "name": "Default special gate over 1000 quarter-second steps",
+            "status": "discrepancy",
+            "evidence": "250 simulated seconds, healthy team, no idle/separation: gate-open steps=0; Peak-compatible steps=0. Current runtime TrySpawnSpecial requires PEAK. This diagnoses eligibility only; no actual spawn attempted."
+        },
+        {
+            "name": "Configured policy special gate over 1000 quarter-second steps",
+            "status": "observation",
+            "evidence": "250 simulated seconds, healthy team, no idle/separation: gate-open steps=200; Peak-compatible steps=80. Current runtime TrySpawnSpecial requires PEAK. This diagnoses eligibility only; no actual spawn attempted."
+        },
+        {
+            "name": "Read current runtime settings without mutation",
+            "status": "pass",
+            "evidence": "Adaptive=True; observeOnly=False; phase=BUILD; adaptivePhase=Calm; multiplier=1; telemetryPlayers=0; directorPolicy=AdaptiveDirectorPolicy; difficultyPolicy=code defaults"
+        }
+    ]
+}

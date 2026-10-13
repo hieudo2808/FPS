@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 02:35:27Z" end-time="2026-10-05 02:35:28Z" duration="0.6263324">
+  <test-suite type="TestSuite" id="1000" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="734" result="Passed" start-time="2026-10-05 02:35:27Z" end-time="2026-10-05 02:35:28Z" duration="0.626332" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1106" name="FPS.UI.Tests.Editor.dll" fullname="E:/Unity/Project/FPS/Library/ScriptAssemblies/FPS.UI.Tests.Editor.dll" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-05 02:35:27Z" end-time="2026-10-05 02:35:28Z" duration="0.514623" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13644" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1107" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-05 02:35:27Z" end-time="2026-10-05 02:35:28Z" duration="0.413713" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1108" name="Tests" fullname="FPS.Tests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-05 02:35:27Z" end-time="2026-10-05 02:35:28Z" duration="0.302773" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1094" name="HudRegressionTests" fullname="FPS.Tests.HudRegressionTests" classname="FPS.Tests.HudRegressionTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-05 02:35:27Z" end-time="2026-10-05 02:35:28Z" duration="0.191722" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1097" name="ProjectionHandlesBehindCameraAndAvoidsOccupiedCorner" fullname="FPS.Tests.HudRegressionTests.ProjectionHandlesBehindCameraAndAvoidsOccupiedCorner" methodname="ProjectionHandlesBehindCameraAndAvoidsOccupiedCorner" classname="FPS.Tests.HudRegressionTests" runstate="Runnable" seed="991951389" result="Passed" start-time="2026-10-05 02:35:28Z" end-time="2026-10-05 02:35:28Z" duration="0.022087" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1098" name="PromptsFollowOverridesAndReset" fullname="FPS.Tests.HudRegressionTests.PromptsFollowOverridesAndReset" methodname="PromptsFollowOverridesAndReset" classname="FPS.Tests.HudRegressionTests" runstate="Runnable" seed="603243055" result="Passed" start-time="2026-10-05 02:35:28Z" end-time="2026-10-05 02:35:28Z" duration="0.047555" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1096" name="TrackingInvalidatesOnChapterPhaseAndCheckpointRollback" fullname="FPS.Tests.HudRegressionTests.TrackingInvalidatesOnChapterPhaseAndCheckpointRollback" methodname="TrackingInvalidatesOnChapterPhaseAndCheckpointRollback" classname="FPS.Tests.HudRegressionTests" runstate="Runnable" seed="281499920" result="Passed" start-time="2026-10-05 02:35:28Z" end-time="2026-10-05 02:35:28Z" duration="0.002708" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1095" name="TrackingUsesNearestCompleteRouteThenKeepsManualSelection" fullname="FPS.Tests.HudRegressionTests.TrackingUsesNearestCompleteRouteThenKeepsManualSelection" methodname="TrackingUsesNearestCompleteRouteThenKeepsManualSelection" classname="FPS.Tests.HudRegressionTests" runstate="Runnable" seed="1370125173" result="Passed" start-time="2026-10-05 02:35:28Z" end-time="2026-10-05 02:35:28Z" duration="0.002334" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/hieud/AppData/LocalLow/HieuDHM/FPS\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

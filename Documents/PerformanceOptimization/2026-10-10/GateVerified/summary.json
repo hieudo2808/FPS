@@ -1,0 +1,719 @@
+[
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateVerified\\NoOcclusion\\Run1\\asylum10-r1.txt",
+    "valid": true,
+    "scenario": "asylum10",
+    "variant": "no-occlusion",
+    "run": "Run1",
+    "frames": {
+      "mean": 7.184344255028735,
+      "p95": 9.413897,
+      "p99": 11.2418,
+      "max": 16.1175,
+      "count": 8352
+    },
+    "over33ms": 0,
+    "over50ms": 0,
+    "setPass": "431.644",
+    "triangles": "729515.190",
+    "textureCurrentMB": "2828.7",
+    "textureNonStreamingMB": "2785.0",
+    "externalTraceValid": true,
+    "presentationRows": 8350,
+    "privateBytes": {
+      "mean": 4545241088,
+      "p95": 4545241088,
+      "p99": 4545241088,
+      "max": 4545241088,
+      "count": 29
+    },
+    "workingSetBytes": {
+      "mean": 821072860.6896552,
+      "p95": 824397824,
+      "p99": 824397824,
+      "max": 824397824,
+      "count": 29
+    },
+    "availablePhysicalBytes": {
+      "mean": 3266127518.8965516,
+      "p95": 3334467584,
+      "p99": 3334524928,
+      "max": 3335835648,
+      "count": 29
+    },
+    "systemMemoryLoad": {
+      "mean": 80.20689655172414,
+      "p95": 81,
+      "p99": 81,
+      "max": 81,
+      "count": 29
+    },
+    "gpuDedicatedInstances": {
+      "pid_27988_luid_0x00000000_0x00017E42_phys_0": {
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "count": 29
+      },
+      "pid_27988_luid_0x00000000_0x0001DB52_phys_0": {
+        "mean": 3285680128,
+        "p95": 3285680128,
+        "p99": 3285680128,
+        "max": 3285680128,
+        "count": 29
+      }
+    },
+    "MsBetweenPresents": {
+      "mean": 7.183995832335329,
+      "p95": 10.3489,
+      "p99": 12.0219,
+      "max": 17.3663,
+      "count": 8350
+    },
+    "MsCPUBusy": {
+      "mean": 6.960665520958083,
+      "p95": 10.0912,
+      "p99": 11.6537,
+      "max": 16.9243,
+      "count": 8350
+    },
+    "MsGPUTime": {
+      "mean": 3.3990196646706585,
+      "p95": 4.7186,
+      "p99": 5.4761,
+      "max": 9.0582,
+      "count": 8350
+    },
+    "MsGPUBusy": {
+      "mean": 2.937304994011976,
+      "p95": 3.5494,
+      "p99": 3.8988,
+      "max": 4.9324,
+      "count": 8350
+    },
+    "MsGPUWait": {
+      "mean": 0.46171467065868266,
+      "p95": 1.3429,
+      "p99": 1.9188,
+      "max": 5.4132,
+      "count": 8350
+    }
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateVerified\\NoOcclusion\\Run1\\factory3-r1.txt",
+    "valid": true,
+    "scenario": "factory3",
+    "variant": "no-occlusion",
+    "run": "Run1",
+    "frames": {
+      "mean": 11.958160249053597,
+      "p95": 16.1168,
+      "p99": 18.708,
+      "max": 26.8902,
+      "count": 5019
+    },
+    "over33ms": 0,
+    "over50ms": 0,
+    "setPass": "808.214",
+    "triangles": "1562390.309",
+    "textureCurrentMB": "2828.7",
+    "textureNonStreamingMB": "2785.0",
+    "externalTraceValid": true,
+    "presentationRows": 5017,
+    "privateBytes": {
+      "mean": 4441392742.4,
+      "p95": 4441890816,
+      "p99": 4441890816,
+      "max": 4441890816,
+      "count": 30
+    },
+    "workingSetBytes": {
+      "mean": 773031799.4666667,
+      "p95": 773992448,
+      "p99": 773992448,
+      "max": 773992448,
+      "count": 30
+    },
+    "availablePhysicalBytes": {
+      "mean": 3576540501.3333335,
+      "p95": 3694800896,
+      "p99": 3695165440,
+      "max": 3695546368,
+      "count": 30
+    },
+    "systemMemoryLoad": {
+      "mean": 78.43333333333334,
+      "p95": 80,
+      "p99": 80,
+      "max": 80,
+      "count": 30
+    },
+    "gpuDedicatedInstances": {
+      "pid_27988_luid_0x00000000_0x00017E42_phys_0": {
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "count": 30
+      },
+      "pid_27988_luid_0x00000000_0x0001DB52_phys_0": {
+        "mean": 3256111104,
+        "p95": 3256111104,
+        "p99": 3256111104,
+        "max": 3256111104,
+        "count": 30
+      }
+    },
+    "MsBetweenPresents": {
+      "mean": 11.956853637632051,
+      "p95": 16.2011,
+      "p99": 18.2927,
+      "max": 24.588,
+      "count": 5017
+    },
+    "MsCPUBusy": {
+      "mean": 11.769555590990631,
+      "p95": 15.9601,
+      "p99": 18.0241,
+      "max": 24.3372,
+      "count": 5017
+    },
+    "MsGPUTime": {
+      "mean": 6.210213175204306,
+      "p95": 8.5267,
+      "p99": 9.9908,
+      "max": 12.9539,
+      "count": 5017
+    },
+    "MsGPUBusy": {
+      "mean": 5.110083296790911,
+      "p95": 6.2059,
+      "p99": 6.7195,
+      "max": 11.7253,
+      "count": 5017
+    },
+    "MsGPUWait": {
+      "mean": 1.1001298784133944,
+      "p95": 2.6975,
+      "p99": 4.0047,
+      "max": 6.1528,
+      "count": 5017
+    }
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateVerified\\NoOcclusion\\Run1\\factory43-r1.txt",
+    "valid": true,
+    "scenario": "factory43",
+    "variant": "no-occlusion",
+    "run": "Run1",
+    "frames": {
+      "mean": 14.456073954227897,
+      "p95": 18.5563,
+      "p99": 20.5531,
+      "max": 27.4667,
+      "count": 4151
+    },
+    "over33ms": 0,
+    "over50ms": 0,
+    "setPass": "851.696",
+    "triangles": "1733447.575",
+    "textureCurrentMB": "2828.7",
+    "textureNonStreamingMB": "2785.0",
+    "externalTraceValid": true,
+    "presentationRows": 4150,
+    "privateBytes": {
+      "mean": 4481340211.2,
+      "p95": 4481802240,
+      "p99": 4481802240,
+      "max": 4481814528,
+      "count": 30
+    },
+    "workingSetBytes": {
+      "mean": 794125107.2,
+      "p95": 794370048,
+      "p99": 794370048,
+      "max": 794378240,
+      "count": 30
+    },
+    "availablePhysicalBytes": {
+      "mean": 3406331767.4666667,
+      "p95": 3429888000,
+      "p99": 3430285312,
+      "max": 3432042496,
+      "count": 30
+    },
+    "systemMemoryLoad": {
+      "mean": 79.16666666666667,
+      "p95": 80,
+      "p99": 80,
+      "max": 80,
+      "count": 30
+    },
+    "gpuDedicatedInstances": {
+      "pid_27988_luid_0x00000000_0x00017E42_phys_0": {
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "count": 30
+      },
+      "pid_27988_luid_0x00000000_0x0001DB52_phys_0": {
+        "mean": 3265866683.733333,
+        "p95": 3266162688,
+        "p99": 3266162688,
+        "max": 3266162688,
+        "count": 30
+      }
+    },
+    "MsBetweenPresents": {
+      "mean": 14.455901325301205,
+      "p95": 18.3527,
+      "p99": 20.6969,
+      "max": 24.6158,
+      "count": 4150
+    },
+    "MsCPUBusy": {
+      "mean": 14.244381228915662,
+      "p95": 18.0714,
+      "p99": 20.2855,
+      "max": 24.4253,
+      "count": 4150
+    },
+    "MsGPUTime": {
+      "mean": 7.8597370843373495,
+      "p95": 10.2124,
+      "p99": 11.4344,
+      "max": 14.3927,
+      "count": 4150
+    },
+    "MsGPUBusy": {
+      "mean": 6.118755879518072,
+      "p95": 7.3968,
+      "p99": 7.9984,
+      "max": 9.2153,
+      "count": 4150
+    },
+    "MsGPUWait": {
+      "mean": 1.7409812048192772,
+      "p95": 3.1538,
+      "p99": 3.9743,
+      "max": 6.1957,
+      "count": 4150
+    }
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateVerified\\NoOcclusion\\Run1\\lab27-r1.txt",
+    "valid": true,
+    "scenario": "lab27",
+    "variant": "no-occlusion",
+    "run": "Run1",
+    "frames": {
+      "mean": 5.777545458501829,
+      "p95": 8.312196,
+      "p99": 9.586798,
+      "max": 12.4853,
+      "count": 10386
+    },
+    "over33ms": 0,
+    "over50ms": 0,
+    "setPass": "107.572",
+    "triangles": "189851.958",
+    "textureCurrentMB": "2828.7",
+    "textureNonStreamingMB": "2785.0",
+    "externalTraceValid": true,
+    "presentationRows": 10385,
+    "privateBytes": {
+      "mean": 4503094067.2,
+      "p95": 4504719360,
+      "p99": 4504752128,
+      "max": 4504752128,
+      "count": 30
+    },
+    "workingSetBytes": {
+      "mean": 814517316.2666667,
+      "p95": 816476160,
+      "p99": 816480256,
+      "max": 816492544,
+      "count": 30
+    },
+    "availablePhysicalBytes": {
+      "mean": 3268420266.6666665,
+      "p95": 3375935488,
+      "p99": 3377295360,
+      "max": 3393818624,
+      "count": 30
+    },
+    "systemMemoryLoad": {
+      "mean": 80.2,
+      "p95": 81,
+      "p99": 81,
+      "max": 81,
+      "count": 30
+    },
+    "gpuDedicatedInstances": {
+      "pid_27988_luid_0x00000000_0x00017E42_phys_0": {
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "count": 30
+      },
+      "pid_27988_luid_0x00000000_0x0001DB52_phys_0": {
+        "mean": 3270949956.266667,
+        "p95": 3271065600,
+        "p99": 3271065600,
+        "max": 3271065600,
+        "count": 30
+      }
+    },
+    "MsBetweenPresents": {
+      "mean": 5.777292229176697,
+      "p95": 9.8372,
+      "p99": 11.4936,
+      "max": 15.0021,
+      "count": 10385
+    },
+    "MsCPUBusy": {
+      "mean": 5.593667934520943,
+      "p95": 9.6234,
+      "p99": 11.2032,
+      "max": 14.7855,
+      "count": 10385
+    },
+    "MsGPUTime": {
+      "mean": 2.316164814636495,
+      "p95": 2.9122,
+      "p99": 3.3769,
+      "max": 5.3325,
+      "count": 10385
+    },
+    "MsGPUBusy": {
+      "mean": 2.2960422725084255,
+      "p95": 2.87,
+      "p99": 3.3417,
+      "max": 5.2991,
+      "count": 10385
+    },
+    "MsGPUWait": {
+      "mean": 0.02012254212806933,
+      "p95": 0.046,
+      "p99": 0.0639,
+      "max": 1.5183,
+      "count": 10385
+    }
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateVerified\\NoOcclusion\\Run1\\lab70-r1.txt",
+    "valid": true,
+    "scenario": "lab70",
+    "variant": "no-occlusion",
+    "run": "Run1",
+    "frames": {
+      "mean": 9.188191663451233,
+      "p95": 13.1451,
+      "p99": 14.8674,
+      "max": 17.7147,
+      "count": 6531
+    },
+    "over33ms": 0,
+    "over50ms": 0,
+    "setPass": "128.159",
+    "triangles": "484379.812",
+    "textureCurrentMB": "2828.7",
+    "textureNonStreamingMB": "2785.0",
+    "externalTraceValid": true,
+    "presentationRows": 6530,
+    "privateBytes": {
+      "mean": 4545729359.448276,
+      "p95": 4545773568,
+      "p99": 4545802240,
+      "max": 4545802240,
+      "count": 29
+    },
+    "workingSetBytes": {
+      "mean": 833020892.6896552,
+      "p95": 833040384,
+      "p99": 833040384,
+      "max": 833040384,
+      "count": 29
+    },
+    "availablePhysicalBytes": {
+      "mean": 3108448750.3448277,
+      "p95": 3234537472,
+      "p99": 3236356096,
+      "max": 3239047168,
+      "count": 29
+    },
+    "systemMemoryLoad": {
+      "mean": 81.03448275862068,
+      "p95": 82,
+      "p99": 82,
+      "max": 83,
+      "count": 29
+    },
+    "gpuDedicatedInstances": {
+      "pid_27988_luid_0x00000000_0x00017E42_phys_0": {
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "count": 29
+      },
+      "pid_27988_luid_0x00000000_0x0001DB52_phys_0": {
+        "mean": 3284450339.3103447,
+        "p95": 3284492288,
+        "p99": 3284492288,
+        "max": 3284492288,
+        "count": 29
+      }
+    },
+    "MsBetweenPresents": {
+      "mean": 9.187668882082695,
+      "p95": 13.1539,
+      "p99": 15.042,
+      "max": 19.7546,
+      "count": 6530
+    },
+    "MsCPUBusy": {
+      "mean": 8.951426508422665,
+      "p95": 12.8964,
+      "p99": 14.8156,
+      "max": 19.5195,
+      "count": 6530
+    },
+    "MsGPUTime": {
+      "mean": 3.613953506891271,
+      "p95": 4.1846,
+      "p99": 4.7195,
+      "max": 9.0995,
+      "count": 6530
+    },
+    "MsGPUBusy": {
+      "mean": 3.582225681470138,
+      "p95": 4.1329,
+      "p99": 4.609,
+      "max": 9.0486,
+      "count": 6530
+    },
+    "MsGPUWait": {
+      "mean": 0.031727825421133234,
+      "p95": 0.0598,
+      "p99": 0.1244,
+      "max": 1.2859,
+      "count": 6530
+    }
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateVerified\\Occlusion\\Run1\\factory3-r1.txt",
+    "valid": true,
+    "scenario": "factory3",
+    "variant": "normal",
+    "run": "Run1",
+    "frames": {
+      "mean": 4.83317850044287,
+      "p95": 7.279096,
+      "p99": 8.332101,
+      "max": 21.5815,
+      "count": 12419
+    },
+    "over33ms": 0,
+    "over50ms": 0,
+    "setPass": "127.249",
+    "triangles": "116341.160",
+    "textureCurrentMB": "2828.7",
+    "textureNonStreamingMB": "2785.0",
+    "externalTraceValid": true,
+    "presentationRows": 12418,
+    "privateBytes": {
+      "mean": 4448313344,
+      "p95": 4448313344,
+      "p99": 4448313344,
+      "max": 4448313344,
+      "count": 30
+    },
+    "workingSetBytes": {
+      "mean": 771119650.1333333,
+      "p95": 772001792,
+      "p99": 772001792,
+      "max": 772001792,
+      "count": 30
+    },
+    "availablePhysicalBytes": {
+      "mean": 3202150400,
+      "p95": 3248099328,
+      "p99": 3249901568,
+      "max": 3253362688,
+      "count": 30
+    },
+    "systemMemoryLoad": {
+      "mean": 80.43333333333334,
+      "p95": 81,
+      "p99": 81,
+      "max": 82,
+      "count": 30
+    },
+    "gpuDedicatedInstances": {
+      "pid_13664_luid_0x00000000_0x0001DB52_phys_0": {
+        "mean": 3243184128,
+        "p95": 3243184128,
+        "p99": 3243184128,
+        "max": 3243184128,
+        "count": 30
+      },
+      "pid_13664_luid_0x00000000_0x00017E42_phys_0": {
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "count": 30
+      }
+    },
+    "MsBetweenPresents": {
+      "mean": 4.831490256079884,
+      "p95": 8.6306,
+      "p99": 10.3059,
+      "max": 14.214,
+      "count": 12418
+    },
+    "MsCPUBusy": {
+      "mean": 4.6580496054115,
+      "p95": 8.4418,
+      "p99": 10.0971,
+      "max": 14.0259,
+      "count": 12418
+    },
+    "MsGPUTime": {
+      "mean": 2.0495174504751166,
+      "p95": 3.0541,
+      "p99": 3.4763,
+      "max": 4.8497,
+      "count": 12418
+    },
+    "MsGPUBusy": {
+      "mean": 2.030490304396843,
+      "p95": 3.0266,
+      "p99": 3.4445,
+      "max": 4.2157,
+      "count": 12418
+    },
+    "MsGPUWait": {
+      "mean": 0.019027146078273473,
+      "p95": 0.0389,
+      "p99": 0.053,
+      "max": 2.0182,
+      "count": 12418
+    }
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateVerified\\Occlusion\\Run1\\factory43-r1.txt",
+    "valid": false,
+    "reason": "1648"
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateVerified\\Occlusion\\Run1Retry1\\factory43-r1.txt",
+    "valid": true,
+    "scenario": "factory43",
+    "variant": "normal",
+    "run": "Run1Retry1",
+    "frames": {
+      "mean": 5.006522696145503,
+      "p95": 6.765497,
+      "p99": 8.075701,
+      "max": 12.1418,
+      "count": 11986
+    },
+    "over33ms": 0,
+    "over50ms": 0,
+    "setPass": "168.132",
+    "triangles": "277004.665",
+    "textureCurrentMB": "2828.7",
+    "textureNonStreamingMB": "2785.0",
+    "externalTraceValid": true,
+    "presentationRows": 11985,
+    "privateBytes": {
+      "mean": 4459425792,
+      "p95": 4459425792,
+      "p99": 4459425792,
+      "max": 4459425792,
+      "count": 29
+    },
+    "workingSetBytes": {
+      "mean": 782075409.6551725,
+      "p95": 782151680,
+      "p99": 782151680,
+      "max": 782151680,
+      "count": 29
+    },
+    "availablePhysicalBytes": {
+      "mean": 3024044032,
+      "p95": 3059433472,
+      "p99": 3233886208,
+      "max": 3263569920,
+      "count": 29
+    },
+    "systemMemoryLoad": {
+      "mean": 81.55172413793103,
+      "p95": 82,
+      "p99": 82,
+      "max": 82,
+      "count": 29
+    },
+    "gpuDedicatedInstances": {
+      "pid_21496_luid_0x00000000_0x0001DB52_phys_0": {
+        "mean": 3280973824,
+        "p95": 3280973824,
+        "p99": 3280973824,
+        "max": 3280973824,
+        "count": 29
+      },
+      "pid_21496_luid_0x00000000_0x00017E42_phys_0": {
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "count": 29
+      }
+    },
+    "MsBetweenPresents": {
+      "mean": 5.005996562369629,
+      "p95": 6.7524,
+      "p99": 8.0725,
+      "max": 11.122,
+      "count": 11985
+    },
+    "MsCPUBusy": {
+      "mean": 4.846497964121819,
+      "p95": 6.5568,
+      "p99": 7.8329,
+      "max": 10.8003,
+      "count": 11985
+    },
+    "MsGPUTime": {
+      "mean": 2.040378189403421,
+      "p95": 2.3363,
+      "p99": 2.8179,
+      "max": 3.4273,
+      "count": 11985
+    },
+    "MsGPUBusy": {
+      "mean": 2.0215461743846475,
+      "p95": 2.31,
+      "p99": 2.7967,
+      "max": 3.4026,
+      "count": 11985
+    },
+    "MsGPUWait": {
+      "mean": 0.018832015018773466,
+      "p95": 0.0301,
+      "p99": 0.0427,
+      "max": 0.4138,
+      "count": 11985
+    }
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateVerified\\Occlusion\\Run1Retry1\\lab27-r1.txt",
+    "valid": false,
+    "reason": "926"
+  }
+]

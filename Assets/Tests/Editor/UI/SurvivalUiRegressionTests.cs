@@ -19,6 +19,51 @@ namespace FPS.Tests
         const string RosterPath = "Assets/FPS/Features/UI/Content/Prefabs/PlayerEntry_Tactical.prefab";
 
         [Test]
+        public void ScopeOpticalCentersStayOnTheCrosshairWhenSwitchingSprites()
+        {
+            var root = new GameObject("Scope alignment regression", typeof(RectTransform), typeof(Canvas));
+            root.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+            try
+            {
+                var hudObject = new GameObject("HUD");
+                hudObject.SetActive(false);
+                hudObject.transform.SetParent(root.transform, false);
+                var hud = hudObject.AddComponent<HUDManager>();
+                var crosshair = new GameObject("Crosshair", typeof(RectTransform));
+                crosshair.transform.SetParent(root.transform, false);
+                var crosshairRect = (RectTransform)crosshair.transform;
+                crosshairRect.anchorMin = crosshairRect.anchorMax = Vector2.one * .5f;
+                crosshairRect.anchoredPosition = Vector2.zero;
+                var serialized = new SerializedObject(hud);
+                serialized.FindProperty("crosshairRoot").objectReferenceValue = crosshair;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                var op = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/FPS/Features/Weapons/Content/Operator/Scope/HUDScope.png");
+                var warden = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/FPS/Features/Weapons/Content/Warden/Scope/WardenScopeADS.png");
+                foreach (var size in new[] { new Vector2(1920, 1080), new Vector2(1440, 1080), new Vector2(2560, 1080) })
+                foreach (var sprite in new[] { op, warden, op })
+                {
+                    Assert.That(sprite, Is.Not.Null);
+                    ((RectTransform)root.transform).sizeDelta = size;
+                    hud.SetAimHudVisible(true, true, sprite);
+                    var image = root.GetComponentsInChildren<Image>(true).Single(i => i.name == "ScopeArtwork");
+                    var fitter = image.transform.parent.GetComponent<AspectRatioFitter>();
+                    fitter.SetLayoutHorizontal();
+                    fitter.SetLayoutVertical();
+                    Canvas.ForceUpdateCanvases();
+                    // Measured optical centers in the source PNGs, not their rectangle centers.
+                    Vector2 opticalCenter = sprite == warden
+                        ? new Vector2(625.5f / 1254f, 611f / 1254f)
+                        : new Vector2(.5f, 538f / 1024f);
+                    Rect rect = image.rectTransform.rect;
+                    Vector3 center = image.rectTransform.TransformPoint(rect.min + opticalCenter * rect.size);
+                    Assert.That(Vector3.Distance(center, crosshairRect.TransformPoint(crosshairRect.rect.center)), Is.LessThan(.5f));
+                    Assert.That(fitter.aspectRatio, Is.EqualTo(sprite.rect.width / sprite.rect.height).Within(.0001f));
+                }
+            }
+            finally { Object.DestroyImmediate(root); }
+        }
+
+        [Test]
         public void CancellingRebindTwiceCompletesOnceAndPreservesBinding()
         {
             var go = new GameObject("UI input regression");
@@ -80,7 +125,11 @@ namespace FPS.Tests
                 var content = Find(root.transform, "Content");
                 var input = Find(root.transform, "InputPanel");
                 var rows = input.Cast<Transform>().Where(t => t.name.EndsWith("Row") && t.name != "SensitivitySliderRow").Cast<RectTransform>().ToArray();
-                Assert.That(rows.Length, Is.EqualTo(7));
+                Assert.That(rows.Select(row => row.name), Is.EquivalentTo(new[]
+                {
+                    "FireRow", "AimRow", "ReloadRow", "Weapon1Row", "Weapon2Row", "InteractRow", "GrenadeRow",
+                    "CycleGrenadeRow", "MedkitRow", "AntidoteRow"
+                }));
                 var rects = rows.Select(r => new Rect(r.anchoredPosition.x, -r.anchoredPosition.y, r.sizeDelta.x, r.sizeDelta.y)).ToArray();
                 foreach (var r in rects) { Assert.That(r.xMin, Is.GreaterThanOrEqualTo(0)); Assert.That(r.xMax, Is.LessThanOrEqualTo(content.rect.width)); Assert.That(r.yMax, Is.LessThanOrEqualTo(content.rect.height)); }
                 for (int i = 0; i < rects.Length; i++) for (int j = i + 1; j < rects.Length; j++) Assert.That(rects[i].Overlaps(rects[j]), Is.False);

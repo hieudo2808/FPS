@@ -1,0 +1,719 @@
+{
+  "status": "success",
+  "result": {
+    "gameObject": "AIManager",
+    "component": "FPS.AIDirector",
+    "fullTypeName": "FPS.AIDirector",
+    "properties": [
+      {
+        "name": "HasBoundNetworkState",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "CurrentPhase",
+        "type": "GamePhase",
+        "fullType": "FPS.GamePhase",
+        "value": "BUILD",
+        "canWrite": false
+      },
+      {
+        "name": "Intensity",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "0",
+        "canWrite": false
+      },
+      {
+        "name": "ZombiesAlive",
+        "type": "Int32",
+        "fullType": "System.Int32",
+        "value": "0",
+        "canWrite": false
+      },
+      {
+        "name": "TotalKills",
+        "type": "Int32",
+        "fullType": "System.Int32",
+        "value": "0",
+        "canWrite": false
+      },
+      {
+        "name": "HPModifier",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "1",
+        "canWrite": false
+      },
+      {
+        "name": "AdaptiveDifficultyMultiplier",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "1",
+        "canWrite": false
+      },
+      {
+        "name": "AdaptiveDirectorEnabled",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "AdaptiveObserveOnly",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "AdaptivePhase",
+        "type": "DirectorPhase",
+        "fullType": "FPS.DirectorPhase",
+        "value": "Calm",
+        "canWrite": false
+      },
+      {
+        "name": "CurrentSpawnAnchorTypes",
+        "type": "DirectorSpawnAnchorType",
+        "fullType": "FPS.DirectorSpawnAnchorType",
+        "value": "Ambient, Common",
+        "canWrite": false
+      },
+      {
+        "name": "SpeedModifier",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "1",
+        "canWrite": false
+      },
+      {
+        "name": "DamageModifier",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "1",
+        "canWrite": false
+      },
+      {
+        "name": "NetworkManager",
+        "type": "NetworkManager",
+        "fullType": "Unity.Netcode.NetworkManager",
+        "value": "null",
+        "canWrite": false
+      },
+      {
+        "name": "RpcTarget",
+        "type": "RpcTarget",
+        "fullType": "Unity.Netcode.RpcTarget",
+        "value": "null",
+        "canWrite": false
+      },
+      {
+        "name": "IsLocalPlayer",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "IsOwner",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": true
+      },
+      {
+        "name": "IsServer",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "HasAuthority",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": true
+      },
+      {
+        "name": "IsSessionOwner",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": true
+      },
+      {
+        "name": "ServerIsHost",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "IsClient",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "IsHost",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "IsOwnedByServer",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": true
+      },
+      {
+        "name": "IsSpawned",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": true
+      },
+      {
+        "name": "NetworkObject",
+        "type": "NetworkObject",
+        "fullType": "Unity.Netcode.NetworkObject",
+        "value": "AIManager",
+        "canWrite": false
+      },
+      {
+        "name": "HasNetworkObject",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "NetworkObjectId",
+        "type": "UInt64",
+        "fullType": "System.UInt64",
+        "value": "0",
+        "canWrite": true
+      },
+      {
+        "name": "NetworkBehaviourId",
+        "type": "UInt16",
+        "fullType": "System.UInt16",
+        "value": "0",
+        "canWrite": true
+      },
+      {
+        "name": "OwnerClientId",
+        "type": "UInt64",
+        "fullType": "System.UInt64",
+        "value": "0",
+        "canWrite": true
+      },
+      {
+        "name": "IsDestroying",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "m_TargetIdBeingSynchronized",
+        "type": "UInt64",
+        "fullType": "System.UInt64",
+        "value": "0",
+        "canWrite": false
+      },
+      {
+        "name": "destroyCancellationToken",
+        "type": "CancellationToken",
+        "fullType": "System.Threading.CancellationToken",
+        "value": "System.Threading.CancellationToken",
+        "canWrite": false
+      },
+      {
+        "name": "useGUILayout",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": true
+      },
+      {
+        "name": "didStart",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "didAwake",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "runInEditMode",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": true
+      },
+      {
+        "name": "allowPrefabModeInPlayMode",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "enabled",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": true
+      },
+      {
+        "name": "isActiveAndEnabled",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "transform",
+        "type": "Transform",
+        "fullType": "UnityEngine.Transform",
+        "value": "AIManager",
+        "canWrite": false
+      },
+      {
+        "name": "transformHandle",
+        "type": "TransformHandle",
+        "fullType": "UnityEngine.TransformHandle",
+        "value": "UnityEngine.TransformHandle",
+        "canWrite": false
+      },
+      {
+        "name": "gameObject",
+        "type": "GameObject",
+        "fullType": "UnityEngine.GameObject",
+        "value": "AIManager",
+        "canWrite": false
+      },
+      {
+        "name": "tag",
+        "type": "String",
+        "fullType": "System.String",
+        "value": "Untagged",
+        "canWrite": true
+      },
+      {
+        "name": "name",
+        "type": "String",
+        "fullType": "System.String",
+        "value": "AIManager",
+        "canWrite": true
+      },
+      {
+        "name": "hideFlags",
+        "type": "HideFlags",
+        "fullType": "UnityEngine.HideFlags",
+        "value": "None",
+        "canWrite": true
+      }
+    ],
+    "fields": [
+      {
+        "name": "buildDuration",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "45",
+        "isSerializable": true
+      },
+      {
+        "name": "peakDuration",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "15",
+        "isSerializable": true
+      },
+      {
+        "name": "relaxDuration",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "20",
+        "isSerializable": true
+      },
+      {
+        "name": "baseSpawnInterval",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "2",
+        "isSerializable": true
+      },
+      {
+        "name": "maxZombiesAlive",
+        "type": "Int32",
+        "fullType": "System.Int32",
+        "value": "30",
+        "isSerializable": true
+      },
+      {
+        "name": "spawnIntervalMin",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "0.5",
+        "isSerializable": true
+      },
+      {
+        "name": "enemyScalingProfile",
+        "type": "EnemyScalingProfile",
+        "fullType": "FPS.EnemyScalingProfile",
+        "value": "EnemyScalingProfile",
+        "isSerializable": true
+      },
+      {
+        "name": "learningRate",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "0.01",
+        "isSerializable": true
+      },
+      {
+        "name": "maxHPModifier",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "2",
+        "isSerializable": true
+      },
+      {
+        "name": "maxSpeedModifier",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "1.5",
+        "isSerializable": true
+      },
+      {
+        "name": "maxDamageModifier",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "1.5",
+        "isSerializable": true
+      },
+      {
+        "name": "phaseText",
+        "type": "TextMeshProUGUI",
+        "fullType": "TMPro.TextMeshProUGUI",
+        "value": "null",
+        "isSerializable": true
+      },
+      {
+        "name": "zombieCountText",
+        "type": "TextMeshProUGUI",
+        "fullType": "TMPro.TextMeshProUGUI",
+        "value": "null",
+        "isSerializable": true
+      },
+      {
+        "name": "waveAnnouncementPanel",
+        "type": "GameObject",
+        "fullType": "UnityEngine.GameObject",
+        "value": "(error reading)",
+        "isSerializable": false
+      },
+      {
+        "name": "announcementText",
+        "type": "TextMeshProUGUI",
+        "fullType": "TMPro.TextMeshProUGUI",
+        "value": "null",
+        "isSerializable": true
+      },
+      {
+        "name": "enableSpecialInfected",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "isSerializable": true
+      },
+      {
+        "name": "specialSpawnChance",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "0.15",
+        "isSerializable": true
+      },
+      {
+        "name": "useSmartSpawning",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "isSerializable": true
+      },
+      {
+        "name": "showDebugLogs",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "isSerializable": true
+      },
+      {
+        "name": "enableAdaptiveDirector",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "isSerializable": true
+      },
+      {
+        "name": "adaptiveObserveOnly",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "isSerializable": true
+      },
+      {
+        "name": "adaptiveDirectorPolicy",
+        "type": "AdaptiveDirectorPolicyAsset",
+        "fullType": "FPS.AdaptiveDirectorPolicyAsset",
+        "value": "null",
+        "isSerializable": true
+      },
+      {
+        "name": "adaptiveDifficultyPolicy",
+        "type": "AdaptiveDifficultyPolicyAsset",
+        "fullType": "FPS.AdaptiveDifficultyPolicyAsset",
+        "value": "null",
+        "isSerializable": true
+      },
+      {
+        "name": "networkPhase",
+        "type": "NetworkVariable`1",
+        "fullType": "Unity.Netcode.NetworkVariable`1[[FPS.GamePhase, FPS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "value": "Unity.Netcode.NetworkVariable`1[FPS.GamePhase]",
+        "isSerializable": false
+      },
+      {
+        "name": "networkZombiesAlive",
+        "type": "NetworkVariable`1",
+        "fullType": "Unity.Netcode.NetworkVariable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "Unity.Netcode.NetworkVariable`1[System.Int32]",
+        "isSerializable": false
+      },
+      {
+        "name": "networkTotalKills",
+        "type": "NetworkVariable`1",
+        "fullType": "Unity.Netcode.NetworkVariable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "Unity.Netcode.NetworkVariable`1[System.Int32]",
+        "isSerializable": false
+      },
+      {
+        "name": "networkAdaptivePhase",
+        "type": "NetworkVariable`1",
+        "fullType": "Unity.Netcode.NetworkVariable`1[[FPS.DirectorPhase, FPS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "value": "Unity.Netcode.NetworkVariable`1[FPS.DirectorPhase]",
+        "isSerializable": false
+      },
+      {
+        "name": "networkAdaptiveMultiplier",
+        "type": "NetworkVariable`1",
+        "fullType": "Unity.Netcode.NetworkVariable`1[[System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "Unity.Netcode.NetworkVariable`1[System.Single]",
+        "isSerializable": false
+      },
+      {
+        "name": "phaseTimer",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "0",
+        "isSerializable": false
+      },
+      {
+        "name": "intensity",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "0",
+        "isSerializable": false
+      },
+      {
+        "name": "spawnTimer",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "0",
+        "isSerializable": false
+      },
+      {
+        "name": "spawnRequestPlayerCount",
+        "type": "Int32",
+        "fullType": "System.Int32",
+        "value": "1",
+        "isSerializable": false
+      },
+      {
+        "name": "hasSpawnRequestPlayerCount",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "isSerializable": false
+      },
+      {
+        "name": "forcedCrescendoUntil",
+        "type": "Double",
+        "fullType": "System.Double",
+        "value": "0",
+        "isSerializable": false
+      },
+      {
+        "name": "hpModifier",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "1",
+        "isSerializable": false
+      },
+      {
+        "name": "speedModifier",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "1",
+        "isSerializable": false
+      },
+      {
+        "name": "damageModifier",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "1",
+        "isSerializable": false
+      },
+      {
+        "name": "subscribedZombieFactory",
+        "type": "ZombieFactory",
+        "fullType": "FPS.ZombieFactory",
+        "value": "null",
+        "isSerializable": false
+      },
+      {
+        "name": "subscribedSpecialRegistry",
+        "type": "SpecialInfectedRegistry",
+        "fullType": "FPS.SpecialInfectedRegistry",
+        "value": "null",
+        "isSerializable": false
+      },
+      {
+        "name": "lastCountedSpawnedEnemy",
+        "type": "GameObject",
+        "fullType": "UnityEngine.GameObject",
+        "value": "(error reading)",
+        "isSerializable": false
+      },
+      {
+        "name": "lastCountedSpawnFrame",
+        "type": "Int32",
+        "fullType": "System.Int32",
+        "value": "-1",
+        "isSerializable": false
+      },
+      {
+        "name": "localPhase",
+        "type": "GamePhase",
+        "fullType": "FPS.GamePhase",
+        "value": "BUILD",
+        "isSerializable": false
+      },
+      {
+        "name": "localZombiesAlive",
+        "type": "Int32",
+        "fullType": "System.Int32",
+        "value": "0",
+        "isSerializable": false
+      },
+      {
+        "name": "localTotalKills",
+        "type": "Int32",
+        "fullType": "System.Int32",
+        "value": "0",
+        "isSerializable": false
+      },
+      {
+        "name": "localAdaptivePhase",
+        "type": "DirectorPhase",
+        "fullType": "FPS.DirectorPhase",
+        "value": "Calm",
+        "isSerializable": false
+      },
+      {
+        "name": "adaptiveStateMachine",
+        "type": "DirectorStateMachine",
+        "fullType": "FPS.DirectorStateMachine",
+        "value": "null",
+        "isSerializable": false
+      },
+      {
+        "name": "adaptiveDifficultyEvaluator",
+        "type": "DynamicDifficultyEvaluator",
+        "fullType": "FPS.DynamicDifficultyEvaluator",
+        "value": "null",
+        "isSerializable": false
+      },
+      {
+        "name": "adaptiveSpawnController",
+        "type": "SpawnController",
+        "fullType": "FPS.SpawnController",
+        "value": "FPS.SpawnController",
+        "isSerializable": false
+      },
+      {
+        "name": "adaptiveDecision",
+        "type": "DirectorDecision",
+        "fullType": "FPS.DirectorDecision",
+        "value": "FPS.DirectorDecision",
+        "isSerializable": false
+      },
+      {
+        "name": "adaptiveDifficultyMultiplier",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "1",
+        "isSerializable": false
+      },
+      {
+        "name": "ShowTopMostFoldoutHeaderGroup",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "isSerializable": true
+      },
+      {
+        "name": "__rpc_exec_stage",
+        "type": "__RpcExecStage",
+        "fullType": "Unity.Netcode.NetworkBehaviour+__RpcExecStage",
+        "value": "Send",
+        "isSerializable": false
+      },
+      {
+        "name": "NetworkVariableFields",
+        "type": "List`1",
+        "fullType": "System.Collections.Generic.List`1[[Unity.Netcode.NetworkVariableBase, Unity.Netcode.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "value": "System.Collections.Generic.List`1[Unity.Netcode.NetworkVariableBase]",
+        "isSerializable": false
+      },
+      {
+        "name": "NetworkVariableIndexesToReset",
+        "type": "List`1",
+        "fullType": "System.Collections.Generic.List`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "System.Collections.Generic.List`1[System.Int32]",
+        "isSerializable": false
+      },
+      {
+        "name": "NetworkVariableIndexesToResetSet",
+        "type": "HashSet`1",
+        "fullType": "System.Collections.Generic.HashSet`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "System.Collections.Generic.HashSet`1[System.Int32]",
+        "isSerializable": false
+      }
+    ]
+  }
+}

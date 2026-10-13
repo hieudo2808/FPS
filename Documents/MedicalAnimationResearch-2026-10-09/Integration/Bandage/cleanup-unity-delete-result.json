@@ -1,0 +1,29 @@
+{
+  "status": "success",
+  "result": {
+    "success": true,
+    "action": "deleted",
+    "deletedCount": 2,
+    "totalMB": 13.834983825683594,
+    "message": "Successfully deleted 2 assets",
+    "results": [
+      {
+        "path": "Assets/FPS/Prototypes/MedicalAnimation/SelfHeal.fbx",
+        "deleted": true
+      },
+      {
+        "path": "Assets/FPS/Prototypes/MedicalAnimation/SelfInjection.fbx",
+        "deleted": true
+      }
+    ],
+    "serverAvailability": {
+      "mayDisconnect": true,
+      "isCompiling": true,
+      "reason": "A skill execution may have triggered compilation or asset refresh.",
+      "suggestion": "Unity is compiling or refreshing assets. The REST server may be briefly unavailable. Please retry shortly.",
+      "retryAfterSeconds": 5,
+      "retryStrategy": "wait_and_retry"
+    }
+  },
+  "workflowEndMs": 5153
+}

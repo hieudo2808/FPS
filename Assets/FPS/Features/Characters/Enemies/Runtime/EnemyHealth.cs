@@ -181,7 +181,8 @@ namespace FPS
                 source.reactionTime,
                 source.damageType,
                 source.hitZone,
-                source.damageMultiplier);
+                source.damageMultiplier,
+                source.sourcePosition);
         }
 
         // ==========================================

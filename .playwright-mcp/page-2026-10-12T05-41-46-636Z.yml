@@ -1,0 +1,212 @@
+- generic [active] [ref=f9e1]:
+  - generic [ref=f9e2]:
+    - generic [ref=f9e4]:
+      - generic [ref=f9e5]:
+        - generic [ref=f9e6]:
+          - link "DuckDuckGo home" [ref=f9e7] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f9e8]: DuckDuckGo
+          - generic [ref=f9e15]:
+            - combobox "Search privately" [ref=f9e17]: "\"bandage\" \"animation\" \"fbx\""
+            - button "Search" [ref=f9e19] [cursor=pointer]
+        - button "Open menu" [ref=f9e23] [cursor=pointer]
+      - navigation [ref=f9e31]:
+        - list [ref=f9e32]:
+          - listitem [ref=f9e33]:
+            - link [ref=f9e34] [cursor=pointer]:
+              - /url: /?q=%22bandage%22+%22animation%22+%22fbx%22&ia=web
+              - strong [ref=f9e35]: All
+          - listitem [ref=f9e38]:
+            - link [ref=f9e39] [cursor=pointer]:
+              - /url: /?q=%22bandage%22+%22animation%22+%22fbx%22&ia=images&iax=images
+              - strong [ref=f9e40]: Images
+          - listitem [ref=f9e41]:
+            - link [ref=f9e42] [cursor=pointer]:
+              - /url: /?q=%22bandage%22+%22animation%22+%22fbx%22&ia=videos&iax=videos
+              - strong [ref=f9e43]: Videos
+          - listitem [ref=f9e44]:
+            - link [ref=f9e45] [cursor=pointer]:
+              - /url: /?q=%22bandage%22+%22animation%22+%22fbx%22&iaxm=maps
+              - strong [ref=f9e46]: Maps
+        - list [ref=f9e47]:
+          - listitem [ref=f9e48]:
+            - link "Duck.ai" [ref=f9e50] [cursor=pointer]:
+              - /url: /?q=%22bandage%22+%22animation%22+%22fbx%22&ia=chat&entry=serp
+          - listitem [ref=f9e54]:
+            - button "Search Settings ✀" [ref=f9e56] [cursor=pointer]:
+              - generic [ref=f9e59]: Search Settings
+              - generic [ref=f9e60]: ✀
+    - navigation [ref=f9e69]:
+      - button [ref=f9e71] [cursor=pointer]:
+        - strong [ref=f9e78]: Private
+      - generic [ref=f9e82]:
+        - switch "Filter by the selected region" [ref=f9e86]
+        - button [ref=f9e88] [cursor=pointer]:
+          - strong [ref=f9e91]: Vietnam (en)
+      - button [ref=f9e95] [cursor=pointer]:
+        - strong [ref=f9e97]: "Safe search: moderate"
+      - button [ref=f9e101] [cursor=pointer]:
+        - strong [ref=f9e103]: Any time
+    - list [ref=f9e107]:
+      - button "Close menu" [ref=f9e108] [cursor=pointer]
+      - list [ref=f9e112]:
+        - listitem [ref=f9e113]: Search
+        - listitem [ref=f9e114]:
+          - link "Homepage" [ref=f9e115] [cursor=pointer]:
+            - /url: https://start.duckduckgo.com/
+        - listitem [ref=f9e116]:
+          - link "Themes" [ref=f9e117] [cursor=pointer]:
+            - /url: /settings#appearance
+        - listitem [ref=f9e118]:
+          - link "Settings" [ref=f9e119] [cursor=pointer]:
+            - /url: /settings
+      - list [ref=f9e120]:
+        - listitem [ref=f9e121]: Share Feedback
+        - listitem [ref=f9e122]:
+          - generic [ref=f9e125]:
+            - button "Positive feedback" [ref=f9e126] [cursor=pointer]
+            - button "Negative feedback" [ref=f9e130] [cursor=pointer]
+      - list [ref=f9e134]:
+        - listitem [ref=f9e135]: Downloads
+        - listitem [ref=f9e136]:
+          - link "iOS Browser" [ref=f9e137] [cursor=pointer]:
+            - /url: https://apps.apple.com/app/duckduckgo-private-browser/id663592361?platform=iphone&pt=866401&mt=8&ct=serp-atb-serp
+        - listitem [ref=f9e138]:
+          - link "Android Browser" [ref=f9e139] [cursor=pointer]:
+            - /url: https://play.google.com/store/apps/details?id=com.duckduckgo.mobile.android&referrer=utm_campaign%3Dserp-atb-serp%26origin%3Dfunnel_playstore_searchresults
+        - listitem [ref=f9e140]:
+          - link "Mac Browser" [ref=f9e141] [cursor=pointer]:
+            - /url: /mac?origin=funnel_browser_searchresults
+        - listitem [ref=f9e142]:
+          - link "Windows Browser" [ref=f9e143] [cursor=pointer]:
+            - /url: /windows?origin=funnel_browser_searchresults
+        - listitem [ref=f9e144]:
+          - link "Browser Extensions" [ref=f9e145] [cursor=pointer]:
+            - /url: /duckduckgo-help-pages/desktop/adding-duckduckgo-to-your-browser/
+      - list [ref=f9e146]:
+        - listitem [ref=f9e147]: More From DuckDuckGo
+        - listitem [ref=f9e148]:
+          - generic [ref=f9e151]:
+            - button "Dismiss promotion" [ref=f9e152] [cursor=pointer]
+            - generic [ref=f9e155]:
+              - paragraph [ref=f9e157]: Upgrade to our Private Browser
+              - paragraph [ref=f9e169]: Fast. Secure. Free.
+            - link "Download Browser" [ref=f9e170] [cursor=pointer]:
+              - /url: /windows
+        - listitem [ref=f9e173]:
+          - link "Duck.ai" [ref=f9e174] [cursor=pointer]:
+            - /url: https://duck.ai
+        - listitem [ref=f9e175]:
+          - link "Email Protection" [ref=f9e176] [cursor=pointer]:
+            - /url: /email
+        - listitem [ref=f9e177]:
+          - link "Newsletter" [ref=f9e178] [cursor=pointer]:
+            - /url: /newsletter
+        - listitem [ref=f9e179]:
+          - link "Blog" [ref=f9e180] [cursor=pointer]:
+            - /url: /blog
+        - listitem [ref=f9e181]:
+          - link "Podcast" [ref=f9e182] [cursor=pointer]:
+            - /url: https://insideduckduckgo.substack.com/?showWelcome=true
+        - listitem [ref=f9e183]:
+          - link "Collaborations" [ref=f9e184] [cursor=pointer]:
+            - /url: /collaborations
+      - list [ref=f9e185]:
+        - listitem [ref=f9e186]: Learn More
+        - listitem [ref=f9e187]:
+          - link "What’s New" [ref=f9e188] [cursor=pointer]:
+            - /url: /updates
+        - listitem [ref=f9e189]:
+          - link "Compare Privacy" [ref=f9e190] [cursor=pointer]:
+            - /url: /compare-privacy
+        - listitem [ref=f9e191]:
+          - link "About Our Browser" [ref=f9e192] [cursor=pointer]:
+            - /url: /app
+        - listitem [ref=f9e193]:
+          - link "About DuckDuckGo" [ref=f9e194] [cursor=pointer]:
+            - /url: /about
+      - list [ref=f9e195]:
+        - listitem [ref=f9e196]: Other Resources
+        - listitem [ref=f9e197]:
+          - link "Help" [ref=f9e198] [cursor=pointer]:
+            - /url: /duckduckgo-help-pages
+        - listitem [ref=f9e199]:
+          - link "Community" [ref=f9e200] [cursor=pointer]:
+            - /url: https://www.reddit.com/r/duckduckgo/
+        - listitem [ref=f9e201]:
+          - link "Careers" [ref=f9e202] [cursor=pointer]:
+            - /url: /careers
+        - listitem [ref=f9e203]:
+          - link "Privacy Policy" [ref=f9e204] [cursor=pointer]:
+            - /url: /privacy
+        - listitem [ref=f9e205]:
+          - link "Terms of Service" [ref=f9e206] [cursor=pointer]:
+            - /url: /terms
+        - listitem [ref=f9e207]:
+          - link "Press Kit" [ref=f9e208] [cursor=pointer]:
+            - /url: /press
+        - listitem [ref=f9e209]:
+          - link "Advertise on Search" [ref=f9e210] [cursor=pointer]:
+            - /url: /duckduckgo-help-pages/company/advertise-on-duckduckgo-search
+  - generic [ref=f9e214]:
+    - generic [ref=f9e216]:
+      - generic [ref=f9e232]:
+        - heading "Get Our Windows Browser" [level=3] [ref=f9e233]
+        - paragraph [ref=f9e234]: Protect your data as you search, browse, and use AI.
+      - link "Download" [ref=f9e235] [cursor=pointer]:
+        - /url: https://duckduckgo.com/windows?origin=funnel_browser_searchresults__footercard
+    - generic [ref=f9e239]:
+      - generic [ref=f9e240]:
+        - heading "Learn More" [level=3] [ref=f9e241]
+        - list [ref=f9e242]:
+          - listitem [ref=f9e243]:
+            - link "What's New" [ref=f9e244] [cursor=pointer]:
+              - /url: https://duckduckgo.com/updates
+          - listitem [ref=f9e245]:
+            - link "About Browser" [ref=f9e246] [cursor=pointer]:
+              - /url: https://duckduckgo.com/app
+          - listitem [ref=f9e247]:
+            - link "Compare Privacy" [ref=f9e248] [cursor=pointer]:
+              - /url: https://duckduckgo.com/compare-privacy
+          - listitem [ref=f9e249]:
+            - link "Help Pages" [ref=f9e250] [cursor=pointer]:
+              - /url: https://duckduckgo.com/duckduckgo-help-pages/
+      - generic [ref=f9e251]:
+        - heading "Get More" [level=3] [ref=f9e252]
+        - list [ref=f9e253]:
+          - listitem [ref=f9e254]:
+            - link "Email Protection" [ref=f9e255] [cursor=pointer]:
+              - /url: https://duckduckgo.com/email
+          - listitem [ref=f9e256]:
+            - generic [ref=f9e257]:
+              - link "Podcast" [ref=f9e259] [cursor=pointer]:
+                - /url: https://insideduckduckgo.substack.com/?showWelcome=true
+              - generic [ref=f9e260]:
+                - text: "&"
+                - link "Newsletter" [ref=f9e261] [cursor=pointer]:
+                  - /url: https://duckduckgo.com/newsletter
+          - listitem [ref=f9e262]:
+            - link "Collaborations" [ref=f9e263] [cursor=pointer]:
+              - /url: https://duckduckgo.com/collaborations
+  - generic [ref=f9e266]:
+    - generic [ref=f9e267]: Unfortunately, bots use DuckDuckGo too.
+    - generic [ref=f9e268]: Please complete the following challenge to confirm this search was made by a human.
+    - generic [ref=f9e269]: "Select all squares containing a duck:"
+    - button "Submit" [ref=f9e291] [cursor=pointer]
+  - button "Share Feedback" [ref=f9e295] [cursor=pointer]
+  - generic [ref=f9e296]:
+    - generic [ref=f9e298]:
+      - banner [ref=f9e299]:
+        - paragraph [ref=f9e300]:
+          - strong [ref=f9e301]: Upgrade to our browser.
+      - generic [ref=f9e302]:
+        - paragraph [ref=f9e305]:
+          - generic [ref=f9e306]:
+            - text: Try the
+            - strong [ref=f9e307]: DuckDuckGo Browser.
+            - text: Fast. Free. Private.
+        - link "Download Browser" [ref=f9e308] [cursor=pointer]:
+          - /url: https://duckduckgo.com/windows?origin=funnel_browser_searchresults__popover
+      - paragraph [ref=f9e314]:
+        - generic [ref=f9e315]: Free
+    - button "Dismiss" [ref=f9e317] [cursor=pointer]

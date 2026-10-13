@@ -1,0 +1,104 @@
+{
+    "utc": "2026-10-13T12:06:52.8643402Z",
+    "formation": "SOLO",
+    "gameSeconds": 143.49321969246032,
+    "profiledPlayers": 1,
+    "trackedZombies": 4,
+    "smartSpawning": true,
+    "rubberBanding": false,
+    "canSpawnSpecial": false,
+    "enemies": [
+        {
+            "entityId": "568105589213343684",
+            "name": "Zombiegirl W Kurniawan(Clone)",
+            "type": "EnemyAI",
+            "state": "Idle",
+            "target": "BrimstonePlayer(Clone)",
+            "spawned": true,
+            "onNavMesh": true,
+            "hasPath": false,
+            "position": {
+                "x": -11.5,
+                "y": 2.0999999046325685,
+                "z": -83.0
+            },
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "hp": 100.0,
+            "damage": 10.0,
+            "speed": 5.0
+        },
+        {
+            "entityId": "568105589213343360",
+            "name": "Zombiegirl W Kurniawan(Clone)",
+            "type": "EnemyAI",
+            "state": "Idle",
+            "target": "BrimstonePlayer(Clone)",
+            "spawned": true,
+            "onNavMesh": true,
+            "hasPath": false,
+            "position": {
+                "x": -124.50000762939453,
+                "y": 0.09999990463256836,
+                "z": -65.5
+            },
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "hp": 100.0,
+            "damage": 10.0,
+            "speed": 5.0
+        },
+        {
+            "entityId": "568105589213383650",
+            "name": "ZombieRig(Clone)",
+            "type": "EnemyAI",
+            "state": "Idle",
+            "target": "BrimstonePlayer(Clone)",
+            "spawned": true,
+            "onNavMesh": true,
+            "hasPath": false,
+            "position": {
+                "x": -119.50000762939453,
+                "y": 0.05217749625444412,
+                "z": -77.0
+            },
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "hp": 100.0,
+            "damage": 10.0,
+            "speed": 5.0
+        },
+        {
+            "entityId": "568105589213363286",
+            "name": "ZombieMale_AAB(Clone)",
+            "type": "EnemyAI",
+            "state": "Idle",
+            "target": "BrimstonePlayer(Clone)",
+            "spawned": true,
+            "onNavMesh": true,
+            "hasPath": false,
+            "position": {
+                "x": -11.5,
+                "y": 2.0999999046325685,
+                "z": -77.0
+            },
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "hp": 100.0,
+            "damage": 10.0,
+            "speed": 5.0
+        }
+    ]
+}

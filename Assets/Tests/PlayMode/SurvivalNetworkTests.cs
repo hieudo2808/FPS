@@ -18,12 +18,17 @@ namespace FPS.Tests
     {
         const string Content = "Assets/FPS/Features/Survival/Content/Prefabs/";
         const string PlayerPrefab = "Assets/FPS/Features/Characters/Content/Players/Brimstone/BrimstonePlayer.prefab";
+        static readonly string[] FeedbackEnemies = {
+            "Assets/FPS/Features/Characters/Content/Enemies/ZombieRig/Prefabs/ZombieRig.prefab",
+            "Assets/FPS/Features/Characters/Content/Enemies/Infector/Prefabs/Infector.prefab",
+            "Assets/FPS/Features/Characters/Content/Enemies/Tanker/Prefabs/Tank.prefab" };
         static readonly string[] PlayerNames = { "Clove", "Brimstone", "Gekko", "Sage" };
         static string PlayerPath(string character) => $"Assets/FPS/Features/Characters/Content/Players/{character}/{character}Player.prefab";
         const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
         NetworkManager host, client;
         PlayerHealth actor, teammate;
         SurvivalInventory serverInventory, clientInventory;
+        UnityEngine.AI.NavMeshDataInstance feedbackNavigation;
 
         [UnitySetUp]
         public IEnumerator SetUp()
@@ -61,7 +66,7 @@ namespace FPS.Tests
             manager.NetworkConfig.PlayerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Tests/Fixtures/SurvivalProbe.prefab");
             manager.NetworkConfig.Prefabs = new NetworkPrefabs();
             foreach (var path in new[] { "Assets/Tests/Fixtures/SurvivalProbe.prefab", "Assets/Tests/Fixtures/SurvivalEnemyProbe.prefab",
-                Content + "GrenadeProjectile.prefab", Content + "FireZone.prefab", Content + "MedkitPickup.prefab" }.Concat(PlayerNames.Select(PlayerPath)))
+                Content + "GrenadeProjectile.prefab", Content + "FireZone.prefab", Content + "MedkitPickup.prefab" }.Concat(PlayerNames.Select(PlayerPath)).Concat(FeedbackEnemies))
                 manager.AddNetworkPrefab(AssetDatabase.LoadAssetAtPath<GameObject>(path));
             return manager;
         }
@@ -69,6 +74,7 @@ namespace FPS.Tests
         [UnityTearDown]
         public IEnumerator TearDown()
         {
+            if (feedbackNavigation.valid) feedbackNavigation.Remove();
             if (client != null) client.Shutdown();
             if (host != null) host.Shutdown();
             yield return null;
@@ -98,6 +104,127 @@ namespace FPS.Tests
         static void SetField(object target, string name, object value) => target.GetType().GetField(name, Private).SetValue(target, value);
         static void Invoke(object target, string name, params object[] args) => target.GetType().GetMethod(name, Private).Invoke(target, args);
         void FinishSoon() => Field<NetworkVariable<double>>(serverInventory, "useDeadline").Value = serverInventory.ServerNow;
+
+        [UnityTest]
+        public IEnumerator DirectionalDamageUsesRealOwnerRpcForEveryDamageSource()
+        {
+            var settings = UnityEngine.AI.NavMesh.GetSettingsByIndex(0);
+            var floor = new UnityEngine.AI.NavMeshBuildSource { shape = UnityEngine.AI.NavMeshBuildSourceShape.Box,
+                transform = Matrix4x4.TRS(Vector3.down * .1f, Quaternion.identity, Vector3.one), size = new Vector3(30, .2f, 30) };
+            feedbackNavigation = UnityEngine.AI.NavMesh.AddNavMeshData(UnityEngine.AI.NavMeshBuilder.BuildNavMeshData(settings,
+                new System.Collections.Generic.List<UnityEngine.AI.NavMeshBuildSource> { floor }, new Bounds(Vector3.zero, Vector3.one * 40), Vector3.zero, Quaternion.identity));
+            var received = new System.Collections.Generic.List<Vector3>();
+            var ownerReplica = client.LocalClient.PlayerObject.GetComponent<PlayerHealth>();
+            int nonOwnerEvents = 0;
+            ownerReplica.DirectionalDamageReceived += received.Add;
+            actor.DirectionalDamageReceived += _ => nonOwnerEvents++;
+            teammate.DirectionalDamageReceived += _ => nonOwnerEvents++;
+            teammate.transform.position = Vector3.right * 50;
+            int expected = 0;
+            foreach (var path in FeedbackEnemies)
+            {
+                actor.ResetHealth();
+                var enemy = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(path), Vector3.back * 1.5f, Quaternion.identity);
+                var ai = enemy.GetComponent<EnemyAI>(); ai.enabled = false;
+                var agent = enemy.GetComponent<UnityEngine.AI.NavMeshAgent>(); if (agent != null) agent.enabled = false;
+                enemy.GetComponent<NetworkObject>().Spawn();
+                yield return Until(() => client.SpawnManager.SpawnedObjects.ContainsKey(ai.NetworkObjectId), "feedback enemy replica");
+                // The animation impact is invoked directly; damage and RPC still run on real spawned behaviours.
+                if (ai is SI_Infector infector)
+                {
+                    SetField(infector, "currentTargetTransform", actor.transform);
+                    SetField(infector, "currentTargetProfile", new PlayerProfile { playerTransform = actor.transform, cachedHealth = actor });
+                    Invoke(infector, "ApplyImplantImpact");
+                }
+                else if (ai is SI_Tank tank)
+                {
+                    DisableClientColliders(); Physics.SyncTransforms();
+                    Invoke(tank, "ExecuteHeavySwingHit");
+                    expected++;
+                    yield return Until(() => received.Count == expected, "Tank swing owner event");
+                    Assert.That(received.Last(), Is.EqualTo(enemy.transform.position));
+                    actor.ResetHealth();
+                    Invoke(tank, "ExecuteSlamAoE");
+                }
+                else
+                {
+                    var attack = (EnemyMeleeAttack)typeof(EnemyAI).GetField("meleeAttack", Private).GetValue(ai);
+                    attack.Configure(3, 5, 0, 0, 0, 0, 180);
+                    Assert.That(attack.TryBegin(enemy.transform, actor.transform, Time.time), Is.True);
+                    typeof(EnemyAI).GetMethod("ProcessPendingAttackDamage", Private).Invoke(ai, new object[] { true });
+                }
+                expected++;
+                yield return Until(() => received.Count == expected, path + " owner event");
+                Assert.That(received.Last(), Is.EqualTo(enemy.transform.position));
+                enemy.GetComponent<NetworkObject>().Despawn();
+            }
+            foreach (bool fire in new[] { false, true })
+            {
+                actor.ResetHealth(); DisableClientColliders(); Physics.SyncTransforms();
+                var center = new Vector3(0, 1, -1);
+                SurvivalDamage.Apply(center, 3, teammate.OwnerClientId, fire);
+                expected++;
+                yield return Until(() => received.Count == expected, fire ? "fire owner event" : "blast owner event");
+                Assert.That(received.Last(), Is.EqualTo(center));
+            }
+            actor.ResetHealth();
+            actor.TakeInfectionDamage(1);
+            actor.TakeDamage(1);
+            actor.TakeDamage(new DamageInfo(1, sourcePosition: new Vector3(float.NaN, 0, 0)));
+            actor.TakeDamage(new DamageInfo(0, sourcePosition: Vector3.right));
+            actor.TakeDamage(new DamageInfo(float.PositiveInfinity, sourcePosition: Vector3.right));
+            yield return new WaitForSecondsRealtime(.25f);
+            Assert.That(received.Count, Is.EqualTo(expected), "sepsis, unattributed, invalid source, and rejected damage have no directional RPC");
+            Assert.That(nonOwnerEvents, Is.Zero, "Host observer and other player never receive victim feedback");
+        }
+
+        [UnityTest]
+        public IEnumerator BothWeaponDamagePathsConfirmOnlyAcceptedDamageAndKeepServerSource()
+        {
+            teammate.transform.position = Vector3.right * 50;
+            var shooter = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPrefab), Vector3.back * 5, Quaternion.identity);
+            shooter.GetComponent<PlayerMovement>().enabled = false;
+            shooter.GetComponent<MouseMovement>().enabled = false;
+            shooter.GetComponent<NetworkObject>().SpawnWithOwnership(host.LocalClientId);
+            var handler = shooter.GetComponent<WeaponFireHandler>();
+            yield return null;
+            var data = shooter.GetComponent<WeaponManager>().GetWeapon(0).Data;
+            var ownerReplica = client.LocalClient.PlayerObject.GetComponent<PlayerHealth>();
+            int events = 0; Vector3 source = default;
+            ownerReplica.DirectionalDamageReceived += p => { events++; source = p; };
+            var methods = typeof(WeaponFireHandler).GetMethods(Private).Where(m => m.Name == "TryApplyDamage").ToArray();
+            DisableClientColliders(); Physics.SyncTransforms();
+            Assert.That(Physics.Raycast(actor.transform.position + Vector3.up + Vector3.back * 2, Vector3.forward, out RaycastHit hit, 5), Is.True);
+            Assert.That(hit.collider.GetComponentInParent<PlayerHealth>(), Is.EqualTo(actor));
+            int expected = 0;
+            foreach (var method in methods)
+            {
+                actor.ResetHealth();
+                object resolvedHit = method.GetParameters()[1].ParameterType == typeof(RaycastHit) ? hit
+                    : new LagCompensatedHit(null, actor, actor.transform.position + Vector3.up, 5, HitboxZone.Head, 1);
+                var args = new object[] { data, resolvedHit, host.LocalClientId, default(DamageInfo) };
+                Assert.That((bool)method.Invoke(handler, args), Is.True);
+                Assert.That(((DamageInfo)args[3]).sourcePosition, Is.EqualTo(shooter.transform.position));
+                expected++;
+                yield return Until(() => events == expected, "gun victim owner feedback");
+                Assert.That(source, Is.EqualTo(shooter.transform.position));
+                actor.TakeDamage(1000);
+                Assert.That((bool)method.Invoke(handler, args), Is.False, "dead target does not confirm a hit");
+            }
+            actor.ResetHealth();
+            var filter = actor.gameObject.AddComponent<DamageFilter>();
+            SetField(filter, "acceptedTypes", DamageType.Environment); SetField(filter, "acceptUnspecified", false);
+            var rayMethod = methods.Single(m => m.GetParameters()[1].ParameterType == typeof(RaycastHit));
+            Assert.That((bool)rayMethod.Invoke(handler, new object[] { data, hit, host.LocalClientId, default(DamageInfo) }), Is.False);
+            Assert.That(actor.CurrentHealth, Is.EqualTo(actor.MaxHealth));
+            yield return new WaitForSecondsRealtime(.2f);
+            Assert.That(events, Is.EqualTo(expected));
+            var enemy = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Tests/Fixtures/SurvivalEnemyProbe.prefab")).GetComponent<EnemyHealth>();
+            enemy.NetworkObject.Spawn();
+            var confirm = typeof(WeaponFireHandler).GetMethod("ApplyConfirmedDamage", BindingFlags.Static | BindingFlags.NonPublic);
+            Assert.That((bool)confirm.Invoke(null, new object[] { enemy, new DamageInfo(1000) }), Is.True);
+            Assert.That((bool)confirm.Invoke(null, new object[] { enemy, new DamageInfo(10) }), Is.False);
+        }
 
         [UnityTest]
         public IEnumerator PlayersAuthoredGrenadeReleasesOnceAndRestoresBothRigs([ValueSource(nameof(PlayerNames))] string character)
@@ -353,6 +480,155 @@ namespace FPS.Tests
         }
 
         [UnityTest]
+        public IEnumerator SelfHealUsesAllFourCharactersAndRestoresPresentation()
+        {
+            actor.transform.position = Vector3.right * 50;
+            teammate.transform.position = Vector3.left * 50;
+            foreach (var character in PlayerNames)
+            {
+                var player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPath(character)));
+                player.GetComponent<PlayerMovement>().enabled = false;
+                player.GetComponent<MouseMovement>().enabled = false;
+                player.GetComponent<NetworkObject>().SpawnWithOwnership(0);
+                yield return new WaitForSeconds(.2f);
+                var inventory = player.GetComponent<SurvivalInventory>();
+                var health = player.GetComponent<PlayerHealth>();
+                var medical = player.GetComponent<SelfInjectionAnimation>();
+                var presentation = player.GetComponent<SurvivalPresentation>();
+                var hands = Field<Renderer[]>(medical, "originalHands");
+                var hidden = hands.Select(r => r.forceRenderingOff).ToArray();
+                health.TakeDamage(70);
+                foreach (var fraction in new[] { .02f, .5f, .98f })
+                {
+                    inventory.RequestUse(ConsumableKind.Medkit);
+                    yield return Until(() => medical.IsPlaying, character + " heal starts");
+                    Assert.That(Field<bool>(medical, "playingHeal"), Is.True);
+                    var now = inventory.ServerNow;
+                    Field<NetworkVariable<double>>(inventory, "useStarted").Value = now - 4 * fraction;
+                    Field<NetworkVariable<double>>(inventory, "useDeadline").Value = now + 4 * (1 - fraction);
+                    Invoke(presentation, "LateUpdate");
+                    var model = Field<GameObject>(medical, "viewmodel");
+                    var skin = model.GetComponentInChildren<SkinnedMeshRenderer>();
+                    Assert.That(skin.sharedMesh, Is.SameAs(((SkinnedMeshRenderer)hands[0]).sharedMesh), character + " original mesh and bind poses");
+                    Assert.That(skin.sharedMaterials, Is.EqualTo(hands[0].sharedMaterials));
+                    Assert.That(model.GetComponentsInChildren<Renderer>().Length, Is.EqualTo(1), "empty hands, no props");
+                    Assert.That(Field<GameObject>(presentation, "item") == null || !Field<GameObject>(presentation, "item").activeSelf, Is.True);
+                    Assert.That(hands.All(r => r.forceRenderingOff), Is.True);
+                    Assert.That(Field<Renderer[]>(presentation, "weaponRenderers").All(r => r == null || r.forceRenderingOff), Is.True);
+                    var remote = client.SpawnManager.SpawnedObjects[player.GetComponent<NetworkObject>().NetworkObjectId];
+                    Assert.That(remote.GetComponent<SelfInjectionAnimation>().IsPlaying, Is.False, "owner-only first-person clip");
+                    CapturePlayer(player, "SelfHeal-" + character + "-" + fraction.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture));
+                    inventory.CancelUse();
+                    yield return null; yield return null;
+                    Assert.That(medical.IsPlaying, Is.False);
+                    Assert.That(model.activeSelf, Is.False);
+                    Assert.That(hands.Select(r => r.forceRenderingOff), Is.EqualTo(hidden));
+                    Assert.That(inventory.MedkitCount.Value, Is.EqualTo(2), "cancel never consumes");
+                    Assert.That(health.CurrentHealth, Is.EqualTo(30), "cancel never heals");
+                }
+                inventory.RequestUse(ConsumableKind.Medkit);
+                yield return Until(() => medical.IsPlaying, "heal before damage");
+                health.TakeDamage(1);
+                yield return Until(() => !inventory.IsUsingItem && !medical.IsPlaying, "damage cancels and restores");
+                Assert.That(inventory.MedkitCount.Value, Is.EqualTo(2));
+                inventory.RequestUse(ConsumableKind.Medkit);
+                yield return Until(() => medical.IsPlaying, "full four-second heal");
+                Assert.That(Field<NetworkVariable<double>>(inventory, "useDeadline").Value - Field<NetworkVariable<double>>(inventory, "useStarted").Value,
+                    Is.EqualTo(4).Within(.001));
+                yield return Until(() => !inventory.IsUsingItem && !medical.IsPlaying, "heal completion", 6);
+                Assert.That(health.CurrentHealth, Is.EqualTo(79));
+                Assert.That(inventory.MedkitCount.Value, Is.EqualTo(1));
+                Assert.That(hands.Select(r => r.forceRenderingOff), Is.EqualTo(hidden));
+                player.GetComponent<PlayerInfectionController>().SetInfectionServer(65);
+                inventory.RequestUse(ConsumableKind.Antidote);
+                yield return Until(() => medical.IsPlaying && !Field<bool>(medical, "playingHeal"), "switch from heal to injection");
+                inventory.CancelUse(); yield return null; yield return null;
+                inventory.RequestUse(ConsumableKind.Medkit);
+                yield return Until(() => medical.IsPlaying && Field<bool>(medical, "playingHeal"), "switch back from injection to heal");
+                medical.enabled = false;
+                Assert.That(medical.IsPlaying, Is.False);
+                Assert.That(hands.Select(r => r.forceRenderingOff), Is.EqualTo(hidden), "disable restores visibility");
+                inventory.CancelUse();
+                player.GetComponent<NetworkObject>().Despawn(true);
+                yield return null;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator SelfInjectionUsesAllFourCharactersAndRestoresPresentation()
+        {
+            actor.transform.position = Vector3.right * 50;
+            teammate.transform.position = Vector3.left * 50;
+            foreach (var character in PlayerNames)
+            {
+                var player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPath(character)), Vector3.zero, Quaternion.identity);
+                player.GetComponent<PlayerMovement>().enabled = false;
+                player.GetComponent<MouseMovement>().enabled = false;
+                player.GetComponent<NetworkObject>().SpawnWithOwnership(0);
+                yield return new WaitForSeconds(.2f);
+                var inventory = player.GetComponent<SurvivalInventory>();
+                var injection = player.GetComponent<SelfInjectionAnimation>();
+                var presentation = player.GetComponent<SurvivalPresentation>();
+                var infection = player.GetComponent<PlayerInfectionController>();
+                Assert.That(injection, Is.Not.Null, character);
+                var hands = Field<Renderer[]>(injection, "originalHands");
+                var originalHidden = hands.Select(r => r.forceRenderingOff).ToArray();
+                infection.SetInfectionServer(65);
+                inventory.RequestUse(ConsumableKind.Antidote);
+                yield return Until(() => injection.IsPlaying, character + " self-injection starts");
+                var viewmodel = Field<GameObject>(injection, "viewmodel");
+                Assert.That(viewmodel.activeInHierarchy, Is.True, character);
+                var skin = viewmodel.GetComponentInChildren<SkinnedMeshRenderer>();
+                Assert.That(skin.sharedMaterials, Is.EqualTo(hands[0].sharedMaterials), character + " keeps character materials");
+                Assert.That(skin.bones.All(b => b != null), Is.True, character + " binds every skin bone");
+                foreach (var seconds in new[] { .5f, 2.5f, 4.25f })
+                {
+                    var now = inventory.ServerNow;
+                    Field<NetworkVariable<double>>(inventory, "useStarted").Value = now - seconds;
+                    Field<NetworkVariable<double>>(inventory, "useDeadline").Value = now + 5 - seconds;
+                    yield return null;
+                    CapturePlayer(player, "SelfInjection-" + character + "-" + seconds.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture));
+                    CapturePlayer(player, "SelfInjection-" + character + "-wide-" + seconds.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture), true);
+                    Assert.That(hands.All(r => r.forceRenderingOff), Is.True, character + " hides original hands");
+                    Assert.That(Field<Renderer[]>(presentation, "weaponRenderers").All(r => r == null || r.forceRenderingOff), Is.True, character + " hides guns");
+                }
+                inventory.CancelUse();
+                yield return null;
+                yield return null;
+                Assert.That(injection.IsPlaying, Is.False, character);
+                Assert.That(viewmodel.activeSelf, Is.False, character);
+                Assert.That(hands.Select(r => r.forceRenderingOff), Is.EqualTo(originalHidden), character + " restores original hand visibility");
+                Assert.That(inventory.AntidoteCount.Value, Is.EqualTo(2), character + " cancellation keeps the antidote");
+
+                foreach (var fraction in new[] { .02f, .5f, .98f })
+                {
+                    inventory.RequestUse(ConsumableKind.Antidote);
+                    var now = inventory.ServerNow;
+                    Field<NetworkVariable<double>>(inventory, "useStarted").Value = now - 5 * fraction;
+                    Field<NetworkVariable<double>>(inventory, "useDeadline").Value = now + 5 * (1 - fraction);
+                    Invoke(presentation, "LateUpdate");
+                    Assert.That(injection.IsPlaying, Is.True, character + " restart");
+                    inventory.CancelUse();
+                    yield return null;
+                    yield return null;
+                    Assert.That(injection.IsPlaying, Is.False, character + " cancels at " + fraction);
+                    Assert.That(inventory.AntidoteCount.Value, Is.EqualTo(2), character);
+                }
+                inventory.RequestUse(ConsumableKind.Antidote);
+                yield return Until(() => injection.IsPlaying, character + " completion starts");
+                Field<NetworkVariable<double>>(inventory, "useDeadline").Value = inventory.ServerNow;
+                yield return Until(() => !inventory.IsUsingItem, character + " server completes");
+                yield return null;
+                Assert.That(injection.IsPlaying, Is.False, character);
+                Assert.That(inventory.AntidoteCount.Value, Is.EqualTo(1), character + " consumes once on completion");
+                Assert.That(infection.CurrentInfection, Is.EqualTo(25).Within(1), character);
+                Assert.That(hands.Select(r => r.forceRenderingOff), Is.EqualTo(originalHidden), character);
+                player.GetComponent<NetworkObject>().Despawn(true);
+                yield return null;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator AuthoredPlayerMedicalPresentationAndIncendiaryCollision()
         {
             actor.transform.position = Vector3.right * 50;
@@ -370,14 +646,15 @@ namespace FPS.Tests
             yield return Until(() => inventory.IsUsingItem, "authored player treatment starts");
             yield return new WaitForSeconds(.8f);
             var presentation = realPlayer.GetComponent<SurvivalPresentation>();
-            Assert.That(Field<GameObject>(presentation, "item").activeInHierarchy, Is.True);
+            Assert.That(realPlayer.GetComponent<SelfInjectionAnimation>().IsPlaying, Is.True);
+            Assert.That(Field<GameObject>(presentation, "item") == null || !Field<GameObject>(presentation, "item").activeSelf, Is.True);
             Assert.That(Field<AudioSource>(presentation, "treatmentAudio").isPlaying, Is.True);
             CapturePlayer(realPlayer, "Survival-Medkit-runtime");
             yield return Until(() => !inventory.IsUsingItem, "authored player heals", 6);
             Assert.That(health.CurrentHealth, Is.EqualTo(95));
             // Presentation consumes server state in LateUpdate, after the test coroutine resumes.
             yield return null;
-            Assert.That(Field<GameObject>(presentation, "item").activeSelf, Is.False);
+            Assert.That(realPlayer.GetComponent<SelfInjectionAnimation>().IsPlaying, Is.False);
             var infection = realPlayer.GetComponent<PlayerInfectionController>();
             infection.SetInfectionServer(65);
             inventory.RequestUse(ConsumableKind.Antidote);
@@ -403,7 +680,7 @@ namespace FPS.Tests
             Debug.Log("SURVIVAL_AUTHORED_PRESENTATION_PASS");
         }
 
-        void CapturePlayer(GameObject player, string name)
+        void CapturePlayer(GameObject player, string name, bool wide = false)
         {
             // Both peers share a scene in this transport fixture. Hide only the client copy
             // during capture so its remote body cannot overlap the host's first-person camera.
@@ -421,9 +698,10 @@ namespace FPS.Tests
                 Assert.That(screen.x, Is.InRange(.1f, .9f), "item within horizontal view");
                 Assert.That(screen.y, Is.InRange(.1f, .7f), "item clear of HUD and crosshair");
             }
-            var target = new RenderTexture(1280, 720, 24);
+            var width = wide ? 1680 : 1280;
+            var target = new RenderTexture(width, 720, 24);
             var previous = RenderTexture.active;
-            var image = new Texture2D(1280, 720, TextureFormat.RGB24, false);
+            var image = new Texture2D(width, 720, TextureFormat.RGB24, false);
             try
             {
                 var light = new GameObject("Presentation test key light").AddComponent<Light>();
@@ -432,7 +710,7 @@ namespace FPS.Tests
                 mouse.BodyCam.targetTexture = target; mouse.BodyCam.Render();
                 mouse.WeaponCam.targetTexture = target; mouse.WeaponCam.Render();
                 RenderTexture.active = target;
-                image.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0); image.Apply();
+                image.ReadPixels(new Rect(0, 0, width, 720), 0, 0); image.Apply();
                 System.IO.Directory.CreateDirectory("Documents/UIUX");
                 System.IO.File.WriteAllBytes("Documents/UIUX/" + name + ".png", image.EncodeToPNG());
                 Object.Destroy(light.gameObject);
@@ -681,6 +959,51 @@ namespace FPS.Tests
         }
 
         [UnityTest]
+        public IEnumerator BothGrenadesLaunchOnServerAndCompleteLongLobsBeforeFuse()
+        {
+            teammate.transform.position = Vector3.right * 50;
+            var floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            floor.transform.position = new Vector3(0, -.5f, 50);
+            floor.transform.localScale = new Vector3(200, 1, 200);
+            Physics.SyncTransforms();
+            foreach (var kind in new[] { ThrowableKind.Frag, ThrowableKind.Incendiary })
+            {
+                if (kind == ThrowableKind.Incendiary)
+                {
+                    SetField(serverInventory, "throwDefinition", AssetDatabase.LoadAssetAtPath<GrenadeThrowDefinition>(
+                        "Assets/FPS/Features/Weapons/Content/Grenade/CloveGrenadeThrow.asset"));
+                    Assert.That(serverInventory.ThrowDefinition.IsValid, Is.True, "Also exercise the animated release path.");
+                    clientInventory.CycleThrowable();
+                    yield return Until(() => clientInventory.SelectedThrowable.Value == kind, "incendiary selected");
+                }
+                clientInventory.RequestThrow(Quaternion.Euler(-35f, 0, 0) * Vector3.forward);
+                yield return Until(() => host.SpawnManager.SpawnedObjectsList.Any(o => o.GetComponent<SurvivalProjectile>() != null), "server launch");
+                var projectile = host.SpawnManager.SpawnedObjectsList.Single(o => o.GetComponent<SurvivalProjectile>() != null);
+                Vector3 velocity = Field<Vector3>(projectile.GetComponent<SurvivalProjectile>(), "launchVelocity");
+                Assert.That(velocity.magnitude, Is.EqualTo(28f).Within(.001f));
+                Assert.That(velocity.y, Is.EqualTo(velocity.z).Within(.001f), "35 degree aim plus 10 degree overhand elevation.");
+                Assert.That(projectile.GetComponent<Rigidbody>().isKinematic, Is.False);
+                ulong id = projectile.NetworkObjectId;
+                yield return Until(() => client.SpawnManager.SpawnedObjects.ContainsKey(id), "observer projectile");
+                Assert.That(client.SpawnManager.SpawnedObjects[id].GetComponent<Rigidbody>().isKinematic, Is.True);
+                double launchedAt = serverInventory.ServerNow;
+                float furthest = projectile.transform.position.z;
+                while (host.SpawnManager.SpawnedObjects.ContainsKey(id) && serverInventory.ServerNow - launchedAt < 7)
+                {
+                    furthest = Mathf.Max(furthest, projectile.GetComponent<Rigidbody>().position.z);
+                    DisableClientColliders();
+                    yield return new WaitForFixedUpdate();
+                }
+                Assert.That(host.SpawnManager.SpawnedObjects.ContainsKey(id), Is.False);
+                Assert.That(furthest, Is.InRange(75f, 85f), kind + " lands after a long ballistic arc");
+                Assert.That(serverInventory.ServerNow - launchedAt, Is.LessThan(5.5), "Impact completes before the six-second fuse.");
+                Assert.That(kind == ThrowableKind.Frag ? serverInventory.FragGrenadeCount.Value : serverInventory.IncendiaryGrenadeCount.Value, Is.EqualTo(2));
+                TestContext.WriteLine($"{kind}: authoritative range {furthest:F2} m, flight {serverInventory.ServerNow - launchedAt:F2} s.");
+            }
+            Object.Destroy(floor);
+        }
+
+        [UnityTest]
         public IEnumerator GrenadeAuthorityOcclusionAndFireNonStacking()
         {
             teammate.transform.position = Vector3.right * 50;
@@ -693,7 +1016,7 @@ namespace FPS.Tests
             Invoke(clientInventory, "RequestThrowServerRpc", ThrowableKind.Frag, Vector3.forward, (uint)1);
             yield return new WaitForSeconds(.2f);
             Assert.That(serverInventory.FragGrenadeCount.Value, Is.EqualTo(2), "duplicate packet");
-            yield return Until(() => !host.SpawnManager.SpawnedObjectsList.Any(o => o.GetComponent<SurvivalProjectile>() != null), "fuse despawn", 4);
+            yield return Until(() => !host.SpawnManager.SpawnedObjectsList.Any(o => o.GetComponent<SurvivalProjectile>() != null), "fuse despawn", 8);
 
             var enemyGo = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Tests/Fixtures/SurvivalEnemyProbe.prefab"), new Vector3(20, 0, 2), Quaternion.identity);
             enemyGo.GetComponent<NetworkObject>().Spawn();

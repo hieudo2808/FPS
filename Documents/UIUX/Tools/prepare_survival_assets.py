@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib
 import json
+import sys
 from PIL import Image, ImageOps, ImageChops
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -46,6 +47,32 @@ def prepare(source, destination, treatment, border=(0, 0, 0, 0), crop=None, pack
                      'pack': pack, 'treatment': treatment, 'source_crop': crop,
                      'size': list(rgb.size), 'border': list(border)})
 
+
+# This pass retains the supplied artwork and its alpha, rather than flattening panels.
+# Only selected sprites enter Resources; the source packs stay outside the build.
+if '--hud-skin' in sys.argv:
+    OUTPUT = ROOT / 'Assets/FPS/Features/UI/Content/Resources/HudSkin'
+    for source, name, border, treatment in [
+        ('dialogue/_0001_dialog-box.png', 'Panel', (62, 40, 62, 40), 'original'),
+        ('inventory/_0007_board.png', 'InventoryBoard', (80, 70, 80, 95), 'original'),
+        ('inventory/inventory slot 128x128.png', 'Slot', (12, 12, 12, 12), 'original'),
+        ('inventory/inventory slot 128x128 hover.png', 'SlotSelected', (12, 12, 12, 12), 'neutral'),
+        ('button/button 256x64/button dark.png', 'Button', (18, 12, 18, 12), 'original'),
+        ('button/button 256x64/button.png', 'ButtonSelected', (18, 12, 18, 12), 'original'),
+        ('health bar/health bar 2 1024x128/_0005_fill-bar.png', 'Fill', (0, 0, 0, 0), 'neutral'),
+        ('icon/key.png', 'KeyItem', (0, 0, 0, 0), 'original'),
+    ]:
+        prepare(LOTUS / source, name, treatment, border, pack='lotus_garden')
+    for source, name in [('Menu', 'File'), ('Star', 'Mission'), ('Check', 'Complete'),
+                         ('Lock', 'Locked'), ('right arrow', 'Arrow'), ('Negative sign', 'Unavailable')]:
+        prepare(SUN / ('Retro icons/Set 1/128 px/' + source + '.png'), name, 'white', pack='SunGraphica')
+    for source, name in [('ItemIcon0', 'Frag'), ('IncendiaryIcon', 'Fire'),
+                         ('ItemIcon2', 'Medkit'), ('ItemIcon3', 'Antidote')]:
+        prepare(ROOT / ('Assets/FPS/Features/Survival/Content/Textures/' + source + '.png'),
+                name, 'original', pack='Existing project item artwork')
+    (SOURCES.parent / 'hud-skin-assets.json').write_text(json.dumps(manifest, indent=2), encoding='utf-8')
+    print(f'Prepared {len(manifest)} asset-backed HUD sprites')
+    sys.exit(0)
 
 prepare(SUN / 'Items - Inventory 1/Bevel button 1.1.png', 'Surfaces/Panel', 'surface', (12, 12, 12, 12), pack='SunGraphica')
 prepare(SUN / 'Items - Inventory 1/Bevel button 1.1.png', 'Controls/Control', 'control', (12, 12, 12, 12), pack='SunGraphica')

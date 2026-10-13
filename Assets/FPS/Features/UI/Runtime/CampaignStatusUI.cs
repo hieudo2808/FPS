@@ -8,6 +8,8 @@ namespace FPS
     /// <summary>Campaign-only downed, phase, extraction and debrief presentation.</summary>
     public sealed class CampaignStatusUI : MonoBehaviour
     {
+        public static CampaignStatusUI Instance { get; private set; }
+        public static bool IsDebriefOpen => Instance != null && Instance.debriefPanel != null && Instance.debriefPanel.activeSelf;
         private CampaignMissionController campaign;
         private PlayerHealth owner;
         private Canvas canvas;
@@ -15,19 +17,21 @@ namespace FPS
         private TMP_Text lifeText;
         private TMP_Text debriefText;
         private GameObject debriefPanel;
+        private Button retryButton;
 
-        private void Awake() => Build();
+        private void Awake() { Instance = this; Build(); }
+        private void OnDestroy() { if (Instance == this) Instance = null; }
 
         private void Update()
         {
             campaign ??= CampaignMissionController.Instance;
             owner ??= Unity.Netcode.NetworkManager.Singleton?.LocalClient?.PlayerObject?.GetComponent<PlayerHealth>();
             if (campaign == null || owner == null) { canvas.enabled = false; return; }
-            canvas.enabled = !InGameMenuUI.IsMenuOpen && !TeamInventoryUI.IsOpen;
+            canvas.enabled = !InGameMenuUI.IsMenuOpen && !TeamInventoryUI.IsOpen && !InputManager.CinematicInputBlocked;
             if (!canvas.enabled) return;
 
             float remaining = campaign.Remaining;
-            phaseText.gameObject.SetActive(campaign.State.phase is CampaignPhase.Preparing or CampaignPhase.Encounter or CampaignPhase.AwaitingParty);
+            phaseText.gameObject.SetActive(CampaignHUD.Instance == null && (campaign.State.phase is CampaignPhase.Preparing or CampaignPhase.Encounter or CampaignPhase.AwaitingParty));
             phaseText.text = campaign.State.phase switch
             {
                 CampaignPhase.Preparing => $"PREPARE  ·  READY {campaign.ReadyCount}/{campaign.ActivePlayerCount}",
@@ -45,9 +49,13 @@ namespace FPS
                 lifeText.text = campaign.State.phase == CampaignPhase.Failed ? "MISSION FAILED" : "SPECTATING\nFIRE / AIM  ·  CHANGE OPERATOR";
 
             bool finished = campaign.State.phase is CampaignPhase.Completed or CampaignPhase.Failed;
+            finished &= campaign.State.phase != CampaignPhase.Completed || campaign.Now - campaign.PhaseStarted >= campaign.settings.endingSeconds;
             debriefPanel.SetActive(finished);
+            retryButton.gameObject.SetActive(finished && campaign.IsServer && campaign.State.phase == CampaignPhase.Failed);
             if (finished)
             {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
                 CampaignRunSummary summary = campaign.RunSummary;
                 if (summary == null)
                 {
@@ -82,14 +90,22 @@ namespace FPS
 
         private void Build()
         {
-            GameObject canvasObject = new("CampaignStatusCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
+            GameObject canvasObject = new("CampaignStatusCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             canvasObject.transform.SetParent(transform, false);
             canvas = canvasObject.GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.sortingOrder = TacticalUiTheme.CampaignOrder + 1;
-            CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize; scaler.referenceResolution = TacticalUiTheme.ReferenceResolution;
+            HudLayout.ConfigureCanvas(canvas);
+            var safe = HudLayout.PeripheralRoot(canvas);
             phaseText = Text(canvasObject.transform, "Phase", new Vector2(.32f, .87f), new Vector2(.68f, .95f), 24, FontStyles.Bold); phaseText.alignment = TextAlignmentOptions.Center;
-            lifeText = Text(canvasObject.transform, "LifeState", new Vector2(.22f, .38f), new Vector2(.78f, .63f), 32, FontStyles.Bold); lifeText.alignment = TextAlignmentOptions.Center; lifeText.color = TacticalUiTheme.Danger;
+            lifeText = Text(safe, "LifeState", new Vector2(.22f, .38f), new Vector2(.78f, .63f), 32, FontStyles.Bold); lifeText.alignment = TextAlignmentOptions.Center; lifeText.color = TacticalUiTheme.Danger;
             debriefPanel = new GameObject("Debrief", typeof(RectTransform), typeof(Image)); debriefPanel.transform.SetParent(canvasObject.transform, false); RectTransform panel = debriefPanel.GetComponent<RectTransform>(); panel.anchorMin = new Vector2(.29f, .19f); panel.anchorMax = new Vector2(.71f, .81f); panel.offsetMin = panel.offsetMax = Vector2.zero; panel.GetComponent<Image>().color = new Color(.03f, .04f, .04f, .96f);
             debriefText = Text(panel, "Summary", new Vector2(.08f, .08f), new Vector2(.92f, .92f), 25, FontStyles.Normal); debriefText.alignment = TextAlignmentOptions.Center;
+            var retry = new GameObject("RetryCheckpoint", typeof(RectTransform), typeof(Image), typeof(Button));
+            retry.transform.SetParent(panel, false);
+            var retryRect = retry.GetComponent<RectTransform>(); retryRect.anchorMin = new Vector2(.15f, .015f); retryRect.anchorMax = new Vector2(.85f, .085f); retryRect.offsetMin = retryRect.offsetMax = Vector2.zero;
+            retry.GetComponent<Image>().color = TacticalUiTheme.Action;
+            retryButton = retry.GetComponent<Button>(); retryButton.colors = TacticalUiTheme.ButtonColors(true);
+            retryButton.onClick.AddListener(() => campaign?.RequestRetry());
+            var retryLabel = Text(retry.transform, "Label", Vector2.zero, Vector2.one, 24, FontStyles.Bold); retryLabel.text = "RETRY CHECKPOINT"; retryLabel.alignment = TextAlignmentOptions.Center;
             phaseText.gameObject.SetActive(false); lifeText.gameObject.SetActive(false); debriefPanel.SetActive(false);
         }
 

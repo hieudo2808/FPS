@@ -1,0 +1,31 @@
+FIXTURE original Aim binding: Right Button
+PASS Body hit uses a plain image in HUD text color
+PASS ADS does not hide hit feedback
+PASS Headshot changes marker color
+PASS Scope feedback renders above scope artwork
+PASS Hit marker expires while scaled time is paused
+PASS Vignette starts smoothly below 45 percent HP
+PASS Vignette alpha rises linearly towards the 0.35 limit
+PASS Healing above threshold fades the vignette out
+PASS Four simultaneous directions use four prebuilt images
+PASS Nearby direction refreshes its original slot
+PASS Fifth direction replaces the oldest cue
+PASS Directions follow owner camera yaw
+PASS Damage cues keep their 128-unit radius
+PASS Coincident source, invalid coordinates and sepsis create no fabricated direction
+PASS Direction fades during the final 0.3 seconds
+PASS Cinematic masks combat feedback
+PASS Feedback still expires behind an overlay
+PASS Downed clears feedback
+PASS Dead clears feedback
+PASS Spectating clears feedback
+PASS Respawn clears feedback even from the Alive state
+PASS Combat feedback creates no per-hit objects
+PASS Keyboard FIRE uses the selected binding label
+PASS Rebound AIM uses left mouse artwork
+PASS Unbound FIRE shows -- without a mouse icon
+PASS Replacement owner prefab exists
+PASS PlayerObject replacement binds new HP immediately
+PASS Old owner event subscription is removed
+PASS New owner receives fresh feedback
+PASS Owner despawn clears all temporary feedback

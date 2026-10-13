@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 15:44:59Z" end-time="2026-10-05 15:47:51Z" duration="172.3120654">
+  <test-suite type="TestSuite" id="1040" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="21" result="Failed" site="Child" start-time="2026-10-05 15:44:59Z" end-time="2026-10-05 15:47:51Z" duration="172.312065" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1028" name="FPS.Survival.PlayModeTests.dll" fullname="E:/Unity/Project/FPS/Library/ScriptAssemblies/FPS.Survival.PlayModeTests.dll" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-10-05 15:44:59Z" end-time="2026-10-05 15:47:51Z" duration="172.220054" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="21156" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1029" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-10-05 15:44:59Z" end-time="2026-10-05 15:47:51Z" duration="172.205891" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1030" name="Tests" fullname="FPS.Tests" runstate="Runnable" testcasecount="20" result="Failed" site="Child" start-time="2026-10-05 15:44:59Z" end-time="2026-10-05 15:47:51Z" duration="172.194402" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestFixture" id="1006" name="HudGameplayAcceptanceTests" fullname="FPS.Tests.HudGameplayAcceptanceTests" classname="FPS.Tests.HudGameplayAcceptanceTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-05 15:44:59Z" end-time="2026-10-05 15:47:51Z" duration="172.172437" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-case id="1007" name="GameplayStatesAndLayoutRemainReadable" fullname="FPS.Tests.HudGameplayAcceptanceTests.GameplayStatesAndLayoutRemainReadable" methodname="GameplayStatesAndLayoutRemainReadable" classname="FPS.Tests.HudGameplayAcceptanceTests" runstate="Runnable" seed="1954076509" result="Failed" start-time="2026-10-05 15:44:59Z" end-time="2026-10-05 15:46:27Z" duration="87.663788" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <failure>
+                <message><![CDATA[  Secondary detail expires after two seconds
+  Expected: True
+  But was:  False
+]]></message>
+                <stack-trace><![CDATA[at FPS.Tests.HudGameplayAcceptanceTests.Check (System.Boolean condition, System.String message) [0x00022] in E:\Unity\Project\FPS\Assets\Tests\PlayMode\HudGameplayAcceptanceTests.cs:449
+at FPS.Tests.HudGameplayAcceptanceTests+<GameplayStatesAndLayoutRemainReadable>d__12.MoveNext () [0x00561] in E:\Unity\Project\FPS\Assets\Tests\PlayMode\HudGameplayAcceptanceTests.cs:111
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0004e] in .\Library\PackageCache\com.unity.test-framework@1405238725ab\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+              </failure>
+              <output><![CDATA[HUD fixture resolution requested: 1920x1080
+[DifficultyManager] Difficulty set to Medium. HP: x1, Damage: x1, Speed: x1, RubberBanding: False
+[Singleton] Created new instance of SettingsManager
+[PlayerVisual] root=BrimstonePlayer(Clone) firstPersonArms=Hand slots=True
+HUD review local host is ready in GameScene.
+[EnemyHealth] Zombiegirl W Kurniawan(Clone) maxHealth scaled to 100
+[ZombieFactory] Spawned Zombiegirl at (-119.50, 0.04, -77.00). HP: 100, Speed: 5.0, Pooled: True, Networked: True
+[EnemyHealth] ZombieMale_AAB_BodyParts(Clone) maxHealth scaled to 100
+[ZombieFactory] Spawned Zombie Male Body Parts at (-124.50, 0.05, -65.50). HP: 100, Speed: 5.0, Pooled: True, Networked: True
+[TeamAnalyzer] Formation: GROUPED, Spread: 0.0m
+[Singleton] Destroying duplicate instance of AudioManager
+]]></output>
+            </test-case>
+            <test-case id="1008" name="NavigationUsesLiveSceneAndInvalidatesConsistently" fullname="FPS.Tests.HudGameplayAcceptanceTests.NavigationUsesLiveSceneAndInvalidatesConsistently" methodname="NavigationUsesLiveSceneAndInvalidatesConsistently" classname="FPS.Tests.HudGameplayAcceptanceTests" runstate="Runnable" seed="427122402" result="Passed" start-time="2026-10-05 15:46:27Z" end-time="2026-10-05 15:47:51Z" duration="84.403104" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[Singleton] Destroying duplicate instance of AudioManager
+HUD fixture resolution requested: 1920x1080
+[DifficultyManager] Difficulty set to Medium. HP: x1, Damage: x1, Speed: x1, RubberBanding: False
+[PlayerVisual] root=BrimstonePlayer(Clone) firstPersonArms=Hand slots=True
+HUD review local host is ready in GameScene.
+[EnemyHealth] ZombieMale_AAB_BodyParts(Clone) maxHealth scaled to 100
+[ZombieFactory] Spawned Zombie Male Body Parts at (-119.50, 0.04, -77.00). HP: 100, Speed: 5.0, Pooled: True, Networked: True
+[Singleton] Destroying duplicate instance of AudioManager
+Saving results to: C:/Users/hieud/AppData/LocalLow/HieuDHM/FPS\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

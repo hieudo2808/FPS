@@ -1,0 +1,85 @@
+playing=True; scene=Assets/FPS/Scenes/GameScene.unity
+resolution=1920x1080; quality=Low; target=-1; vsync=0; fixedDelta=0.01999999
+allocatedMB=3675.5; reservedMB=5227.6; monoUsedMB=733.4
+ROOT -------- Manager --------: active=True; objects=10
+ROOT Canvas: active=True; objects=254
+ROOT SpawnPosition: active=True; objects=10
+ROOT PlayerSpawnPosition: active=True; objects=5
+ROOT UIManager: active=True; objects=1
+ROOT CampaignWorld: active=True; objects=17094
+ROOT CampaignSystems: active=True; objects=85
+ROOT BrimstonePlayer(Clone): active=True; objects=1632
+ROOT BookHeadMonster_withBlood(Clone): active=False; objects=97
+ROOT BookHeadMonster_withBlood(Clone): active=False; objects=97
+ROOT Infector(Clone): active=False; objects=118
+ROOT Infector(Clone): active=False; objects=118
+ROOT Tank(Clone): active=False; objects=140
+ROOT Tank(Clone): active=False; objects=140
+BEHAVIOUR Unity.AI.Navigation.NavMeshModifier: total=1118; activeEnabled=1085
+BEHAVIOUR UnityEngine.Light: total=316; activeEnabled=280
+BEHAVIOUR UnityEngine.UI.Image: total=189; activeEnabled=1
+BEHAVIOUR FPS.DirectorSpawnAnchor: total=124; activeEnabled=124
+BEHAVIOUR FPS.CampaignSupply: total=108; activeEnabled=108
+BEHAVIOUR TMPro.TextMeshProUGUI: total=104; activeEnabled=0
+BEHAVIOUR FPS.SurvivalPickupPresentation: total=72; activeEnabled=72
+BEHAVIOUR UnityEngine.ReflectionProbe: total=46; activeEnabled=46
+BEHAVIOUR FPS.CampaignInteractable: total=41; activeEnabled=41
+BEHAVIOUR FPS.HitboxSegment: total=34; activeEnabled=0
+BEHAVIOUR FPS.CampaignInteractionProxy: total=33; activeEnabled=19
+BEHAVIOUR UnityEngine.LightProbeGroup: total=28; activeEnabled=28
+BEHAVIOUR UnityEngine.UI.Button: total=24; activeEnabled=0
+BEHAVIOUR FPS.DirectorZone: total=21; activeEnabled=21
+BEHAVIOUR UnityEngine.Animator: total=20; activeEnabled=2
+BEHAVIOUR UnityEngine.UI.Outline: total=20; activeEnabled=3
+BEHAVIOUR FPS.MapRecoveryPoint: total=19; activeEnabled=19
+BEHAVIOUR Unity.Netcode.NetworkObject: total=15; activeEnabled=9
+BEHAVIOUR FPS.ButtonAudioFeedback: total=15; activeEnabled=0
+BEHAVIOUR UnityEngine.UI.Shadow: total=13; activeEnabled=1
+BEHAVIOUR UnityEngine.AI.NavMeshObstacle: total=13; activeEnabled=13
+BEHAVIOUR UnityEngine.AudioSource: total=10; activeEnabled=4
+BEHAVIOUR FPS.CampaignDoor: total=10; activeEnabled=10
+BEHAVIOUR TMPro.TextMeshPro: total=10; activeEnabled=10
+BEHAVIOUR UnityEngine.Canvas: total=9; activeEnabled=4
+BEHAVIOUR UnityEngine.UI.Text: total=9; activeEnabled=1
+BEHAVIOUR UnityEngine.Animation: total=7; activeEnabled=7
+BEHAVIOUR UnityEngine.Camera: total=6; activeEnabled=3
+BEHAVIOUR Unity.AI.Navigation.NavMeshSurface: total=6; activeEnabled=6
+BEHAVIOUR UnityEngine.UI.GraphicRaycaster: total=6; activeEnabled=4
+BEHAVIOUR Unity.Netcode.Components.NetworkTransform: total=6; activeEnabled=0
+BEHAVIOUR FPS.Weapon: total=6; activeEnabled=1
+BEHAVIOUR FPS.SpecialSpatialAudio: total=6; activeEnabled=0
+BEHAVIOUR FPS.EnemyHealth: total=6; activeEnabled=0
+BEHAVIOUR FPS.LagCompensatedTarget: total=6; activeEnabled=0
+BEHAVIOUR UnityEngine.AI.NavMeshAgent: total=6; activeEnabled=0
+BEHAVIOUR UnityEngine.UI.CanvasScaler: total=5; activeEnabled=5
+BEHAVIOUR FPS.UiSafeArea: total=5; activeEnabled=4
+BEHAVIOUR FPS.ObjectPooling: total=5; activeEnabled=0
+BEHAVIOUR UnityEngine.UI.ScrollRect: total=4; activeEnabled=0
+BEHAVIOUR FPS.HelicopterRappellerPose: total=4; activeEnabled=0
+BEHAVIOUR UnityEngine.UI.Slider: total=4; activeEnabled=0
+BEHAVIOUR FPS.CampaignChapterRoot: total=3; activeEnabled=3
+BEHAVIOUR UnityEngine.UI.RectMask2D: total=3; activeEnabled=0
+BEHAVIOUR FPS.OutOfBoundsRecoveryVolume: total=3; activeEnabled=3
+LIGHT Point/Baked/Soft: total=242; active=242
+LIGHT Point/Realtime/None: total=72; active=36
+LIGHT Directional/Mixed/Soft: total=1; active=1
+LIGHT Point/Baked/None: total=1; active=1
+CAMERA WeaponCamera: enabled=True; mask=320; path=UsePlayerSettings; actual=Forward; occlusion=True; far=1000; hdr=True
+CAMERA InsertionCamera: enabled=True; mask=3775; path=UsePlayerSettings; actual=Forward; occlusion=True; far=800; hdr=True
+CAMERA Camera: enabled=True; mask=191; path=UsePlayerSettings; actual=Forward; occlusion=True; far=1000; hdr=True
+CAMERA SpectatorCamera: enabled=False; mask=-1; path=UsePlayerSettings; actual=Forward; occlusion=True; far=1000; hdr=True
+CAMERA EndingShotCamera: enabled=False; mask=-1; path=UsePlayerSettings; actual=Forward; occlusion=True; far=120; hdr=True
+CAMERA AudioListenerFallback: enabled=False; mask=-1; path=UsePlayerSettings; actual=Forward; occlusion=True; far=1000; hdr=True
+RENDERER MeshRenderer: active=7133; enabled=6859; static=6037
+RENDERER ParticleSystemRenderer: active=10; enabled=10; static=0
+RENDERER SkinnedMeshRenderer: active=6; enabled=5; static=0
+CAMPAIGN phase=Insertion; chapter=Factory
+CHAPTER Factory: renderers=2545; position=(0.00, 0.00, 0.00)
+CHAPTER Asylum: renderers=1688; position=(125.00, 0.00, 242.29)
+CHAPTER Laboratory: renderers=2777; position=(201.19, -18.00, 272.89)
+LAYER Ground: renderers=3726; enabled=3720
+LAYER Default: renderers=3405; enabled=3137
+LAYER SmallProps: renderers=7; enabled=7
+LAYER Weapon: renderers=5; enabled=5
+LAYER ThirdPerson: renderers=5; enabled=4
+LAYER FirstPerson: renderers=1; enabled=1

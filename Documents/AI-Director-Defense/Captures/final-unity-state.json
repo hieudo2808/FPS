@@ -1,0 +1,110 @@
+{
+  "flags": [
+    {
+      "name": "enableAdaptiveDirector",
+      "type": "Boolean",
+      "fullType": "System.Boolean",
+      "value": "false",
+      "isSerializable": true
+    },
+    {
+      "name": "adaptiveObserveOnly",
+      "type": "Boolean",
+      "fullType": "System.Boolean",
+      "value": "true",
+      "isSerializable": true
+    },
+    {
+      "name": "adaptiveDirectorPolicy",
+      "type": "AdaptiveDirectorPolicyAsset",
+      "fullType": "FPS.AdaptiveDirectorPolicyAsset",
+      "value": "null",
+      "isSerializable": true
+    },
+    {
+      "name": "adaptiveDifficultyPolicy",
+      "type": "AdaptiveDifficultyPolicyAsset",
+      "fullType": "FPS.AdaptiveDifficultyPolicyAsset",
+      "value": "null",
+      "isSerializable": true
+    }
+  ],
+  "saveGate": {
+    "success": true,
+    "executed": "Tools/AI Director/Save Authored Assets"
+  },
+  "scene": {
+    "sceneName": "GameScene",
+    "scenePath": "Assets/FPS/Scenes/GameScene.unity",
+    "isDirty": false,
+    "rootObjectCount": 8,
+    "rootObjects": [
+      {
+        "name": "-------- Manager --------",
+        "entityId": "568105584920198952",
+        "instanceId": 0,
+        "childCount": 9
+      },
+      {
+        "name": "Canvas",
+        "entityId": "568105584920220798",
+        "instanceId": 0,
+        "childCount": 5
+      },
+      {
+        "name": "SpawnPosition",
+        "entityId": "568105584920253792",
+        "instanceId": 0,
+        "childCount": 9
+      },
+      {
+        "name": "PlayerSpawnPosition",
+        "entityId": "568105584920250000",
+        "instanceId": 0,
+        "childCount": 4
+      },
+      {
+        "name": "UIManager",
+        "entityId": "568105584920223746",
+        "instanceId": 0,
+        "childCount": 0
+      },
+      {
+        "name": "CampaignWorld",
+        "entityId": "568105584920223938",
+        "instanceId": 0,
+        "childCount": 9
+      },
+      {
+        "name": "CampaignSystems",
+        "entityId": "568105584920230864",
+        "instanceId": 0,
+        "childCount": 3
+      },
+      {
+        "name": "NetworkGameManager",
+        "entityId": "568105584920219800",
+        "instanceId": 0,
+        "childCount": 0
+      }
+    ]
+  },
+  "compilation": {
+    "isCompiling": false,
+    "isUpdating": false,
+    "domainReloadPending": false
+  },
+  "capturedUtc": "2026-10-13T07:49:09.2366975Z",
+  "errors": {
+    "count": 0,
+    "logs": []
+  },
+  "editor": {
+    "isPlaying": false,
+    "isPaused": false,
+    "isCompiling": false,
+    "timeSinceStartup": 17529.6560321,
+    "unityVersion": "6000.5.6f1",
+    "platform": "WindowsEditor"
+  }
+}

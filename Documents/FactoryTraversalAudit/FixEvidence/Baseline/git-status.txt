@@ -1,0 +1,74 @@
+ M Assets/FPS/Features/AI/Runtime/RubberBandingSystem.cs
+ M Assets/FPS/Features/Characters/Enemies/Runtime/EnemyAI.cs
+ M Assets/FPS/Features/Input/Runtime/InputManager.cs
+ M Assets/FPS/Features/Interaction/Runtime/PickupItem.cs
+ M Assets/FPS/Features/Missions/Runtime/CampaignDoor.cs
+ M Assets/FPS/Features/Missions/Runtime/CampaignHUD.Navigation.cs
+ M Assets/FPS/Features/Missions/Runtime/CampaignHUD.cs
+ M Assets/FPS/Features/Missions/Runtime/CampaignInteractable.cs
+ M Assets/FPS/Features/Missions/Runtime/FactoryObjectiveInteractable.cs
+ M Assets/FPS/Features/Survival/Runtime/SurvivalHotbar.cs
+ M Assets/FPS/Features/UI/Editor/SurvivalUiArt.cs
+ M Assets/FPS/Features/UI/Editor/TacticalUiWorkshop.cs
+ M Assets/FPS/Features/UI/Runtime/CampaignStatusUI.cs
+ M Assets/FPS/Features/UI/Runtime/HUDManager.cs
+ M Assets/FPS/Features/UI/Runtime/InGameMenuUI.cs
+ M Assets/FPS/Features/UI/Runtime/SettingsManager.cs
+ M Assets/FPS/Features/UI/Runtime/SettingsUI.cs
+ M Assets/FPS/Features/UI/Runtime/SquadHUD.cs
+ M Assets/FPS/Features/UI/Runtime/TeamInventoryUI.cs
+ M Assets/FPS/Features/UI/Runtime/WaitingRoomUI.cs
+ M Assets/FPS/Features/Weapons/Content/Operator/Scope/HUDScope.png.meta
+ M Assets/FPS/Features/Weapons/Content/Warden/Material/bullet/WardenBullet.mat
+ M Assets/FPS/Features/Weapons/Content/Warden/Material/glass/WardenGlass.mat
+ M Assets/FPS/Features/Weapons/Content/Warden/Material/gun/Warden.mat
+ M Assets/FPS/Features/Weapons/Content/Warden/Material/scope/WardenScope.mat
+ M Assets/FPS/Features/Weapons/Content/Warden/Warden.asset
+ M Assets/FPS/Features/Weapons/Content/Warden/Warden.prefab
+ M Assets/FPS/Features/Weapons/Runtime/Weapon.cs
+ M Assets/FPS/Scenes/GameScene.unity
+ M Assets/Tests/Editor/UI/SurvivalUiRegressionTests.cs
+ M Assets/Tests/PlayMode/FPS.Survival.PlayModeTests.asmdef
+ M Documents/UIUX/GameScene-survival-1920x1080.png
+ M Documents/UIUX/Tools/prepare_survival_assets.py
+ D Documents/UIUX/gerty-tools.json
+ M Documents/checklist.md
+ M Packages/packages-lock.json
+?? .playwright-mcp/
+?? Assets/FPS/Features/Missions/Editor/FactoryTraversalAudit.cs
+?? Assets/FPS/Features/Missions/Editor/FactoryTraversalAudit.cs.meta
+?? Assets/FPS/Features/Missions/Runtime/CampaignObjectiveSelection.cs
+?? Assets/FPS/Features/Missions/Runtime/CampaignObjectiveSelection.cs.meta
+?? Assets/FPS/Features/UI/Content/Resources.meta
+?? Assets/FPS/Features/UI/Content/Resources/
+?? Assets/FPS/Features/UI/Editor/HudReviewTools.cs
+?? Assets/FPS/Features/UI/Editor/HudReviewTools.cs.meta
+?? Assets/FPS/Features/UI/Runtime/HudLayout.cs
+?? Assets/FPS/Features/UI/Runtime/HudLayout.cs.meta
+?? Assets/FPS/Features/UI/Runtime/HudMarkerProjection.cs
+?? Assets/FPS/Features/UI/Runtime/HudMarkerProjection.cs.meta
+?? Assets/FPS/Features/UI/Runtime/HudSkin.cs
+?? Assets/FPS/Features/UI/Runtime/HudSkin.cs.meta
+?? Assets/FPS/Features/Weapons/Content/Warden/Scope.meta
+?? Assets/FPS/Features/Weapons/Content/Warden/Scope/
+?? Assets/Tests/Editor/ServicesShutdownRegressionTests.cs
+?? Assets/Tests/Editor/ServicesShutdownRegressionTests.cs.meta
+?? Assets/Tests/Editor/UI/HudRegressionTests.cs
+?? Assets/Tests/Editor/UI/HudRegressionTests.cs.meta
+?? Assets/Tests/Editor/UI/SettingsDifficultyRegressionTests.cs
+?? Assets/Tests/Editor/UI/SettingsDifficultyRegressionTests.cs.meta
+?? Assets/Tests/Editor/WeaponAimRegressionTests.cs
+?? Assets/Tests/Editor/WeaponAimRegressionTests.cs.meta
+?? Assets/Tests/PlayMode/HudGameplayAcceptanceTests.cs
+?? Assets/Tests/PlayMode/HudGameplayAcceptanceTests.cs.meta
+?? Assets/Tests/PlayMode/HudInputPlayModeTests.cs
+?? Assets/Tests/PlayMode/HudInputPlayModeTests.cs.meta
+?? Documents/FactoryTraversalAudit/
+?? Documents/Settings-Difficulty-Audit-2026-10-05.md
+?? Documents/UIUX/HUD-Asset-Skin-2026-10-05.md
+?? Documents/UIUX/HUD-Evidence/
+?? Documents/UIUX/HUD-Implementation-2026-10-05.md
+?? Documents/UIUX/HUD-Layout-Study-2026-10-05.png
+?? Documents/UIUX/HUD-Research-2026-10-05.md
+?? Documents/UIUX/hud-skin-assets.json
+?? Packages/com.unity.services.multiplayer/

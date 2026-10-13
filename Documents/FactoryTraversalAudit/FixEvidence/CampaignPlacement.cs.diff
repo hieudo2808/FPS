@@ -1,0 +1,34 @@
+--- baseline/CampaignPlacement.cs
++++ Assets/FPS/Features/Missions/Runtime/CampaignPlacement.cs
+@@ -48,6 +48,17 @@
+             return true;
+         }
+ 
++        /// <summary>A saved pose must have a way out, not just a clear body and a NavMesh floor.</summary>
++        public static bool TrySafeFloor(CampaignChapterRoot chapter, Vector3 position, ulong playerId, out Vector3 floor)
++        {
++            if (!TryFloor(chapter, position, out floor) || !Clear(floor, playerId) || chapter.recoveries == null) return false;
++            foreach (var point in chapter.recoveries)
++                if (point != null && point.isActiveAndEnabled
++                    && TryFloor(chapter, point.transform.position, out var destination)
++                    && CompletePath(floor, destination, out _)) return true;
++            return false;
++        }
++
+         public static bool TryReconnectPosition(CampaignChapterRoot chapter, Vector3 requested, ulong playerId, out Vector3 result)
+         {
+             result = requested;
+@@ -58,12 +69,7 @@
+                 {
+                     float angle = i * Mathf.PI / 4;
+                     Vector3 candidate = requested + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * (ring * .6f);
+-                    if (!TryFloor(chapter, candidate, out var floor) || !Clear(floor, playerId)) continue;
+-                    bool connected = false;
+-                    foreach (var point in chapter.recoveries)
+-                        if (point != null && TryFloor(chapter, point.transform.position, out var start)
+-                            && CompletePath(start, floor, out _)) { connected = true; break; }
+-                    if (!connected) continue;
++                    if (!TrySafeFloor(chapter, candidate, playerId, out var floor)) continue;
+                     result = floor + Vector3.up * .12f;
+                     return true;
+                 }

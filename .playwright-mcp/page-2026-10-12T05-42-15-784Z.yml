@@ -1,0 +1,44 @@
+- generic [active] [ref=f11e1]:
+  - banner [ref=f11e2]:
+    - button "Skip to content" [ref=f11e3] [cursor=pointer]
+    - button "Accessibility Feedback" [ref=f11e6] [cursor=pointer]
+    - generic [ref=f11e9]:
+      - link [ref=f11e10] [cursor=pointer]:
+        - /url: https://www.bing.com/ck/a?!&&p=a94d82ebbdb21344731fe0d487a8427f3610e838906837a4740bca19a5407966JmltdHM9MTc5MTY3NjgwMA&ptn=3&ver=2&hsh=4&fclid=11207493-17f4-65ad-244f-637016fb64a9&u=a1Lz9GT1JNPVo5RkQx&ntb=1
+        - heading "Back to Bing search" [level=1] [ref=f11e11]
+      - search [ref=f11e12]:
+        - button "Search" [ref=f11e15] [cursor=pointer]
+        - searchbox "Enter your search here - Search suggestions will show as you type" [ref=f11e16]: "\"bandage\" \"animation\" \"fbx\""
+        - button "Search using an image" [ref=f11e19] [cursor=pointer]
+    - complementary "Account Rewards and Preferences" [ref=f11e21]:
+      - button "Microsoft Rewards"
+      - button "Shuutou" [ref=f11e22] [cursor=pointer]:
+        - img "Profile Picture" [ref=f11e23]
+    - navigation "Search Filter" [ref=f11e24]:
+      - list [ref=f11e25]:
+        - listitem [ref=f11e26]:
+          - link "All" [ref=f11e27] [cursor=pointer]:
+            - /url: https://www.bing.com/ck/a?!&&p=eaf0d1b2d7f35fb60a845fd364840271e8146fdd92f35dc646801b364acfc818JmltdHM9MTc5MTY3NjgwMA&ptn=3&ver=2&hsh=4&fclid=11207493-17f4-65ad-244f-637016fb64a9&u=a1Lz9zY29wZT13ZWImRk9STT1IRFJTQzE&ntb=1
+        - listitem [ref=f11e28]:
+          - link "AI Mode" [ref=f11e29] [cursor=pointer]:
+            - /url: /copilotsearch?q=%22bandage%22+%22animation%22+%22fbx%22&FORM=CSSCOP
+        - listitem [ref=f11e32]:
+          - link "Images" [ref=f11e33] [cursor=pointer]:
+            - /url: https://www.bing.com/ck/a?!&&p=1cd65276ad36f029e66da677a73e97bda003f3e7ca0859b0079e415c43472aebJmltdHM9MTc5MTY3NjgwMA&ptn=3&ver=2&hsh=4&fclid=11207493-17f4-65ad-244f-637016fb64a9&u=a1L2ltYWdlcy9zZWFyY2g_cT0lMjJiYW5kYWdlJTIyKyUyMmFuaW1hdGlvbiUyMislMjJmYnglMjImRk9STT1IRFJTQzI&ntb=1
+        - listitem [ref=f11e34]:
+          - link "Videos" [ref=f11e35] [cursor=pointer]:
+            - /url: https://www.bing.com/ck/a?!&&p=84e40025d95a76f6de156de3979ac8397327d309e8e6d9707dc7509842867b1aJmltdHM9MTc5MTY3NjgwMA&ptn=3&ver=2&hsh=4&fclid=11207493-17f4-65ad-244f-637016fb64a9&u=a1L3ZpZGVvcy9zZWFyY2g_cT0lMjJiYW5kYWdlJTIyKyUyMmFuaW1hdGlvbiUyMislMjJmYnglMjImRk9STT1IRFJTQzM&ntb=1
+        - listitem [ref=f11e36]:
+          - link "Maps" [ref=f11e37] [cursor=pointer]:
+            - /url: https://www.bing.com/ck/a?!&&p=ee42a136ec256cae0f2f198f4e25eb906206370e181e0200a6509d9314a04fc3JmltdHM9MTc5MTY3NjgwMA&ptn=3&ver=2&hsh=4&fclid=11207493-17f4-65ad-244f-637016fb64a9&u=a1L21hcHM_cT0lMjJiYW5kYWdlJTIyKyUyMmFuaW1hdGlvbiUyMislMjJmYnglMjImRk9STT1IRFJTQzQ&ntb=1
+        - listitem [ref=f11e38]:
+          - button [ref=f11e39] [cursor=pointer]
+  - contentinfo [ref=f11e43]:
+    - generic [ref=f11e44]:
+      - list:
+        - listitem [ref=f11e45]:
+          - link "Privacy" [ref=f11e46] [cursor=pointer]:
+            - /url: https://www.bing.com/ck/a?!&&p=3a6f01833675e58f2d7f145a66bdfe428c82d93c6b2790cc45ffd37a0a45be45JmltdHM9MTc5MTY3NjgwMA&ptn=3&ver=2&hsh=4&fclid=11207493-17f4-65ad-244f-637016fb64a9&psq=%22bandage%22+%22animation%22+%22fbx%22&u=a1aHR0cDovL2dvLm1pY3Jvc29mdC5jb20vZndsaW5rLz9MaW5rSWQ9NTIxODM5&ntb=1
+        - listitem [ref=f11e47]:
+          - link "Terms" [ref=f11e48] [cursor=pointer]:
+            - /url: https://www.bing.com/ck/a?!&&p=848985f530d801637f518b60e0e558e9620ac5caef7a1239a9e9a5aba1dcef25JmltdHM9MTc5MTY3NjgwMA&ptn=3&ver=2&hsh=4&fclid=11207493-17f4-65ad-244f-637016fb64a9&psq=%22bandage%22+%22animation%22+%22fbx%22&u=a1aHR0cDovL2dvLm1pY3Jvc29mdC5jb20vZndsaW5rLz9MaW5rSUQ9MjQ2MzM4&ntb=1

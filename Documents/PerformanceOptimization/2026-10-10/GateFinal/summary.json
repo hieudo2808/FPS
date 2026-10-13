@@ -1,0 +1,345 @@
+[
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateFinal\\NoOcclusion\\Run1\\factory3-r1.txt",
+    "valid": false,
+    "reason": "external foreground check failed or unavailable"
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateFinal\\NoOcclusion\\Run1\\factory43-r1.txt",
+    "valid": false,
+    "reason": "external foreground check failed or unavailable"
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateFinal\\NoOcclusion\\Run1\\lab27-r1.txt",
+    "valid": false,
+    "reason": "external foreground check failed or unavailable"
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateFinal\\NoOcclusion\\Run1\\lab70-r1.txt",
+    "valid": false,
+    "reason": "17"
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateFinal\\NoOcclusion\\Run1Retry\\asylum10-r1.txt",
+    "valid": false,
+    "reason": "7"
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateFinal\\NoOcclusion\\Run1Retry\\lab70-r1.txt",
+    "valid": false,
+    "reason": "0"
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateFinal\\Occlusion\\Run1\\asylum10-r1.txt",
+    "valid": true,
+    "scenario": "asylum10",
+    "variant": "normal",
+    "run": "Run1",
+    "frames": {
+      "mean": 3.8384104626751103,
+      "p95": 4.748803,
+      "p99": 5.292198,
+      "max": 8.391695,
+      "count": 15633
+    },
+    "over33ms": 0,
+    "over50ms": 0,
+    "setPass": "235.848",
+    "triangles": "387785.490",
+    "textureCurrentMB": "2828.7",
+    "textureNonStreamingMB": "2785.0",
+    "externalTraceValid": true,
+    "presentationRows": 15632,
+    "privateBytes": {
+      "mean": 4531843072,
+      "p95": 4531843072,
+      "p99": 4531843072,
+      "max": 4531843072,
+      "count": 30
+    },
+    "workingSetBytes": {
+      "mean": 822230357.3333334,
+      "p95": 823103488,
+      "p99": 823894016,
+      "max": 823894016,
+      "count": 30
+    },
+    "availablePhysicalBytes": {
+      "mean": 3380541849.6,
+      "p95": 3423305728,
+      "p99": 3428487168,
+      "max": 3440918528,
+      "count": 30
+    },
+    "systemMemoryLoad": {
+      "mean": 79.6,
+      "p95": 80,
+      "p99": 80,
+      "max": 80,
+      "count": 30
+    },
+    "gpuDedicatedInstances": {
+      "pid_24184_luid_0x00000000_0x00017E42_phys_0": {
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "count": 30
+      },
+      "pid_24184_luid_0x00000000_0x0001DB52_phys_0": {
+        "mean": 3282329600,
+        "p95": 3282329600,
+        "p99": 3282329600,
+        "max": 3282329600,
+        "count": 30
+      }
+    },
+    "MsBetweenPresents": {
+      "mean": 3.838250524564995,
+      "p95": 4.7578,
+      "p99": 5.3454,
+      "max": 7.734,
+      "count": 15632
+    },
+    "MsCPUBusy": {
+      "mean": 3.7051973004094165,
+      "p95": 4.6017,
+      "p99": 5.159,
+      "max": 7.5608,
+      "count": 15632
+    },
+    "MsGPUTime": {
+      "mean": 2.031447888945752,
+      "p95": 2.1588,
+      "p99": 2.3175,
+      "max": 3.1451,
+      "count": 15632
+    },
+    "MsGPUBusy": {
+      "mean": 2.017816511003071,
+      "p95": 2.1411,
+      "p99": 2.2874,
+      "max": 2.6386,
+      "count": 15632
+    },
+    "MsGPUWait": {
+      "mean": 0.01363137794268168,
+      "p95": 0.0209,
+      "p99": 0.0401,
+      "max": 0.8893,
+      "count": 15632
+    }
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateFinal\\Occlusion\\Run1\\factory3-r1.txt",
+    "valid": false,
+    "reason": "external foreground check failed or unavailable"
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateFinal\\Occlusion\\Run1\\factory43-r1.txt",
+    "valid": false,
+    "reason": "external foreground check failed or unavailable"
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateFinal\\Occlusion\\Run1\\lab27-r1.txt",
+    "valid": true,
+    "scenario": "lab27",
+    "variant": "normal",
+    "run": "Run1",
+    "frames": {
+      "mean": 3.663745581756014,
+      "p95": 4.566398,
+      "p99": 5.176601,
+      "max": 8.269501,
+      "count": 16378
+    },
+    "over33ms": 0,
+    "over50ms": 0,
+    "setPass": "91.377",
+    "triangles": "159307.688",
+    "textureCurrentMB": "2828.7",
+    "textureNonStreamingMB": "2785.0",
+    "externalTraceValid": true,
+    "presentationRows": 16377,
+    "privateBytes": {
+      "mean": 4480518280.533334,
+      "p95": 4480753664,
+      "p99": 4480786432,
+      "max": 4480786432,
+      "count": 30
+    },
+    "workingSetBytes": {
+      "mean": 791579306.6666666,
+      "p95": 791769088,
+      "p99": 791769088,
+      "max": 792588288,
+      "count": 30
+    },
+    "availablePhysicalBytes": {
+      "mean": 3320679901.866667,
+      "p95": 3513774080,
+      "p99": 3517067264,
+      "max": 3523866624,
+      "count": 30
+    },
+    "systemMemoryLoad": {
+      "mean": 80,
+      "p95": 85,
+      "p99": 85,
+      "max": 85,
+      "count": 30
+    },
+    "gpuDedicatedInstances": {
+      "pid_24184_luid_0x00000000_0x00017E42_phys_0": {
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "count": 30
+      },
+      "pid_24184_luid_0x00000000_0x0001DB52_phys_0": {
+        "mean": 3262341120,
+        "p95": 3262341120,
+        "p99": 3262341120,
+        "max": 3262341120,
+        "count": 30
+      }
+    },
+    "MsBetweenPresents": {
+      "mean": 3.6636777370702815,
+      "p95": 4.5619,
+      "p99": 5.1577,
+      "max": 8.3544,
+      "count": 16377
+    },
+    "MsCPUBusy": {
+      "mean": 3.5299232582280027,
+      "p95": 4.4026,
+      "p99": 4.9791,
+      "max": 8.1143,
+      "count": 16377
+    },
+    "MsGPUTime": {
+      "mean": 1.6334123160530012,
+      "p95": 1.7872,
+      "p99": 1.9172,
+      "max": 2.5182,
+      "count": 16377
+    },
+    "MsGPUBusy": {
+      "mean": 1.6190280698540636,
+      "p95": 1.7692,
+      "p99": 1.8943,
+      "max": 2.4976,
+      "count": 16377
+    },
+    "MsGPUWait": {
+      "mean": 0.014384246198937535,
+      "p95": 0.022,
+      "p99": 0.0318,
+      "max": 0.5082,
+      "count": 16377
+    }
+  },
+  {
+    "file": "Documents\\PerformanceOptimization\\2026-10-10\\GateFinal\\Occlusion\\Run1\\lab70-r1.txt",
+    "valid": true,
+    "scenario": "lab70",
+    "variant": "normal",
+    "run": "Run1",
+    "frames": {
+      "mean": 5.460921211484211,
+      "p95": 6.984297,
+      "p99": 8.329499,
+      "max": 11.2509,
+      "count": 10989
+    },
+    "over33ms": 0,
+    "over50ms": 0,
+    "setPass": "107.012",
+    "triangles": "410741.377",
+    "textureCurrentMB": "2828.7",
+    "textureNonStreamingMB": "2785.0",
+    "externalTraceValid": true,
+    "presentationRows": 10988,
+    "privateBytes": {
+      "mean": 4531737258.666667,
+      "p95": 4531765248,
+      "p99": 4531765248,
+      "max": 4531765248,
+      "count": 30
+    },
+    "workingSetBytes": {
+      "mean": 822171374.9333333,
+      "p95": 822190080,
+      "p99": 822190080,
+      "max": 822190080,
+      "count": 30
+    },
+    "availablePhysicalBytes": {
+      "mean": 3495419767.4666667,
+      "p95": 3537215488,
+      "p99": 3537309696,
+      "max": 3539755008,
+      "count": 30
+    },
+    "systemMemoryLoad": {
+      "mean": 79,
+      "p95": 79,
+      "p99": 79,
+      "max": 79,
+      "count": 30
+    },
+    "gpuDedicatedInstances": {
+      "pid_24184_luid_0x00000000_0x00017E42_phys_0": {
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "count": 30
+      },
+      "pid_24184_luid_0x00000000_0x0001DB52_phys_0": {
+        "mean": 3275096064,
+        "p95": 3275096064,
+        "p99": 3275096064,
+        "max": 3275096064,
+        "count": 30
+      }
+    },
+    "MsBetweenPresents": {
+      "mean": 5.460232344375682,
+      "p95": 6.9725,
+      "p99": 8.2979,
+      "max": 14.4229,
+      "count": 10988
+    },
+    "MsCPUBusy": {
+      "mean": 5.306848252639242,
+      "p95": 6.8029,
+      "p99": 8.0914,
+      "max": 14.1631,
+      "count": 10988
+    },
+    "MsGPUTime": {
+      "mean": 2.2214028667637424,
+      "p95": 2.4999,
+      "p99": 2.6407,
+      "max": 3.407,
+      "count": 10988
+    },
+    "MsGPUBusy": {
+      "mean": 2.2058921914816163,
+      "p95": 2.4814,
+      "p99": 2.6162,
+      "max": 3.276,
+      "count": 10988
+    },
+    "MsGPUWait": {
+      "mean": 0.015510675282125956,
+      "p95": 0.0262,
+      "p99": 0.0396,
+      "max": 0.2973,
+      "count": 10988
+    }
+  }
+]

@@ -1,0 +1,677 @@
+{
+  "status": "success",
+  "result": {
+    "gameObject": "CampaignSystems",
+    "component": "FPS.CampaignMissionController",
+    "fullTypeName": "FPS.CampaignMissionController",
+    "properties": [
+      {
+        "name": "InsertionReady",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "InsertionPartySize",
+        "type": "Int32",
+        "fullType": "System.Int32",
+        "value": "1",
+        "canWrite": false
+      },
+      {
+        "name": "State",
+        "type": "CampaignState",
+        "fullType": "FPS.CampaignState",
+        "value": "FPS.CampaignState",
+        "canWrite": false
+      },
+      {
+        "name": "RunSummary",
+        "type": "CampaignRunSummary",
+        "fullType": "FPS.CampaignRunSummary",
+        "value": "null",
+        "canWrite": false
+      },
+      {
+        "name": "ContentCatalog",
+        "type": "CampaignContentCatalog",
+        "fullType": "FPS.CampaignContentCatalog",
+        "value": "CampaignContentCatalog",
+        "canWrite": false
+      },
+      {
+        "name": "Current",
+        "type": "CampaignChapterRoot",
+        "fullType": "FPS.CampaignChapterRoot",
+        "value": "Factory",
+        "canWrite": false
+      },
+      {
+        "name": "Now",
+        "type": "Double",
+        "fullType": "System.Double",
+        "value": "305.20744685920886",
+        "canWrite": false
+      },
+      {
+        "name": "PhaseStarted",
+        "type": "Double",
+        "fullType": "System.Double",
+        "value": "55.313698596330362",
+        "canWrite": false
+      },
+      {
+        "name": "Remaining",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "0",
+        "canWrite": false
+      },
+      {
+        "name": "ReadyCount",
+        "type": "Int32",
+        "fullType": "System.Int32",
+        "value": "0",
+        "canWrite": false
+      },
+      {
+        "name": "CanResumeSavedCampaign",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "IsFinale",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "SuppressSpawns",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "BlocksInput",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "Players",
+        "type": "IEnumerable`1",
+        "fullType": "System.Collections.Generic.IEnumerable`1[[FPS.PlayerHealth, FPS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "value": "System.Linq.Enumerable+WhereEnumerableIterator`1[FPS.PlayerHealth]",
+        "canWrite": false
+      },
+      {
+        "name": "ActivePlayerCount",
+        "type": "Int32",
+        "fullType": "System.Int32",
+        "value": "1",
+        "canWrite": false
+      },
+      {
+        "name": "SnapshotChapter",
+        "type": "CampaignChapter",
+        "fullType": "FPS.CampaignChapter",
+        "value": "Factory",
+        "canWrite": false
+      },
+      {
+        "name": "NetworkManager",
+        "type": "NetworkManager",
+        "fullType": "Unity.Netcode.NetworkManager",
+        "value": "NetworkManager",
+        "canWrite": false
+      },
+      {
+        "name": "RpcTarget",
+        "type": "RpcTarget",
+        "fullType": "Unity.Netcode.RpcTarget",
+        "value": "Unity.Netcode.RpcTarget",
+        "canWrite": false
+      },
+      {
+        "name": "IsLocalPlayer",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "IsOwner",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": true
+      },
+      {
+        "name": "IsServer",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "HasAuthority",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": true
+      },
+      {
+        "name": "IsSessionOwner",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": true
+      },
+      {
+        "name": "ServerIsHost",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "IsClient",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "IsHost",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "IsOwnedByServer",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": true
+      },
+      {
+        "name": "IsSpawned",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": true
+      },
+      {
+        "name": "NetworkObject",
+        "type": "NetworkObject",
+        "fullType": "Unity.Netcode.NetworkObject",
+        "value": "CampaignSystems",
+        "canWrite": false
+      },
+      {
+        "name": "HasNetworkObject",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "NetworkObjectId",
+        "type": "UInt64",
+        "fullType": "System.UInt64",
+        "value": "8",
+        "canWrite": true
+      },
+      {
+        "name": "NetworkBehaviourId",
+        "type": "UInt16",
+        "fullType": "System.UInt16",
+        "value": "0",
+        "canWrite": true
+      },
+      {
+        "name": "OwnerClientId",
+        "type": "UInt64",
+        "fullType": "System.UInt64",
+        "value": "0",
+        "canWrite": true
+      },
+      {
+        "name": "IsDestroying",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": false
+      },
+      {
+        "name": "m_TargetIdBeingSynchronized",
+        "type": "UInt64",
+        "fullType": "System.UInt64",
+        "value": "0",
+        "canWrite": false
+      },
+      {
+        "name": "destroyCancellationToken",
+        "type": "CancellationToken",
+        "fullType": "System.Threading.CancellationToken",
+        "value": "System.Threading.CancellationToken",
+        "canWrite": false
+      },
+      {
+        "name": "useGUILayout",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": true
+      },
+      {
+        "name": "didStart",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "didAwake",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "runInEditMode",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "canWrite": true
+      },
+      {
+        "name": "allowPrefabModeInPlayMode",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "enabled",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": true
+      },
+      {
+        "name": "isActiveAndEnabled",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "canWrite": false
+      },
+      {
+        "name": "transform",
+        "type": "Transform",
+        "fullType": "UnityEngine.Transform",
+        "value": "CampaignSystems",
+        "canWrite": false
+      },
+      {
+        "name": "transformHandle",
+        "type": "TransformHandle",
+        "fullType": "UnityEngine.TransformHandle",
+        "value": "UnityEngine.TransformHandle",
+        "canWrite": false
+      },
+      {
+        "name": "gameObject",
+        "type": "GameObject",
+        "fullType": "UnityEngine.GameObject",
+        "value": "CampaignSystems",
+        "canWrite": false
+      },
+      {
+        "name": "tag",
+        "type": "String",
+        "fullType": "System.String",
+        "value": "Untagged",
+        "canWrite": true
+      },
+      {
+        "name": "name",
+        "type": "String",
+        "fullType": "System.String",
+        "value": "CampaignSystems",
+        "canWrite": true
+      },
+      {
+        "name": "hideFlags",
+        "type": "HideFlags",
+        "fullType": "UnityEngine.HideFlags",
+        "value": "None",
+        "canWrite": true
+      }
+    ],
+    "fields": [
+      {
+        "name": "insertionRoster",
+        "type": "NetworkList`1",
+        "fullType": "Unity.Netcode.NetworkList`1[[FPS.CampaignInsertionParticipant, FPS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "value": "Unity.Netcode.NetworkList`1[FPS.CampaignInsertionParticipant]",
+        "isSerializable": false
+      },
+      {
+        "name": "insertionReady",
+        "type": "NetworkVariable`1",
+        "fullType": "Unity.Netcode.NetworkVariable`1[[System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "Unity.Netcode.NetworkVariable`1[System.Boolean]",
+        "isSerializable": false
+      },
+      {
+        "name": "campaignTank",
+        "type": "EnemyHealth",
+        "fullType": "FPS.EnemyHealth",
+        "value": "null",
+        "isSerializable": false
+      },
+      {
+        "name": "nextTankAttempt",
+        "type": "Double",
+        "fullType": "System.Double",
+        "value": "0",
+        "isSerializable": false
+      },
+      {
+        "name": "settings",
+        "type": "CampaignSettings",
+        "fullType": "FPS.CampaignSettings",
+        "value": "CampaignSettings",
+        "isSerializable": true
+      },
+      {
+        "name": "chapters",
+        "type": "CampaignChapterRoot[]",
+        "fullType": "FPS.CampaignChapterRoot[]",
+        "value": "FPS.CampaignChapterRoot[]",
+        "isSerializable": true
+      },
+      {
+        "name": "supplies",
+        "type": "CampaignSupply[]",
+        "fullType": "FPS.CampaignSupply[]",
+        "value": "FPS.CampaignSupply[]",
+        "isSerializable": true
+      },
+      {
+        "name": "doors",
+        "type": "CampaignDoor[]",
+        "fullType": "FPS.CampaignDoor[]",
+        "value": "FPS.CampaignDoor[]",
+        "isSerializable": true
+      },
+      {
+        "name": "fileSources",
+        "type": "CampaignInteractable[]",
+        "fullType": "FPS.CampaignInteractable[]",
+        "value": "FPS.CampaignInteractable[]",
+        "isSerializable": true
+      },
+      {
+        "name": "openDoorMask",
+        "type": "NetworkVariable`1",
+        "fullType": "Unity.Netcode.NetworkVariable`1[[System.UInt64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "Unity.Netcode.NetworkVariable`1[System.UInt64]",
+        "isSerializable": false
+      },
+      {
+        "name": "replicatedState",
+        "type": "NetworkVariable`1",
+        "fullType": "Unity.Netcode.NetworkVariable`1[[Unity.Collections.FixedString4096Bytes, Unity.Collections, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "value": "Unity.Netcode.NetworkVariable`1[Unity.Collections.FixedString4096Bytes]",
+        "isSerializable": false
+      },
+      {
+        "name": "replicatedSummary",
+        "type": "NetworkVariable`1",
+        "fullType": "Unity.Netcode.NetworkVariable`1[[Unity.Collections.FixedString4096Bytes, Unity.Collections, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "value": "Unity.Netcode.NetworkVariable`1[Unity.Collections.FixedString4096Bytes]",
+        "isSerializable": false
+      },
+      {
+        "name": "phaseStarted",
+        "type": "NetworkVariable`1",
+        "fullType": "Unity.Netcode.NetworkVariable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "Unity.Netcode.NetworkVariable`1[System.Double]",
+        "isSerializable": false
+      },
+      {
+        "name": "readyCount",
+        "type": "NetworkVariable`1",
+        "fullType": "Unity.Netcode.NetworkVariable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "Unity.Netcode.NetworkVariable`1[System.Int32]",
+        "isSerializable": false
+      },
+      {
+        "name": "transferLocked",
+        "type": "NetworkVariable`1",
+        "fullType": "Unity.Netcode.NetworkVariable`1[[System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "Unity.Netcode.NetworkVariable`1[System.Boolean]",
+        "isSerializable": false
+      },
+      {
+        "name": "claimedSupplies",
+        "type": "NetworkList`1",
+        "fullType": "Unity.Netcode.NetworkList`1[[Unity.Collections.FixedString64Bytes, Unity.Collections, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "value": "Unity.Netcode.NetworkList`1[Unity.Collections.FixedString64Bytes]",
+        "isSerializable": false
+      },
+      {
+        "name": "state",
+        "type": "CampaignState",
+        "fullType": "FPS.CampaignState",
+        "value": "FPS.CampaignState",
+        "isSerializable": false
+      },
+      {
+        "name": "checkpoint",
+        "type": "CampaignCheckpoint",
+        "fullType": "FPS.CampaignCheckpoint",
+        "value": "FPS.CampaignCheckpoint",
+        "isSerializable": false
+      },
+      {
+        "name": "holds",
+        "type": "Dictionary`2",
+        "fullType": "System.Collections.Generic.Dictionary`2[[System.UInt64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[FPS.CampaignMissionController+Hold, FPS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "value": "System.Collections.Generic.Dictionary`2[System.UInt64,FPS.CampaignMissionController+Hold]",
+        "isSerializable": false
+      },
+      {
+        "name": "releaseRequired",
+        "type": "HashSet`1",
+        "fullType": "System.Collections.Generic.HashSet`1[[System.UInt64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "System.Collections.Generic.HashSet`1[System.UInt64]",
+        "isSerializable": false
+      },
+      {
+        "name": "ready",
+        "type": "HashSet`1",
+        "fullType": "System.Collections.Generic.HashSet`1[[System.UInt64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "System.Collections.Generic.HashSet`1[System.UInt64]",
+        "isSerializable": false
+      },
+      {
+        "name": "knownPlayers",
+        "type": "HashSet`1",
+        "fullType": "System.Collections.Generic.HashSet`1[[System.UInt64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "System.Collections.Generic.HashSet`1[System.UInt64]",
+        "isSerializable": false
+      },
+      {
+        "name": "clientPlayers",
+        "type": "Dictionary`2",
+        "fullType": "System.Collections.Generic.Dictionary`2[[System.UInt64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.UInt64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "System.Collections.Generic.Dictionary`2[System.UInt64,System.UInt64]",
+        "isSerializable": false
+      },
+      {
+        "name": "disconnected",
+        "type": "Dictionary`2",
+        "fullType": "System.Collections.Generic.Dictionary`2[[System.UInt64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "System.Collections.Generic.Dictionary`2[System.UInt64,System.Double]",
+        "isSerializable": false
+      },
+      {
+        "name": "rosterSnapshots",
+        "type": "Dictionary`2",
+        "fullType": "System.Collections.Generic.Dictionary`2[[System.UInt64, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[FPS.PlayerRuntimeSnapshot, FPS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "value": "System.Collections.Generic.Dictionary`2[System.UInt64,FPS.PlayerRuntimeSnapshot]",
+        "isSerializable": false
+      },
+      {
+        "name": "boardingSince",
+        "type": "Double",
+        "fullType": "System.Double",
+        "value": "-1",
+        "isSerializable": false
+      },
+      {
+        "name": "closingSince",
+        "type": "Double",
+        "fullType": "System.Double",
+        "value": "-1",
+        "isSerializable": false
+      },
+      {
+        "name": "countdownSince",
+        "type": "Double",
+        "fullType": "System.Double",
+        "value": "-1",
+        "isSerializable": false
+      },
+      {
+        "name": "readingUntil",
+        "type": "Double",
+        "fullType": "System.Double",
+        "value": "0",
+        "isSerializable": false
+      },
+      {
+        "name": "nextBeatAt",
+        "type": "Double",
+        "fullType": "System.Double",
+        "value": "0",
+        "isSerializable": false
+      },
+      {
+        "name": "updateBudget",
+        "type": "Single",
+        "fullType": "System.Single",
+        "value": "0.072528705",
+        "isSerializable": false
+      },
+      {
+        "name": "initialized",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "isSerializable": false
+      },
+      {
+        "name": "transferred",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "false",
+        "isSerializable": false
+      },
+      {
+        "name": "runSummary",
+        "type": "CampaignRunSummary",
+        "fullType": "FPS.CampaignRunSummary",
+        "value": "null",
+        "isSerializable": false
+      },
+      {
+        "name": "campaignStartedAt",
+        "type": "Double",
+        "fullType": "System.Double",
+        "value": "22.132636370137334",
+        "isSerializable": false
+      },
+      {
+        "name": "attemptKillBaseline",
+        "type": "Int32",
+        "fullType": "System.Int32",
+        "value": "0",
+        "isSerializable": false
+      },
+      {
+        "name": "publishedFiles",
+        "type": "UInt64",
+        "fullType": "System.UInt64",
+        "value": "0",
+        "isSerializable": false
+      },
+      {
+        "name": "dialogueHistory",
+        "type": "Dictionary`2",
+        "fullType": "System.Collections.Generic.Dictionary`2[[FPS.CampaignDialogueId, FPS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "System.Collections.Generic.Dictionary`2[FPS.CampaignDialogueId,System.Double]",
+        "isSerializable": false
+      },
+      {
+        "name": "dialogueSpecialRegistry",
+        "type": "SpecialInfectedRegistry",
+        "fullType": "FPS.SpecialInfectedRegistry",
+        "value": "AIManager",
+        "isSerializable": false
+      },
+      {
+        "name": "Changed",
+        "type": "Action",
+        "fullType": "System.Action",
+        "value": "System.Action",
+        "isSerializable": false
+      },
+      {
+        "name": "ShowTopMostFoldoutHeaderGroup",
+        "type": "Boolean",
+        "fullType": "System.Boolean",
+        "value": "true",
+        "isSerializable": true
+      },
+      {
+        "name": "__rpc_exec_stage",
+        "type": "__RpcExecStage",
+        "fullType": "Unity.Netcode.NetworkBehaviour+__RpcExecStage",
+        "value": "Send",
+        "isSerializable": false
+      },
+      {
+        "name": "NetworkVariableFields",
+        "type": "List`1",
+        "fullType": "System.Collections.Generic.List`1[[Unity.Netcode.NetworkVariableBase, Unity.Netcode.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "value": "System.Collections.Generic.List`1[Unity.Netcode.NetworkVariableBase]",
+        "isSerializable": false
+      },
+      {
+        "name": "NetworkVariableIndexesToReset",
+        "type": "List`1",
+        "fullType": "System.Collections.Generic.List`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "System.Collections.Generic.List`1[System.Int32]",
+        "isSerializable": false
+      },
+      {
+        "name": "NetworkVariableIndexesToResetSet",
+        "type": "HashSet`1",
+        "fullType": "System.Collections.Generic.HashSet`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
+        "value": "System.Collections.Generic.HashSet`1[System.Int32]",
+        "isSerializable": false
+      }
+    ]
+  }
+}

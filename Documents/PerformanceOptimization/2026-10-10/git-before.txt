@@ -1,0 +1,243 @@
+ M AGENTS.md
+ M Assets/FPS/Core/Runtime/Combat/DamageInfo.cs
+ M Assets/FPS/Features/AI/Runtime/RubberBandingSystem.cs
+ M Assets/FPS/Features/Characters/Content/Players/Brimstone/BrimstonePlayer.prefab
+ M Assets/FPS/Features/Characters/Content/Players/Clove/ClovePlayer.prefab
+ M Assets/FPS/Features/Characters/Content/Players/Gekko/GekkoPlayer.prefab
+ M Assets/FPS/Features/Characters/Content/Players/Sage/SagePlayer.prefab
+ M Assets/FPS/Features/Characters/Enemies/Runtime/EnemyAI.cs
+ M Assets/FPS/Features/Characters/Enemies/Runtime/EnemyHealth.cs
+ M Assets/FPS/Features/Characters/Enemies/Runtime/SpecialInfected/SI_Infector.cs
+ M Assets/FPS/Features/Characters/Enemies/Runtime/SpecialInfected/SI_Tank.cs
+ M Assets/FPS/Features/Characters/Player/Runtime/PlayerHealth.cs
+ M Assets/FPS/Features/Input/Runtime/InputManager.cs
+ M Assets/FPS/Features/Interaction/Runtime/InteractionManager.cs
+ M Assets/FPS/Features/Interaction/Runtime/PickupItem.cs
+ M Assets/FPS/Features/Missions/Runtime/CampaignDoor.cs
+ M Assets/FPS/Features/Missions/Runtime/CampaignHUD.Navigation.cs
+ M Assets/FPS/Features/Missions/Runtime/CampaignHUD.cs
+ M Assets/FPS/Features/Missions/Runtime/CampaignInteractable.cs
+ M Assets/FPS/Features/Missions/Runtime/CampaignPlacement.cs
+ M Assets/FPS/Features/Missions/Runtime/FactoryObjectiveInteractable.cs
+ M Assets/FPS/Features/Missions/Runtime/HelicopterInsertionRappel.cs
+ M Assets/FPS/Features/Missions/Runtime/HelicopterRappellerPose.cs
+ M Assets/FPS/Features/Survival/Content/Prefabs/GrenadeProjectile.prefab
+ M Assets/FPS/Features/Survival/Runtime/SurvivalDamage.cs
+ M Assets/FPS/Features/Survival/Runtime/SurvivalHotbar.cs
+ M Assets/FPS/Features/Survival/Runtime/SurvivalInventory.cs
+ M Assets/FPS/Features/Survival/Runtime/SurvivalPresentation.cs
+ M Assets/FPS/Features/Survival/Runtime/SurvivalProjectile.cs
+ M Assets/FPS/Features/UI/Editor/SurvivalUiArt.cs
+ M Assets/FPS/Features/UI/Editor/SurvivalUiVerification.cs
+ M Assets/FPS/Features/UI/Editor/TacticalUiWorkshop.cs
+ M Assets/FPS/Features/UI/Editor/UiVisualVerification.cs
+ M Assets/FPS/Features/UI/Runtime/CampaignStatusUI.cs
+ M Assets/FPS/Features/UI/Runtime/HUDManager.cs
+ M Assets/FPS/Features/UI/Runtime/InGameMenuUI.cs
+ M Assets/FPS/Features/UI/Runtime/SettingsManager.cs
+ M Assets/FPS/Features/UI/Runtime/SettingsUI.cs
+ M Assets/FPS/Features/UI/Runtime/SquadHUD.cs
+ M Assets/FPS/Features/UI/Runtime/TeamInventoryUI.cs
+ M Assets/FPS/Features/UI/Runtime/WaitingRoomUI.cs
+ M Assets/FPS/Features/Weapons/Content/Operator/Scope/HUDScope.png.meta
+ M Assets/FPS/Features/Weapons/Content/Warden/Material/bullet/WardenBullet.mat
+ M Assets/FPS/Features/Weapons/Content/Warden/Material/glass/WardenGlass.mat
+ M Assets/FPS/Features/Weapons/Content/Warden/Material/gun/Warden.mat
+ M Assets/FPS/Features/Weapons/Content/Warden/Material/scope/WardenScope.mat
+ M Assets/FPS/Features/Weapons/Content/Warden/Warden.asset
+ M Assets/FPS/Features/Weapons/Content/Warden/Warden.prefab
+ M Assets/FPS/Features/Weapons/Runtime/Weapon.cs
+ M Assets/FPS/Features/Weapons/Runtime/WeaponFireHandler.cs
+ M Assets/FPS/Features/World/Content/Vehicles/Helicopters/Mi24/Animations/Brimstone_InsertionArmedWalk.anim
+ M Assets/FPS/Features/World/Content/Vehicles/Helicopters/Mi24/Animations/Clove_InsertionArmedWalk.anim
+ M Assets/FPS/Features/World/Content/Vehicles/Helicopters/Mi24/Animations/Gekko_InsertionArmedWalk.anim
+ M Assets/FPS/Features/World/Content/Vehicles/Helicopters/Mi24/Animations/Sage_InsertionArmedWalk.anim
+ M Assets/FPS/Features/World/Runtime/WorldRecoveryService.cs
+ M Assets/FPS/Scenes/GameScene.unity
+ M Assets/FPS/Scenes/MainMenu.unity
+ M Assets/Tests/Editor/FPS.RegressionTests.Editor.asmdef
+ M Assets/Tests/Editor/UI/SurvivalUiRegressionTests.cs
+ M Assets/Tests/PlayMode/CampaignLifecycleTests.cs
+ M Assets/Tests/PlayMode/FPS.Survival.PlayModeTests.asmdef
+ M Assets/Tests/PlayMode/SurvivalNetworkTests.cs
+ M CLAUDE.md
+ M Documents/UIUX/Brimstone-Grenade-1P-Frag-release.png
+ M Documents/UIUX/Brimstone-Grenade-1P-Frag-windup.png
+ M Documents/UIUX/Brimstone-Grenade-1P-Incendiary-release.png
+ M Documents/UIUX/Brimstone-Grenade-1P-Incendiary-windup.png
+ M Documents/UIUX/Brimstone-Grenade-3P-Frag-release.png
+ M Documents/UIUX/Brimstone-Grenade-3P-Frag-windup.png
+ M Documents/UIUX/Brimstone-Grenade-3P-Incendiary-release.png
+ M Documents/UIUX/Brimstone-Grenade-3P-Incendiary-windup.png
+ M Documents/UIUX/Clove-Grenade-1P-Frag-release.png
+ M Documents/UIUX/Clove-Grenade-1P-Frag-windup.png
+ M Documents/UIUX/Clove-Grenade-1P-Incendiary-release.png
+ M Documents/UIUX/Clove-Grenade-1P-Incendiary-windup.png
+ M Documents/UIUX/Clove-Grenade-3P-Frag-release.png
+ M Documents/UIUX/Clove-Grenade-3P-Frag-windup.png
+ M Documents/UIUX/Clove-Grenade-3P-Incendiary-release.png
+ M Documents/UIUX/Clove-Grenade-3P-Incendiary-windup.png
+ M Documents/UIUX/GameScene-survival-1920x1080.png
+ M Documents/UIUX/Gekko-Grenade-1P-Frag-release.png
+ M Documents/UIUX/Gekko-Grenade-1P-Frag-windup.png
+ M Documents/UIUX/Gekko-Grenade-1P-Incendiary-release.png
+ M Documents/UIUX/Gekko-Grenade-1P-Incendiary-windup.png
+ M Documents/UIUX/Gekko-Grenade-3P-Frag-release.png
+ M Documents/UIUX/Gekko-Grenade-3P-Frag-windup.png
+ M Documents/UIUX/Gekko-Grenade-3P-Incendiary-release.png
+ M Documents/UIUX/Gekko-Grenade-3P-Incendiary-windup.png
+ M Documents/UIUX/Sage-Grenade-1P-Frag-release.png
+ M Documents/UIUX/Sage-Grenade-1P-Frag-windup.png
+ M Documents/UIUX/Sage-Grenade-1P-Incendiary-release.png
+ M Documents/UIUX/Sage-Grenade-1P-Incendiary-windup.png
+ M Documents/UIUX/Sage-Grenade-3P-Frag-release.png
+ M Documents/UIUX/Sage-Grenade-3P-Frag-windup.png
+ M Documents/UIUX/Sage-Grenade-3P-Incendiary-release.png
+ M Documents/UIUX/Sage-Grenade-3P-Incendiary-windup.png
+ M Documents/UIUX/Survival-Antidote-runtime.png
+ M Documents/UIUX/Survival-Fire-runtime.png
+ M Documents/UIUX/Survival-Medkit-runtime.png
+ M Documents/UIUX/Tools/prepare_survival_assets.py
+ D Documents/UIUX/gerty-tools.json
+ M Documents/checklist.md
+ M Packages/packages-lock.json
+?? .playwright-mcp/
+?? Assets/FPS/Features/Missions/Editor/FPS.Missions.Editor.asmdef
+?? Assets/FPS/Features/Missions/Editor/FPS.Missions.Editor.asmdef.meta
+?? Assets/FPS/Features/Missions/Editor/FactoryTraversalAudit.cs
+?? Assets/FPS/Features/Missions/Editor/FactoryTraversalAudit.cs.meta
+?? Assets/FPS/Features/Missions/Editor/FactoryTraversalRepair.cs
+?? Assets/FPS/Features/Missions/Editor/FactoryTraversalRepair.cs.meta
+?? Assets/FPS/Features/Missions/Editor/HelicopterLandingAuthoring.cs
+?? Assets/FPS/Features/Missions/Editor/HelicopterLandingAuthoring.cs.meta
+?? Assets/FPS/Features/Missions/Runtime/CampaignObjectiveSelection.cs
+?? Assets/FPS/Features/Missions/Runtime/CampaignObjectiveSelection.cs.meta
+?? Assets/FPS/Features/Survival/Content/MedicalAnimation.meta
+?? Assets/FPS/Features/Survival/Content/MedicalAnimation/
+?? Assets/FPS/Features/Survival/Runtime/SelfInjectionAnimation.cs
+?? Assets/FPS/Features/Survival/Runtime/SelfInjectionAnimation.cs.meta
+?? Assets/FPS/Features/UI/Content/Resources.meta
+?? Assets/FPS/Features/UI/Content/Resources/
+?? Assets/FPS/Features/UI/Editor/HudReviewTools.cs
+?? Assets/FPS/Features/UI/Editor/HudReviewTools.cs.meta
+?? Assets/FPS/Features/UI/Runtime/HudLayout.cs
+?? Assets/FPS/Features/UI/Runtime/HudLayout.cs.meta
+?? Assets/FPS/Features/UI/Runtime/HudMarkerProjection.cs
+?? Assets/FPS/Features/UI/Runtime/HudMarkerProjection.cs.meta
+?? Assets/FPS/Features/UI/Runtime/HudSkin.cs
+?? Assets/FPS/Features/UI/Runtime/HudSkin.cs.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/BrimstoneWarden_GenericPathBound.controller
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/BrimstoneWarden_GenericPathBound.controller.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Brimstone_Warden_Aim.anim
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Brimstone_Warden_Aim.anim.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Brimstone_Warden_Equip.anim
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Brimstone_Warden_Equip.anim.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Brimstone_Warden_Hold.anim
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Brimstone_Warden_Hold.anim.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Brimstone_Warden_Reload.anim
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Brimstone_Warden_Reload.anim.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/CloveWarden_GenericPathBound.controller
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/CloveWarden_GenericPathBound.controller.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Clove_Warden_Aim.anim
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Clove_Warden_Aim.anim.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Clove_Warden_Equip.anim
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Clove_Warden_Equip.anim.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Clove_Warden_Hold.anim
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Clove_Warden_Hold.anim.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Clove_Warden_Reload.anim
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Clove_Warden_Reload.anim.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden3P_Gun.controller
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden3P_Gun.controller.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden3P_Gun_Equip.anim
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden3P_Gun_Equip.anim.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden3P_Gun_Idle.anim
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden3P_Gun_Idle.anim.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden3P_Gun_Reload.anim
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden3P_Gun_Reload.anim.meta
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden_3P.prefab
+?? Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden_3P.prefab.meta
+?? Assets/FPS/Features/Weapons/Content/Warden/Scope.meta
+?? Assets/FPS/Features/Weapons/Content/Warden/Scope/
+?? Assets/FPS/Features/World/Content/Campaign/FactoryTraversal.meta
+?? Assets/FPS/Features/World/Content/Campaign/FactoryTraversal/
+?? Assets/FPS/Features/World/Content/Vehicles/Helicopters/Mi24/Animations/Brimstone_InsertionEquip.anim
+?? Assets/FPS/Features/World/Content/Vehicles/Helicopters/Mi24/Animations/Brimstone_InsertionEquip.anim.meta
+?? Assets/FPS/Features/World/Content/Vehicles/Helicopters/Mi24/Animations/Clove_InsertionEquip.anim
+?? Assets/FPS/Features/World/Content/Vehicles/Helicopters/Mi24/Animations/Clove_InsertionEquip.anim.meta
+?? Assets/FPS/Features/World/Content/Vehicles/Helicopters/Mi24/Animations/Gekko_InsertionEquip.anim
+?? Assets/FPS/Features/World/Content/Vehicles/Helicopters/Mi24/Animations/Gekko_InsertionEquip.anim.meta
+?? Assets/FPS/Features/World/Content/Vehicles/Helicopters/Mi24/Animations/Sage_InsertionEquip.anim
+?? Assets/FPS/Features/World/Content/Vehicles/Helicopters/Mi24/Animations/Sage_InsertionEquip.anim.meta
+?? Assets/FPS/Features/World/Content/Vehicles/Helicopters/RappelRope.meta
+?? Assets/FPS/Features/World/Content/Vehicles/Helicopters/RappelRope/
+?? Assets/FPS/Features/World/Runtime/FactoryPitFillLighting.cs
+?? Assets/FPS/Features/World/Runtime/FactoryPitFillLighting.cs.meta
+?? Assets/FPS/Prototypes.meta
+?? Assets/FPS/Prototypes/
+?? Assets/Tests/Editor/CampaignPlacementSafetyTests.cs
+?? Assets/Tests/Editor/CampaignPlacementSafetyTests.cs.meta
+?? Assets/Tests/Editor/HelicopterRappelTests.cs
+?? Assets/Tests/Editor/HelicopterRappelTests.cs.meta
+?? Assets/Tests/Editor/ServicesShutdownRegressionTests.cs
+?? Assets/Tests/Editor/ServicesShutdownRegressionTests.cs.meta
+?? Assets/Tests/Editor/UI/HudRegressionTests.cs
+?? Assets/Tests/Editor/UI/HudRegressionTests.cs.meta
+?? Assets/Tests/Editor/UI/SettingsDifficultyRegressionTests.cs
+?? Assets/Tests/Editor/UI/SettingsDifficultyRegressionTests.cs.meta
+?? Assets/Tests/Editor/WardenThirdPersonTests.cs
+?? Assets/Tests/Editor/WardenThirdPersonTests.cs.meta
+?? Assets/Tests/Editor/WeaponAimRegressionTests.cs
+?? Assets/Tests/Editor/WeaponAimRegressionTests.cs.meta
+?? Assets/Tests/PlayMode/GrenadeProjectilePhysicsTests.cs
+?? Assets/Tests/PlayMode/GrenadeProjectilePhysicsTests.cs.meta
+?? Assets/Tests/PlayMode/HudGameplayAcceptanceTests.cs
+?? Assets/Tests/PlayMode/HudGameplayAcceptanceTests.cs.meta
+?? Assets/Tests/PlayMode/HudInputPlayModeTests.cs
+?? Assets/Tests/PlayMode/HudInputPlayModeTests.cs.meta
+?? Assets/Tests/PlayMode/WeaponAimInputTests.cs
+?? Assets/Tests/PlayMode/WeaponAimInputTests.cs.meta
+?? Assets/_Recovery.meta
+?? Assets/_Recovery/
+?? Documents/AI-Director-Defense/
+?? Documents/FPSSample-Asset-Reuse-Audit-2026-10-07.md
+?? Documents/FPSSample-Assets-To-Take-2026-10-07.md
+?? Documents/FPSSample-HUD-Implementation-2026-10-07.md
+?? Documents/FPSSample-HUD-Reuse-2026-10-07.md
+?? Documents/FactoryTraversalAudit/
+?? Documents/HelicopterInsertion/
+?? Documents/MedicalAnimationResearch-2026-10-09/
+?? Documents/PerformanceAudit/
+?? Documents/PerformanceOptimization/
+?? Documents/Settings-Difficulty-Audit-2026-10-05.md
+?? Documents/UIUX/HUD-Asset-Skin-2026-10-05.md
+?? Documents/UIUX/HUD-Evidence/
+?? Documents/UIUX/HUD-Implementation-2026-10-05.md
+?? Documents/UIUX/HUD-Layout-Study-2026-10-05.png
+?? Documents/UIUX/HUD-Research-2026-10-05.md
+?? Documents/UIUX/SelfInjection-Brimstone-0.50.png
+?? Documents/UIUX/SelfInjection-Brimstone-2.50.png
+?? Documents/UIUX/SelfInjection-Brimstone-4.25.png
+?? Documents/UIUX/SelfInjection-Brimstone-wide-0.50.png
+?? Documents/UIUX/SelfInjection-Brimstone-wide-2.50.png
+?? Documents/UIUX/SelfInjection-Brimstone-wide-4.25.png
+?? Documents/UIUX/SelfInjection-Clove-0.50.png
+?? Documents/UIUX/SelfInjection-Clove-2.50.png
+?? Documents/UIUX/SelfInjection-Clove-4.25.png
+?? Documents/UIUX/SelfInjection-Clove-wide-0.50.png
+?? Documents/UIUX/SelfInjection-Clove-wide-2.50.png
+?? Documents/UIUX/SelfInjection-Clove-wide-4.25.png
+?? Documents/UIUX/SelfInjection-Gekko-0.50.png
+?? Documents/UIUX/SelfInjection-Gekko-2.50.png
+?? Documents/UIUX/SelfInjection-Gekko-4.25.png
+?? Documents/UIUX/SelfInjection-Gekko-wide-0.50.png
+?? Documents/UIUX/SelfInjection-Gekko-wide-2.50.png
+?? Documents/UIUX/SelfInjection-Gekko-wide-4.25.png
+?? Documents/UIUX/SelfInjection-Sage-0.50.png
+?? Documents/UIUX/SelfInjection-Sage-2.50.png
+?? Documents/UIUX/SelfInjection-Sage-4.25.png
+?? Documents/UIUX/SelfInjection-Sage-wide-0.50.png
+?? Documents/UIUX/SelfInjection-Sage-wide-2.50.png
+?? Documents/UIUX/SelfInjection-Sage-wide-4.25.png
+?? Documents/UIUX/hud-skin-assets.json
+?? Documents/Warden/ThirdPerson/
+?? Packages/com.unity.services.multiplayer/

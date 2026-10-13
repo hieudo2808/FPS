@@ -1,0 +1,950 @@
+- generic [ref=f50e69]:
+  - banner [ref=f50e71]:
+    - generic [ref=f50e73]:
+      - generic [ref=f50e74]:
+        - button "Guide" [ref=f50e76] [cursor=pointer]
+        - generic [ref=f50e80]:
+          - link "YouTube Home" [ref=f50e81] [cursor=pointer]:
+            - /url: /
+          - generic [ref=f50e87]: VN
+        - button "Skip navigation" [ref=f50e91] [cursor=pointer]
+      - generic [ref=f50e95]:
+        - search [ref=f50e96]:
+          - generic [ref=f50e98]:
+            - combobox "Search" [expanded] [ref=f50e101]
+            - button "Search" [ref=f50e102] [cursor=pointer]
+        - generic [ref=f50e107]:
+          - button "Search with your voice" [ref=f50e109] [cursor=pointer]
+          - tooltip "tooltip"
+      - generic [ref=f50e114]:
+        - button "Settings" [ref=f50e119] [cursor=pointer]
+        - link "Sign in" [ref=f50e125] [cursor=pointer]:
+          - /url: https://accounts.google.com/ServiceLogin?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den%26next%3D%252Fwatch%253Fv%253DHLjiHOzxOVw%2526pp%253DQAFIAdIHCQkHA54VBgUm4g%25253D%25253D&hl=en&ec=65620
+  - main [ref=f50e130]:
+    - generic [ref=f50e131]:
+      - generic [ref=f50e133]:
+        - generic [ref=f50e136]:
+          - generic [aria-hidden] [ref=f50e139] [cursor=pointer]
+          - complementary [ref=f50e140]:
+            - generic "YouTube Video Player" [ref=f50e5]:
+              - generic [ref=f50e144]:
+                - generic [ref=f50e145]: Hi, I'm Nick, and this is Model
+                - generic [ref=f50e147]: Splitter. A browser-based
+              - generic [ref=f50e10]:
+                - slider "Seek slider" [ref=f50e12] [cursor=pointer]
+                - generic [ref=f50e21]:
+                  - generic [ref=f50e22]:
+                    - button "Pause (k)" [ref=f50e151] [cursor=pointer]
+                    - generic [ref=f50e24]:
+                      - button "Mute (m)" [ref=f50e26] [cursor=pointer]
+                      - slider "Volume":
+                        - generic [ref=f50e27] [cursor=pointer]
+                    - button "0 Minutes 3 Seconds of 4 Minutes 57 Seconds" [ref=f50e152] [cursor=pointer]: 0:03 / 4:57
+                  - generic [ref=f50e31]:
+                    - generic [ref=f50e32]:
+                      - button "Autoplay is on" [ref=f50e153] [cursor=pointer]
+                      - button "Subtitles/closed captions unavailable" [pressed] [ref=f50e33] [cursor=pointer]
+                      - button "Settings" [ref=f50e35] [cursor=pointer]
+                    - generic [ref=f50e36]:
+                      - button "Theater mode (t)" [ref=f50e37] [cursor=pointer]
+                      - button "Full screen (f)" [ref=f50e38] [cursor=pointer]
+        - generic [ref=f50e156]:
+          - generic [ref=f50e157]:
+            - generic [ref=f50e159]:
+              - heading "Cutting and Keying 3d Models is now Easy" [level=1] [ref=f50e162]
+              - generic [ref=f50e163]:
+                - generic [ref=f50e164]:
+                  - generic [ref=f50e165]:
+                    - link [ref=f50e166] [cursor=pointer]:
+                      - /url: /@ModelSplitter
+                      - img "Model Splitter" [ref=f50e168]
+                    - generic [ref=f50e169]:
+                      - generic "Model Splitter" [ref=f50e173]:
+                        - link "Model Splitter" [ref=f50e174] [cursor=pointer]:
+                          - /url: /@ModelSplitter
+                      - generic "445 subscribers" [ref=f50e175]
+                  - button "Subscribe to Model Splitter." [ref=f50e181] [cursor=pointer]:
+                    - generic: Subscribe
+                - generic [ref=f50e188]:
+                  - generic [ref=f50e189]:
+                    - generic [ref=f50e193]:
+                      - button "like this video along with 619 other people" [ref=f50e197] [cursor=pointer]:
+                        - generic: "619"
+                      - button "Dislike this video" [ref=f50e204] [cursor=pointer]
+                    - button "Share" [ref=f50e210] [cursor=pointer]
+                  - generic [ref=f50e214]:
+                    - button "Save to playlist" [ref=f50e217] [cursor=pointer]:
+                      - generic: Save
+                    - generic [ref=f50e222]:
+                      - button "Download" [ref=f50e224] [cursor=pointer]
+                      - tooltip "tooltip"
+                  - button "More actions" [ref=f50e229] [cursor=pointer]
+              - generic [ref=f50e235]:
+                - generic [ref=f50e236]: 18,513 views Sep 4, 2026
+                - generic [ref=f50e239]:
+                  - generic [ref=f50e242]:
+                    - text: "Free in your browser:"
+                    - link "https://modelsplitter.com" [ref=f50e244] [cursor=pointer]:
+                      - /url: https://www.youtube.com/redirect?event=video_description&redir_token=QUZZTVljR2hIa3ZjSHJHUE1pRk4wUF93VjZqU3xBSTVJdTV0WE9ZVEFRLUZWeWI3NXJrRVo0ek9abWVaeEJ0bHU3d0kwak9wRVhSUkcwd1pPcV9VOTYzWEtwSERNQ2R1Wkx4RWFsVkN0MTZ1aVVsbUJzMzlUMjVWbXF1NmcyM0Zs&q=https%3A%2F%2Fmodelsplitter.com%2F&v=HLjiHOzxOVw
+                    - text: "— Pro launches on Kickstarter Tuesday 3 November, one-time payment, no subscription. Press Notify me:"
+                    - link "https://modelsplitter.com/pro/" [ref=f50e246] [cursor=pointer]:
+                      - /url: https://www.youtube.com/redirect?event=video_description&redir_token=QUZZTVljRlI1M2Z2bUgwNjhhSmlSWUlWRmtGSnxBSTVJdTV0SFdQQ1FCTWQwd0IzaVZFV0V1OV9QbU5pTktOckY1a25JMmNZRVhkVkFuMU42S2lxODBwYXRNOFhSUmRNRm12ODc4Zmx1X2pvNDg2eGlld3JISU5OQkJlY3hOWFNa&q=https%3A%2F%2Fmodelsplitter.com%2Fpro%2F&v=HLjiHOzxOVw
+                    - text: "A quick look at how easy it is to cut and key 3D models and STL files using ModelSplitter. Paint or draw where you want the cut, press Cut, and the halves get pins and sockets so they line up when you glue them. Works onWindows Mac and Linux with nothing to install, and your models never leave your computer. Questions, bugs or ideas: hello@modelsplitter.com"
+                  - generic [ref=f50e249]:
+                    - generic [ref=f50e250]:
+                      - generic [ref=f50e251]: Transcript
+                      - paragraph [ref=f50e254]: Follow along using the transcript.
+                      - button "Show transcript" [ref=f50e259] [cursor=pointer]
+                    - generic [ref=f50e263]:
+                      - link "Model Splitter 445 subscribers" [ref=f50e264] [cursor=pointer]:
+                        - /url: /@ModelSplitter
+                        - generic [ref=f50e266]:
+                          - heading "Model Splitter" [level=3] [ref=f50e267]
+                          - generic [ref=f50e268]: 445 subscribers
+                      - generic [ref=f50e271]:
+                        - link "Videos" [ref=f50e274] [cursor=pointer]:
+                          - /url: /channel/UCo1dZdm6EqBGFFhQ9eJdEzg/videos
+                        - link "About" [ref=f50e280] [cursor=pointer]:
+                          - /url: /channel/UCo1dZdm6EqBGFFhQ9eJdEzg/about
+                        - link "Patreon" [ref=f50e286] [cursor=pointer]:
+                          - /url: https://www.youtube.com/redirect?event=Watch_SD_EP&redir_token=QUZZTVljRkR5NXBmXzdQeEw4VUNjdERhUFUzUHxBSTVJdTV1WU1BbWllbXFjbU5qQ3RnMG5ZUnZEQkZIS0t5ajRYakVUT2RXSDBnbUt6YkJSY2FPc3dvdGlOSlVsNlZWbmY4eWgzQUl0NS1DVEdRd0l3Qks5Z29PRWZUZXlDNUll&q=https%3A%2F%2Fwww.patreon.com%2Fcw%2FBigHeadMinatures
+                  - button "Show less" [ref=f50e290] [cursor=pointer]
+            - text: •
+          - generic [ref=f50e293]:
+            - generic [ref=f50e295]:
+              - generic [ref=f50e296]:
+                - heading "48 Comments" [level=2] [ref=f50e298]
+                - generic [ref=f50e302]:
+                  - tooltip "tooltip"
+                  - group [ref=f50e304]:
+                    - button "Sort comments" [ref=f50e306] [cursor=pointer]:
+                      - generic [ref=f50e308]: Sort by
+              - generic [ref=f50e310]:
+                - img "Default profile photo" [ref=f50e312]
+                - textbox [ref=f50e314]
+            - generic [ref=f50e315]:
+              - generic [ref=f50e320]:
+                - button "@ModelSplitter" [ref=f50e322] [cursor=pointer]
+                - generic [ref=f50e324]:
+                  - generic [ref=f50e325]:
+                    - generic [ref=f50e326]: Pinned by @ModelSplitter
+                    - generic [ref=f50e331]:
+                      - heading [level=3]
+                      - link "@ModelSplitter" [ref=f50e334] [cursor=pointer]:
+                        - /url: /@ModelSplitter
+                        - generic "@ModelSplitter" [ref=f50e338]
+                      - link "2 days ago (edited)" [ref=f50e340] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=UgzMhQeBpPSA7VGDsUN4AaABAg
+                  - generic [ref=f50e341]:
+                    - generic [ref=f50e344]:
+                      - text: Thanks for 10,000 views! ModelSplitter is free to use in your browser at
+                      - link "https://modelsplitter.com" [ref=f50e346] [cursor=pointer]:
+                        - /url: https://www.youtube.com/redirect?event=comments&redir_token=QUZZTVljRTZRcllzaXlGRURvaXl5VWZGMEJ0N3xBSTVJdTVzZXctaFh3ZTY5OHpBMjdSeTJORm5BMWtpb2c0Q1otZ0JKMHpUVWFMRVhpSVdYcXJXR24yZEtXYkdFRXdLWncyWnZiZTJ3M0ltbkJuTkdiSEJTdmwxcXVlY3c0ZGNF&q=https%3A%2F%2Fmodelsplitter.com%2F
+                      - text: ". It works on Windows, Mac and Linux with nothing to install, and your models never leave your computer. Pro launches on Kickstarter on Tuesday 3 November as a one-time payment, not a subscription, and the free edition stays. To hear the moment it goes live, press Notify me here:"
+                      - link "https://modelsplitter.com/pro/" [ref=f50e348] [cursor=pointer]:
+                        - /url: https://www.youtube.com/redirect?event=comments&redir_token=QUZZTVljRzNJYzdJallFdmpHMjhzbllJZFJDRnxBSTVJdTV1Mjd4YXBrUkhoTjRvaUR0VWpHSWVqOFRRblo4d3ZkY1JmY3ZwTXlPXzVrV0g4dGFRdW5tS1BqRjdFQUNpMzJWNWpUaWIxOGZ6TFUya2tzbm5aVDh1NklqOFpyOGNh&q=https%3A%2F%2Fmodelsplitter.com%2Fpro%2F
+                      - text: Questions, bugs or ideas are welcome below or at hello@
+                      - link "modelsplitter.com" [ref=f50e350] [cursor=pointer]:
+                        - /url: https://www.youtube.com/redirect?event=comments&redir_token=QUZZTVljSHZJSkMtcldyaWxrZy1Ody1QdkxYYnxBSTVJdTV1MVJxbW8yY3NobDJXSVhDU0Z4Y1RSVzVIT1k3UDRSMnlDTW1fTWs1Q3NLNzRGang2Z2J2UElGdTNycjhOVzFCaU5sdEpiOUEzR3hrajJTZjdrekNJM1ZfNTlCT1VH&q=http%3A%2F%2Fmodelsplitter.com%2F
+                      - text: . I read and answer them all, and a lot of this week's fixes came from your comments.
+                    - button "Read more" [ref=f50e351] [cursor=pointer]
+                  - generic [ref=f50e353]:
+                    - generic [ref=f50e354]:
+                      - button "Like this comment along with 2 other people" [ref=f50e356] [cursor=pointer]
+                      - tooltip "tooltip"
+                    - generic [ref=f50e360]: "2"
+                    - generic [ref=f50e361]:
+                      - button "Dislike this comment" [ref=f50e363] [cursor=pointer]
+                      - tooltip "tooltip"
+                    - button "Reply" [ref=f50e369] [cursor=pointer]
+              - generic [ref=f50e373]:
+                - generic [ref=f50e377]:
+                  - button "@nemesis851_" [ref=f50e379] [cursor=pointer]
+                  - generic [ref=f50e383]:
+                    - generic [ref=f50e385]:
+                      - heading [level=3] [ref=f50e386]:
+                        - link "@nemesis851_" [ref=f50e387] [cursor=pointer]:
+                          - /url: /@nemesis851_
+                      - link "6 hours ago" [ref=f50e389] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=UgxpQjNMWLrP_7ZEcG14AaABAg
+                    - generic [ref=f50e390]: Saved to playlist, and private/public Discords
+                    - generic [ref=f50e394]:
+                      - generic [ref=f50e395]:
+                        - button "Like this comment along with 1 other person" [ref=f50e397] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e401]: "1"
+                      - generic [ref=f50e402]:
+                        - button "Dislike this comment" [ref=f50e404] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e410] [cursor=pointer]
+                - generic [ref=f50e422]:
+                  - generic [ref=f50e423] [cursor=pointer]
+                  - generic [ref=f50e425]: ·
+                  - button "1 reply" [ref=f50e428] [cursor=pointer]
+                - generic [ref=f50e432] [cursor=pointer]
+              - generic [ref=f50e433]:
+                - generic [ref=f50e437]:
+                  - button "@launchpadengineering7749" [ref=f50e439] [cursor=pointer]
+                  - generic [ref=f50e443]:
+                    - generic [ref=f50e445]:
+                      - heading [level=3] [ref=f50e446]:
+                        - link "@launchpadengineering7749" [ref=f50e447] [cursor=pointer]:
+                          - /url: /@launchpadengineering7749
+                      - link "1 day ago" [ref=f50e449] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=UgywZ8GtMzeF9eHMDE14AaABAg
+                    - generic [ref=f50e450]: my internet is pretty unreliable- definitely need an offline version! signed up for every notification i can find. thank you this has been much needed for a very long time!
+                    - generic [ref=f50e454]:
+                      - generic [ref=f50e455]:
+                        - button "Like this comment along with 2 other people" [ref=f50e457] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e461]: "2"
+                      - generic [ref=f50e462]:
+                        - button "Dislike this comment" [ref=f50e464] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e470] [cursor=pointer]
+                - generic [ref=f50e482]:
+                  - generic [ref=f50e483] [cursor=pointer]
+                  - generic [ref=f50e485]: ·
+                  - button "1 reply" [ref=f50e488] [cursor=pointer]
+                - generic [ref=f50e492] [cursor=pointer]
+              - generic [ref=f50e493]:
+                - generic [ref=f50e497]:
+                  - button "@rageofachilles7400" [ref=f50e499] [cursor=pointer]
+                  - generic [ref=f50e503]:
+                    - generic [ref=f50e505]:
+                      - heading [level=3] [ref=f50e506]:
+                        - link "@rageofachilles7400" [ref=f50e507] [cursor=pointer]:
+                          - /url: /@rageofachilles7400
+                      - link "13 hours ago" [ref=f50e509] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=UgzoFBBs15ZnqamF6x54AaABAg
+                    - generic [ref=f50e510]: I just gave it a try, i'm a digital store owner on MMF. It certainly has potential to be a very useful tool, though i did have some trouble with the elastic rope cutter. I think it probably works best on models that are built from scratch start to finish in one app. I don't work like that , so its probably why i had trouble with the cutter.
+                    - generic [ref=f50e514]:
+                      - generic [ref=f50e515]:
+                        - button "Like this comment along with 0 other people" [ref=f50e517] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e521]:
+                        - button "Dislike this comment" [ref=f50e523] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e529] [cursor=pointer]
+                - generic [ref=f50e541]:
+                  - generic [ref=f50e542] [cursor=pointer]
+                  - generic [ref=f50e544]: ·
+                  - button "1 reply" [ref=f50e547] [cursor=pointer]
+                - generic [ref=f50e551] [cursor=pointer]
+              - generic [ref=f50e552]:
+                - generic [ref=f50e556]:
+                  - button "@BennyThe3DPrinterDude" [ref=f50e558] [cursor=pointer]
+                  - generic [ref=f50e562]:
+                    - generic [ref=f50e564]:
+                      - heading [level=3] [ref=f50e565]:
+                        - link "@BennyThe3DPrinterDude" [ref=f50e566] [cursor=pointer]:
+                          - /url: /@BennyThe3DPrinterDude
+                      - link "9 hours ago (edited)" [ref=f50e568] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=Ugwh-P4_JBTnSB7f-uR4AaABAg
+                    - generic [ref=f50e569]: This looks amazing. One thing I would like to see is the joining faces would generate more than one pin/socket depending on the surface area.1 for small, many for larger. Just looking at the egg for example, one pin/socket would still mean you have to line the edges up perfectly because of the somewhat oblong shape. 2 or even 3 pins would solve that issue. This opinion is well before I have even tried the program, which I am definietly going to do.
+                    - generic [ref=f50e573]:
+                      - generic [ref=f50e574]:
+                        - button "Like this comment along with 0 other people" [ref=f50e576] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e580]:
+                        - button "Dislike this comment" [ref=f50e582] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e588] [cursor=pointer]
+                - generic [ref=f50e600]:
+                  - generic [ref=f50e601] [cursor=pointer]
+                  - generic [ref=f50e603]: ·
+                  - button "1 reply" [ref=f50e606] [cursor=pointer]
+                - generic [ref=f50e610] [cursor=pointer]
+              - generic [ref=f50e611]:
+                - generic [ref=f50e615]:
+                  - button "@SangeetPDC" [ref=f50e617] [cursor=pointer]
+                  - generic [ref=f50e621]:
+                    - generic [ref=f50e623]:
+                      - heading [level=3] [ref=f50e624]:
+                        - link "@SangeetPDC" [ref=f50e625] [cursor=pointer]:
+                          - /url: /@SangeetPDC
+                      - link "1 day ago" [ref=f50e627] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=UgwGqGZ80kELtcblnSt4AaABAg
+                    - generic [ref=f50e628]: This looks great. I reckon a matrix mould/jacket creation tool would sit alongside this perfectly well
+                    - generic [ref=f50e632]:
+                      - generic [ref=f50e633]:
+                        - button "Like this comment along with 4 other people" [ref=f50e635] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e639]: "4"
+                      - generic [ref=f50e640]:
+                        - button "Dislike this comment" [ref=f50e642] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e648] [cursor=pointer]
+                - generic [ref=f50e660]:
+                  - generic [ref=f50e661] [cursor=pointer]
+                  - generic [ref=f50e663]: ·
+                  - button "1 reply" [ref=f50e666] [cursor=pointer]
+                - generic [ref=f50e670] [cursor=pointer]
+              - generic [ref=f50e671]:
+                - generic [ref=f50e675]:
+                  - button "@moodberry" [ref=f50e677] [cursor=pointer]
+                  - generic [ref=f50e681]:
+                    - generic [ref=f50e683]:
+                      - heading [level=3] [ref=f50e684]:
+                        - link "@moodberry" [ref=f50e685] [cursor=pointer]:
+                          - /url: /@moodberry
+                      - link "1 day ago" [ref=f50e687] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=UgyYz69X5WxGbxIaL4h4AaABAg
+                    - generic [ref=f50e688]: The website has some kind of problem. The center pane won't display all the text. I tried it in different browsers and the same problem is apparent.
+                    - generic [ref=f50e692]:
+                      - generic [ref=f50e693]:
+                        - button "Like this comment along with 1 other person" [ref=f50e695] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e699]: "1"
+                      - generic [ref=f50e700]:
+                        - button "Dislike this comment" [ref=f50e702] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e708] [cursor=pointer]
+                - generic [ref=f50e720]:
+                  - generic [ref=f50e721] [cursor=pointer]
+                  - generic [ref=f50e723]: ·
+                  - button "1 reply" [ref=f50e726] [cursor=pointer]
+                - generic [ref=f50e730] [cursor=pointer]
+              - generic [ref=f50e731]:
+                - generic [ref=f50e735]:
+                  - button "@Oddboggler" [ref=f50e737] [cursor=pointer]
+                  - generic [ref=f50e741]:
+                    - generic [ref=f50e743]:
+                      - heading [level=3] [ref=f50e744]:
+                        - link "@Oddboggler" [ref=f50e745] [cursor=pointer]:
+                          - /url: /@Oddboggler
+                      - link "3 days ago" [ref=f50e747] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=UgyPG5wxH5-5z6l4-9t4AaABAg
+                    - generic [ref=f50e748]: Very cool. Thanks for creating it!
+                    - generic [ref=f50e752]:
+                      - generic [ref=f50e753]:
+                        - button "Like this comment along with 1 other person" [ref=f50e755] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e759]: "1"
+                      - generic [ref=f50e760]:
+                        - button "Dislike this comment" [ref=f50e762] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e768] [cursor=pointer]
+                - generic [ref=f50e780]:
+                  - generic [ref=f50e781] [cursor=pointer]
+                  - generic [ref=f50e783]: ·
+                  - button "1 reply" [ref=f50e786] [cursor=pointer]
+                - generic [ref=f50e790] [cursor=pointer]
+              - generic [ref=f50e791]:
+                - generic [ref=f50e795]:
+                  - button "@9brian99" [ref=f50e797] [cursor=pointer]
+                  - generic [ref=f50e801]:
+                    - generic [ref=f50e803]:
+                      - heading [level=3] [ref=f50e804]:
+                        - link "@9brian99" [ref=f50e805] [cursor=pointer]:
+                          - /url: /@9brian99
+                      - link "1 day ago" [ref=f50e807] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=UgwK-mfxV2imd5ysocB4AaABAg
+                    - generic [ref=f50e808]: Looks very interesting.
+                    - generic [ref=f50e812]:
+                      - generic [ref=f50e813]:
+                        - button "Like this comment along with 1 other person" [ref=f50e815] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e819]: "1"
+                      - generic [ref=f50e820]:
+                        - button "Dislike this comment" [ref=f50e822] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e828] [cursor=pointer]
+                - generic [ref=f50e840]:
+                  - generic [ref=f50e841] [cursor=pointer]
+                  - generic [ref=f50e843]: ·
+                  - button "1 reply" [ref=f50e846] [cursor=pointer]
+                - generic [ref=f50e850] [cursor=pointer]
+              - generic [ref=f50e851]:
+                - generic [ref=f50e855]:
+                  - button "@HMB27587" [ref=f50e857] [cursor=pointer]
+                  - generic [ref=f50e861]:
+                    - generic [ref=f50e863]:
+                      - heading [level=3] [ref=f50e864]:
+                        - link "@HMB27587" [ref=f50e865] [cursor=pointer]:
+                          - /url: /@HMB27587
+                      - link "2 days ago" [ref=f50e867] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=UgzLgUtzkMhCYRUhm5B4AaABAg&pp=0gcJCUsANpG00pGi
+                    - generic [ref=f50e868]: So brilliant!!!!
+                    - generic [ref=f50e872]:
+                      - generic [ref=f50e873]:
+                        - button "Like this comment along with 1 other person" [ref=f50e875] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e879]: "1"
+                      - generic [ref=f50e880]:
+                        - button "Dislike this comment" [ref=f50e882] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e888] [cursor=pointer]
+                - generic [ref=f50e900]:
+                  - generic [ref=f50e901] [cursor=pointer]
+                  - generic [ref=f50e903]: ·
+                  - button "1 reply" [ref=f50e906] [cursor=pointer]
+                - generic [ref=f50e910] [cursor=pointer]
+              - generic [ref=f50e911]:
+                - generic [ref=f50e915]:
+                  - button "@that_benji" [ref=f50e917] [cursor=pointer]
+                  - generic [ref=f50e921]:
+                    - generic [ref=f50e923]:
+                      - heading [level=3] [ref=f50e924]:
+                        - link "@that_benji" [ref=f50e925] [cursor=pointer]:
+                          - /url: /@that_benji
+                      - link "3 days ago" [ref=f50e927] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=UgwS7hGef9I2-XEJzB94AaABAg
+                    - generic [ref=f50e928]: This is amazing!
+                    - generic [ref=f50e932]:
+                      - generic [ref=f50e933]:
+                        - button "Like this comment along with 2 other people" [ref=f50e935] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e939]: "2"
+                      - generic [ref=f50e940]:
+                        - button "Dislike this comment" [ref=f50e942] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e948] [cursor=pointer]
+                - generic [ref=f50e960]:
+                  - generic [ref=f50e961] [cursor=pointer]
+                  - generic [ref=f50e963]: ·
+                  - button "1 reply" [ref=f50e966] [cursor=pointer]
+                - generic [ref=f50e970] [cursor=pointer]
+              - generic [ref=f50e971]:
+                - generic [ref=f50e975]:
+                  - button "@yaomicqui" [ref=f50e977] [cursor=pointer]
+                  - generic [ref=f50e981]:
+                    - generic [ref=f50e983]:
+                      - heading [level=3] [ref=f50e984]:
+                        - link "@yaomicqui" [ref=f50e985] [cursor=pointer]:
+                          - /url: /@yaomicqui
+                      - link "5 days ago" [ref=f50e987] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=Ugw5zXgsQk_MTayu1Mp4AaABAg
+                    - generic [ref=f50e988]: awesome tool
+                    - generic [ref=f50e992]:
+                      - generic [ref=f50e993]:
+                        - button "Like this comment along with 2 other people" [ref=f50e995] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e999]: "2"
+                      - generic [ref=f50e1000]:
+                        - button "Dislike this comment" [ref=f50e1002] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e1008] [cursor=pointer]
+                - generic [ref=f50e1020]:
+                  - generic [ref=f50e1021] [cursor=pointer]
+                  - generic [ref=f50e1023]: ·
+                  - button "1 reply" [ref=f50e1026] [cursor=pointer]
+                - generic [ref=f50e1030] [cursor=pointer]
+              - generic [ref=f50e1031]:
+                - generic [ref=f50e1035]:
+                  - button "@HMB27587" [ref=f50e1037] [cursor=pointer]
+                  - generic [ref=f50e1041]:
+                    - generic [ref=f50e1043]:
+                      - heading [level=3] [ref=f50e1044]:
+                        - link "@HMB27587" [ref=f50e1045] [cursor=pointer]:
+                          - /url: /@HMB27587
+                      - link "2 days ago" [ref=f50e1047] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=Ugz7tQHeSDCWNCtKiR14AaABAg
+                    - generic [ref=f50e1048]: Congrats!!!! Good Job!
+                    - generic [ref=f50e1052]:
+                      - generic [ref=f50e1053]:
+                        - button "Like this comment along with 1 other person" [ref=f50e1055] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e1059]: "1"
+                      - generic [ref=f50e1060]:
+                        - button "Dislike this comment" [ref=f50e1062] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e1068] [cursor=pointer]
+                - generic [ref=f50e1080]:
+                  - generic [ref=f50e1081] [cursor=pointer]
+                  - generic [ref=f50e1083]: ·
+                  - button "1 reply" [ref=f50e1086] [cursor=pointer]
+                - generic [ref=f50e1090] [cursor=pointer]
+              - generic [ref=f50e1091]:
+                - generic [ref=f50e1095]:
+                  - button "@Shrike2415" [ref=f50e1097] [cursor=pointer]
+                  - generic [ref=f50e1101]:
+                    - generic [ref=f50e1103]:
+                      - heading [level=3] [ref=f50e1104]:
+                        - link "@Shrike2415" [ref=f50e1105] [cursor=pointer]:
+                          - /url: /@Shrike2415
+                      - link "1 day ago" [ref=f50e1107] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=Ugw7JHJJg2m7qmtsuol4AaABAg
+                    - generic [ref=f50e1108]: Thanks, just saw this video AFTER I finished cutting my spool feeder riser design Are there different tab options, like clips or sliding notches?
+                    - generic [ref=f50e1114]:
+                      - generic [ref=f50e1115]:
+                        - button "Like this comment along with 0 other people" [ref=f50e1117] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e1121]:
+                        - button "Dislike this comment" [ref=f50e1123] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e1129] [cursor=pointer]
+                - generic [ref=f50e1141]:
+                  - generic [ref=f50e1142] [cursor=pointer]
+                  - generic [ref=f50e1144]: ·
+                  - button "1 reply" [ref=f50e1147] [cursor=pointer]
+                - generic [ref=f50e1151] [cursor=pointer]
+              - generic [ref=f50e1152]:
+                - generic [ref=f50e1156]:
+                  - button "@eXtremeFX2010" [ref=f50e1158] [cursor=pointer]
+                  - generic [ref=f50e1162]:
+                    - generic [ref=f50e1164]:
+                      - heading [level=3] [ref=f50e1165]:
+                        - link "@eXtremeFX2010" [ref=f50e1166] [cursor=pointer]:
+                          - /url: /@eXtremeFX2010
+                      - link "3 days ago" [ref=f50e1168] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=UgwCnjY8EjQdDCx2Uvx4AaABAg
+                    - generic [ref=f50e1169]: OMG! Thank You YouTube Algorithms ️
+                    - generic [ref=f50e1175]:
+                      - generic [ref=f50e1176]:
+                        - button "Like this comment along with 3 other people" [ref=f50e1178] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e1182]: "3"
+                      - generic [ref=f50e1183]:
+                        - button "Dislike this comment" [ref=f50e1185] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e1191] [cursor=pointer]
+                - generic [ref=f50e1203]:
+                  - generic [ref=f50e1204] [cursor=pointer]
+                  - generic [ref=f50e1206]: ·
+                  - button "1 reply" [ref=f50e1209] [cursor=pointer]
+                - generic [ref=f50e1213] [cursor=pointer]
+              - generic [ref=f50e1214]:
+                - generic [ref=f50e1218]:
+                  - button "@CraigJNewman" [ref=f50e1220] [cursor=pointer]
+                  - generic [ref=f50e1224]:
+                    - generic [ref=f50e1226]:
+                      - heading [level=3] [ref=f50e1227]:
+                        - link "@CraigJNewman" [ref=f50e1228] [cursor=pointer]:
+                          - /url: /@CraigJNewman
+                      - link "4 days ago" [ref=f50e1230] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=UgxmtBeq0C8unY5fJ1F4AaABAg
+                    - generic [ref=f50e1231]: Oh hells yeah! I have a perfect model I want to try this with!
+                    - generic [ref=f50e1235]:
+                      - generic [ref=f50e1236]:
+                        - button "Like this comment along with 0 other people" [ref=f50e1238] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e1242]:
+                        - button "Dislike this comment" [ref=f50e1244] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e1250] [cursor=pointer]
+                - generic [ref=f50e1262]:
+                  - generic [ref=f50e1263] [cursor=pointer]
+                  - generic [ref=f50e1265]: ·
+                  - button "1 reply" [ref=f50e1268] [cursor=pointer]
+                - generic [ref=f50e1272] [cursor=pointer]
+              - generic [ref=f50e1273]:
+                - generic [ref=f50e1277]:
+                  - button "@willmorton6800" [ref=f50e1279] [cursor=pointer]
+                  - generic [ref=f50e1283]:
+                    - generic [ref=f50e1285]:
+                      - heading [level=3] [ref=f50e1286]:
+                        - link "@willmorton6800" [ref=f50e1287] [cursor=pointer]:
+                          - /url: /@willmorton6800
+                      - link "3 days ago" [ref=f50e1289] [cursor=pointer]:
+                        - /url: /watch?v=HLjiHOzxOVw&lc=Ugy3z38O3N1Q9zb8hlJ4AaABAg
+                    - generic [ref=f50e1290]: Is it going to be a 1 time charge? Or a bloody subscription?
+                    - generic [ref=f50e1294]:
+                      - generic [ref=f50e1295]:
+                        - button "Like this comment along with 6 other people" [ref=f50e1297] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - generic [ref=f50e1301]: "6"
+                      - generic [ref=f50e1302]:
+                        - button "Dislike this comment" [ref=f50e1304] [cursor=pointer]
+                        - tooltip "tooltip"
+                      - button "Reply" [ref=f50e1310] [cursor=pointer]
+                - generic [ref=f50e1322]:
+                  - generic [ref=f50e1323] [cursor=pointer]
+                  - generic [ref=f50e1325]: ·
+                  - button "2 replies" [ref=f50e1328] [cursor=pointer]
+                - generic [ref=f50e1332] [cursor=pointer]
+      - generic [ref=f50e1339]:
+        - generic [ref=f50e1341] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1342]:
+            - /url: /watch?v=4SqvvpCwFnE
+            - generic [ref=f50e1343]:
+              - img [ref=f50e1348]:
+                - generic [aria-hidden] [ref=f50e1349]: 1:52:47
+              - img [ref=f50e1352]:
+                - generic [aria-hidden] [ref=f50e1353]: New
+          - generic [ref=f50e1355]:
+            - generic [ref=f50e1356]:
+              - heading "What Keeps a Quantum Field There When There Are No Particles?" [level=3] [ref=f50e1357]:
+                - link "What Keeps a Quantum Field There When There Are No Particles? 1 hour, 52 minutes" [ref=f50e1358]:
+                  - /url: /watch?v=4SqvvpCwFnE
+                  - text: What Keeps a Quantum Field There When There Are No Particles?
+              - generic [ref=f50e1360]:
+                - group [ref=f50e1361]:
+                  - generic [ref=f50e1362]: Sleep On Physics
+                - group [ref=f50e1363]:
+                  - generic "6.6 thousand views" [ref=f50e1367]: 6.6K
+                  - generic "8 hours ago" [ref=f50e1368]: 8h ago
+            - button "More actions" [ref=f50e1371]
+        - generic [ref=f50e1376] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1377]:
+            - /url: /watch?v=9Ge0sMm65jo
+            - img [ref=f50e1383]:
+              - generic [aria-hidden] [ref=f50e1384]: 3:29:11
+          - generic [ref=f50e1386]:
+            - generic [ref=f50e1387]:
+              - heading "Train Your Own LLM – Tutorial" [level=3] [ref=f50e1388]:
+                - link "Train Your Own LLM – Tutorial 3 hours, 29 minutes" [ref=f50e1389]:
+                  - /url: /watch?v=9Ge0sMm65jo
+                  - text: Train Your Own LLM – Tutorial
+              - generic [ref=f50e1391]:
+                - group [ref=f50e1392]:
+                  - generic [ref=f50e1393]: freeCodeCamp.org
+                  - generic "Verified" [ref=f50e1394]
+                - group [ref=f50e1397]:
+                  - generic "453 thousand views" [ref=f50e1401]: 453K
+                  - generic "1 year ago" [ref=f50e1402]: 1y ago
+            - button "More actions" [ref=f50e1405]
+        - generic [ref=f50e1410] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1411]:
+            - /url: /watch?v=6Uv94zhK9M0&pp=0gcJCTcMAYcqIYzv
+            - generic [ref=f50e1412]:
+              - img [ref=f50e1417]:
+                - generic [aria-hidden] [ref=f50e1418]: 15:59
+              - img [ref=f50e1421]:
+                - generic [aria-hidden] [ref=f50e1422]: New
+          - generic [ref=f50e1424]:
+            - generic [ref=f50e1425]:
+              - heading "Facebook is FULL of It 🤬" [level=3] [ref=f50e1426]:
+                - link "Facebook is FULL of It 🤬 15 minutes" [ref=f50e1427]:
+                  - /url: /watch?v=6Uv94zhK9M0&pp=0gcJCTcMAYcqIYzv
+                  - text: Facebook is FULL of It 🤬
+              - generic [ref=f50e1429]:
+                - group [ref=f50e1430]:
+                  - generic [ref=f50e1431]: ElectroBOOM
+                  - generic "Verified" [ref=f50e1432]
+                - group [ref=f50e1435]:
+                  - generic "778 thousand views" [ref=f50e1439]: 778K
+                  - generic "1 day ago" [ref=f50e1440]: 1d ago
+            - button "More actions" [ref=f50e1443]
+        - generic [ref=f50e1448] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1449]:
+            - /url: /watch?v=2wP4DPg7yW0
+            - img [ref=f50e1455]:
+              - generic [aria-hidden] [ref=f50e1456]: 1:00:05
+          - generic [ref=f50e1458]:
+            - generic [ref=f50e1459]:
+              - heading "Gears Trees And Blender Addons" [level=3] [ref=f50e1460]:
+                - link "Gears Trees And Blender Addons 1 hour" [ref=f50e1461]:
+                  - /url: /watch?v=2wP4DPg7yW0
+                  - text: Gears Trees And Blender Addons
+              - generic [ref=f50e1463]:
+                - group [ref=f50e1464]:
+                  - generic [ref=f50e1465]: Merchantt Samuel
+                - group [ref=f50e1466]:
+                  - generic "11 views" [ref=f50e1470]: "11"
+                  - generic "10 days ago" [ref=f50e1471]: 10d ago
+            - button "More actions" [ref=f50e1474]
+        - generic [ref=f50e1479] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1480]:
+            - /url: /watch?v=D90bGbNHu7s
+            - img [ref=f50e1486]:
+              - generic [aria-hidden] [ref=f50e1487]: 1:07:29
+          - generic [ref=f50e1489]:
+            - generic [ref=f50e1490]:
+              - 'heading "[Episode 5: EXPORTING] Batman Arkham Knight Model Meshing Tutorial | Part Two" [level=3] [ref=f50e1491]':
+                - 'link "[Episode 5: EXPORTING] Batman Arkham Knight Model Meshing Tutorial | Part Two 1 hour, 7 minutes" [ref=f50e1492]':
+                  - /url: /watch?v=D90bGbNHu7s
+                  - text: "[Episode 5: EXPORTING] Batman Arkham Knight Model Meshing Tutorial | Part Two"
+              - generic [ref=f50e1494]:
+                - group [ref=f50e1495]:
+                  - generic [ref=f50e1496]: IAmRoger
+                - group [ref=f50e1497]:
+                  - generic "33 views" [ref=f50e1501]: "33"
+                  - generic "2 weeks ago" [ref=f50e1502]: 2w ago
+            - button "More actions" [ref=f50e1505]
+        - generic [ref=f50e1510] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1511]:
+            - /url: /watch?v=Ib8UBwu3yGA
+            - img [ref=f50e1517]:
+              - generic [aria-hidden] [ref=f50e1518]: 3:17:15
+          - generic [ref=f50e1520]:
+            - generic [ref=f50e1521]:
+              - heading "Adobe Illustrator for Beginners | FREE COURSE" [level=3] [ref=f50e1522]:
+                - link "Adobe Illustrator for Beginners | FREE COURSE 3 hours, 17 minutes" [ref=f50e1523]:
+                  - /url: /watch?v=Ib8UBwu3yGA
+                  - text: Adobe Illustrator for Beginners | FREE COURSE
+              - generic [ref=f50e1525]:
+                - group [ref=f50e1526]:
+                  - generic [ref=f50e1527]: Envato Tuts+
+                  - generic "Verified" [ref=f50e1528]
+                - group [ref=f50e1531]:
+                  - generic "12 million views" [ref=f50e1535]: 12M
+                  - generic "6 years ago" [ref=f50e1536]: 6y ago
+            - button "More actions" [ref=f50e1539]
+        - generic [ref=f50e1544] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1545]:
+            - /url: /watch?v=oZQXT55msAY&pp=ugUHEgVlbi1VU9IHCQk3DAGHKiGM7w%3D%3D
+            - generic [ref=f50e1546]:
+              - img [ref=f50e1551]:
+                - generic [aria-hidden] [ref=f50e1552]: 1:16:55
+              - img [ref=f50e1555]:
+                - generic [aria-hidden] [ref=f50e1556]: New
+          - generic [ref=f50e1558]:
+            - generic [ref=f50e1559]:
+              - heading "#190 DuyNisa Selling Non-Stop - Bringing Authentic Hometown Cuisine to Thailand to Start a Business" [level=3] [ref=f50e1560]:
+                - link "#190 DuyNisa Selling Non-Stop - Bringing Authentic Hometown Cuisine to Thailand to Start a Business 1 hour, 16 minutes" [ref=f50e1561]:
+                  - /url: /watch?v=oZQXT55msAY&pp=ugUHEgVlbi1VU9IHCQk3DAGHKiGM7w%3D%3D
+                  - text: "#190 DuyNisa Selling Non-Stop - Bringing Authentic Hometown Cuisine to Thailand to Start a Business"
+              - generic [ref=f50e1563]:
+                - group [ref=f50e1564]:
+                  - generic [ref=f50e1565]: Duy Nisa
+                  - generic "Verified" [ref=f50e1566]
+                - group [ref=f50e1569]:
+                  - generic "37 thousand views" [ref=f50e1573]: 37K
+                  - generic "1 hour ago" [ref=f50e1574]: 1h ago
+                - group [ref=f50e1575]:
+                  - generic [ref=f50e1576]: Auto-dubbed
+            - button "More actions" [ref=f50e1585]
+        - generic [ref=f50e1590] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1591]:
+            - /url: /watch?v=sVcwVQRHIc8&pp=0gcJCTcMAYcqIYzv
+            - img [ref=f50e1597]:
+              - generic [aria-hidden] [ref=f50e1598]: 2:33:11
+          - generic [ref=f50e1600]:
+            - generic [ref=f50e1601]:
+              - heading "Learn RAG From Scratch – Python AI Tutorial from a LangChain Engineer" [level=3] [ref=f50e1602]:
+                - link "Learn RAG From Scratch – Python AI Tutorial from a LangChain Engineer 2 hours, 33 minutes" [ref=f50e1603]:
+                  - /url: /watch?v=sVcwVQRHIc8&pp=0gcJCTcMAYcqIYzv
+                  - text: Learn RAG From Scratch – Python AI Tutorial from a LangChain Engineer
+              - generic [ref=f50e1605]:
+                - group [ref=f50e1606]:
+                  - generic [ref=f50e1607]: freeCodeCamp.org
+                  - generic "Verified" [ref=f50e1608]
+                - group [ref=f50e1611]:
+                  - generic "1.7 million views" [ref=f50e1615]: 1.7M
+                  - generic "2 years ago" [ref=f50e1616]: 2y ago
+            - button "More actions" [ref=f50e1619]
+        - generic [ref=f50e1624] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1625]:
+            - /url: /watch?v=qjWkNZ0SXfo&pp=ugUEEgJlbg%3D%3D
+            - img [ref=f50e1631]:
+              - generic [aria-hidden] [ref=f50e1632]: 20:16
+          - generic [ref=f50e1634]:
+            - generic [ref=f50e1635]:
+              - heading "One Formula That Demystifies 3D Graphics" [level=3] [ref=f50e1636]:
+                - link "One Formula That Demystifies 3D Graphics 20 minutes" [ref=f50e1637]:
+                  - /url: /watch?v=qjWkNZ0SXfo&pp=ugUEEgJlbg%3D%3D
+                  - text: One Formula That Demystifies 3D Graphics
+              - generic [ref=f50e1639]:
+                - group [ref=f50e1640]:
+                  - generic [ref=f50e1641]: Tsoding
+                  - generic "Verified" [ref=f50e1642]
+                - group [ref=f50e1645]:
+                  - generic "1.1 million views" [ref=f50e1649]: 1.1M
+                  - generic "9 months ago" [ref=f50e1650]: 9mo ago
+            - button "More actions" [ref=f50e1653]
+        - generic [ref=f50e1658] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1659]:
+            - /url: /watch?v=nESaz92SJ0w&pp=ugUEEgJlbg%3D%3D
+            - img [ref=f50e1665]:
+              - generic [aria-hidden] [ref=f50e1666]: 29:35
+          - generic [ref=f50e1668]:
+            - generic [ref=f50e1669]:
+              - heading "The World's Easiest Blender Tutorial for Beginners" [level=3] [ref=f50e1670]:
+                - link "The World's Easiest Blender Tutorial for Beginners 29 minutes" [ref=f50e1671]:
+                  - /url: /watch?v=nESaz92SJ0w&pp=ugUEEgJlbg%3D%3D
+                  - text: The World's Easiest Blender Tutorial for Beginners
+              - generic [ref=f50e1673]:
+                - group [ref=f50e1674]:
+                  - generic [ref=f50e1675]: Brad's Art School
+                - group [ref=f50e1676]:
+                  - generic "834 thousand views" [ref=f50e1680]: 834K
+                  - generic "1 year ago" [ref=f50e1681]: 1y ago
+            - button "More actions" [ref=f50e1684]
+        - generic [ref=f50e1689] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1690]:
+            - /url: /watch?v=6eVWDVlTfCc
+            - generic [ref=f50e1691]:
+              - img [ref=f50e1696]:
+                - generic [aria-hidden] [ref=f50e1697]: 2:08:54
+              - img [ref=f50e1700]:
+                - generic [aria-hidden] [ref=f50e1701]: New
+          - generic [ref=f50e1703]:
+            - generic [ref=f50e1704]:
+              - 'heading "Khi Kẻ Đi Săn Trở Thành Con Mồi: Những Cuộc Đối Đầu Vĩ Đại Nhất | POW - Thế Giới Động Vật" [level=3] [ref=f50e1705]':
+                - 'link "Khi Kẻ Đi Săn Trở Thành Con Mồi: Những Cuộc Đối Đầu Vĩ Đại Nhất | POW - Thế Giới Động Vật 2 hours, 8 minutes" [ref=f50e1706]':
+                  - /url: /watch?v=6eVWDVlTfCc
+                  - text: "Khi Kẻ Đi Săn Trở Thành Con Mồi: Những Cuộc Đối Đầu Vĩ Đại Nhất | POW - Thế Giới Động Vật"
+              - generic [ref=f50e1708]:
+                - group [ref=f50e1709]:
+                  - generic [ref=f50e1710]: POW – Thế Giới Động Vật
+                  - generic: and Impossible China
+                - group [ref=f50e1711]:
+                  - generic "119 thousand views" [ref=f50e1715]: 119K
+                  - generic "1 day ago" [ref=f50e1716]: 1d ago
+            - button "More actions" [ref=f50e1719]
+        - generic [ref=f50e1724] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1725]:
+            - /url: /watch?v=iPNxT2wwccg&pp=ugUEEgJlbg%3D%3D
+            - img [ref=f50e1731]:
+              - generic [aria-hidden] [ref=f50e1732]: 59:48
+          - generic [ref=f50e1734]:
+            - generic [ref=f50e1735]:
+              - heading "DIY 3D Printed CNC Cuts Metal with 0.05mm Accuracy - Complete Build" [level=3] [ref=f50e1736]:
+                - link "DIY 3D Printed CNC Cuts Metal with 0.05mm Accuracy - Complete Build 59 minutes" [ref=f50e1737]:
+                  - /url: /watch?v=iPNxT2wwccg&pp=ugUEEgJlbg%3D%3D
+                  - text: DIY 3D Printed CNC Cuts Metal with 0.05mm Accuracy - Complete Build
+              - generic [ref=f50e1739]:
+                - group [ref=f50e1740]:
+                  - generic [ref=f50e1741]: How To Mechatronics
+                  - generic "Verified" [ref=f50e1742]
+                - group [ref=f50e1745]:
+                  - generic "439 thousand views" [ref=f50e1749]: 439K
+                  - generic "8 months ago" [ref=f50e1750]: 8mo ago
+            - button "More actions" [ref=f50e1753]
+        - generic [ref=f50e1758] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1759]:
+            - /url: /watch?v=c9Nd3GOPCD8
+            - generic [ref=f50e1760]:
+              - img [ref=f50e1765]:
+                - generic [aria-hidden] [ref=f50e1766]: 33:08
+              - img [ref=f50e1769]:
+                - generic [aria-hidden] [ref=f50e1770]: New
+          - generic [ref=f50e1772]:
+            - generic [ref=f50e1773]:
+              - heading "XIAOCHAOMENG VÀ CON MALPHITE NHỊP ĐỘ 2.6 TỐC ĐÁNH BUILD CỰC LẠ VẢ GIÁM ĐỐC DR.MUNDO LIÊN TỌI" [level=3] [ref=f50e1774]:
+                - link "XIAOCHAOMENG VÀ CON MALPHITE NHỊP ĐỘ 2.6 TỐC ĐÁNH BUILD CỰC LẠ VẢ GIÁM ĐỐC DR.MUNDO LIÊN TỌI 33 minutes" [ref=f50e1775]:
+                  - /url: /watch?v=c9Nd3GOPCD8
+                  - text: XIAOCHAOMENG VÀ CON MALPHITE NHỊP ĐỘ 2.6 TỐC ĐÁNH BUILD CỰC LẠ VẢ GIÁM ĐỐC DR.MUNDO LIÊN TỌI
+              - generic [ref=f50e1777]:
+                - group [ref=f50e1778]:
+                  - generic [ref=f50e1779]: Văn Tùng
+                  - generic "Verified" [ref=f50e1780]
+                - group [ref=f50e1783]:
+                  - generic "5.9 thousand views" [ref=f50e1787]: 5.9K
+                  - generic "1 hour ago" [ref=f50e1788]: 1h ago
+            - button "More actions" [ref=f50e1791]
+        - generic [ref=f50e1796] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1797]:
+            - /url: /watch?v=rZKmvdCWBP4
+            - img [ref=f50e1803]:
+              - generic [aria-hidden] [ref=f50e1804]: 52:37
+          - generic [ref=f50e1806]:
+            - generic [ref=f50e1807]:
+              - heading "Human Head sculpt" [level=3] [ref=f50e1808]:
+                - link "Human Head sculpt 52 minutes" [ref=f50e1809]:
+                  - /url: /watch?v=rZKmvdCWBP4
+                  - text: Human Head sculpt
+              - generic [ref=f50e1811]:
+                - group [ref=f50e1812]:
+                  - generic [ref=f50e1813]: Huy Ngo
+                - group [ref=f50e1814]:
+                  - generic "117 views" [ref=f50e1818]: "117"
+                  - generic "13 days ago" [ref=f50e1819]: 13d ago
+            - button "More actions" [ref=f50e1822]
+        - generic [ref=f50e1827] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1828]:
+            - /url: /watch?v=mkaLvAeoprg
+            - generic [ref=f50e1829]:
+              - img [ref=f50e1834]:
+                - generic [aria-hidden] [ref=f50e1835]: 2:30:26
+              - img [ref=f50e1838]:
+                - generic [aria-hidden] [ref=f50e1839]: New
+          - generic [ref=f50e1841]:
+            - generic [ref=f50e1842]:
+              - heading "Helicopter modeling process. (AH-6 Little Bird). Blender time-lapse." [level=3] [ref=f50e1843]:
+                - link "Helicopter modeling process. (AH-6 Little Bird). Blender time-lapse. 2 hours, 30 minutes" [ref=f50e1844]:
+                  - /url: /watch?v=mkaLvAeoprg
+                  - text: Helicopter modeling process. (AH-6 Little Bird). Blender time-lapse.
+              - generic [ref=f50e1846]:
+                - group [ref=f50e1847]:
+                  - generic [ref=f50e1848]: Kim Sergei_3D
+                - group [ref=f50e1849]:
+                  - generic "259 thousand views" [ref=f50e1853]: 259K
+                  - generic "6 days ago" [ref=f50e1854]: 6d ago
+            - button "More actions" [ref=f50e1857]
+        - generic [ref=f50e1862] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1863]:
+            - /url: /watch?v=-XYryP_GU8o&pp=ugUEEgJlbg%3D%3D
+            - img [ref=f50e1869]:
+              - generic [aria-hidden] [ref=f50e1870]: 23:46
+          - generic [ref=f50e1872]:
+            - generic [ref=f50e1873]:
+              - heading "Creating Stylized Low Poly Characters in Blender" [level=3] [ref=f50e1874]:
+                - link "Creating Stylized Low Poly Characters in Blender 23 minutes" [ref=f50e1875]:
+                  - /url: /watch?v=-XYryP_GU8o&pp=ugUEEgJlbg%3D%3D
+                  - text: Creating Stylized Low Poly Characters in Blender
+              - generic [ref=f50e1877]:
+                - group [ref=f50e1878]:
+                  - generic [ref=f50e1879]: lacruzo
+                - group [ref=f50e1880]:
+                  - generic "1.6 million views" [ref=f50e1884]: 1.6M
+                  - generic "2 years ago" [ref=f50e1885]: 2y ago
+            - button "More actions" [ref=f50e1888]
+        - generic [ref=f50e1893] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1894]:
+            - /url: /watch?v=U5R2LhR5gMU
+            - img [ref=f50e1900]:
+              - generic [aria-hidden] [ref=f50e1901]: 17:39
+          - generic [ref=f50e1903]:
+            - generic [ref=f50e1904]:
+              - heading "sculpting hair" [level=3] [ref=f50e1905]:
+                - link "sculpting hair 17 minutes" [ref=f50e1906]:
+                  - /url: /watch?v=U5R2LhR5gMU
+                  - text: sculpting hair
+              - generic [ref=f50e1908]:
+                - group [ref=f50e1909]:
+                  - generic [ref=f50e1910]: Huy Ngo
+                - group [ref=f50e1911]:
+                  - generic "71 views" [ref=f50e1915]: "71"
+                  - generic "10 days ago" [ref=f50e1916]: 10d ago
+            - button "More actions" [ref=f50e1919]
+        - generic [ref=f50e1924] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1925]:
+            - /url: /watch?v=g4OXlrxqIx0&pp=ugUEEgJlbg%3D%3D
+            - img [ref=f50e1931]:
+              - generic [aria-hidden] [ref=f50e1932]: 36:57
+          - generic [ref=f50e1934]:
+            - generic [ref=f50e1935]:
+              - heading "What's New in Blender 5.2 LTS! Official Overview" [level=3] [ref=f50e1936]:
+                - link "What's New in Blender 5.2 LTS! Official Overview 36 minutes" [ref=f50e1937]:
+                  - /url: /watch?v=g4OXlrxqIx0&pp=ugUEEgJlbg%3D%3D
+                  - text: What's New in Blender 5.2 LTS! Official Overview
+              - generic [ref=f50e1939]:
+                - group [ref=f50e1940]:
+                  - generic [ref=f50e1941]: Blender
+                  - generic "Verified" [ref=f50e1942]
+                - group [ref=f50e1945]:
+                  - generic "261 thousand views" [ref=f50e1949]: 261K
+                  - generic "2 months ago" [ref=f50e1950]: 2mo ago
+            - button "More actions" [ref=f50e1953]
+        - generic [ref=f50e1958] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1959]:
+            - /url: /watch?v=-VWQSh_b36Y
+            - generic [ref=f50e1960]:
+              - img [ref=f50e1965]:
+                - generic [aria-hidden] [ref=f50e1966]: 42:55
+              - img [ref=f50e1969]:
+                - generic [aria-hidden] [ref=f50e1970]: New
+          - generic [ref=f50e1972]:
+            - generic [ref=f50e1973]:
+              - 'heading "Ozone Subdivision Surfaces: Character Modeling Best Practices | Unreal Fest Chicago 2026" [level=3] [ref=f50e1974]':
+                - 'link "Ozone Subdivision Surfaces: Character Modeling Best Practices | Unreal Fest Chicago 2026 42 minutes" [ref=f50e1975]':
+                  - /url: /watch?v=-VWQSh_b36Y
+                  - text: "Ozone Subdivision Surfaces: Character Modeling Best Practices | Unreal Fest Chicago 2026"
+              - generic [ref=f50e1977]:
+                - group [ref=f50e1978]:
+                  - generic [ref=f50e1979]: Unreal Engine
+                  - generic "Verified" [ref=f50e1980]
+                - group [ref=f50e1983]:
+                  - generic "27 thousand views" [ref=f50e1987]: 27K
+                  - generic "5 days ago" [ref=f50e1988]: 5d ago
+            - button "More actions" [ref=f50e1991]
+        - generic [ref=f50e1996] [cursor=pointer]:
+          - link [aria-hidden] [ref=f50e1997]:
+            - /url: /watch?v=9atGC20hO4A
+            - img [ref=f50e2003]:
+              - generic [aria-hidden] [ref=f50e2004]: 7:57
+          - generic [ref=f50e2006]:
+            - generic [ref=f50e2007]:
+              - heading "Learn Boolean operators in ModelSplitter" [level=3] [ref=f50e2008]:
+                - link "Learn Boolean operators in ModelSplitter 7 minutes, 57 seconds" [ref=f50e2009]:
+                  - /url: /watch?v=9atGC20hO4A
+                  - text: Learn Boolean operators in ModelSplitter
+              - generic [ref=f50e2011]:
+                - group [ref=f50e2012]:
+                  - generic [ref=f50e2013]: Model Splitter
+                - group [ref=f50e2014]:
+                  - generic "50 views" [ref=f50e2018]: "50"
+                  - generic "1 month ago" [ref=f50e2019]: 1mo ago
+            - button "More actions" [ref=f50e2022]

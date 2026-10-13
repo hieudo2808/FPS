@@ -1,0 +1,79 @@
+{
+    "results": [
+        {
+            "name": "L15_after_hop_nav_walk",
+            "reached": true,
+            "validStart": true,
+            "reachedWaypoint": 14,
+            "ticks": 526,
+            "start": {
+                "x": 110.5,
+                "y": 0.0,
+                "z": -26.0
+            },
+            "end": {
+                "x": 100.51396179199219,
+                "y": 2.1723856925964357,
+                "z": -78.52379608154297
+            },
+            "target": {
+                "x": 100.30400085449219,
+                "y": 2.1100001335144045,
+                "z": -78.54000091552735
+            },
+            "maximumY": 2.1723880767822267,
+            "minimumY": 0.0010000000474974514,
+            "maximumTickRise": 0.09187865257263184
+        },
+        {
+            "name": "L26_north_walk",
+            "reached": false,
+            "validStart": true,
+            "reachedWaypoint": 0,
+            "ticks": 2400,
+            "start": {
+                "x": -65.5,
+                "y": 0.0,
+                "z": 185.0
+            },
+            "end": {
+                "x": -65.5,
+                "y": -19675.51953125,
+                "z": 194.99911499023438
+            },
+            "target": {
+                "x": -65.5,
+                "y": 0.0,
+                "z": 195.0
+            },
+            "maximumY": 0.034612610936164859,
+            "minimumY": -19675.51953125,
+            "maximumTickRise": 0.0
+        },
+        {
+            "name": "Single_jump_flat_ground",
+            "reached": false,
+            "validStart": true,
+            "reachedWaypoint": 0,
+            "ticks": 156,
+            "start": {
+                "x": -90.0,
+                "y": 0.1899999976158142,
+                "z": -137.0
+            },
+            "end": {
+                "x": -90.0,
+                "y": 0.07999992370605469,
+                "z": -137.0
+            },
+            "target": {
+                "x": -90.0,
+                "y": 5.0,
+                "z": -137.0
+            },
+            "maximumY": 0.8285458087921143,
+            "minimumY": 0.07999992370605469,
+            "maximumTickRise": 0.09759056568145752
+        }
+    ]
+}

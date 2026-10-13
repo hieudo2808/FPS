@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "result": {
+    "success": true,
+    "error": null,
+    "errorCode": null,
+    "retryStrategy": null,
+    "suggestedFixes": null,
+    "totalItems": 6,
+    "successCount": 6,
+    "failCount": 0,
+    "results": [
+      {
+        "target": "Assets/FPS/Features/World/Runtime/PerformanceAuditPlayer.cs",
+        "success": true,
+        "serverAvailability": {
+          "mayDisconnect": true,
+          "isCompiling": false,
+          "reason": "Deleted script-domain asset: Assets/FPS/Features/World/Runtime/PerformanceAuditPlayer.cs. Unity may briefly reload the script domain.",
+          "suggestion": "This operation may trigger a script-domain reload. The REST server may be briefly unavailable. Please retry shortly.",
+          "retryAfterSeconds": 5,
+          "retryStrategy": "wait_and_retry"
+        }
+      },
+      {
+        "target": "Assets/FPS/Features/Missions/Editor/PerformanceOptimizationEditor.cs",
+        "success": true,
+        "serverAvailability": {
+          "mayDisconnect": true,
+          "isCompiling": false,
+          "reason": "Deleted script-domain asset: Assets/FPS/Features/Missions/Editor/PerformanceOptimizationEditor.cs. Unity may briefly reload the script domain.",
+          "suggestion": "This operation may trigger a script-domain reload. The REST server may be briefly unavailable. Please retry shortly.",
+          "retryAfterSeconds": 5,
+          "retryStrategy": "wait_and_retry"
+        }
+      },
+      {
+        "target": "Assets/Screenshots/Occlusion2-Editor.png",
+        "success": true,
+        "serverAvailability": null
+      },
+      {
+        "target": "Assets/Screenshots/Occlusion5-Editor.png",
+        "success": true,
+        "serverAvailability": null
+      },
+      {
+        "target": "Assets/Screenshots/Occlusion5Corrected-Editor.png",
+        "success": true,
+        "serverAvailability": null
+      },
+      {
+        "target": "Assets/Screenshots/OcclusionSafe5-Editor.png",
+        "success": true,
+        "serverAvailability": null
+      }
+    ],
+    "serverAvailability": {
+      "mayDisconnect": true,
+      "isCompiling": true,
+      "reason": "A skill execution may have triggered compilation or asset refresh.",
+      "suggestion": "Unity is compiling or refreshing assets. The REST server may be briefly unavailable. Please retry shortly.",
+      "retryAfterSeconds": 5,
+      "retryStrategy": "wait_and_retry"
+    }
+  },
+  "workflowEndMs": 2882
+}

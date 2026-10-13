@@ -16,6 +16,15 @@ namespace FPS
         public const float MaxMouseSensitivity = 10f;
         public const float DefaultMouseSensitivity = 2f;
 
+        public static int DefaultGraphicsQuality { get; private set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void CaptureDefaultGraphicsQuality()
+        {
+            // Capture the platform's project default before loading saved choices.
+            DefaultGraphicsQuality = QualitySettings.GetQualityLevel();
+        }
+
         private bool settingsLoaded;
         private float mouseSensitivity;
         private int graphicsQuality;

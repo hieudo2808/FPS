@@ -1,0 +1,10 @@
+{
+  "harnessAbsent": true,
+  "editorAssemblyAbsent": true,
+  "gameAssemblies": [
+    "FPS.dll"
+  ],
+  "aliveAfter12s": true,
+  "exitCode": 1,
+  "terminationReason": "Audit runner intentionally stopped Player after startup-only smoke; exit code 1 from TerminateProcess is expected."
+}

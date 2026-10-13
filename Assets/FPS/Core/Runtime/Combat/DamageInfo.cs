@@ -19,6 +19,7 @@ namespace FPS
         public readonly ulong attackerClientId;
         public readonly int attackerPlayerIndex;
         public readonly Vector3 hitPoint;
+        public readonly Vector3? sourcePosition;
         public readonly bool isHeadshot;
         public readonly float reactionTime;
         public readonly DamageType damageType;
@@ -39,13 +40,15 @@ namespace FPS
             float reactionTime = 0f,
             DamageType damageType = DamageType.Unspecified,
             HitboxZone hitZone = HitboxZone.Body,
-            float damageMultiplier = 1f)
+            float damageMultiplier = 1f,
+            Vector3? sourcePosition = null)
         {
             bool resolvedHeadshot = isHeadshot || hitZone == HitboxZone.Head;
             this.amount = amount;
             this.attackerClientId = attackerClientId;
             this.attackerPlayerIndex = attackerPlayerIndex;
             this.hitPoint = hitPoint;
+            this.sourcePosition = sourcePosition;
             this.isHeadshot = resolvedHeadshot;
             this.reactionTime = reactionTime;
             this.damageType = damageType;

@@ -1,0 +1,105 @@
+{
+  "uniquePassedTests": 28,
+  "receipts": [
+    {
+      "file": "CampaignLifecycleTests.xml",
+      "result": "Passed",
+      "passed": 2,
+      "start": "2026-10-05 03:40:19Z",
+      "end": "2026-10-05 03:40:20Z",
+      "cases": [
+        "FPS.Tests.CampaignLifecycleTests.StateRestoreDoesNotReplayDialogue_QueueResetClearsPresentation",
+        "FPS.Tests.CampaignLifecycleTests.TankDespawnDoesNotCountAsKill_DeathUnlocksFactory"
+      ]
+    },
+    {
+      "file": "CampaignMorgueNavigationTests.xml",
+      "result": "Passed",
+      "passed": 1,
+      "start": "2026-10-05 02:39:44Z",
+      "end": "2026-10-05 02:40:05Z",
+      "cases": [
+        "FPS.Tests.CampaignMorgueNavigationTests.TankAgentSettings_ReachReaderAndLiftFromBothConcealedAnchors"
+      ]
+    },
+    {
+      "file": "CampaignRulesTests.xml",
+      "result": "Passed",
+      "passed": 11,
+      "start": "2026-10-05 02:22:05Z",
+      "end": "2026-10-05 02:22:05Z",
+      "cases": [
+        "FPS.Tests.CampaignRulesTests.ContentCatalog_ContainsLockedFileAndPuzzleTruth",
+        "FPS.Tests.CampaignRulesTests.Dialogue_HonorsOncePerAttemptCooldownAndStablePriority",
+        "FPS.Tests.CampaignRulesTests.EnglishCanon_HasCompleteFilesAndMatchesRuntimeCatalog",
+        "FPS.Tests.CampaignRulesTests.FileDiscovery_IsIdempotent",
+        "FPS.Tests.CampaignRulesTests.FileDiscovery_RejectsNullUnknownWrongChapterAndWrongPhase",
+        "FPS.Tests.CampaignRulesTests.FileDiscovery_RequiresBoundReachableSourceAndExploringPhase",
+        "FPS.Tests.CampaignRulesTests.FileSources_OnlyRequiredCluesHaveConsoleFallback",
+        "FPS.Tests.CampaignRulesTests.FileVisibility_RecordingAndRollbackToggleOnlyPickupAndInteraction",
+        "FPS.Tests.CampaignRulesTests.KeyItem_IsOwnedOnlyBetweenAcquireAndConsumeUnlessPersistent",
+        "FPS.Tests.CampaignRulesTests.PuzzleChoices_MatchAcceptedIndicesAndWrongAnswerDoesNotMutateState",
+        "FPS.Tests.CampaignRulesTests.ScriptedTank_ArmsAtLockedBeatsAndOnlyFactoryRequiresKill"
+      ]
+    },
+    {
+      "file": "HudGameplayStatesTests.xml",
+      "result": "Passed",
+      "passed": 1,
+      "start": "2026-10-05 03:48:11Z",
+      "end": "2026-10-05 03:49:13Z",
+      "cases": [
+        "FPS.Tests.HudGameplayAcceptanceTests.GameplayStatesAndLayoutRemainReadable"
+      ]
+    },
+    {
+      "file": "HudInputPlayModeTests.xml",
+      "result": "Passed",
+      "passed": 2,
+      "start": "2026-10-05 03:36:52Z",
+      "end": "2026-10-05 03:36:52Z",
+      "cases": [
+        "FPS.Tests.HudInputPlayModeTests.InventoryBackClosesOnlyTheTopOverlayAndRestoresFocus",
+        "FPS.Tests.HudInputPlayModeTests.PromptsSwitchOnDerivedGamepadAndReportUnboundActions"
+      ]
+    },
+    {
+      "file": "HudNavigationAcceptanceTests.xml",
+      "result": "Passed",
+      "passed": 1,
+      "start": "2026-10-05 03:34:15Z",
+      "end": "2026-10-05 03:35:04Z",
+      "cases": [
+        "FPS.Tests.HudGameplayAcceptanceTests.NavigationUsesLiveSceneAndInvalidatesConsistently"
+      ]
+    },
+    {
+      "file": "HudRegressionTests.xml",
+      "result": "Passed",
+      "passed": 4,
+      "start": "2026-10-05 02:35:27Z",
+      "end": "2026-10-05 02:35:28Z",
+      "cases": [
+        "FPS.Tests.HudRegressionTests.ProjectionHandlesBehindCameraAndAvoidsOccupiedCorner",
+        "FPS.Tests.HudRegressionTests.PromptsFollowOverridesAndReset",
+        "FPS.Tests.HudRegressionTests.TrackingInvalidatesOnChapterPhaseAndCheckpointRollback",
+        "FPS.Tests.HudRegressionTests.TrackingUsesNearestCompleteRouteThenKeepsManualSelection"
+      ]
+    },
+    {
+      "file": "SurvivalUiRegressionTests.xml",
+      "result": "Passed",
+      "passed": 6,
+      "start": "2026-10-05 03:37:35Z",
+      "end": "2026-10-05 03:37:35Z",
+      "cases": [
+        "FPS.Tests.SurvivalUiRegressionTests.CancellingRebindTwiceCompletesOnceAndPreservesBinding",
+        "FPS.Tests.SurvivalUiRegressionTests.LongPlayerNamesCannotOverwriteReadinessOrInjectMarkup",
+        "FPS.Tests.SurvivalUiRegressionTests.MainMenuModalBlocksBackgroundAndRestoresItOnBack",
+        "FPS.Tests.SurvivalUiRegressionTests.MissingMatchManagerClearsAuthoredPhaseLabel",
+        "FPS.Tests.SurvivalUiRegressionTests.PrimaryButtonAndMutedTextHaveReadableContrast",
+        "FPS.Tests.SurvivalUiRegressionTests.SettingsBindingsStayInsideContentAndDoNotOverlap"
+      ]
+    }
+  ]
+}

@@ -36,6 +36,10 @@ namespace FPS
         private InputActionMap gameplayMap;
         private readonly Dictionary<string, InputAction> actions = new(StringComparer.Ordinal);
         private InputActionRebindingExtensions.RebindingOperation activeRebind;
+        private bool promptUsesGamepad;
+
+        public event Action PromptBindingsChanged;
+        public bool PromptUsesGamepad => promptUsesGamepad;
 
         public InputActionAsset ActionsAsset => actionAsset;
 
@@ -67,10 +71,13 @@ namespace FPS
             if (gameplayMap == null || actionAsset == null)
                 InitializeActions();
             EnableGameplayMapSafely();
+            InputSystem.onActionChange -= OnPromptActionChange;
+            InputSystem.onActionChange += OnPromptActionChange;
         }
 
         private void OnDisable()
         {
+            InputSystem.onActionChange -= OnPromptActionChange;
             CancelInteractiveRebind();
             DisableGameplayMapSafely();
         }
@@ -277,6 +284,56 @@ namespace FPS
             return "--";
         }
 
+        /// <summary>HUD-only binding label. Never substitutes a keyboard key for an unbound gamepad action.</summary>
+        public string GetPromptDisplayName(string actionName)
+        {
+            var action = GetAction(actionName);
+            int index = GetPromptBindingIndex(action);
+            return index < 0 ? "--" : action.GetBindingDisplayString(index, InputBinding.DisplayStringOptions.DontIncludeInteractions);
+        }
+
+        public string GetPromptBindingPath(string actionName)
+        {
+            var action = GetAction(actionName);
+            int index = GetPromptBindingIndex(action);
+            return index < 0 ? string.Empty : action.bindings[index].effectivePath;
+        }
+
+        private int GetPromptBindingIndex(InputAction action)
+        {
+            if (action == null) return -1;
+            for (int i = 0; i < action.bindings.Count; i++)
+            {
+                var binding = action.bindings[i];
+                if (binding.isComposite || binding.isPartOfComposite) continue;
+                string path = binding.effectivePath;
+                if (string.IsNullOrEmpty(path)) continue;
+                string layout = InputControlPath.TryGetDeviceLayout(path);
+                bool gamepad = layout != null && (InputSystem.IsFirstLayoutBasedOnSecond(layout, "Gamepad")
+                    || InputSystem.IsFirstLayoutBasedOnSecond(layout, "Joystick"));
+                if (gamepad != promptUsesGamepad) continue;
+                return i;
+            }
+            return -1;
+        }
+
+        private void OnPromptActionChange(object source, InputActionChange change)
+        {
+            if (change == InputActionChange.BoundControlsChanged && ReferenceEquals(source, actionAsset))
+            { PromptBindingsChanged?.Invoke(); return; }
+            if (change != InputActionChange.ActionPerformed || source is not InputAction action
+                || action.actionMap?.asset != actionAsset || activeRebind != null) return;
+            var control = action.activeControl;
+            if (control == null) return;
+            // Mouse jitter and analog noise must not switch the prompt scheme.
+            if (action.name == "Look" && control.device is Mouse && action.ReadValue<Vector2>().sqrMagnitude < 4f) return;
+            if ((action.name == "Move" || action.name == "Look") && action.ReadValue<Vector2>().sqrMagnitude < .04f) return;
+            bool gamepad = control.device is Gamepad || control.device is Joystick;
+            if (gamepad == promptUsesGamepad) return;
+            promptUsesGamepad = gamepad;
+            PromptBindingsChanged?.Invoke();
+        }
+
         /// <summary>
         /// Compatibility helper for existing editor tests and non-interactive defaults.
         /// Runtime input still flows through Input System actions.
@@ -369,6 +426,14 @@ namespace FPS
             activeRebind.Cancel();
         }
 
+        public void ResetBindingsToDefault()
+        {
+            CancelInteractiveRebind();
+            actionAsset.RemoveAllBindingOverrides();
+            foreach (var action in actions.Values) PlayerPrefs.DeleteKey("Input_" + action.name);
+            SaveBindingOverrides();
+        }
+
         private static int FindFirstRebindableBinding(InputAction action)
         {
             for (int i = 0; i < action.bindings.Count; i++)
@@ -387,6 +452,7 @@ namespace FPS
 
             PlayerPrefs.SetString(BindingOverridesKey, actionAsset.SaveBindingOverridesAsJson());
             PlayerPrefs.Save();
+            PromptBindingsChanged?.Invoke();
         }
 
         private void LoadBindingOverrides()

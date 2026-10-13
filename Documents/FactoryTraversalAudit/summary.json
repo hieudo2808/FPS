@@ -1,0 +1,51 @@
+{
+  "standing_samples": 822127,
+  "geometry_regions": 77,
+  "authored_colliders": 3213,
+  "active_solid_colliders": 2519,
+  "controller_probes": 24744,
+  "boundary_probes": 10476,
+  "boundary_landings": 1471,
+  "upper_and_connection_probes": 9918,
+  "upper_and_connection_landings": 1835,
+  "landing_nav_paths": {
+    "PathComplete": 3139,
+    "PathPartial": 165,
+    "PathInvalid": 2
+  },
+  "native_landing_returns": 3139,
+  "native_landing_returns_reached": 3139,
+  "initial_native_returns_reached": 3121,
+  "nav_corner_tolerance_rechecks": 18,
+  "l15_native_exit_routes": 51,
+  "upper_native_exit_routes": 5,
+  "scene_sha256": "63F712AD5EEDC32D3FB88C30D410F58EC58A06A1E1BE848C0AFF63342094E9AA",
+  "scope": "Saved Edit Mode geometry and native movement tick; dynamic mission gates and network recovery callbacks are not simulated",
+  "walk_routes_confirmed": [
+    "L01",
+    "L02",
+    "L03",
+    "L15",
+    "L61"
+  ],
+  "fine_scan": {
+    "spacing": 0.125,
+    "samples": 28675,
+    "pit_samples": 4692,
+    "pit_maximum_y": 0.0,
+    "bounds": [
+      10.5,
+      29.75,
+      -103.0,
+      -95.5
+    ],
+    "upper_floor_reached": false
+  },
+  "single_jump_apex_above_rest": 0.7485458850860596,
+  "classified_landings": {
+    "L30: vùng kẹt đã tái hiện": 73,
+    "Lối về không cần nhảy đã kiểm chứng": 3195,
+    "Mép WorldBase; thử bước ra ngoài rơi qua cao độ cứu hộ": 2,
+    "Trong/sau cổng nhiệm vụ đang đóng; chưa kết luận khi chạy nhiệm vụ": 36
+  }
+}

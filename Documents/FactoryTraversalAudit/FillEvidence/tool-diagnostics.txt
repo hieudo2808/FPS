@@ -1,0 +1,1 @@
+During verification, UnitySkills component_get_properties(MeshFilter) invoked MeshFilter.mesh in Edit Mode, creating a transient mesh instance and logging a leak warning as Error. Both scenes were clean. Reloaded saved scenes before further authoring; no mesh instance was saved.

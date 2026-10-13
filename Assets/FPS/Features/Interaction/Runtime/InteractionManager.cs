@@ -91,11 +91,8 @@ namespace FPS
                 if (InputManager.Instance.GetInteractInputDown()) survivalInventory.RequestUse(heal ? ConsumableKind.Medkit : ConsumableKind.Antidote, teammate);
                 return;
             }
-            if (survivalInventory.CanTreat(survivalInventory, ConsumableKind.Antidote))
-            { SetPromptText("[" + SurvivalHotbar.Key("Antidote", "5") + "] SELF · ANTIDOTE"); SetPromptVisible(true); }
-            else if (survivalInventory.CanTreat(survivalInventory, ConsumableKind.Medkit))
-            { SetPromptText("[" + SurvivalHotbar.Key("Medkit", "4") + "] SELF · MEDKIT"); SetPromptVisible(true); }
-            else SetPromptVisible(false);
+            // Self-treatment keys already appear on the hotbar; reserve this prompt for a target in view.
+            SetPromptVisible(false);
         }
 
         private SurvivalInventory FindTeammateInventoryInView()

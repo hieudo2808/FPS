@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="11" result="Passed" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.6074194">
+  <test-suite type="TestSuite" id="1865" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="734" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.607419" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1091" name="FPS.RegressionTests.Editor.dll" fullname="E:/Unity/Project/FPS/Library/ScriptAssemblies/FPS.RegressionTests.Editor.dll" runstate="Runnable" testcasecount="71" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.508625" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13644" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1092" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="71" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.409107" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1093" name="Tests" fullname="FPS.Tests" runstate="Runnable" testcasecount="71" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.309909" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1018" name="CampaignRulesTests" fullname="FPS.Tests.CampaignRulesTests" classname="FPS.Tests.CampaignRulesTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.209208" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1026" name="ContentCatalog_ContainsLockedFileAndPuzzleTruth" fullname="FPS.Tests.CampaignRulesTests.ContentCatalog_ContainsLockedFileAndPuzzleTruth" methodname="ContentCatalog_ContainsLockedFileAndPuzzleTruth" classname="FPS.Tests.CampaignRulesTests" runstate="Runnable" seed="14376245" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.024054" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1020" name="Dialogue_HonorsOncePerAttemptCooldownAndStablePriority" fullname="FPS.Tests.CampaignRulesTests.Dialogue_HonorsOncePerAttemptCooldownAndStablePriority" methodname="Dialogue_HonorsOncePerAttemptCooldownAndStablePriority" classname="FPS.Tests.CampaignRulesTests" runstate="Runnable" seed="583216377" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.003163" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1027" name="EnglishCanon_HasCompleteFilesAndMatchesRuntimeCatalog" fullname="FPS.Tests.CampaignRulesTests.EnglishCanon_HasCompleteFilesAndMatchesRuntimeCatalog" methodname="EnglishCanon_HasCompleteFilesAndMatchesRuntimeCatalog" classname="FPS.Tests.CampaignRulesTests" runstate="Runnable" seed="968097745" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.069689" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1024" name="FileDiscovery_IsIdempotent" fullname="FPS.Tests.CampaignRulesTests.FileDiscovery_IsIdempotent" methodname="FileDiscovery_IsIdempotent" classname="FPS.Tests.CampaignRulesTests" runstate="Runnable" seed="174743615" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.000686" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1028" name="FileDiscovery_RejectsNullUnknownWrongChapterAndWrongPhase" fullname="FPS.Tests.CampaignRulesTests.FileDiscovery_RejectsNullUnknownWrongChapterAndWrongPhase" methodname="FileDiscovery_RejectsNullUnknownWrongChapterAndWrongPhase" classname="FPS.Tests.CampaignRulesTests" runstate="Runnable" seed="2060517939" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.000405" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1023" name="FileDiscovery_RequiresBoundReachableSourceAndExploringPhase" fullname="FPS.Tests.CampaignRulesTests.FileDiscovery_RequiresBoundReachableSourceAndExploringPhase" methodname="FileDiscovery_RequiresBoundReachableSourceAndExploringPhase" classname="FPS.Tests.CampaignRulesTests" runstate="Runnable" seed="1385990566" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.000252" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1021" name="FileSources_OnlyRequiredCluesHaveConsoleFallback" fullname="FPS.Tests.CampaignRulesTests.FileSources_OnlyRequiredCluesHaveConsoleFallback" methodname="FileSources_OnlyRequiredCluesHaveConsoleFallback" classname="FPS.Tests.CampaignRulesTests" runstate="Runnable" seed="2021310654" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.001399" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1022" name="FileVisibility_RecordingAndRollbackToggleOnlyPickupAndInteraction" fullname="FPS.Tests.CampaignRulesTests.FileVisibility_RecordingAndRollbackToggleOnlyPickupAndInteraction" methodname="FileVisibility_RecordingAndRollbackToggleOnlyPickupAndInteraction" classname="FPS.Tests.CampaignRulesTests" runstate="Runnable" seed="1895626233" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.003529" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1025" name="KeyItem_IsOwnedOnlyBetweenAcquireAndConsumeUnlessPersistent" fullname="FPS.Tests.CampaignRulesTests.KeyItem_IsOwnedOnlyBetweenAcquireAndConsumeUnlessPersistent" methodname="KeyItem_IsOwnedOnlyBetweenAcquireAndConsumeUnlessPersistent" classname="FPS.Tests.CampaignRulesTests" runstate="Runnable" seed="538494846" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.000388" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1029" name="PuzzleChoices_MatchAcceptedIndicesAndWrongAnswerDoesNotMutateState" fullname="FPS.Tests.CampaignRulesTests.PuzzleChoices_MatchAcceptedIndicesAndWrongAnswerDoesNotMutateState" methodname="PuzzleChoices_MatchAcceptedIndicesAndWrongAnswerDoesNotMutateState" classname="FPS.Tests.CampaignRulesTests" runstate="Runnable" seed="1357790973" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.001192" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1019" name="ScriptedTank_ArmsAtLockedBeatsAndOnlyFactoryRequiresKill" fullname="FPS.Tests.CampaignRulesTests.ScriptedTank_ArmsAtLockedBeatsAndOnlyFactoryRequiresKill" methodname="ScriptedTank_ArmsAtLockedBeatsAndOnlyFactoryRequiresKill" classname="FPS.Tests.CampaignRulesTests" runstate="Runnable" seed="843391087" result="Passed" start-time="2026-10-05 02:22:05Z" end-time="2026-10-05 02:22:05Z" duration="0.001063" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/hieud/AppData/LocalLow/HieuDHM/FPS\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

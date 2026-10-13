@@ -20,7 +20,7 @@ namespace FPS.UI.Editor
         public static string Capture(string sceneName, string screen, int width = 1920, int height = 1080)
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Use authored UI verification in Edit mode.");
-            EditorSceneManager.SaveOpenScenes(); AssetDatabase.SaveAssets();
+            TacticalUiWorkshop.SaveAuthoredScenes();
             string path = "Assets/FPS/Scenes/" + sceneName + ".unity";
             var scene = SceneManager.GetSceneByPath(path); bool opened = !scene.isLoaded;
             var previous = SceneManager.GetActiveScene();
@@ -81,7 +81,7 @@ namespace FPS.UI.Editor
                     bar.AddComponent<SurvivalHotbar>().Bind(inventory);
                     bar.GetComponent<SurvivalHotbar>().AdaptToCanvasScale(scale);
                     foreach (var t in bar.GetComponentsInChildren<Transform>(true)) t.gameObject.layer = 5;
-                    foreach (string legacy in new[] { "FragSlot", "IncendiarySlot", "MedkitSlot", "AntidoteSlot", "TreatmentProgressFill" }) SetActive(clone.transform, legacy, false);
+                    foreach (string legacy in new[] { "FragSlot", "IncendiarySlot", "MedkitSlot", "AntidoteSlot" }) SetActive(clone.transform, legacy, false);
                 }
                 var cameraGo = new GameObject("UI verification camera"); SceneManager.MoveGameObjectToScene(cameraGo, preview);
                 var camera = cameraGo.AddComponent<Camera>(); camera.scene = preview;
@@ -111,7 +111,7 @@ namespace FPS.UI.Editor
                 if (image != null) Object.DestroyImmediate(image);
                 if (opened && scene.isLoaded) EditorSceneManager.CloseScene(scene, true);
                 if (previous.IsValid() && previous.isLoaded) SceneManager.SetActiveScene(previous);
-                EditorSceneManager.SaveOpenScenes(); AssetDatabase.SaveAssets();
+                TacticalUiWorkshop.SaveAuthoredScenes();
             }
         }
 

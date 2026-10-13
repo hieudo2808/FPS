@@ -133,13 +133,17 @@ namespace FPS
 
         private void TrySubscribe()
         {
-            if (WaitingRoomManager.Instance == null) return;
+            // Initial NetworkVariable values are synchronized before OnNetworkSpawn.
+            if (WaitingRoomManager.Instance == null || !WaitingRoomManager.Instance.IsSpawned) return;
 
             Unsubscribe();
 
             WaitingRoomManager.Instance.OnPlayerListChanged += RefreshPlayerList;
             WaitingRoomManager.Instance.OnAllReadyChanged += UpdateStartButton;
             WaitingRoomManager.Instance.LobbyDifficulty.OnValueChanged += HandleDifficultyChanged;
+
+            DifficultyLevel difficulty = WaitingRoomManager.Instance.LobbyDifficulty.Value;
+            HandleDifficultyChanged(difficulty, difficulty);
 
             CancelInvoke(nameof(TrySubscribe));
             RefreshPlayerList();

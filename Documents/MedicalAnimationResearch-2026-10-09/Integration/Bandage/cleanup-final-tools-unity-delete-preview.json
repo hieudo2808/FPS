@@ -1,0 +1,29 @@
+{
+  "status": "success",
+  "result": {
+    "success": true,
+    "action": "preview",
+    "totalAssets": 2,
+    "existingAssets": 2,
+    "totalBytes": 7487404,
+    "totalMB": 7.140544891357422,
+    "confirmToken": "c5cc5c5c",
+    "message": "⚠️ PREVIEW ONLY - 2 assets will be deleted (7.14 MB). To confirm, call again with confirmToken='c5cc5c5c'",
+    "expiresIn": "5 minutes",
+    "assetsToDelete": [
+      {
+        "path": "Assets/FPS/Prototypes/MedicalAnimation",
+        "exists": true,
+        "sizeBytes": 0,
+        "sizeMB": 0.0
+      },
+      {
+        "path": "Assets/FPS/Features/Survival/Content/MedicalAnimation/SelfHeal_FDDA_Bandage.fbx",
+        "exists": true,
+        "sizeBytes": 7487404,
+        "sizeMB": 7.140544891357422
+      }
+    ]
+  },
+  "workflowEndMs": 0
+}

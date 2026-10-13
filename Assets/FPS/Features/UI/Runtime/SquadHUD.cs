@@ -27,6 +27,7 @@ namespace FPS
         private readonly List<Row> rows = new(3);
         private CampaignMissionController campaign;
         private Canvas canvas;
+        private Sprite barSprite;
         private float nextBindingRefresh;
 
         private void Awake() => Build();
@@ -50,7 +51,7 @@ namespace FPS
                 return;
             }
 
-            canvas.enabled = !InGameMenuUI.IsMenuOpen && !TeamInventoryUI.IsOpen;
+            canvas.enabled = HudLayout.GameplayVisible;
             if (Time.unscaledTime >= nextBindingRefresh)
             {
                 nextBindingRefresh = Time.unscaledTime + 1f;
@@ -151,12 +152,12 @@ namespace FPS
 
         private static string Direction(Vector3 target)
         {
-            Camera camera = Camera.main;
-            if (camera == null) return "◆";
-            Vector3 direction = Vector3.ProjectOnPlane(target - camera.transform.position, Vector3.up).normalized;
+            var camera = Camera.main;
+            if (camera == null) return "";
+            var direction = Vector3.ProjectOnPlane(target - camera.transform.position, Vector3.up).normalized;
             float right = Vector3.Dot(camera.transform.right, direction);
             float forward = Vector3.Dot(camera.transform.forward, direction);
-            return Mathf.Abs(right) > Mathf.Abs(forward) ? right >= 0 ? "▶" : "◀" : forward >= 0 ? "▲" : "▼";
+            return Mathf.Abs(right) > Mathf.Abs(forward) ? right >= 0 ? "RIGHT" : "LEFT" : forward >= 0 ? "AHEAD" : "BEHIND";
         }
 
         private void Build()
@@ -164,25 +165,28 @@ namespace FPS
             GameObject canvasObject = new("SquadHUDCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
             canvasObject.transform.SetParent(transform, false);
             canvas = canvasObject.GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.sortingOrder = TacticalUiTheme.HudOrder + 1;
-            CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize; scaler.referenceResolution = TacticalUiTheme.ReferenceResolution; scaler.matchWidthOrHeight = .5f;
+            HudLayout.ConfigureCanvas(canvas);
             RectTransform root = new GameObject("SquadPanel", typeof(RectTransform), typeof(VerticalLayoutGroup)).GetComponent<RectTransform>();
-            root.SetParent(canvasObject.transform, false); root.anchorMin = root.anchorMax = new Vector2(0, 1); root.pivot = new Vector2(0, 1); root.anchoredPosition = new Vector2(28, -28); root.sizeDelta = new Vector2(410, 250);
-            VerticalLayoutGroup layout = root.GetComponent<VerticalLayoutGroup>(); layout.spacing = 8; layout.childControlWidth = true; layout.childForceExpandWidth = true; layout.childControlHeight = false;
-            for (int i = 0; i < 3; i++) rows.Add(BuildRow(root, i));
+            root.SetParent(HudLayout.PeripheralRoot(canvas), false); HudLayout.Corner(root, Vector2.zero, new Vector2(28, 328), new Vector2(HudLayout.VitalsWidth, 304));
+            VerticalLayoutGroup layout = root.GetComponent<VerticalLayoutGroup>(); layout.spacing = 8; layout.childControlWidth = true; layout.childForceExpandWidth = true;
+            layout.childControlHeight = true; layout.childForceExpandHeight = false;
+            barSprite = HudSkin.Get("Fill");
+            for (int i = 0; i < 3; i++) rows.Add(BuildRow(root, i, barSprite));
             canvas.enabled = false;
         }
 
-        private static Row BuildRow(Transform parent, int index)
+        private static Row BuildRow(Transform parent, int index, Sprite barSprite)
         {
             GameObject root = new($"SquadMember_{index + 1}", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
-            root.transform.SetParent(parent, false); root.GetComponent<Image>().color = new Color(.03f, .04f, .04f, .86f); root.GetComponent<LayoutElement>().preferredHeight = 74;
-            TMP_Text portrait = Text(root.transform, "Portrait", new Vector2(.02f, .15f), new Vector2(.16f, .85f), 30, FontStyles.Bold); portrait.alignment = TextAlignmentOptions.Center;
-            TMP_Text name = Text(root.transform, "Name", new Vector2(.19f, .52f), new Vector2(.66f, .92f), 21, FontStyles.Bold);
-            TMP_Text character = Text(root.transform, "Character", new Vector2(.68f, .55f), new Vector2(.97f, .90f), 15); character.alignment = TextAlignmentOptions.Right;
-            TMP_Text status = Text(root.transform, "Status", new Vector2(.19f, .08f), new Vector2(.62f, .43f), 16, FontStyles.Bold);
-            Image healthTrack = Image(root.transform, "HealthTrack", new Vector2(.64f, .25f), new Vector2(.97f, .42f)); healthTrack.color = TacticalUiTheme.Control;
-            Image health = Image(root.transform, "Health", new Vector2(.64f, .25f), new Vector2(.97f, .42f)); health.type = UnityEngine.UI.Image.Type.Filled; health.fillMethod = UnityEngine.UI.Image.FillMethod.Horizontal; health.color = TacticalUiTheme.Success;
-            Image infection = Image(root.transform, "Infection", new Vector2(.64f, .08f), new Vector2(.97f, .18f)); infection.type = UnityEngine.UI.Image.Type.Filled; infection.fillMethod = UnityEngine.UI.Image.FillMethod.Horizontal; infection.color = TacticalUiTheme.Accent;
+            root.transform.SetParent(parent, false); HudSkin.Apply(root.GetComponent<Image>(), "Button"); root.GetComponent<LayoutElement>().preferredHeight = 96;
+            TMP_Text portrait = Text(root.transform, "Portrait", new Vector2(16f / 350, 56f / 96), new Vector2(.14f, 84f / 96), 24, FontStyles.Bold); portrait.alignment = TextAlignmentOptions.Center;
+            TMP_Text name = Text(root.transform, "Name", new Vector2(.17f, 56f / 96), new Vector2(.49f, 84f / 96), 21, FontStyles.Bold);
+            TMP_Text character = Text(root.transform, "Character", new Vector2(.50f, 56f / 96), new Vector2(334f / 350, 84f / 96), 15); character.alignment = TextAlignmentOptions.Right;
+            TMP_Text status = Text(root.transform, "Status", new Vector2(16f / 350, .25f), new Vector2(334f / 350, 56f / 96), 24, FontStyles.Bold);
+            Image healthTrack = Image(root.transform, "HealthTrack", new Vector2(.17f, .18f), new Vector2(334f / 350, .23f)); healthTrack.sprite = barSprite; healthTrack.color = TacticalUiTheme.Control;
+            Image health = Image(root.transform, "Health", new Vector2(.17f, .18f), new Vector2(334f / 350, .23f)); health.type = UnityEngine.UI.Image.Type.Filled; health.fillMethod = UnityEngine.UI.Image.FillMethod.Horizontal; health.color = TacticalUiTheme.Success;
+            Image infection = Image(root.transform, "Infection", new Vector2(.17f, .125f), new Vector2(334f / 350, .155f)); infection.type = UnityEngine.UI.Image.Type.Filled; infection.fillMethod = UnityEngine.UI.Image.FillMethod.Horizontal; infection.color = TacticalUiTheme.Accent;
+            health.sprite = infection.sprite = barSprite;
             root.SetActive(false);
             return new Row { root = root, portrait = portrait, name = name, character = character, status = status, health = health, infection = infection };
         }
@@ -191,7 +195,7 @@ namespace FPS
         {
             TMP_Text text = new GameObject(name, typeof(RectTransform), typeof(TextMeshProUGUI)).GetComponent<TMP_Text>(); text.transform.SetParent(parent, false);
             RectTransform rect = text.rectTransform; rect.anchorMin = min; rect.anchorMax = max; rect.offsetMin = rect.offsetMax = Vector2.zero;
-            text.fontSize = size; text.fontStyle = style; text.color = TacticalUiTheme.Text; text.raycastTarget = false; text.overflowMode = TextOverflowModes.Ellipsis; return text;
+            text.fontSize = Mathf.Max(24, size); text.fontStyle = style; text.color = TacticalUiTheme.Text; text.raycastTarget = false; text.overflowMode = TextOverflowModes.Ellipsis; return text;
         }
 
         private static Image Image(Transform parent, string name, Vector2 min, Vector2 max)

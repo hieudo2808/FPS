@@ -686,20 +686,14 @@ namespace FPS
                 reactionTime: 0f,
                 damageType: weaponData.damageType,
                 hitZone: zone,
-                damageMultiplier: multiplier);
+                damageMultiplier: multiplier,
+                sourcePosition: transform.position);
 
             DamageFilter damageFilter = hit.collider.GetComponentInParent<DamageFilter>();
             if (damageFilter != null && !damageFilter.Allows(damageInfo))
                 return false;
 
-            if (damageable is IAttributedDamageable attributedDamageable)
-            {
-                attributedDamageable.TakeDamage(damageInfo);
-                return true;
-            }
-
-            damageable.TakeDamage(finalDamage);
-            return true;
+            return ApplyConfirmedDamage(damageable, damageInfo);
         }
 
         private bool TryApplyDamage(WeaponData weaponData, LagCompensatedHit hit, ulong attackerClientId, out DamageInfo damageInfo)
@@ -725,7 +719,8 @@ namespace FPS
                 reactionTime: 0f,
                 damageType: weaponData.damageType,
                 hitZone: hit.zone,
-                damageMultiplier: multiplier);
+                damageMultiplier: multiplier,
+                sourcePosition: transform.position);
 
             DamageFilter damageFilter = hit.segment != null
                 ? hit.segment.GetComponentInParent<DamageFilter>()
@@ -733,14 +728,22 @@ namespace FPS
             if (damageFilter != null && !damageFilter.Allows(damageInfo))
                 return false;
 
-            if (damageable is IAttributedDamageable attributedDamageable)
-            {
-                attributedDamageable.TakeDamage(damageInfo);
-                return true;
-            }
+            return ApplyConfirmedDamage(damageable, damageInfo);
+        }
 
-            damageable.TakeDamage(finalDamage);
-            return true;
+        private static bool ApplyConfirmedDamage(IDamageable target, DamageInfo info)
+        {
+            if (!float.IsFinite(info.amount) || info.amount <= 0f) return false;
+            float healthBefore = target is EnemyHealth enemy ? enemy.CurrentHealth : 0f;
+            uint revisionBefore = target is PlayerHealth player ? player.DamageRevision : 0;
+            if (target is IAttributedDamageable attributed) attributed.TakeDamage(info);
+            else target.TakeDamage(info.amount);
+            return target switch
+            {
+                EnemyHealth e => e.CurrentHealth < healthBefore,
+                PlayerHealth p => p.DamageRevision != revisionBefore,
+                _ => false
+            };
         }
 
         private static HitboxZone ResolveZone(HitboxSegment segment, EnemyHitbox legacyHitbox)
@@ -971,7 +974,7 @@ namespace FPS
             float finalDamage,
             ClientRpcParams clientRpcParams = default)
         {
-            if (HUDManager.HasInstance)
+            if (IsOwner && HUDManager.HasInstance)
                 HUDManager.Instance.ShowHitConfirmed(zone, finalDamage);
         }
 

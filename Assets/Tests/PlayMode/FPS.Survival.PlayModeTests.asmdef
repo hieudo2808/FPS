@@ -2,7 +2,11 @@
   "name": "FPS.Survival.PlayModeTests",
   "references": [
     "FPS",
-    "Unity.Netcode.Runtime"
+    "Unity.Netcode.Runtime",
+    "Unity.Collections",
+    "Unity.InputSystem",
+    "Unity.ugui",
+    "Unity.TextMeshPro"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"

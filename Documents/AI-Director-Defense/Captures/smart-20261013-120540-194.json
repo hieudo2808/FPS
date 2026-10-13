@@ -1,0 +1,35 @@
+{
+    "utc": "2026-10-13T12:05:40.1924729Z",
+    "formation": "SOLO",
+    "gameSeconds": 71.6350058744331,
+    "profiledPlayers": 1,
+    "trackedZombies": 1,
+    "smartSpawning": true,
+    "rubberBanding": false,
+    "canSpawnSpecial": false,
+    "enemies": [
+        {
+            "entityId": "568105589213383650",
+            "name": "ZombieRig(Clone)",
+            "type": "EnemyAI",
+            "state": "Idle",
+            "target": "BrimstonePlayer(Clone)",
+            "spawned": true,
+            "onNavMesh": true,
+            "hasPath": false,
+            "position": {
+                "x": -119.50000762939453,
+                "y": 0.05217749625444412,
+                "z": -77.0
+            },
+            "velocity": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "hp": 100.0,
+            "damage": 10.0,
+            "speed": 5.0
+        }
+    ]
+}

@@ -1,0 +1,187 @@
+# Warden 3P native Unity audit
+UTC: 2026-10-07T17:22:44.9068580Z; Unity 6000.5.6f1
+Evaluated actual player prefabs through WeaponManager and PlayerVisibilityController; no prefab or rig changes.
+SOURCE GNTP_Core_BattleRifle_S0_Equip.fbx: Generic
+SOURCE GNTP_Core_BattleRifle_S0_Equip_Montage.fbx: Generic
+SOURCE GNTP_Core_BattleRifle_S0_Reload.fbx: Generic
+SOURCE GNTP_Core_BattleRifle_S0_Reload_Montage.fbx: Generic
+SOURCE TP_Core_BattleRifle_S0_AltIdlePose.fbx: Generic
+SOURCE TP_Core_BattleRifle_S0_Crouch_AltIdlePose_UB.fbx: Generic
+SOURCE TP_Core_BattleRifle_S0_CrouchIdlePose.fbx: Generic
+SOURCE TP_Core_BattleRifle_S0_Equip_LB.fbx: Generic
+SOURCE TP_Core_BattleRifle_S0_Equip_Montage.fbx: Generic
+SOURCE TP_Core_BattleRifle_S0_Equip_UB.fbx: Generic
+SOURCE TP_Core_BattleRifle_S0_IdlePose_UB.fbx: Generic
+SOURCE TP_Core_BattleRifle_S0_Reload_LB.fbx: Generic
+SOURCE TP_Core_BattleRifle_S0_Reload_Montage.fbx: Generic
+SOURCE TP_Core_BattleRifle_S0_Reload_UB.fbx: Generic
+SOURCE MATCH Brimstone_Warden_Hold <- TP_Core_BattleRifle_S0_IdlePose_UB; sameCurves=178/658; maxScalarDelta=1.986554
+SOURCE MATCH Brimstone_Warden_Aim <- TP_Core_BattleRifle_S0_AltIdlePose; sameCurves=162/658; maxScalarDelta=1.986554
+SOURCE MATCH Brimstone_Warden_Equip <- TP_Core_BattleRifle_S0_Equip_UB; sameCurves=164/658; maxScalarDelta=1.996179
+SOURCE MATCH Brimstone_Warden_Reload <- TP_Core_BattleRifle_S0_Reload_UB; sameCurves=172/658; maxScalarDelta=1.996672
+SOURCE MATCH Clove_Warden_Hold <- TP_Core_BattleRifle_S0_IdlePose_UB; sameCurves=409/665; maxScalarDelta=1.132324
+SOURCE MATCH Clove_Warden_Aim <- TP_Core_BattleRifle_S0_AltIdlePose; sameCurves=398/665; maxScalarDelta=1.212296
+SOURCE MATCH Clove_Warden_Equip <- TP_Core_BattleRifle_S0_Equip_UB; sameCurves=266/665; maxScalarDelta=1.150143
+SOURCE MATCH Clove_Warden_Reload <- TP_Core_BattleRifle_S0_Reload_UB; sameCurves=306/665; maxScalarDelta=1.134202
+SOURCE MATCH Warden3P_Gun_Equip <- GNTP_Core_BattleRifle_S0_Equip; sameCurves=120/150; maxScalarDelta=0.9910294
+SOURCE MATCH Warden3P_Gun_Reload <- GNTP_Core_BattleRifle_S0_Reload; sameCurves=119/150; maxScalarDelta=0.9910294
+
+## Brimstone
+Body=Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/BrimstoneWarden_GenericPathBound.controller; mode=GenericPathBound; avatar=null
+Gun=Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden3P_Gun.controller; parent=CS_Sarge_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/R_WeaponMaster
+GUN CLIP Warden3P_Gun_Idle; duration=0.04166667; rootRotationKeys=2
+GUN CLIP Warden3P_Gun_Equip; duration=4.083333; rootRotationKeys=2
+GUN CLIP Warden3P_Gun_Reload; duration=3.75; rootRotationKeys=2
+LAYER Locomotion; weight=0; mask=
+LAYER Upper Body Gun Pose; weight=1; mask=Assets/FPS/Features/Characters/Animation/Content/3P/Shared/BrimstoneGenericUpperBody.mask
+LAYER Upper Body Movement Additive; weight=1; mask=Assets/FPS/Features/Characters/Animation/Content/3P/Shared/BrimstoneGenericUpperBodyNoFingers.mask
+LAYER Grenade Throw; weight=0; mask=
+BIND Brimstone_Warden_Hold; duration=0.04166667; bound=94/94; missing=
+BIND Brimstone_Warden_Equip; duration=2.041667; bound=94/94; missing=
+BIND Brimstone_Warden_Reload; duration=3.75; bound=94/94; missing=
+BIND Brimstone_Warden_Aim; duration=0.04166667; bound=94/94; missing=
+UPPER POSE Hold t=0; bodyState=987630686; gunState=2081823275; rotations=72; maxDegrees=0; worst=
+GRIP Hold t=0; driftMeters=0; driftDegrees=0
+UPPER POSE Aim t=0; bodyState=1253788860; gunState=2081823275; rotations=72; maxDegrees=0; worst=
+GRIP Aim t=0; driftMeters=0.01274374; driftDegrees=0
+UPPER POSE Equip t=0.1; bodyState=-522109215; gunState=867364020; rotations=72; maxDegrees=0; worst=
+GRIP Equip t=0.1; driftMeters=0.03393327; driftDegrees=1.014897
+UPPER POSE Equip t=0.25; bodyState=-522109215; gunState=867364020; rotations=72; maxDegrees=0; worst=
+GRIP Equip t=0.25; driftMeters=0.03203954; driftDegrees=0.4458716
+UPPER POSE Equip t=0.5; bodyState=-522109215; gunState=867364020; rotations=72; maxDegrees=0; worst=
+GRIP Equip t=0.5; driftMeters=0.01039895; driftDegrees=0.915991
+UPPER POSE Equip t=0.75; bodyState=-522109215; gunState=867364020; rotations=72; maxDegrees=0; worst=
+GRIP Equip t=0.75; driftMeters=0.004901452; driftDegrees=0.4845667
+UPPER POSE Equip t=0.9; bodyState=-522109215; gunState=867364020; rotations=72; maxDegrees=0; worst=
+GRIP Equip t=0.9; driftMeters=0.001102699; driftDegrees=0
+UPPER POSE Reload t=0.1; bodyState=-1094304310; gunState=-1525363869; rotations=72; maxDegrees=0; worst=
+GRIP Reload t=0.1; driftMeters=0.02676349; driftDegrees=0.8059955
+UPPER POSE Reload t=0.25; bodyState=-1094304310; gunState=-1525363869; rotations=72; maxDegrees=0; worst=
+GRIP Reload t=0.25; driftMeters=0.02585386; driftDegrees=0.556725
+UPPER POSE Reload t=0.5; bodyState=-1094304310; gunState=-1525363869; rotations=72; maxDegrees=0; worst=
+GRIP Reload t=0.5; driftMeters=0.02544413; driftDegrees=0.5020199
+UPPER POSE Reload t=0.75; bodyState=-1094304310; gunState=-1525363869; rotations=72; maxDegrees=0; worst=
+GRIP Reload t=0.75; driftMeters=0.01391978; driftDegrees=0
+UPPER POSE Reload t=0.9; bodyState=-1094304310; gunState=-1525363869; rotations=72; maxDegrees=0; worst=
+GRIP Reload t=0.9; driftMeters=0.00410141; driftDegrees=0.5581291
+RUN Speed=4; locomotionState=-2089788878; upperHold=True; kneeChangeDegrees=40.63838; maxGripDriftMeters=0.01835702
+
+## Clove
+Body=Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/CloveWarden_GenericPathBound.controller; mode=GenericPathBound; avatar=null
+Gun=Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden3P_Gun.controller; parent=CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/R_WeaponMaster
+GUN CLIP Warden3P_Gun_Idle; duration=0.04166667; rootRotationKeys=2
+GUN CLIP Warden3P_Gun_Equip; duration=4.083333; rootRotationKeys=2
+GUN CLIP Warden3P_Gun_Reload; duration=3.75; rootRotationKeys=2
+LAYER Locomotion; weight=0; mask=
+LAYER Upper Body Gun Pose; weight=1; mask=Assets/FPS/Features/Characters/Animation/Content/3P/Shared/CloveGenericUpperBody.mask
+LAYER Upper Body Movement Additive; weight=1; mask=Assets/FPS/Features/Characters/Animation/Content/3P/Shared/CloveGenericUpperBodyNoFingers.mask
+LAYER Grenade Throw; weight=0; mask=
+BIND Clove_Warden_Hold; duration=0.04166667; bound=95/95; missing=
+BIND Clove_Warden_Equip; duration=2.041667; bound=95/95; missing=
+BIND Clove_Warden_Reload; duration=3.75; bound=95/95; missing=
+BIND Clove_Warden_Aim; duration=0.04166667; bound=95/95; missing=
+UPPER POSE Hold t=0; bodyState=987630686; gunState=2081823275; rotations=73; maxDegrees=0; worst=
+GRIP Hold t=0; driftMeters=0; driftDegrees=0
+UPPER POSE Aim t=0; bodyState=1253788860; gunState=2081823275; rotations=73; maxDegrees=0; worst=
+GRIP Aim t=0; driftMeters=0.001025784; driftDegrees=0
+UPPER POSE Equip t=0.1; bodyState=-522109215; gunState=867364020; rotations=73; maxDegrees=0; worst=
+GRIP Equip t=0.1; driftMeters=0.006559202; driftDegrees=1.016438
+UPPER POSE Equip t=0.25; bodyState=-522109215; gunState=867364020; rotations=73; maxDegrees=0; worst=
+GRIP Equip t=0.25; driftMeters=0.004778821; driftDegrees=0.4528388
+UPPER POSE Equip t=0.5; bodyState=-522109215; gunState=867364020; rotations=73; maxDegrees=0; worst=
+GRIP Equip t=0.5; driftMeters=0.005142042; driftDegrees=0.9211037
+UPPER POSE Equip t=0.75; bodyState=-522109215; gunState=867364020; rotations=73; maxDegrees=0; worst=
+GRIP Equip t=0.75; driftMeters=0.004254376; driftDegrees=0.4909852
+UPPER POSE Equip t=0.9; bodyState=-522109215; gunState=867364020; rotations=73; maxDegrees=0; worst=
+GRIP Equip t=0.9; driftMeters=0.001028185; driftDegrees=0
+UPPER POSE Reload t=0.1; bodyState=-1094304310; gunState=-1525363869; rotations=73; maxDegrees=0; worst=
+GRIP Reload t=0.1; driftMeters=0.01643291; driftDegrees=0.8146884
+UPPER POSE Reload t=0.25; bodyState=-1094304310; gunState=-1525363869; rotations=73; maxDegrees=0; worst=
+GRIP Reload t=0.25; driftMeters=0.01641374; driftDegrees=0.5637105
+UPPER POSE Reload t=0.5; bodyState=-1094304310; gunState=-1525363869; rotations=73; maxDegrees=0; worst=
+GRIP Reload t=0.5; driftMeters=0.0147327; driftDegrees=0.5066755
+UPPER POSE Reload t=0.75; bodyState=-1094304310; gunState=-1525363869; rotations=73; maxDegrees=0; worst=
+GRIP Reload t=0.75; driftMeters=0.0005420678; driftDegrees=0
+UPPER POSE Reload t=0.9; bodyState=-1094304310; gunState=-1525363869; rotations=73; maxDegrees=0; worst=
+GRIP Reload t=0.9; driftMeters=0.004874683; driftDegrees=0.5553173
+RUN Speed=4; locomotionState=-2089788878; upperHold=True; kneeChangeDegrees=41.16355; maxGripDriftMeters=0.01412326
+
+## Gekko
+Body=Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/CloveWarden_GenericPathBound.controller; mode=GenericPathBound; avatar=null
+Gun=Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden3P_Gun.controller; parent=CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/R_WeaponMaster
+GUN CLIP Warden3P_Gun_Idle; duration=0.04166667; rootRotationKeys=2
+GUN CLIP Warden3P_Gun_Equip; duration=4.083333; rootRotationKeys=2
+GUN CLIP Warden3P_Gun_Reload; duration=3.75; rootRotationKeys=2
+LAYER Locomotion; weight=0; mask=
+LAYER Upper Body Gun Pose; weight=1; mask=Assets/FPS/Features/Characters/Animation/Content/3P/Shared/CloveGenericUpperBody.mask
+LAYER Upper Body Movement Additive; weight=1; mask=Assets/FPS/Features/Characters/Animation/Content/3P/Shared/CloveGenericUpperBodyNoFingers.mask
+LAYER Grenade Throw; weight=0; mask=
+BIND Clove_Warden_Hold; duration=0.04166667; bound=95/95; missing=
+BIND Clove_Warden_Equip; duration=2.041667; bound=95/95; missing=
+BIND Clove_Warden_Reload; duration=3.75; bound=95/95; missing=
+BIND Clove_Warden_Aim; duration=0.04166667; bound=95/95; missing=
+UPPER POSE Hold t=0; bodyState=987630686; gunState=2081823275; rotations=73; maxDegrees=0; worst=
+GRIP Hold t=0; driftMeters=0; driftDegrees=0
+UPPER POSE Aim t=0; bodyState=1253788860; gunState=2081823275; rotations=73; maxDegrees=0; worst=
+GRIP Aim t=0; driftMeters=0.001025784; driftDegrees=0
+UPPER POSE Equip t=0.1; bodyState=-522109215; gunState=867364020; rotations=73; maxDegrees=0; worst=
+GRIP Equip t=0.1; driftMeters=0.006559199; driftDegrees=1.016438
+UPPER POSE Equip t=0.25; bodyState=-522109215; gunState=867364020; rotations=73; maxDegrees=0; worst=
+GRIP Equip t=0.25; driftMeters=0.004778804; driftDegrees=0.4528388
+UPPER POSE Equip t=0.5; bodyState=-522109215; gunState=867364020; rotations=73; maxDegrees=0; worst=
+GRIP Equip t=0.5; driftMeters=0.005142042; driftDegrees=0.9211037
+UPPER POSE Equip t=0.75; bodyState=-522109215; gunState=867364020; rotations=73; maxDegrees=0; worst=
+GRIP Equip t=0.75; driftMeters=0.004254363; driftDegrees=0.4893884
+UPPER POSE Equip t=0.9; bodyState=-522109215; gunState=867364020; rotations=73; maxDegrees=0; worst=
+GRIP Equip t=0.9; driftMeters=0.001028195; driftDegrees=0
+UPPER POSE Reload t=0.1; bodyState=-1094304310; gunState=-1525363869; rotations=73; maxDegrees=0; worst=
+GRIP Reload t=0.1; driftMeters=0.01643291; driftDegrees=0.8137271
+UPPER POSE Reload t=0.25; bodyState=-1094304310; gunState=-1525363869; rotations=73; maxDegrees=0; worst=
+GRIP Reload t=0.25; driftMeters=0.01641374; driftDegrees=0.5637105
+UPPER POSE Reload t=0.5; bodyState=-1094304310; gunState=-1525363869; rotations=73; maxDegrees=0; worst=
+GRIP Reload t=0.5; driftMeters=0.0147327; driftDegrees=0.5066755
+UPPER POSE Reload t=0.75; bodyState=-1094304310; gunState=-1525363869; rotations=73; maxDegrees=0; worst=
+GRIP Reload t=0.75; driftMeters=0.000542076; driftDegrees=0
+UPPER POSE Reload t=0.9; bodyState=-1094304310; gunState=-1525363869; rotations=73; maxDegrees=0; worst=
+GRIP Reload t=0.9; driftMeters=0.004874684; driftDegrees=0.5539061
+RUN Speed=4; locomotionState=-2089788878; upperHold=True; kneeChangeDegrees=41.16355; maxGripDriftMeters=0.01412326
+
+## Sage
+Body=Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/CloveWarden_GenericPathBound.controller; mode=GenericPathBound; avatar=null
+Gun=Assets/FPS/Features/Weapons/Content/ThirdPerson/Guns/Warden/Warden3P_Gun.controller; parent=CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/MasterWeapon/R_WeaponMaster
+GUN CLIP Warden3P_Gun_Idle; duration=0.04166667; rootRotationKeys=2
+GUN CLIP Warden3P_Gun_Equip; duration=4.083333; rootRotationKeys=2
+GUN CLIP Warden3P_Gun_Reload; duration=3.75; rootRotationKeys=2
+LAYER Locomotion; weight=0; mask=
+LAYER Upper Body Gun Pose; weight=1; mask=Assets/FPS/Features/Characters/Animation/Content/3P/Shared/CloveGenericUpperBody.mask
+LAYER Upper Body Movement Additive; weight=1; mask=Assets/FPS/Features/Characters/Animation/Content/3P/Shared/CloveGenericUpperBodyNoFingers.mask
+LAYER Grenade Throw; weight=0; mask=
+BIND Clove_Warden_Hold; duration=0.04166667; bound=88/95; missing=CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/IK_RootTarget,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/IK_RootTarget/L_IK_FootTarget,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/IK_RootTarget/R_IK_FootTarget,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/L_Hand_IKpv_IUE,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/R_Hand_IKpv_IUE,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Pelvis/L_Foot_IKpv_IUE,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Pelvis/R_Foot_IKpv_IUE
+BIND Clove_Warden_Equip; duration=2.041667; bound=88/95; missing=CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/IK_RootTarget,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/IK_RootTarget/L_IK_FootTarget,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/IK_RootTarget/R_IK_FootTarget,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/L_Hand_IKpv_IUE,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/R_Hand_IKpv_IUE,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Pelvis/L_Foot_IKpv_IUE,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Pelvis/R_Foot_IKpv_IUE
+BIND Clove_Warden_Reload; duration=3.75; bound=88/95; missing=CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/IK_RootTarget,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/IK_RootTarget/L_IK_FootTarget,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/IK_RootTarget/R_IK_FootTarget,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/L_Hand_IKpv_IUE,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/R_Hand_IKpv_IUE,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Pelvis/L_Foot_IKpv_IUE,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Pelvis/R_Foot_IKpv_IUE
+BIND Clove_Warden_Aim; duration=0.04166667; bound=88/95; missing=CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/IK_RootTarget,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/IK_RootTarget/L_IK_FootTarget,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/IK_RootTarget/R_IK_FootTarget,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/L_Hand_IKpv_IUE,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/MasterWeaponAim/R_Hand_IKpv_IUE,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Pelvis/L_Foot_IKpv_IUE,CS_Smonk_S0_Skelmesh.ao/Skeleton/Root/Splitter/Pelvis/R_Foot_IKpv_IUE
+UPPER POSE Hold t=0; bodyState=987630686; gunState=2081823275; rotations=71; maxDegrees=0; worst=
+GRIP Hold t=0; driftMeters=0; driftDegrees=0
+UPPER POSE Aim t=0; bodyState=1253788860; gunState=2081823275; rotations=71; maxDegrees=0; worst=
+GRIP Aim t=0; driftMeters=0.001025784; driftDegrees=0
+UPPER POSE Equip t=0.1; bodyState=-522109215; gunState=867364020; rotations=71; maxDegrees=0; worst=
+GRIP Equip t=0.1; driftMeters=0.006559199; driftDegrees=1.016438
+UPPER POSE Equip t=0.25; bodyState=-522109215; gunState=867364020; rotations=71; maxDegrees=0; worst=
+GRIP Equip t=0.25; driftMeters=0.004778804; driftDegrees=0.4528388
+UPPER POSE Equip t=0.5; bodyState=-522109215; gunState=867364020; rotations=71; maxDegrees=0; worst=
+GRIP Equip t=0.5; driftMeters=0.005142042; driftDegrees=0.9211037
+UPPER POSE Equip t=0.75; bodyState=-522109215; gunState=867364020; rotations=71; maxDegrees=0; worst=
+GRIP Equip t=0.75; driftMeters=0.004254363; driftDegrees=0.4893884
+UPPER POSE Equip t=0.9; bodyState=-522109215; gunState=867364020; rotations=71; maxDegrees=0; worst=
+GRIP Equip t=0.9; driftMeters=0.001028195; driftDegrees=0
+UPPER POSE Reload t=0.1; bodyState=-1094304310; gunState=-1525363869; rotations=71; maxDegrees=0; worst=
+GRIP Reload t=0.1; driftMeters=0.01643291; driftDegrees=0.8137271
+UPPER POSE Reload t=0.25; bodyState=-1094304310; gunState=-1525363869; rotations=71; maxDegrees=0; worst=
+GRIP Reload t=0.25; driftMeters=0.01641374; driftDegrees=0.5637105
+UPPER POSE Reload t=0.5; bodyState=-1094304310; gunState=-1525363869; rotations=71; maxDegrees=0; worst=
+GRIP Reload t=0.5; driftMeters=0.0147327; driftDegrees=0.5066755
+UPPER POSE Reload t=0.75; bodyState=-1094304310; gunState=-1525363869; rotations=71; maxDegrees=0; worst=
+GRIP Reload t=0.75; driftMeters=0.000542076; driftDegrees=0
+UPPER POSE Reload t=0.9; bodyState=-1094304310; gunState=-1525363869; rotations=71; maxDegrees=0; worst=
+GRIP Reload t=0.9; driftMeters=0.004874684; driftDegrees=0.5539061
+RUN Speed=4; locomotionState=-2089788878; upperHold=True; kneeChangeDegrees=41.16355; maxGripDriftMeters=0.01412326

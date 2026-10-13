@@ -10,10 +10,15 @@ namespace FPS
     public sealed partial class CampaignHUD : MonoBehaviour
     {
         public static CampaignHUD Instance { get; private set; }
+        public static bool IsDocumentOpen => Instance != null && Instance.panel != null && Instance.panel.gameObject.activeSelf;
+        public bool HasInteractionMessage => progress != null && progress.isActiveAndEnabled && !string.IsNullOrWhiteSpace(progress.text);
         private Canvas canvas;
         private RectTransform panel, controls;
         private GameObject confirmation;
         private Text status, body, feedback, progress, subtitle;
+        private RectTransform subtitleBand;
+        private Image subtitlePlate;
+        private Text closeLabel;
         private RectTransform documentViewport;
         private float subtitleUntil;
         private readonly System.Collections.Generic.List<CampaignDialogueDefinition> pendingDialogue = new();
@@ -40,21 +45,28 @@ namespace FPS
             var c = new GameObject("CampaignCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster), typeof(AudioSource));
             c.transform.SetParent(transform, false); canvas = c.GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.sortingOrder = TacticalUiTheme.CampaignOrder;
             dialogueAudio = c.GetComponent<AudioSource>(); dialogueAudio.playOnAwake = false; dialogueAudio.spatialBlend = 0;
-            var scaler = c.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize; scaler.referenceResolution = new Vector2(1600,900); scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
-            status = Label(c.transform, "Objective", new Vector2(.61f,.78f), new Vector2(.98f,.97f), 22);
-            navigation = Label(c.transform, "RouteGuidance", new Vector2(.61f,.70f), new Vector2(.98f,.78f), 19);
-            feedback = Label(c.transform, "Feedback", new Vector2(.2f,.2f), new Vector2(.8f,.28f), 22); feedback.alignment = TextAnchor.MiddleCenter;
-            progress = Label(c.transform, "Interaction", new Vector2(.26f,.10f), new Vector2(.74f,.19f), 21); progress.alignment = TextAnchor.MiddleCenter;
-            subtitle = Label(c.transform,"MandatorySubtitles",new Vector2(.17f,.29f),new Vector2(.83f,.39f),22);subtitle.alignment=TextAnchor.MiddleCenter;
+            HudLayout.ConfigureCanvas(canvas);
+            var safe = HudLayout.PeripheralRoot(canvas);
+            BuildNavigation(safe);
+            feedback = Label(safe, "Feedback", Vector2.zero, Vector2.one, 24); feedback.alignment = TextAnchor.MiddleCenter;
+            progress = Label(safe, "Interaction", Vector2.zero, Vector2.one, 26); progress.alignment = TextAnchor.MiddleCenter;
+            var subtitles = new GameObject("SubtitlesLayer", typeof(RectTransform), typeof(Canvas));
+            subtitles.transform.SetParent(safe, false);
+            var subtitleRect = subtitles.GetComponent<RectTransform>(); subtitleRect.anchorMin = Vector2.zero; subtitleRect.anchorMax = Vector2.one; subtitleRect.offsetMin = subtitleRect.offsetMax = Vector2.zero;
+            var subtitleCanvas = subtitles.GetComponent<Canvas>(); subtitleCanvas.overrideSorting = true; subtitleCanvas.sortingOrder = TacticalUiTheme.CampaignOrder + 3;
+            subtitleBand = Box(subtitles.transform, "SubtitleBand", Vector2.zero, Vector2.one);
+            subtitlePlate = subtitleBand.GetComponent<Image>(); subtitlePlate.color = HudLayout.Plate;
+            subtitle = Label(subtitleBand,"MandatorySubtitles",new Vector2(.02f,.02f),new Vector2(.98f,.98f),26);subtitle.alignment=TextAnchor.MiddleCenter;
             var shadow=subtitle.gameObject.AddComponent<Shadow>();shadow.effectColor=Color.black;shadow.effectDistance=new Vector2(1,-1);
             panel = Box(c.transform, "JournalAndDocument", new Vector2(.18f,.12f), new Vector2(.82f,.87f));
+            HudSkin.Apply(panel.GetComponent<Image>(), "Panel", HudSkin.PanelTint, 2f);
             documentViewport=Box(panel,"DocumentViewport",new Vector2(.04f,.36f),new Vector2(.96f,.93f));
             documentViewport.GetComponent<Image>().color=Color.clear;documentViewport.gameObject.AddComponent<RectMask2D>();
             body = Label(documentViewport, "Document", Vector2.zero, Vector2.one, 23);
             body.rectTransform.anchorMin=new Vector2(0,1);body.rectTransform.anchorMax=Vector2.one;body.rectTransform.pivot=new Vector2(0,1);
             var scroll=documentViewport.gameObject.AddComponent<ScrollRect>();scroll.content=body.rectTransform;scroll.viewport=documentViewport;scroll.horizontal=false;scroll.movementType=ScrollRect.MovementType.Clamped;
             controls = Box(panel, "Controls", new Vector2(.04f,.07f), new Vector2(.96f,.36f)); controls.GetComponent<Image>().color = Color.clear;
-            Button(panel, "CLOSE / I", new Vector2(.79f,.94f), new Vector2(.98f,.995f), Close);
+            closeLabel = Button(panel, "CLOSE", new Vector2(.65f,.94f), new Vector2(.98f,.995f), Close).GetComponentInChildren<Text>();
             panel.gameObject.SetActive(false);
         }
         private RectTransform Box(Transform parent, string name, Vector2 min, Vector2 max)
@@ -67,12 +79,14 @@ namespace FPS
         {
             var go = new GameObject(name, typeof(RectTransform), typeof(Text)); go.transform.SetParent(parent,false);
             var r=go.GetComponent<RectTransform>();r.anchorMin=min;r.anchorMax=max;r.offsetMin=r.offsetMax=Vector2.zero;
-            var t=go.GetComponent<Text>();t.font=font;t.fontSize=size;t.color=TacticalUiTheme.Text;t.raycastTarget=false;t.horizontalOverflow=HorizontalWrapMode.Wrap;t.verticalOverflow=VerticalWrapMode.Truncate;return t;
+            var t=go.GetComponent<Text>();t.font=font;t.fontSize=Mathf.Max(24,size);t.color=TacticalUiTheme.Text;t.raycastTarget=false;t.horizontalOverflow=HorizontalWrapMode.Wrap;t.verticalOverflow=VerticalWrapMode.Truncate;
+            var outline=go.AddComponent<Outline>();outline.effectColor=Color.black;outline.effectDistance=new Vector2(1,-1);return t;
         }
         private UnityEngine.UI.Button Button(Transform parent,string label,Vector2 min,Vector2 max,Action clicked)
         {
             var r=Box(parent,label,min,max);r.GetComponent<Image>().color=Color.white;
             var b=r.gameObject.AddComponent<UnityEngine.UI.Button>(); b.colors=TacticalUiTheme.ButtonColors(); b.onClick.AddListener(()=>clicked());
+            HudSkin.StyleButton(b);
             var t=Label(r,"Label",new Vector2(.02f,0),new Vector2(.98f,1),19);t.alignment=TextAnchor.MiddleCenter;t.text=label;return b;
         }
         private void ClearControls()
@@ -167,6 +181,7 @@ namespace FPS
         }
         private void Close()
         {CancelHold();CancelAid();focused=null;journal=false;panel.gameObject.SetActive(false);ClearControls();}
+        public void CloseDocument() => Close();
         private void CancelHold()
         {if(holding&&focused!=null)Campaign?.RequestHold(focused.objectiveId,first,second,false);holding=false;mouseHeld=false;}
         private void CancelAid()
@@ -214,7 +229,26 @@ namespace FPS
             if (canvas != null) canvas.enabled = !InGameMenuUI.IsMenuOpen;
             if (InGameMenuUI.IsMenuOpen) { CancelHold(); CancelAid(); return; }
             if(Campaign==null||!Campaign.IsSpawned)return;
+            var owner=Owner;
+            ResolveTracking(owner);
+            if (owner != null) RenderPhaseControls();
+            HudLayout.CentralBand(progress.rectTransform,canvas,HudLayout.InteractionBottom,HudLayout.InteractionHeight);
+            HudLayout.CentralBand(feedback.rectTransform,canvas,HudLayout.FeedbackBottom,HudLayout.FeedbackHeight);
+            bool subtitleOverlay = TeamInventoryUI.IsOpen || panel.gameObject.activeSelf || InputManager.CinematicInputBlocked || CampaignStatusUI.IsDebriefOpen;
+            if (subtitleOverlay)
+            {
+                subtitleBand.anchorMin = new Vector2(.06f, 0); subtitleBand.anchorMax = new Vector2(.94f, 0);
+                subtitleBand.pivot = new Vector2(.5f, 0); subtitleBand.anchoredPosition = new Vector2(0, 16);
+                subtitleBand.sizeDelta = new Vector2(0, 110);
+            }
+            else HudLayout.CentralBand(subtitleBand,canvas,HudLayout.SubtitleBottom,HudLayout.SubtitleHeight);
+            subtitlePlate.enabled = !string.IsNullOrEmpty(subtitle.text);
+            if (owner != null) UpdateNavigation(owner);
+            UpdateTracker(owner);
+            progress.enabled=feedback.enabled=HudLayout.GameplayVisible;
+            if (!HudLayout.GameplayVisible) marker.gameObject.SetActive(false);
             var input=InputManager.Instance;var actions=input?.ActionsAsset;
+            closeLabel.text="CLOSE ["+SurvivalHotbar.Key("Journal","I")+"]";
             bool open=panel.gameObject.activeSelf;
             if(actions?.FindAction("Journal")?.WasPressedThisFrame()==true)
             {
@@ -230,16 +264,12 @@ namespace FPS
                 return;
             }
             InputManager.CampaignInputBlocked=Campaign.BlocksInput||panel.gameObject.activeSelf;
-            if(panel.gameObject.activeSelf){Cursor.lockState=CursorLockMode.None;Cursor.visible=true;}
+            if(panel.gameObject.activeSelf || CampaignStatusUI.IsDebriefOpen){Cursor.lockState=CursorLockMode.None;Cursor.visible=true;}
             else if(!InputManager.GameplayInputBlocked){Cursor.lockState=CursorLockMode.Locked;Cursor.visible=false;}
-            status.text=ObjectiveText();feedback.text=Time.unscaledTime<messageUntil?message:"";
+            feedback.text=Time.unscaledTime<messageUntil?message:"";
             if(panel.gameObject.activeSelf)body.rectTransform.sizeDelta=new Vector2(0,Mathf.Max(documentViewport.rect.height,body.preferredHeight));
-            var owner=Owner;if(owner==null)return;
-            UpdateNavigation(owner);
-            RenderPhaseControls();
-            progress.text=$"{input?.GetKeyForAction("Journal")} · INVENTORY";
-            if(owner.LifeState==PlayerLifeState.Downed)progress.text=$"DOWNED · WAIT FOR REVIVE · {Mathf.CeilToInt((float)(owner.LifeStateDeadline-Campaign.Now))}s";
-            if(owner.IsDead)progress.text="SPECTATING · FIRE / AIM TO CHANGE OPERATOR";
+            if(owner==null)return;
+            progress.text="";
             bool fire=actions?.FindAction("Fire")?.WasPressedThisFrame()==true;
             bool anyHold=mouseHeld||actions?.FindAction("Interact")?.IsPressed()==true;
             if(releaseBeforeHold&&!anyHold){releaseBeforeHold=false;Campaign.RequestAid(0,false,false);}
@@ -268,10 +298,9 @@ namespace FPS
             if(cam!=null&&Physics.Raycast(cam.transform.position,cam.transform.forward,out var hit,Campaign.settings.interactionRange,~0,QueryTriggerInteraction.Ignore))downed=hit.collider.GetComponentInParent<PlayerHealth>();
             bool revive=downed!=null&&downed!=owner&&downed.LifeState==PlayerLifeState.Downed;
             bool aid=!releaseBeforeHold&&owner.GetComponent<SurvivalInventory>()?.IsUsingItem!=true&&revive&&actions?.FindAction("Interact")?.IsPressed()==true&&!fire;
-            if(revive)progress.text=$"HOLD {input?.GetKeyForAction("Interact")} TO REVIVE ({Campaign.settings.reviveSeconds:0}s)";
+            if(revive)progress.text=$"HOLD {input?.GetPromptDisplayName("Interact")} TO REVIVE ({Campaign.settings.reviveSeconds:0}s)";
             if((aid&&heartbeat)||aidHeld!=aid){Campaign.RequestAid(downed!=null?downed.NetworkObjectId:0,false,aid);aidHeld=aid;nextAidHeartbeat=Time.unscaledTime+.2f;}
             PresentHint();
-            RenderPhaseControls();
         }
         private void UpdateHints(PlayerHealth owner,bool fired)
         {
@@ -330,8 +359,11 @@ namespace FPS
         private void RenderPhaseControls()
         {
             var phase=Campaign.State.phase;
+            if (CampaignStatusUI.Instance != null && (phase is CampaignPhase.Failed or CampaignPhase.Completed))
+            { if (panel.gameObject.activeSelf) Close(); return; }
             if(phase==CampaignPhase.Completed&&Campaign.Now-Campaign.PhaseStarted<Campaign.settings.endingSeconds){if(panel.gameObject.activeSelf)Close();return;}
             if(renderedPhase==phase && renderedTankStage==Campaign.State.tankStage)return;
+            if (journal && focused == null && panel.gameObject.activeSelf) Close();
             renderedPhase=phase;renderedTankStage=Campaign.State.tankStage;
             if(phase is CampaignPhase.Preparing or CampaignPhase.Failed or CampaignPhase.Completed) Close();
             if (phase == CampaignPhase.Preparing && Campaign.State.tankStage is CampaignTankStage.Pending or CampaignTankStage.Active) return;

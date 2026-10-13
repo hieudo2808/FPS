@@ -239,7 +239,7 @@ namespace FPS
             PlayerHealth playerHealth = currentTargetProfile?.cachedHealth;
             if (playerHealth == null)
                 currentTargetTransform.TryGetComponent(out playerHealth);
-            playerHealth?.TakeDamage(damage);
+            playerHealth?.TakeDamage(new DamageInfo(damage, damageType: DamageType.Melee, sourcePosition: transform.position));
 
             PlayerInfectionController infection = currentTargetProfile?.cachedInfection;
             if (infection == null)

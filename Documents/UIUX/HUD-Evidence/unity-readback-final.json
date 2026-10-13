@@ -1,0 +1,148 @@
+{
+  "health": {
+    "success": true,
+    "name": "HealthPanel",
+    "entityId": "568105584922027308",
+    "instanceId": 0,
+    "path": "Canvas/HudSafeArea/HealthPanel",
+    "anchorMin": {
+      "x": 0,
+      "y": 0
+    },
+    "anchorMax": {
+      "x": 0,
+      "y": 0
+    },
+    "pivot": {
+      "x": 0,
+      "y": 0
+    },
+    "anchoredPosition3D": {
+      "x": 28,
+      "y": 28,
+      "z": 0
+    },
+    "sizeDelta": {
+      "x": 350,
+      "y": 106
+    },
+    "offsetMin": {
+      "x": 28,
+      "y": 28
+    },
+    "offsetMax": {
+      "x": 378,
+      "y": 134
+    },
+    "localPosition": {
+      "x": -932,
+      "y": -512,
+      "z": 0
+    },
+    "localEulerAngles": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "rect": {
+      "width": 350,
+      "height": 106
+    }
+  },
+  "weapon": {
+    "success": true,
+    "name": "WeaponPanel",
+    "entityId": "568105584922037100",
+    "instanceId": 0,
+    "path": "Canvas/HudSafeArea/WeaponPanel",
+    "anchorMin": {
+      "x": 1,
+      "y": 0
+    },
+    "anchorMax": {
+      "x": 1,
+      "y": 0
+    },
+    "pivot": {
+      "x": 1,
+      "y": 0
+    },
+    "anchoredPosition3D": {
+      "x": -28,
+      "y": 28,
+      "z": 0
+    },
+    "sizeDelta": {
+      "x": 420,
+      "y": 144
+    },
+    "offsetMin": {
+      "x": -448,
+      "y": 28
+    },
+    "offsetMax": {
+      "x": -28,
+      "y": 172
+    },
+    "localPosition": {
+      "x": 932,
+      "y": -512,
+      "z": 0
+    },
+    "localEulerAngles": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "localScale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "rect": {
+      "width": 420,
+      "height": 144
+    }
+  },
+  "canvasScaler": [
+    {
+      "name": "uiScaleMode",
+      "type": "ScaleMode",
+      "fullType": "UnityEngine.UI.CanvasScaler+ScaleMode",
+      "value": "ScaleWithScreenSize",
+      "canWrite": true
+    },
+    {
+      "name": "referenceResolution",
+      "type": "Vector2",
+      "fullType": "UnityEngine.Vector2",
+      "value": "(1920, 1080)",
+      "canWrite": true
+    },
+    {
+      "name": "screenMatchMode",
+      "type": "ScreenMatchMode",
+      "fullType": "UnityEngine.UI.CanvasScaler+ScreenMatchMode",
+      "value": "MatchWidthOrHeight",
+      "canWrite": true
+    },
+    {
+      "name": "matchWidthOrHeight",
+      "type": "Single",
+      "fullType": "System.Single",
+      "value": "1",
+      "canWrite": true
+    }
+  ],
+  "consoleErrors": {
+    "success": true,
+    "count": 0,
+    "logs": [],
+    "source": "console"
+  }
+}

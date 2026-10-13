@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 02:39:44Z" end-time="2026-10-05 02:40:05Z" duration="20.4521235">
+  <test-suite type="TestSuite" id="1037" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-10-05 02:39:44Z" end-time="2026-10-05 02:40:05Z" duration="20.452124" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1025" name="FPS.Survival.PlayModeTests.dll" fullname="E:/Unity/Project/FPS/Library/ScriptAssemblies/FPS.Survival.PlayModeTests.dll" runstate="Runnable" testcasecount="18" result="Passed" start-time="2026-10-05 02:39:44Z" end-time="2026-10-05 02:40:05Z" duration="20.435983" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13644" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1026" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="18" result="Passed" start-time="2026-10-05 02:39:44Z" end-time="2026-10-05 02:40:05Z" duration="20.431902" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1027" name="Tests" fullname="FPS.Tests" runstate="Runnable" testcasecount="18" result="Passed" start-time="2026-10-05 02:39:44Z" end-time="2026-10-05 02:40:05Z" duration="20.428792" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1004" name="CampaignMorgueNavigationTests" fullname="FPS.Tests.CampaignMorgueNavigationTests" classname="FPS.Tests.CampaignMorgueNavigationTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-05 02:39:44Z" end-time="2026-10-05 02:40:05Z" duration="20.423673" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1005" name="TankAgentSettings_ReachReaderAndLiftFromBothConcealedAnchors" fullname="FPS.Tests.CampaignMorgueNavigationTests.TankAgentSettings_ReachReaderAndLiftFromBothConcealedAnchors" methodname="TankAgentSettings_ReachReaderAndLiftFromBothConcealedAnchors" classname="FPS.Tests.CampaignMorgueNavigationTests" runstate="Runnable" seed="1646909211" result="Passed" start-time="2026-10-05 02:39:44Z" end-time="2026-10-05 02:40:05Z" duration="20.403215" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[UnitySkills] [Self-Test] Starting (ProcessJobQueue ticks=11, listener=True)
+[MorgueNavigation] Reached (164.00, -3.79, 238.00) -> (152.00, -3.84, 239.80)
+[MorgueNavigation] Reached (164.00, -3.79, 238.00) -> (146.30, -3.84, 238.79)
+[MorgueNavigation] Reached (163.00, -3.79, 240.00) -> (152.00, -3.84, 239.80)
+[MorgueNavigation] Reached (163.00, -3.79, 240.00) -> (146.30, -3.84, 238.79)
+Saving results to: C:/Users/hieud/AppData/LocalLow/HieuDHM/FPS\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

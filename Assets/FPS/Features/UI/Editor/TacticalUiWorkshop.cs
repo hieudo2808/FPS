@@ -364,7 +364,7 @@ namespace FPS.UI.Editor
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(UiPath + "Prefabs/PlayerEntry_Tactical.prefab"); Bind(room, "playerEntryPrefab", prefab);
         }
 
-        public static void Gameplay(Canvas c)
+        public static void Gameplay(Canvas c, bool includeMenus = true)
         {
             ConfigureCanvas(c);
             var hud = Find(c.transform, "MinimalHUDRoot"); StyleCommon(hud);
@@ -379,13 +379,11 @@ namespace FPS.UI.Editor
             At(Find(infection, "InfectionStageText"), TL, 18, -4, 252, 30); Text(Find(infection, "InfectionStageText"), "INFECTION 0%", 18, false, TacticalUiTheme.Muted);
             At(Find(infection, "InfectionIcon"), TL, 16, -16, 24, 24);
             At(Find(infection, "InfectionFill"), BL, 18, 32, 240, 4);
-            At(Find(infection, "TreatmentProgressFill"), BL, 18, 25, 240, 3);
+            var legacyTreatment = Find(infection, "TreatmentProgressFill");
+            if (legacyTreatment != null) Object.DestroyImmediate(legacyTreatment.gameObject);
             Find(infection, "InfectionFill").GetComponent<Image>().color = TacticalUiTheme.Accent;
             Find(infection, "InfectionFill").GetComponent<Image>().fillAmount = 0;
-            Find(infection, "TreatmentProgressFill").GetComponent<Image>().color = TacticalUiTheme.Success;
-            Find(infection, "TreatmentProgressFill").GetComponent<Image>().fillAmount = 0;
             ConfigureFill(Find(infection, "InfectionFill").GetComponent<Image>());
-            ConfigureFill(Find(infection, "TreatmentProgressFill").GetComponent<Image>());
             Find(infection, "InfectionIcon").GetComponent<Image>().enabled = false;
             At(Find(infection, "SepsisWarning"), BL, 16, 3, 268, 22); Text(Find(infection, "SepsisWarning"), "SEPSIS - TREAT NOW", 17, false, TacticalUiTheme.Danger);
             var weapon = Find(hud, "WeaponPanel"); At(weapon, BR, -56, 44, 420, 148);
@@ -397,7 +395,7 @@ namespace FPS.UI.Editor
             At(Find(weapon,"WeaponIcon"),TL,44,-22,150,44);
             At(Find(weapon,"PrimaryWeaponKeyText"),TL,18,-22,24,28);
             var ammoIcon = Find(weapon, "AmmoIconImg");
-            if (ammoIcon != null) ammoIcon.gameObject.SetActive(false);
+            if (ammoIcon != null) ammoIcon.gameObject.SetActive(true);
             foreach (var name in new[] { "WeaponIconPlate", "SecondaryWeaponSlot", "FragSlot" }) { var r = Find(weapon, name); if (r != null) Plate(r, Color.clear); }
             foreach (var name in new[] { "UnusedWeaponNameText", "FragLabel", "GrenadeKeyText", "SlotKey", "PrimaryWeaponKeyText" }) { var r = Find(weapon, name); if (r != null) Text(r, r.GetComponent<TMP_Text>().text, 16); }
             foreach (var slotName in new[] { "SecondaryWeaponSlot", "FragSlot" })
@@ -426,7 +424,10 @@ namespace FPS.UI.Editor
             var prompt = Find(hud, "InteractionPrompt"); At(prompt, Center, 0, -116, 640, 48); Text(prompt, "[F] Interact", 23).alignment = TextAlignmentOptions.Center;
             var respawn = Find(hud, "RespawnCountdownText"); At(respawn, Center, 0, 70, 640, 64); Text(respawn, "", 36, true).alignment = TextAlignmentOptions.Center;
             ApplyHudArt(hud, manager);
+            ArrangeGameplayHud(c, hud);
             foreach (var graphic in hud.GetComponentsInChildren<Graphic>(true)) graphic.raycastTarget = false;
+            foreach (var graphic in HudLayout.PeripheralRoot(c).GetComponentsInChildren<Graphic>(true)) graphic.raycastTarget = false;
+            if (!includeMenus) return;
             var pause = Find(c.transform, "PausePanel"); Modal(pause);
             var shell = Find(pause, "PauseShell"); At(shell, Center, 0, 0, 600, 590); Plate(shell, TacticalUiTheme.Surface, true);
             StyleCommon(shell); At(Find(shell, "Title"), TL, 48, -44, 504, 70); Text(Find(shell, "Title"), "MENU", 62, true);
@@ -443,6 +444,131 @@ namespace FPS.UI.Editor
             image.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(UiPath + "Sprites/Survival/SolidFill.png");
             image.type = Image.Type.Filled; image.fillMethod = Image.FillMethod.Horizontal;
             image.fillOrigin = 0; image.raycastTarget = false;
+        }
+
+        static void ArrangeGameplayHud(Canvas canvas, RectTransform hud)
+        {
+            HudLayout.ConfigureCanvas(canvas);
+            var safe = HudLayout.PeripheralRoot(canvas);
+            var health = Find(hud, "HealthPanel");
+            var infection = Find(hud, "InfectionPanel");
+            var weapon = Find(hud, "WeaponPanel");
+            health.SetParent(safe, false); infection.SetParent(safe, false); weapon.SetParent(safe, false);
+            At(health, BL, 28, 28, 350, 106);
+            At(infection, BL, 28, 146, 350, 114);
+            At(weapon, BR, -28, 28, 420, 176);
+            At(Find(health, "HealthText"), TL, 64, -16, 262, 54);
+            At(Find(health, "HealthIcon"), TL, 24, -30, 24, 24);
+            At(Find(health, "HealthFrame"), BL, 24, 18, 302, 19);
+            At(Find(health, "HealthTrack"), BL, 30, 22, 287, 10);
+            At(Find(health, "HealthBar"), BL, 30, 22, 287, 10);
+            At(Find(infection, "InfectionIcon"), TL, 24, -19, 24, 24);
+            At(Find(infection, "InfectionStageText"), TL, 64, -16, 262, 30);
+            Text(Find(infection, "InfectionStageText"), "INFECTION 0%", 24, false, TacticalUiTheme.Text);
+            Text(Find(infection, "SepsisWarning"), "SEPSIS - TREAT NOW", 24, false, TacticalUiTheme.Danger);
+            At(Find(weapon, "WeaponNameText"), TL, 24, -62, 168, 32);
+            At(Find(weapon, "PrimaryWeaponKeyText"), TL, 24, -20, 60, 30);
+            At(Find(weapon, "WeaponIcon"), TL, 92, -20, 112, 38);
+            At(Find(weapon, "CurrentAmmoText"), TR, -124, -16, 104, 76);
+            At(Find(weapon, "ReserveAmmoText"), TR, -24, -34, 92, 40);
+            Text(Find(weapon, "ReserveAmmoText"), "/ 120", 24, true, TacticalUiTheme.Muted).alignment = TextAlignmentOptions.MidlineRight;
+            Text(Find(weapon, "WeaponNameText"), "AKM", 24, false, TacticalUiTheme.Text);
+            foreach (var name in new[] { "PrimaryWeaponKeyText", "SlotKey" })
+            {
+                var key = Find(weapon, name);
+                key.sizeDelta = new Vector2(60, 30);
+                Text(key, key.GetComponent<TMP_Text>().text, 24);
+            }
+            At(Find(infection, "SepsisWarning"), BL, 24, 16, 302, 30);
+            At(Find(infection, "InfectionFill"), BL, 24, 60, 302, 4);
+            var infectionShade = Node(infection, "VitalsShade"); Fill(infectionShade);
+            HudSkin.Apply(Plate(infectionShade, Color.white), "Panel"); infectionShade.SetAsFirstSibling();
+            Plate(Find(health, "HealthBackground"), Color.clear);
+            HudSkin.Apply(Plate(Find(health, "HealthReadabilityPlate"), Color.white), "Panel");
+            HudSkin.Apply(Plate(Find(weapon, "WeaponFrame"), Color.white), "Panel");
+            Plate(Find(weapon, "WeaponReadabilityPlate"), Color.clear);
+            var healthLabel = Text(Find(health, "HealthText"), "100<size=65%> / 100</size>", 40);
+            healthLabel.fontStyle = FontStyles.Bold;
+            var ammoLabel = Text(Find(weapon, "CurrentAmmoText"), "24", 64);
+            ammoLabel.fontStyle = FontStyles.Bold; ammoLabel.alignment = TextAlignmentOptions.MidlineRight;
+            var secondary = Find(weapon, "SecondaryWeaponSlot");
+            At(secondary, BL, 24, 16, 372, 32);
+            At(Find(secondary, "SlotKey"), TL, 0, 0, 60, 30);
+            At(Find(secondary, "UnusedWeaponIcon"), TL, 68, -2, 50, 28);
+            At(Find(secondary, "UnusedWeaponNameText"), TL, 130, 0, 242, 30);
+            Text(Find(secondary, "UnusedWeaponNameText"), "EMPTY", 24, false, TacticalUiTheme.Text);
+            var manager = canvas.gameObject.scene.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<HUDManager>(true)).First();
+            var ammo = Node(weapon, "AmmoIconImg"); At(ammo, TR, -24, -8, 24, 24);
+            var ammoImage = Plate(ammo, TacticalUiTheme.Text);
+            HudSkin.Apply(ammoImage, "FPSSample/UI_Hud_Bullets", TacticalUiTheme.Text);
+            ammoImage.preserveAspect = true; ammoImage.enabled = false;
+            Bind(manager, "ammoTypeUI", ammoImage);
+            foreach (var action in new[] { "Fire", "Aim" })
+            {
+                var group = Node(weapon, action + "Prompt"); At(group, TL, action == "Fire" ? 24 : 210, -98, 176, 24);
+                var icon = Node(group, "Icon"); At(icon, TL, 0, 0, 24, 24);
+                var image = Plate(icon, TacticalUiTheme.Text);
+                HudSkin.Apply(image, action == "Fire" ? "FPSSample/UI_HUD_LMB" : "FPSSample/UI_HUD_RMB", TacticalUiTheme.Text);
+                image.preserveAspect = true;
+                var text = Node(group, "Label"); At(text, TL, 28, 0, 148, 24);
+                var label = Text(text, action.ToUpperInvariant(), 16);
+                label.textWrappingMode = TextWrappingModes.NoWrap;
+                Bind(manager, action.ToLowerInvariant() + "PromptIcon", image);
+                Bind(manager, action.ToLowerInvariant() + "PromptText", label);
+            }
+            var frag = Find(weapon, "FragSlot"); if (frag != null) frag.gameObject.SetActive(false);
+            var prompt = Find(hud, "InteractionPrompt"); prompt.SetParent(safe, false);
+            HudLayout.CentralBand(prompt, canvas, HudLayout.InteractionBottom, 52);
+            Text(prompt, "[F] Interact", 26);
+            var outline = Ensure<Outline>(prompt.gameObject); outline.effectColor = Color.black;
+            outline.effectDistance = new Vector2(1.5f, -1.5f);
+        }
+
+        [MenuItem("Tools/FPS/UI/Apply Gameplay HUD Only")]
+        public static void ApplyGameplayHud()
+        {
+            if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode before authoring HUD.");
+            SaveAuthoredScenes();
+            SurvivalUiArt.ConfigureHudSkinImports();
+            var previous = SceneManager.GetActiveScene();
+            const string path = "Assets/FPS/Scenes/GameScene.unity";
+            var scene = SceneManager.GetSceneByPath(path); bool opened = !scene.isLoaded;
+            if (opened) scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Additive);
+            try
+            {
+                var canvas = scene.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Canvas>(true)).First(c => c.isRootCanvas);
+                Undo.RegisterFullObjectHierarchyUndo(canvas.gameObject, "Apply gameplay HUD");
+                // Move peripheral children back before reapplying the existing idempotent authoring routine.
+                var hud = Find(canvas.transform, "MinimalHUDRoot");
+                var safe = canvas.transform.Find("HudSafeArea");
+                if (safe != null)
+                    foreach (var name in new[] { "HealthPanel", "InfectionPanel", "WeaponPanel", "InteractionPrompt" })
+                    { var item = safe.Find(name); if (item != null) item.SetParent(hud, false); }
+                Gameplay(canvas, false);
+                EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);
+            }
+            finally
+            {
+                SaveAuthoredScenes();
+                if (opened) EditorSceneManager.CloseScene(scene, true);
+                if (previous.IsValid() && previous.isLoaded) SceneManager.SetActiveScene(previous);
+            }
+            Debug.Log("Gameplay HUD applied to GameScene only.");
+        }
+
+        [MenuItem("Tools/FPS/UI/Save Authored Scenes")]
+        public static void SaveAuthoredScenes()
+        {
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                var scene = SceneManager.GetSceneAt(i);
+                if (!string.IsNullOrEmpty(scene.path) && !scene.name.StartsWith("Untitled")
+                    && !scene.path.StartsWith("Assets/InitTestScene", StringComparison.Ordinal)
+                    && !EditorSceneManager.IsPreviewScene(scene) && scene.isDirty
+                    && !EditorSceneManager.SaveScene(scene))
+                    throw new InvalidOperationException("Could not save authored scene: " + scene.path);
+            }
+            AssetDatabase.SaveAssets();
         }
 
         static void ApplyHudArt(RectTransform hud, HUDManager manager)
@@ -466,7 +592,7 @@ namespace FPS.UI.Editor
             var infectionIcon = Find(infection, "InfectionIcon").GetComponent<Image>();
             SurvivalUiArt.Assign(infectionIcon, "Icons/Biohazard", TacticalUiTheme.Accent);
             At(Find(infection, "InfectionStageText"), TL, 52, -4, 250, 30);
-            foreach (string name in new[] { "InfectionFill", "TreatmentProgressFill" })
+            foreach (string name in new[] { "InfectionFill" })
             {
                 var image = Find(infection, name).GetComponent<Image>();
                 image.sprite = SurvivalUiArt.Get("Bars/HealthFill");
@@ -485,11 +611,33 @@ namespace FPS.UI.Editor
             Find(weapon, "AmmoSeparator").gameObject.SetActive(false);
 
             var blood = Node(hud, "LowHealthBlood");
-            blood.anchorMin = Vector2.zero; blood.anchorMax = new Vector2(1, 0); blood.pivot = new Vector2(.5f, 0);
-            blood.anchoredPosition = Vector2.zero; blood.sizeDelta = new Vector2(0, 115); blood.SetAsFirstSibling();
+            Fill(blood); blood.SetAsFirstSibling();
             var bloodImage = Plate(blood, Color.clear);
-            SurvivalUiArt.Assign(bloodImage, "Effects/BloodEdge", Color.clear); bloodImage.enabled = false;
+            HudSkin.Apply(bloodImage, "FPSSample/DamageVignette", Color.clear); bloodImage.enabled = false;
             Bind(manager, "healthDangerBackground", bloodImage);
+
+            var oldMarker = Find(hud, "HitMarkerText");
+            if (oldMarker != null) Object.DestroyImmediate(oldMarker.gameObject);
+            var feedback = Node(hud, "CombatFeedback"); Fill(feedback);
+            // Scope artwork is on the root canvas; feedback must remain visible above it.
+            var feedbackCanvas = Ensure<Canvas>(feedback.gameObject);
+            feedbackCanvas.overrideSorting = true; feedbackCanvas.sortingOrder = 10;
+            var marker = Node(feedback, "HitMarker"); At(marker, Center, 0, 0, 48, 48);
+            var markerImage = Plate(marker, TacticalUiTheme.Text);
+            HudSkin.Apply(markerImage, "FPSSample/HitMarker", TacticalUiTheme.Text); markerImage.enabled = false;
+            Bind(manager, "hitMarker", markerImage);
+            var indicators = new Image[4];
+            for (int i = 0; i < indicators.Length; i++)
+            {
+                var cue = Node(feedback, "DirectionalDamage" + i); At(cue, Center, 0, 128, 192, 48);
+                indicators[i] = Plate(cue, TacticalUiTheme.Danger);
+                HudSkin.Apply(indicators[i], "FPSSample/DamageIndicator", TacticalUiTheme.Danger);
+                indicators[i].enabled = false;
+            }
+            var serialized = new SerializedObject(manager);
+            var field = serialized.FindProperty("directionalDamageIndicators"); field.arraySize = indicators.Length;
+            for (int i = 0; i < indicators.Length; i++) field.GetArrayElementAtIndex(i).objectReferenceValue = indicators[i];
+            serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
         static void RosterPrefab()
@@ -520,7 +668,7 @@ namespace FPS.UI.Editor
         public static void ApplyAll()
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play mode before authoring UI.");
-            EditorSceneManager.SaveOpenScenes(); AssetDatabase.SaveAssets();
+            TacticalUiWorkshop.SaveAuthoredScenes();
             AssetDatabase.Refresh();
             SurvivalUiArt.ConfigureImports();
             var active = SceneManager.GetActiveScene();
@@ -548,7 +696,7 @@ namespace FPS.UI.Editor
             finally
             {
                 if (active.IsValid() && active.isLoaded) SceneManager.SetActiveScene(active);
-                EditorSceneManager.SaveOpenScenes(); AssetDatabase.SaveAssets();
+                TacticalUiWorkshop.SaveAuthoredScenes();
             }
             Debug.Log("Tactical UI applied to MainMenu, LobbyScene, GameScene and shared prefabs.");
         }

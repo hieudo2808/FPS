@@ -1,0 +1,29 @@
+{
+  "status": "success",
+  "result": {
+    "success": true,
+    "action": "preview",
+    "totalAssets": 2,
+    "existingAssets": 2,
+    "totalBytes": 14507032,
+    "totalMB": 13.834983825683594,
+    "confirmToken": "2d4b6598",
+    "message": "⚠️ PREVIEW ONLY - 2 assets will be deleted (13.83 MB). To confirm, call again with confirmToken='2d4b6598'",
+    "expiresIn": "5 minutes",
+    "assetsToDelete": [
+      {
+        "path": "Assets/FPS/Prototypes/MedicalAnimation/SelfHeal.fbx",
+        "exists": true,
+        "sizeBytes": 7575820,
+        "sizeMB": 7.224864959716797
+      },
+      {
+        "path": "Assets/FPS/Prototypes/MedicalAnimation/SelfInjection.fbx",
+        "exists": true,
+        "sizeBytes": 6931212,
+        "sizeMB": 6.610118865966797
+      }
+    ]
+  },
+  "workflowEndMs": 5
+}

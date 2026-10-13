@@ -39,6 +39,33 @@ namespace FPS.UI.Editor
             }
         }
 
+        internal static void ConfigureHudSkinImports()
+        {
+            const string root = "Assets/FPS/Features/UI/Content/Resources/HudSkin";
+            foreach (string guid in AssetDatabase.FindAssets("t:Texture2D", new[] { root }))
+            {
+                var importer = (TextureImporter)AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid));
+                Undo.RecordObject(importer, "Import HUD skin");
+                importer.textureType = TextureImporterType.Sprite;
+                importer.spriteImportMode = SpriteImportMode.Single;
+                importer.spritePixelsPerUnit = 100;
+                importer.mipmapEnabled = false; importer.alphaIsTransparency = true;
+                importer.wrapMode = TextureWrapMode.Clamp; importer.filterMode = FilterMode.Bilinear;
+                importer.textureCompression = TextureImporterCompression.Uncompressed;
+                importer.maxTextureSize = 2048;
+                string name = System.IO.Path.GetFileNameWithoutExtension(importer.assetPath);
+                importer.spriteBorder = name switch
+                {
+                    "Panel" => new Vector4(62, 40, 62, 40),
+                    "InventoryBoard" => new Vector4(80, 70, 80, 95),
+                    "Slot" or "SlotSelected" => new Vector4(12, 12, 12, 12),
+                    "Button" or "ButtonSelected" => new Vector4(18, 12, 18, 12),
+                    _ => Vector4.zero
+                };
+                importer.SaveAndReimport();
+            }
+        }
+
         static Vector4 Border(string path)
         {
             if (path.EndsWith("/Panel.png") || path.EndsWith("/Control.png")) return new Vector4(12, 12, 12, 12);

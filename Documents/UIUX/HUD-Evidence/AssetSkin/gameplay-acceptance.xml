@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 15:55:03Z" end-time="2026-10-05 15:56:15Z" duration="71.1378848">
+  <test-suite type="TestSuite" id="1040" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="21" result="Passed" start-time="2026-10-05 15:55:03Z" end-time="2026-10-05 15:56:15Z" duration="71.137885" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1028" name="FPS.Survival.PlayModeTests.dll" fullname="E:/Unity/Project/FPS/Library/ScriptAssemblies/FPS.Survival.PlayModeTests.dll" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-05 15:55:03Z" end-time="2026-10-05 15:56:15Z" duration="71.117609" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="21156" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1029" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-05 15:55:03Z" end-time="2026-10-05 15:56:15Z" duration="71.112367" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1030" name="Tests" fullname="FPS.Tests" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-05 15:55:04Z" end-time="2026-10-05 15:56:15Z" duration="71.108811" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1006" name="HudGameplayAcceptanceTests" fullname="FPS.Tests.HudGameplayAcceptanceTests" classname="FPS.Tests.HudGameplayAcceptanceTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-05 15:55:04Z" end-time="2026-10-05 15:56:15Z" duration="71.099865" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1007" name="GameplayStatesAndLayoutRemainReadable" fullname="FPS.Tests.HudGameplayAcceptanceTests.GameplayStatesAndLayoutRemainReadable" methodname="GameplayStatesAndLayoutRemainReadable" classname="FPS.Tests.HudGameplayAcceptanceTests" runstate="Runnable" seed="1072149013" result="Passed" start-time="2026-10-05 15:55:04Z" end-time="2026-10-05 15:56:15Z" duration="71.049563" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[[UnitySkills] [Self-Test] Starting (ProcessJobQueue ticks=14, listener=True)
+HUD fixture resolution requested: 1920x1080
+[DifficultyManager] Difficulty set to Medium. HP: x1, Damage: x1, Speed: x1, RubberBanding: False
+[Singleton] Created new instance of SettingsManager
+[PlayerVisual] root=BrimstonePlayer(Clone) firstPersonArms=Hand slots=True
+HUD review local host is ready in GameScene.
+[EnemyHealth] Zombiegirl W Kurniawan(Clone) maxHealth scaled to 100
+[ZombieFactory] Spawned Zombiegirl at (-124.50, 0.05, -59.50). HP: 100, Speed: 5.0, Pooled: True, Networked: True
+[EnemyHealth] ZombieMale_AAB(Clone) maxHealth scaled to 100
+[ZombieFactory] Spawned Zombie Male at (-119.50, 0.04, -77.00). HP: 100, Speed: 5.0, Pooled: True, Networked: True
+HUD fixture resolution requested: 1280x720
+[EnemyHealth] Zombiegirl W Kurniawan(Clone) maxHealth scaled to 100
+[ZombieFactory] Spawned Zombiegirl at (-124.50, 0.05, -65.50). HP: 100, Speed: 5.0, Pooled: True, Networked: True
+HUD fixture resolution requested: 1280x720
+HUD fixture resolution requested: 1920x1080
+HUD fixture resolution requested: 1920x1080
+HUD fixture resolution requested: 3440x1440
+HUD fixture resolution requested: 3440x1440
+HUD fixture resolution requested: 1920x1080
+[EnemyAI] No player found
+[EnemyAI] No player found
+[EnemyAI] No player found
+[AIDirector] Phase -> PEAK
+[AIDirector] Phase -> RELAX
+[AIDirector] Phase -> BUILD
+[Singleton] Destroying duplicate instance of AudioManager
+Saving results to: C:/Users/hieud/AppData/LocalLow/HieuDHM/FPS\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

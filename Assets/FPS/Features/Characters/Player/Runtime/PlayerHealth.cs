@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace FPS
 {
-    public class PlayerHealth : NetworkBehaviour, IDamageable
+    public class PlayerHealth : NetworkBehaviour, IAttributedDamageable
     {
         public static event System.Action<PlayerHealth, ulong> PlayerDiedServer;
         public static event System.Action<PlayerHealth> PlayerSpawnedServer;
@@ -141,6 +141,8 @@ namespace FPS
         public event OnPlayerDeath PlayerDeathEvent;
         public event System.Action<bool> CombatAvailabilityChanged;
         public event System.Action<PlayerLifeState, PlayerLifeState> LifeStateChanged;
+        public event System.Action<Vector3> DirectionalDamageReceived;
+        public event System.Action CombatFeedbackReset;
 
         public override void OnNetworkSpawn()
         {
@@ -170,6 +172,7 @@ namespace FPS
 
         public override void OnNetworkDespawn()
         {
+            CombatFeedbackReset?.Invoke();
             networkHealth.OnValueChanged -= OnHealthValueChanged;
             networkIsDead.OnValueChanged -= OnDeadValueChanged;
             networkLifeState.OnValueChanged -= OnLifeStateChanged;
@@ -237,10 +240,12 @@ namespace FPS
 
         public void TakeDamage(float damage) => ApplyDamage(damage, interruptTreatment: true);
 
+        public void TakeDamage(DamageInfo damageInfo) => ApplyDamage(damageInfo.amount, true, damageInfo.sourcePosition);
+
         // Sepsis drains health but must not make the five-second antidote impossible to finish.
         public void TakeInfectionDamage(float damage) => ApplyDamage(damage, interruptTreatment: false);
 
-        private void ApplyDamage(float damage, bool interruptTreatment)
+        private void ApplyDamage(float damage, bool interruptTreatment, Vector3? sourcePosition = null)
         {
             if (!IsServer) return;
             if (networkIsDead.Value) return;
@@ -248,6 +253,8 @@ namespace FPS
             if (campaign != null && (campaign.BlocksInput || CampaignNow < campaignProtectionUntil)) return;
             if (!float.IsFinite(damage) || damage <= 0) return;
             if (interruptTreatment) damageRevision.Value++;
+            if (sourcePosition is Vector3 source && float.IsFinite(source.x) && float.IsFinite(source.y) && float.IsFinite(source.z))
+                DirectionalDamageClientRpc(source, CreateOwnerRpcParams());
             if (campaign != null && LifeState == PlayerLifeState.Downed)
             {
                 networkLifeStateDeadline.Value -= damage * campaign.settings.bleedoutDamageSeconds;
@@ -274,6 +281,12 @@ namespace FPS
                 }
                 else Die();
             }
+        }
+
+        [ClientRpc]
+        private void DirectionalDamageClientRpc(Vector3 source, ClientRpcParams rpcParams = default)
+        {
+            if (IsOwner) DirectionalDamageReceived?.Invoke(source);
         }
 
         private void Die()
@@ -431,6 +444,7 @@ namespace FPS
         [ClientRpc]
         private void BeginReconnectRestoreClientRpc(PlayerRuntimeSnapshot snapshot, ClientRpcParams rpcParams = default)
         {
+            CombatFeedbackReset?.Invoke();
             ApplyRespawnPose(snapshot.position, snapshot.rotation);
             WeaponRuntimeSnapshot weaponSnapshot = snapshot.equippedWeaponSlot == 1
                 ? snapshot.weaponSlot1
@@ -482,6 +496,7 @@ namespace FPS
         [ClientRpc]
         private void RespawnClientRpc(Vector3 position, Quaternion rotation)
         {
+            CombatFeedbackReset?.Invoke();
             ApplyRespawnPose(position, rotation);
         }
 

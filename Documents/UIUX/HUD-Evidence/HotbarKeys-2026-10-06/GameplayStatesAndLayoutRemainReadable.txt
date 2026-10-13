@@ -1,0 +1,1471 @@
+FIXTURE original Aim binding: Right Button
+PASS Squad preserves downed direction and bleed-out time
+PASS Text renders without truncation: Portrait / B
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Name / MASON
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / BRIMSTONE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Status / RIGHT DOWNED · 40s
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Portrait / S
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Name / DOC
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / SAGE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Status / INFECTED · 80%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Portrait / G
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Name / VEGA
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / GEKKO
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Squad keeps direction when the downed teammate is behind the camera
+PASS Text renders without truncation: Portrait / B
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Name / MASON
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / BRIMSTONE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Status / BEHIND DOWNED · 38s
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Portrait / S
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Name / DOC
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / SAGE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Status / INFECTED · 80%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Portrait / G
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Name / VEGA
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / GEKKO
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Squad updates after native revive
+PASS Grenade cycle changes selected type
+PASS Selected grenade detail appears
+PASS Secondary detail expires after two seconds
+PASS Antidote progress is live
+PASS Active treatment remains visible
+PASS Treatment cancellation clears progress
+PASS Medkit starts through the inventory API
+PASS Empty quick slot has zero and a geometric slash
+PASS Text renders without truncation: ReserveAmmoText / / 999
+PASS Quick text is at least 16px: ReserveAmmoText
+PASS Sepsis warning is visible at maximum infection
+PASS Reticle stays within 0.5px of viewport center
+PASS HUD groups remain separate: MissionTracker / SquadPanel
+PASS HUD groups remain separate: MissionTracker / HealthPanel
+PASS HUD groups remain separate: MissionTracker / InfectionPanel
+PASS HUD groups remain separate: MissionTracker / WeaponPanel
+PASS HUD groups remain separate: MissionTracker / SurvivalHotbar
+PASS HUD groups remain separate: MissionTracker / InteractionPrompt
+PASS HUD groups remain separate: MissionTracker / Interaction
+PASS HUD groups remain separate: MissionTracker / Feedback
+PASS HUD groups remain separate: MissionTracker / MandatorySubtitles
+PASS HUD groups remain separate: SquadPanel / HealthPanel
+PASS HUD groups remain separate: SquadPanel / InfectionPanel
+PASS HUD groups remain separate: SquadPanel / WeaponPanel
+PASS HUD groups remain separate: SquadPanel / SurvivalHotbar
+PASS HUD groups remain separate: SquadPanel / InteractionPrompt
+PASS HUD groups remain separate: SquadPanel / Interaction
+PASS HUD groups remain separate: SquadPanel / Feedback
+PASS HUD groups remain separate: SquadPanel / MandatorySubtitles
+PASS HUD groups remain separate: HealthPanel / InfectionPanel
+PASS HUD groups remain separate: HealthPanel / WeaponPanel
+PASS HUD groups remain separate: HealthPanel / SurvivalHotbar
+PASS HUD groups remain separate: HealthPanel / InteractionPrompt
+PASS HUD groups remain separate: HealthPanel / Interaction
+PASS HUD groups remain separate: HealthPanel / Feedback
+PASS HUD groups remain separate: HealthPanel / MandatorySubtitles
+PASS HUD groups remain separate: InfectionPanel / WeaponPanel
+PASS HUD groups remain separate: InfectionPanel / SurvivalHotbar
+PASS HUD groups remain separate: InfectionPanel / InteractionPrompt
+PASS HUD groups remain separate: InfectionPanel / Interaction
+PASS HUD groups remain separate: InfectionPanel / Feedback
+PASS HUD groups remain separate: InfectionPanel / MandatorySubtitles
+PASS HUD groups remain separate: WeaponPanel / SurvivalHotbar
+PASS HUD groups remain separate: WeaponPanel / InteractionPrompt
+PASS HUD groups remain separate: WeaponPanel / Interaction
+PASS HUD groups remain separate: WeaponPanel / Feedback
+PASS HUD groups remain separate: WeaponPanel / MandatorySubtitles
+PASS HUD groups remain separate: SurvivalHotbar / InteractionPrompt
+PASS HUD groups remain separate: SurvivalHotbar / Interaction
+PASS HUD groups remain separate: SurvivalHotbar / Feedback
+PASS HUD groups remain separate: SurvivalHotbar / MandatorySubtitles
+PASS HUD groups remain separate: InteractionPrompt / Interaction
+PASS HUD groups remain separate: InteractionPrompt / Feedback
+PASS HUD groups remain separate: InteractionPrompt / MandatorySubtitles
+PASS HUD groups remain separate: Interaction / Feedback
+PASS HUD groups remain separate: Interaction / MandatorySubtitles
+PASS HUD groups remain separate: Feedback / MandatorySubtitles
+PASS Text renders without truncation: PrimaryWeaponKeyText / 1
+PASS Quick text is at least 16px: PrimaryWeaponKeyText
+PASS Text renders without truncation: SepsisWarning / SEPSIS - TREAT NOW
+PASS Quick text is at least 16px: SepsisWarning
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Character / SAGE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Name / VEGA
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Name / DOC
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / BRIMSTONE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: InfectionStageText / SEPSIS 100%
+PASS Quick text is at least 16px: InfectionStageText
+PASS Text renders without truncation: ReserveAmmoText / / 45
+PASS Quick text is at least 16px: ReserveAmmoText
+PASS Text renders without truncation: UnusedWeaponNameText / CLASSIC
+PASS Quick text is at least 16px: UnusedWeaponNameText
+PASS Text renders without truncation: InteractionPrompt / [5] SELF · ANTIDOTE
+PASS Quick text is at least 16px: InteractionPrompt
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Portrait / G
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Character / GEKKO
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Key / 4
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: CurrentAmmoText / 15
+PASS Quick text is at least 16px: CurrentAmmoText
+PASS Text renders without truncation: WeaponNameText / WARDEN
+PASS Quick text is at least 16px: WeaponNameText
+PASS Text renders without truncation: Key / G
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: Key / 5
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: HealthText / 35<size=65%> / 100</size>
+PASS Quick text is at least 16px: HealthText
+PASS Text renders without truncation: Name / MASON
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 3
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Count / 0
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Status / INFECTED · 80%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: SlotKey / 2
+PASS Quick text is at least 16px: SlotKey
+PASS Text renders without truncation: Portrait / B
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Portrait / S
+PASS Quick text is at least 16px: Portrait
+PASS Legacy text has enough height: TrackedObjective
+PASS Quick legacy text is at least 16px: TrackedObjective
+PASS Legacy text has enough height: MandatorySubtitles
+PASS Quick legacy text is at least 16px: MandatorySubtitles
+PASS Legacy text has enough height: Distance
+PASS Quick legacy text is at least 16px: Distance
+PASS Legacy text has enough height: Location
+PASS Quick legacy text is at least 16px: Location
+PASS Legacy text has enough height: CurrentAction
+PASS Quick legacy text is at least 16px: CurrentAction
+PASS Text clears its decorative frame: HealthPanel / HealthText
+PASS Text clears its decorative frame: InfectionPanel / InfectionStageText
+PASS Text clears its decorative frame: InfectionPanel / SepsisWarning
+PASS Text clears its decorative frame: WeaponPanel / PrimaryWeaponKeyText
+PASS Text clears its decorative frame: WeaponPanel / WeaponNameText
+PASS Text clears its decorative frame: WeaponPanel / CurrentAmmoText
+PASS Text clears its decorative frame: WeaponPanel / ReserveAmmoText
+PASS Text clears its decorative frame: WeaponPanel / SlotKey
+PASS Text clears its decorative frame: WeaponPanel / UnusedWeaponNameText
+PASS Text clears its decorative frame: MissionTracker / Location
+PASS Text clears its decorative frame: MissionTracker / TrackedObjective
+PASS Text clears its decorative frame: MissionTracker / CurrentAction
+PASS Text clears its decorative frame: SquadMember_1 / Portrait
+PASS Text clears its decorative frame: SquadMember_1 / Name
+PASS Text clears its decorative frame: SquadMember_1 / Character
+PASS Text clears its decorative frame: SquadMember_1 / Status
+PASS Text clears its decorative frame: SquadMember_2 / Portrait
+PASS Text clears its decorative frame: SquadMember_2 / Name
+PASS Text clears its decorative frame: SquadMember_2 / Character
+PASS Text clears its decorative frame: SquadMember_2 / Status
+PASS Text clears its decorative frame: SquadMember_3 / Portrait
+PASS Text clears its decorative frame: SquadMember_3 / Name
+PASS Text clears its decorative frame: SquadMember_3 / Character
+PASS Text clears its decorative frame: SquadMember_3 / Status
+PASS Text clears its decorative frame: InfectionPanel / InfectionIcon
+PASS Infection icon clears its stage label
+PASS Text clears its decorative frame: FRAG / Count
+PASS Text clears its decorative frame: FRAG / Key
+PASS Hotbar shortcut has no panel: FRAG
+PASS Hotbar shortcut sits at the top right: FRAG
+PASS Text clears its decorative frame: FIRE / Count
+PASS Text clears its decorative frame: FIRE / Key
+PASS Hotbar shortcut has no panel: FIRE
+PASS Hotbar shortcut sits at the top right: FIRE
+PASS Text clears its decorative frame: MEDKIT / Count
+PASS Text clears its decorative frame: MEDKIT / Key
+PASS Hotbar shortcut has no panel: MEDKIT
+PASS Hotbar shortcut sits at the top right: MEDKIT
+PASS Text clears its decorative frame: ANTIDOTE / Count
+PASS Text clears its decorative frame: ANTIDOTE / Key
+PASS Hotbar shortcut has no panel: ANTIDOTE
+PASS Hotbar shortcut sits at the top right: ANTIDOTE
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Reticle stays within 0.5px of viewport center
+PASS HUD groups remain separate: MissionTracker / SquadPanel
+PASS HUD groups remain separate: MissionTracker / HealthPanel
+PASS HUD groups remain separate: MissionTracker / InfectionPanel
+PASS HUD groups remain separate: MissionTracker / WeaponPanel
+PASS HUD groups remain separate: MissionTracker / SurvivalHotbar
+PASS HUD groups remain separate: MissionTracker / InteractionPrompt
+PASS HUD groups remain separate: MissionTracker / Interaction
+PASS HUD groups remain separate: MissionTracker / Feedback
+PASS HUD groups remain separate: MissionTracker / MandatorySubtitles
+PASS HUD groups remain separate: SquadPanel / HealthPanel
+PASS HUD groups remain separate: SquadPanel / InfectionPanel
+PASS HUD groups remain separate: SquadPanel / WeaponPanel
+PASS HUD groups remain separate: SquadPanel / SurvivalHotbar
+PASS HUD groups remain separate: SquadPanel / InteractionPrompt
+PASS HUD groups remain separate: SquadPanel / Interaction
+PASS HUD groups remain separate: SquadPanel / Feedback
+PASS HUD groups remain separate: SquadPanel / MandatorySubtitles
+PASS HUD groups remain separate: HealthPanel / InfectionPanel
+PASS HUD groups remain separate: HealthPanel / WeaponPanel
+PASS HUD groups remain separate: HealthPanel / SurvivalHotbar
+PASS HUD groups remain separate: HealthPanel / InteractionPrompt
+PASS HUD groups remain separate: HealthPanel / Interaction
+PASS HUD groups remain separate: HealthPanel / Feedback
+PASS HUD groups remain separate: HealthPanel / MandatorySubtitles
+PASS HUD groups remain separate: InfectionPanel / WeaponPanel
+PASS HUD groups remain separate: InfectionPanel / SurvivalHotbar
+PASS HUD groups remain separate: InfectionPanel / InteractionPrompt
+PASS HUD groups remain separate: InfectionPanel / Interaction
+PASS HUD groups remain separate: InfectionPanel / Feedback
+PASS HUD groups remain separate: InfectionPanel / MandatorySubtitles
+PASS HUD groups remain separate: WeaponPanel / SurvivalHotbar
+PASS HUD groups remain separate: WeaponPanel / InteractionPrompt
+PASS HUD groups remain separate: WeaponPanel / Interaction
+PASS HUD groups remain separate: WeaponPanel / Feedback
+PASS HUD groups remain separate: WeaponPanel / MandatorySubtitles
+PASS HUD groups remain separate: SurvivalHotbar / InteractionPrompt
+PASS HUD groups remain separate: SurvivalHotbar / Interaction
+PASS HUD groups remain separate: SurvivalHotbar / Feedback
+PASS HUD groups remain separate: SurvivalHotbar / MandatorySubtitles
+PASS HUD groups remain separate: InteractionPrompt / Interaction
+PASS HUD groups remain separate: InteractionPrompt / Feedback
+PASS HUD groups remain separate: InteractionPrompt / MandatorySubtitles
+PASS HUD groups remain separate: Interaction / Feedback
+PASS HUD groups remain separate: Interaction / MandatorySubtitles
+PASS HUD groups remain separate: Feedback / MandatorySubtitles
+PASS Text renders without truncation: PrimaryWeaponKeyText / 1
+PASS Quick text is at least 16px: PrimaryWeaponKeyText
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Character / SAGE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Name / VEGA
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Name / DOC
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / BRIMSTONE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: InfectionStageText / CRITICAL 80%
+PASS Quick text is at least 16px: InfectionStageText
+PASS Text renders without truncation: ReserveAmmoText / / 45
+PASS Quick text is at least 16px: ReserveAmmoText
+PASS Text renders without truncation: UnusedWeaponNameText / CLASSIC
+PASS Quick text is at least 16px: UnusedWeaponNameText
+PASS Text renders without truncation: InteractionPrompt / [5] SELF · ANTIDOTE
+PASS Quick text is at least 16px: InteractionPrompt
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Portrait / G
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Character / GEKKO
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Key / 4
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: CurrentAmmoText / 15
+PASS Quick text is at least 16px: CurrentAmmoText
+PASS Text renders without truncation: WeaponNameText / WARDEN
+PASS Quick text is at least 16px: WeaponNameText
+PASS Text renders without truncation: Key / G
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: Key / 5
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: HealthText / 35<size=65%> / 100</size>
+PASS Quick text is at least 16px: HealthText
+PASS Text renders without truncation: Name / MASON
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 3
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Count / 0
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Status / INFECTED · 80%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: SlotKey / 2
+PASS Quick text is at least 16px: SlotKey
+PASS Text renders without truncation: Portrait / B
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Portrait / S
+PASS Quick text is at least 16px: Portrait
+PASS Legacy text has enough height: TrackedObjective
+PASS Quick legacy text is at least 16px: TrackedObjective
+PASS Legacy text has enough height: MandatorySubtitles
+PASS Quick legacy text is at least 16px: MandatorySubtitles
+PASS Legacy text has enough height: Distance
+PASS Quick legacy text is at least 16px: Distance
+PASS Legacy text has enough height: Feedback
+PASS Quick legacy text is at least 16px: Feedback
+PASS Legacy text has enough height: Location
+PASS Quick legacy text is at least 16px: Location
+PASS Legacy text has enough height: CurrentAction
+PASS Quick legacy text is at least 16px: CurrentAction
+PASS Text clears its decorative frame: HealthPanel / HealthText
+PASS Text clears its decorative frame: InfectionPanel / InfectionStageText
+PASS Text clears its decorative frame: WeaponPanel / PrimaryWeaponKeyText
+PASS Text clears its decorative frame: WeaponPanel / WeaponNameText
+PASS Text clears its decorative frame: WeaponPanel / CurrentAmmoText
+PASS Text clears its decorative frame: WeaponPanel / ReserveAmmoText
+PASS Text clears its decorative frame: WeaponPanel / SlotKey
+PASS Text clears its decorative frame: WeaponPanel / UnusedWeaponNameText
+PASS Text clears its decorative frame: MissionTracker / Location
+PASS Text clears its decorative frame: MissionTracker / TrackedObjective
+PASS Text clears its decorative frame: MissionTracker / CurrentAction
+PASS Text clears its decorative frame: SquadMember_1 / Portrait
+PASS Text clears its decorative frame: SquadMember_1 / Name
+PASS Text clears its decorative frame: SquadMember_1 / Character
+PASS Text clears its decorative frame: SquadMember_1 / Status
+PASS Text clears its decorative frame: SquadMember_2 / Portrait
+PASS Text clears its decorative frame: SquadMember_2 / Name
+PASS Text clears its decorative frame: SquadMember_2 / Character
+PASS Text clears its decorative frame: SquadMember_2 / Status
+PASS Text clears its decorative frame: SquadMember_3 / Portrait
+PASS Text clears its decorative frame: SquadMember_3 / Name
+PASS Text clears its decorative frame: SquadMember_3 / Character
+PASS Text clears its decorative frame: SquadMember_3 / Status
+PASS Text clears its decorative frame: InfectionPanel / InfectionIcon
+PASS Infection icon clears its stage label
+PASS Text clears its decorative frame: FRAG / Count
+PASS Text clears its decorative frame: FRAG / Key
+PASS Hotbar shortcut has no panel: FRAG
+PASS Hotbar shortcut sits at the top right: FRAG
+PASS Text clears its decorative frame: FIRE / Count
+PASS Text clears its decorative frame: FIRE / Key
+PASS Hotbar shortcut has no panel: FIRE
+PASS Hotbar shortcut sits at the top right: FIRE
+PASS Text clears its decorative frame: MEDKIT / Count
+PASS Text clears its decorative frame: MEDKIT / Key
+PASS Hotbar shortcut has no panel: MEDKIT
+PASS Hotbar shortcut sits at the top right: MEDKIT
+PASS Text clears its decorative frame: ANTIDOTE / Count
+PASS Text clears its decorative frame: ANTIDOTE / Key
+PASS Hotbar shortcut has no panel: ANTIDOTE
+PASS Hotbar shortcut sits at the top right: ANTIDOTE
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Matrix includes populated subtitles
+PASS Inventory owns gameplay input
+PASS Text renders without truncation: Title / SQUAD INVENTORY
+PASS Quick text is at least 16px: Title
+PASS Text renders without truncation: Label / KEY ITEMS
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / FILES
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / MISSIONS
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / CLOSE [I / Escape]
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Name / ISOLATE PRODUCTION
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / AVAILABLE
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / BACKUP COLD STORE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / START GENERATOR
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / READ DELIVERY MANIFEST
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / TRACKING
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / VERIFY SHIPPING RELEASE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / AVAILABLE
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / SECURE T9-17 CASE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / OPEN SERVICE ROUTE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: DetailTitle / READ DELIVERY MANIFEST
+PASS Quick text is at least 16px: DetailTitle
+PASS Text renders without truncation: DetailStatus / TRACKING
+PASS Quick text is at least 16px: DetailStatus
+PASS Text renders without truncation: Body / Read the shipping manifest
+
+Select this objective to follow it on your HUD. Tracking is local; progress is shared by the squad.
+PASS Quick text is at least 16px: Body
+PASS Overlay subtitle strip clears inventory content
+PASS Closing inventory restores input and cursor
+PASS Reticle stays within 0.5px of viewport center
+PASS HUD groups remain separate: MissionTracker / SquadPanel
+PASS HUD groups remain separate: MissionTracker / HealthPanel
+PASS HUD groups remain separate: MissionTracker / InfectionPanel
+PASS HUD groups remain separate: MissionTracker / WeaponPanel
+PASS HUD groups remain separate: MissionTracker / SurvivalHotbar
+PASS HUD groups remain separate: MissionTracker / InteractionPrompt
+PASS HUD groups remain separate: MissionTracker / Interaction
+PASS HUD groups remain separate: MissionTracker / Feedback
+PASS HUD groups remain separate: MissionTracker / MandatorySubtitles
+PASS HUD groups remain separate: SquadPanel / HealthPanel
+PASS HUD groups remain separate: SquadPanel / InfectionPanel
+PASS HUD groups remain separate: SquadPanel / WeaponPanel
+PASS HUD groups remain separate: SquadPanel / SurvivalHotbar
+PASS HUD groups remain separate: SquadPanel / InteractionPrompt
+PASS HUD groups remain separate: SquadPanel / Interaction
+PASS HUD groups remain separate: SquadPanel / Feedback
+PASS HUD groups remain separate: SquadPanel / MandatorySubtitles
+PASS HUD groups remain separate: HealthPanel / InfectionPanel
+PASS HUD groups remain separate: HealthPanel / WeaponPanel
+PASS HUD groups remain separate: HealthPanel / SurvivalHotbar
+PASS HUD groups remain separate: HealthPanel / InteractionPrompt
+PASS HUD groups remain separate: HealthPanel / Interaction
+PASS HUD groups remain separate: HealthPanel / Feedback
+PASS HUD groups remain separate: HealthPanel / MandatorySubtitles
+PASS HUD groups remain separate: InfectionPanel / WeaponPanel
+PASS HUD groups remain separate: InfectionPanel / SurvivalHotbar
+PASS HUD groups remain separate: InfectionPanel / InteractionPrompt
+PASS HUD groups remain separate: InfectionPanel / Interaction
+PASS HUD groups remain separate: InfectionPanel / Feedback
+PASS HUD groups remain separate: InfectionPanel / MandatorySubtitles
+PASS HUD groups remain separate: WeaponPanel / SurvivalHotbar
+PASS HUD groups remain separate: WeaponPanel / InteractionPrompt
+PASS HUD groups remain separate: WeaponPanel / Interaction
+PASS HUD groups remain separate: WeaponPanel / Feedback
+PASS HUD groups remain separate: WeaponPanel / MandatorySubtitles
+PASS HUD groups remain separate: SurvivalHotbar / InteractionPrompt
+PASS HUD groups remain separate: SurvivalHotbar / Interaction
+PASS HUD groups remain separate: SurvivalHotbar / Feedback
+PASS HUD groups remain separate: SurvivalHotbar / MandatorySubtitles
+PASS HUD groups remain separate: InteractionPrompt / Interaction
+PASS HUD groups remain separate: InteractionPrompt / Feedback
+PASS HUD groups remain separate: InteractionPrompt / MandatorySubtitles
+PASS HUD groups remain separate: Interaction / Feedback
+PASS HUD groups remain separate: Interaction / MandatorySubtitles
+PASS HUD groups remain separate: Feedback / MandatorySubtitles
+PASS Text renders without truncation: PrimaryWeaponKeyText / 1
+PASS Quick text is at least 16px: PrimaryWeaponKeyText
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Character / SAGE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Name / VEGA
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Name / DOC
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / BRIMSTONE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: InfectionStageText / CRITICAL 80%
+PASS Quick text is at least 16px: InfectionStageText
+PASS Text renders without truncation: ReserveAmmoText / / 45
+PASS Quick text is at least 16px: ReserveAmmoText
+PASS Text renders without truncation: UnusedWeaponNameText / CLASSIC
+PASS Quick text is at least 16px: UnusedWeaponNameText
+PASS Text renders without truncation: InteractionPrompt / [5] SELF · ANTIDOTE
+PASS Quick text is at least 16px: InteractionPrompt
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Portrait / G
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Character / GEKKO
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Key / 4
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: CurrentAmmoText / 15
+PASS Quick text is at least 16px: CurrentAmmoText
+PASS Text renders without truncation: WeaponNameText / WARDEN
+PASS Quick text is at least 16px: WeaponNameText
+PASS Text renders without truncation: Key / G
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: Key / 5
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: HealthText / 35<size=65%> / 100</size>
+PASS Quick text is at least 16px: HealthText
+PASS Text renders without truncation: Name / MASON
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 3
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Count / 0
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Status / INFECTED · 80%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: SlotKey / 2
+PASS Quick text is at least 16px: SlotKey
+PASS Text renders without truncation: Portrait / B
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Portrait / S
+PASS Quick text is at least 16px: Portrait
+PASS Legacy text has enough height: TrackedObjective
+PASS Quick legacy text is at least 16px: TrackedObjective
+PASS Legacy text has enough height: MandatorySubtitles
+PASS Quick legacy text is at least 16px: MandatorySubtitles
+PASS Legacy text has enough height: Distance
+PASS Quick legacy text is at least 16px: Distance
+PASS Legacy text has enough height: Feedback
+PASS Quick legacy text is at least 16px: Feedback
+PASS Legacy text has enough height: Location
+PASS Quick legacy text is at least 16px: Location
+PASS Legacy text has enough height: CurrentAction
+PASS Quick legacy text is at least 16px: CurrentAction
+PASS Text clears its decorative frame: HealthPanel / HealthText
+PASS Text clears its decorative frame: InfectionPanel / InfectionStageText
+PASS Text clears its decorative frame: WeaponPanel / PrimaryWeaponKeyText
+PASS Text clears its decorative frame: WeaponPanel / WeaponNameText
+PASS Text clears its decorative frame: WeaponPanel / CurrentAmmoText
+PASS Text clears its decorative frame: WeaponPanel / ReserveAmmoText
+PASS Text clears its decorative frame: WeaponPanel / SlotKey
+PASS Text clears its decorative frame: WeaponPanel / UnusedWeaponNameText
+PASS Text clears its decorative frame: MissionTracker / Location
+PASS Text clears its decorative frame: MissionTracker / TrackedObjective
+PASS Text clears its decorative frame: MissionTracker / CurrentAction
+PASS Text clears its decorative frame: SquadMember_1 / Portrait
+PASS Text clears its decorative frame: SquadMember_1 / Name
+PASS Text clears its decorative frame: SquadMember_1 / Character
+PASS Text clears its decorative frame: SquadMember_1 / Status
+PASS Text clears its decorative frame: SquadMember_2 / Portrait
+PASS Text clears its decorative frame: SquadMember_2 / Name
+PASS Text clears its decorative frame: SquadMember_2 / Character
+PASS Text clears its decorative frame: SquadMember_2 / Status
+PASS Text clears its decorative frame: SquadMember_3 / Portrait
+PASS Text clears its decorative frame: SquadMember_3 / Name
+PASS Text clears its decorative frame: SquadMember_3 / Character
+PASS Text clears its decorative frame: SquadMember_3 / Status
+PASS Text clears its decorative frame: InfectionPanel / InfectionIcon
+PASS Infection icon clears its stage label
+PASS Text clears its decorative frame: FRAG / Count
+PASS Text clears its decorative frame: FRAG / Key
+PASS Hotbar shortcut has no panel: FRAG
+PASS Hotbar shortcut sits at the top right: FRAG
+PASS Text clears its decorative frame: FIRE / Count
+PASS Text clears its decorative frame: FIRE / Key
+PASS Hotbar shortcut has no panel: FIRE
+PASS Hotbar shortcut sits at the top right: FIRE
+PASS Text clears its decorative frame: MEDKIT / Count
+PASS Text clears its decorative frame: MEDKIT / Key
+PASS Hotbar shortcut has no panel: MEDKIT
+PASS Hotbar shortcut sits at the top right: MEDKIT
+PASS Text clears its decorative frame: ANTIDOTE / Count
+PASS Text clears its decorative frame: ANTIDOTE / Key
+PASS Hotbar shortcut has no panel: ANTIDOTE
+PASS Hotbar shortcut sits at the top right: ANTIDOTE
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Matrix includes populated subtitles
+PASS Inventory owns gameplay input
+PASS Text renders without truncation: Title / SQUAD INVENTORY
+PASS Quick text is at least 16px: Title
+PASS Text renders without truncation: Label / KEY ITEMS
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / FILES
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / MISSIONS
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / CLOSE [I / Escape]
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Name / ISOLATE PRODUCTION
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / AVAILABLE
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / BACKUP COLD STORE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / START GENERATOR
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / READ DELIVERY MANIFEST
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / TRACKING
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / VERIFY SHIPPING RELEASE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / AVAILABLE
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / SECURE T9-17 CASE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / OPEN SERVICE ROUTE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: DetailTitle / READ DELIVERY MANIFEST
+PASS Quick text is at least 16px: DetailTitle
+PASS Text renders without truncation: DetailStatus / TRACKING
+PASS Quick text is at least 16px: DetailStatus
+PASS Text renders without truncation: Body / Read the shipping manifest
+
+Select this objective to follow it on your HUD. Tracking is local; progress is shared by the squad.
+PASS Quick text is at least 16px: Body
+PASS Overlay subtitle strip clears inventory content
+PASS Closing inventory restores input and cursor
+PASS Reticle stays within 0.5px of viewport center
+PASS HUD groups remain separate: MissionTracker / SquadPanel
+PASS HUD groups remain separate: MissionTracker / HealthPanel
+PASS HUD groups remain separate: MissionTracker / InfectionPanel
+PASS HUD groups remain separate: MissionTracker / WeaponPanel
+PASS HUD groups remain separate: MissionTracker / SurvivalHotbar
+PASS HUD groups remain separate: MissionTracker / InteractionPrompt
+PASS HUD groups remain separate: MissionTracker / Interaction
+PASS HUD groups remain separate: MissionTracker / Feedback
+PASS HUD groups remain separate: MissionTracker / MandatorySubtitles
+PASS HUD groups remain separate: SquadPanel / HealthPanel
+PASS HUD groups remain separate: SquadPanel / InfectionPanel
+PASS HUD groups remain separate: SquadPanel / WeaponPanel
+PASS HUD groups remain separate: SquadPanel / SurvivalHotbar
+PASS HUD groups remain separate: SquadPanel / InteractionPrompt
+PASS HUD groups remain separate: SquadPanel / Interaction
+PASS HUD groups remain separate: SquadPanel / Feedback
+PASS HUD groups remain separate: SquadPanel / MandatorySubtitles
+PASS HUD groups remain separate: HealthPanel / InfectionPanel
+PASS HUD groups remain separate: HealthPanel / WeaponPanel
+PASS HUD groups remain separate: HealthPanel / SurvivalHotbar
+PASS HUD groups remain separate: HealthPanel / InteractionPrompt
+PASS HUD groups remain separate: HealthPanel / Interaction
+PASS HUD groups remain separate: HealthPanel / Feedback
+PASS HUD groups remain separate: HealthPanel / MandatorySubtitles
+PASS HUD groups remain separate: InfectionPanel / WeaponPanel
+PASS HUD groups remain separate: InfectionPanel / SurvivalHotbar
+PASS HUD groups remain separate: InfectionPanel / InteractionPrompt
+PASS HUD groups remain separate: InfectionPanel / Interaction
+PASS HUD groups remain separate: InfectionPanel / Feedback
+PASS HUD groups remain separate: InfectionPanel / MandatorySubtitles
+PASS HUD groups remain separate: WeaponPanel / SurvivalHotbar
+PASS HUD groups remain separate: WeaponPanel / InteractionPrompt
+PASS HUD groups remain separate: WeaponPanel / Interaction
+PASS HUD groups remain separate: WeaponPanel / Feedback
+PASS HUD groups remain separate: WeaponPanel / MandatorySubtitles
+PASS HUD groups remain separate: SurvivalHotbar / InteractionPrompt
+PASS HUD groups remain separate: SurvivalHotbar / Interaction
+PASS HUD groups remain separate: SurvivalHotbar / Feedback
+PASS HUD groups remain separate: SurvivalHotbar / MandatorySubtitles
+PASS HUD groups remain separate: InteractionPrompt / Interaction
+PASS HUD groups remain separate: InteractionPrompt / Feedback
+PASS HUD groups remain separate: InteractionPrompt / MandatorySubtitles
+PASS HUD groups remain separate: Interaction / Feedback
+PASS HUD groups remain separate: Interaction / MandatorySubtitles
+PASS HUD groups remain separate: Feedback / MandatorySubtitles
+PASS Text renders without truncation: PrimaryWeaponKeyText / 1
+PASS Quick text is at least 16px: PrimaryWeaponKeyText
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Character / SAGE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Name / VEGA
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Name / DOC
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / BRIMSTONE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: InfectionStageText / CRITICAL 80%
+PASS Quick text is at least 16px: InfectionStageText
+PASS Text renders without truncation: ReserveAmmoText / / 45
+PASS Quick text is at least 16px: ReserveAmmoText
+PASS Text renders without truncation: UnusedWeaponNameText / CLASSIC
+PASS Quick text is at least 16px: UnusedWeaponNameText
+PASS Text renders without truncation: InteractionPrompt / [5] SELF · ANTIDOTE
+PASS Quick text is at least 16px: InteractionPrompt
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Portrait / G
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Character / GEKKO
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Key / 4
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: CurrentAmmoText / 15
+PASS Quick text is at least 16px: CurrentAmmoText
+PASS Text renders without truncation: WeaponNameText / WARDEN
+PASS Quick text is at least 16px: WeaponNameText
+PASS Text renders without truncation: Key / G
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: Key / 5
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: HealthText / 35<size=65%> / 100</size>
+PASS Quick text is at least 16px: HealthText
+PASS Text renders without truncation: Name / MASON
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 3
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Count / 0
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Status / INFECTED · 80%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: SlotKey / 2
+PASS Quick text is at least 16px: SlotKey
+PASS Text renders without truncation: Portrait / B
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Portrait / S
+PASS Quick text is at least 16px: Portrait
+PASS Legacy text has enough height: TrackedObjective
+PASS Quick legacy text is at least 16px: TrackedObjective
+PASS Legacy text has enough height: MandatorySubtitles
+PASS Quick legacy text is at least 16px: MandatorySubtitles
+PASS Legacy text has enough height: Distance
+PASS Quick legacy text is at least 16px: Distance
+PASS Legacy text has enough height: Feedback
+PASS Quick legacy text is at least 16px: Feedback
+PASS Legacy text has enough height: Location
+PASS Quick legacy text is at least 16px: Location
+PASS Legacy text has enough height: CurrentAction
+PASS Quick legacy text is at least 16px: CurrentAction
+PASS Text clears its decorative frame: HealthPanel / HealthText
+PASS Text clears its decorative frame: InfectionPanel / InfectionStageText
+PASS Text clears its decorative frame: WeaponPanel / PrimaryWeaponKeyText
+PASS Text clears its decorative frame: WeaponPanel / WeaponNameText
+PASS Text clears its decorative frame: WeaponPanel / CurrentAmmoText
+PASS Text clears its decorative frame: WeaponPanel / ReserveAmmoText
+PASS Text clears its decorative frame: WeaponPanel / SlotKey
+PASS Text clears its decorative frame: WeaponPanel / UnusedWeaponNameText
+PASS Text clears its decorative frame: MissionTracker / Location
+PASS Text clears its decorative frame: MissionTracker / TrackedObjective
+PASS Text clears its decorative frame: MissionTracker / CurrentAction
+PASS Text clears its decorative frame: SquadMember_1 / Portrait
+PASS Text clears its decorative frame: SquadMember_1 / Name
+PASS Text clears its decorative frame: SquadMember_1 / Character
+PASS Text clears its decorative frame: SquadMember_1 / Status
+PASS Text clears its decorative frame: SquadMember_2 / Portrait
+PASS Text clears its decorative frame: SquadMember_2 / Name
+PASS Text clears its decorative frame: SquadMember_2 / Character
+PASS Text clears its decorative frame: SquadMember_2 / Status
+PASS Text clears its decorative frame: SquadMember_3 / Portrait
+PASS Text clears its decorative frame: SquadMember_3 / Name
+PASS Text clears its decorative frame: SquadMember_3 / Character
+PASS Text clears its decorative frame: SquadMember_3 / Status
+PASS Text clears its decorative frame: InfectionPanel / InfectionIcon
+PASS Infection icon clears its stage label
+PASS Text clears its decorative frame: FRAG / Count
+PASS Text clears its decorative frame: FRAG / Key
+PASS Hotbar shortcut has no panel: FRAG
+PASS Hotbar shortcut sits at the top right: FRAG
+PASS Text clears its decorative frame: FIRE / Count
+PASS Text clears its decorative frame: FIRE / Key
+PASS Hotbar shortcut has no panel: FIRE
+PASS Hotbar shortcut sits at the top right: FIRE
+PASS Text clears its decorative frame: MEDKIT / Count
+PASS Text clears its decorative frame: MEDKIT / Key
+PASS Hotbar shortcut has no panel: MEDKIT
+PASS Hotbar shortcut sits at the top right: MEDKIT
+PASS Text clears its decorative frame: ANTIDOTE / Count
+PASS Text clears its decorative frame: ANTIDOTE / Key
+PASS Hotbar shortcut has no panel: ANTIDOTE
+PASS Hotbar shortcut sits at the top right: ANTIDOTE
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Matrix includes populated subtitles
+PASS Inventory owns gameplay input
+PASS Text renders without truncation: Title / SQUAD INVENTORY
+PASS Quick text is at least 16px: Title
+PASS Text renders without truncation: Label / KEY ITEMS
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / FILES
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / MISSIONS
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / CLOSE [I / Escape]
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Name / ISOLATE PRODUCTION
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / AVAILABLE
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / BACKUP COLD STORE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / START GENERATOR
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / READ DELIVERY MANIFEST
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / TRACKING
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / VERIFY SHIPPING RELEASE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / AVAILABLE
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / SECURE T9-17 CASE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / OPEN SERVICE ROUTE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: DetailTitle / READ DELIVERY MANIFEST
+PASS Quick text is at least 16px: DetailTitle
+PASS Text renders without truncation: DetailStatus / TRACKING
+PASS Quick text is at least 16px: DetailStatus
+PASS Text renders without truncation: Body / Read the shipping manifest
+
+Select this objective to follow it on your HUD. Tracking is local; progress is shared by the squad.
+PASS Quick text is at least 16px: Body
+PASS Overlay subtitle strip clears inventory content
+PASS Closing inventory restores input and cursor
+PASS Reticle stays within 0.5px of viewport center
+PASS HUD groups remain separate: MissionTracker / SquadPanel
+PASS HUD groups remain separate: MissionTracker / HealthPanel
+PASS HUD groups remain separate: MissionTracker / InfectionPanel
+PASS HUD groups remain separate: MissionTracker / WeaponPanel
+PASS HUD groups remain separate: MissionTracker / SurvivalHotbar
+PASS HUD groups remain separate: MissionTracker / InteractionPrompt
+PASS HUD groups remain separate: MissionTracker / Interaction
+PASS HUD groups remain separate: MissionTracker / Feedback
+PASS HUD groups remain separate: MissionTracker / MandatorySubtitles
+PASS HUD groups remain separate: SquadPanel / HealthPanel
+PASS HUD groups remain separate: SquadPanel / InfectionPanel
+PASS HUD groups remain separate: SquadPanel / WeaponPanel
+PASS HUD groups remain separate: SquadPanel / SurvivalHotbar
+PASS HUD groups remain separate: SquadPanel / InteractionPrompt
+PASS HUD groups remain separate: SquadPanel / Interaction
+PASS HUD groups remain separate: SquadPanel / Feedback
+PASS HUD groups remain separate: SquadPanel / MandatorySubtitles
+PASS HUD groups remain separate: HealthPanel / InfectionPanel
+PASS HUD groups remain separate: HealthPanel / WeaponPanel
+PASS HUD groups remain separate: HealthPanel / SurvivalHotbar
+PASS HUD groups remain separate: HealthPanel / InteractionPrompt
+PASS HUD groups remain separate: HealthPanel / Interaction
+PASS HUD groups remain separate: HealthPanel / Feedback
+PASS HUD groups remain separate: HealthPanel / MandatorySubtitles
+PASS HUD groups remain separate: InfectionPanel / WeaponPanel
+PASS HUD groups remain separate: InfectionPanel / SurvivalHotbar
+PASS HUD groups remain separate: InfectionPanel / InteractionPrompt
+PASS HUD groups remain separate: InfectionPanel / Interaction
+PASS HUD groups remain separate: InfectionPanel / Feedback
+PASS HUD groups remain separate: InfectionPanel / MandatorySubtitles
+PASS HUD groups remain separate: WeaponPanel / SurvivalHotbar
+PASS HUD groups remain separate: WeaponPanel / InteractionPrompt
+PASS HUD groups remain separate: WeaponPanel / Interaction
+PASS HUD groups remain separate: WeaponPanel / Feedback
+PASS HUD groups remain separate: WeaponPanel / MandatorySubtitles
+PASS HUD groups remain separate: SurvivalHotbar / InteractionPrompt
+PASS HUD groups remain separate: SurvivalHotbar / Interaction
+PASS HUD groups remain separate: SurvivalHotbar / Feedback
+PASS HUD groups remain separate: SurvivalHotbar / MandatorySubtitles
+PASS HUD groups remain separate: InteractionPrompt / Interaction
+PASS HUD groups remain separate: InteractionPrompt / Feedback
+PASS HUD groups remain separate: InteractionPrompt / MandatorySubtitles
+PASS HUD groups remain separate: Interaction / Feedback
+PASS HUD groups remain separate: Interaction / MandatorySubtitles
+PASS HUD groups remain separate: Feedback / MandatorySubtitles
+PASS Text renders without truncation: PrimaryWeaponKeyText / 1
+PASS Quick text is at least 16px: PrimaryWeaponKeyText
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Character / SAGE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Name / VEGA
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Name / DOC
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / BRIMSTONE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: InfectionStageText / CRITICAL 80%
+PASS Quick text is at least 16px: InfectionStageText
+PASS Text renders without truncation: ReserveAmmoText / / 45
+PASS Quick text is at least 16px: ReserveAmmoText
+PASS Text renders without truncation: UnusedWeaponNameText / CLASSIC
+PASS Quick text is at least 16px: UnusedWeaponNameText
+PASS Text renders without truncation: InteractionPrompt / [5] SELF · ANTIDOTE
+PASS Quick text is at least 16px: InteractionPrompt
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Portrait / G
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Character / GEKKO
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Key / 4
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: CurrentAmmoText / 15
+PASS Quick text is at least 16px: CurrentAmmoText
+PASS Text renders without truncation: WeaponNameText / WARDEN
+PASS Quick text is at least 16px: WeaponNameText
+PASS Text renders without truncation: Key / G
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: Key / 5
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: HealthText / 35<size=65%> / 100</size>
+PASS Quick text is at least 16px: HealthText
+PASS Text renders without truncation: Name / MASON
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 3
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Count / 0
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Status / INFECTED · 80%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: SlotKey / 2
+PASS Quick text is at least 16px: SlotKey
+PASS Text renders without truncation: Portrait / B
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Portrait / S
+PASS Quick text is at least 16px: Portrait
+PASS Legacy text has enough height: TrackedObjective
+PASS Quick legacy text is at least 16px: TrackedObjective
+PASS Legacy text has enough height: MandatorySubtitles
+PASS Quick legacy text is at least 16px: MandatorySubtitles
+PASS Legacy text has enough height: Distance
+PASS Quick legacy text is at least 16px: Distance
+PASS Legacy text has enough height: Feedback
+PASS Quick legacy text is at least 16px: Feedback
+PASS Legacy text has enough height: Location
+PASS Quick legacy text is at least 16px: Location
+PASS Legacy text has enough height: CurrentAction
+PASS Quick legacy text is at least 16px: CurrentAction
+PASS Text clears its decorative frame: HealthPanel / HealthText
+PASS Text clears its decorative frame: InfectionPanel / InfectionStageText
+PASS Text clears its decorative frame: WeaponPanel / PrimaryWeaponKeyText
+PASS Text clears its decorative frame: WeaponPanel / WeaponNameText
+PASS Text clears its decorative frame: WeaponPanel / CurrentAmmoText
+PASS Text clears its decorative frame: WeaponPanel / ReserveAmmoText
+PASS Text clears its decorative frame: WeaponPanel / SlotKey
+PASS Text clears its decorative frame: WeaponPanel / UnusedWeaponNameText
+PASS Text clears its decorative frame: MissionTracker / Location
+PASS Text clears its decorative frame: MissionTracker / TrackedObjective
+PASS Text clears its decorative frame: MissionTracker / CurrentAction
+PASS Text clears its decorative frame: SquadMember_1 / Portrait
+PASS Text clears its decorative frame: SquadMember_1 / Name
+PASS Text clears its decorative frame: SquadMember_1 / Character
+PASS Text clears its decorative frame: SquadMember_1 / Status
+PASS Text clears its decorative frame: SquadMember_2 / Portrait
+PASS Text clears its decorative frame: SquadMember_2 / Name
+PASS Text clears its decorative frame: SquadMember_2 / Character
+PASS Text clears its decorative frame: SquadMember_2 / Status
+PASS Text clears its decorative frame: SquadMember_3 / Portrait
+PASS Text clears its decorative frame: SquadMember_3 / Name
+PASS Text clears its decorative frame: SquadMember_3 / Character
+PASS Text clears its decorative frame: SquadMember_3 / Status
+PASS Text clears its decorative frame: InfectionPanel / InfectionIcon
+PASS Infection icon clears its stage label
+PASS Text clears its decorative frame: FRAG / Count
+PASS Text clears its decorative frame: FRAG / Key
+PASS Hotbar shortcut has no panel: FRAG
+PASS Hotbar shortcut sits at the top right: FRAG
+PASS Text clears its decorative frame: FIRE / Count
+PASS Text clears its decorative frame: FIRE / Key
+PASS Hotbar shortcut has no panel: FIRE
+PASS Hotbar shortcut sits at the top right: FIRE
+PASS Text clears its decorative frame: MEDKIT / Count
+PASS Text clears its decorative frame: MEDKIT / Key
+PASS Hotbar shortcut has no panel: MEDKIT
+PASS Hotbar shortcut sits at the top right: MEDKIT
+PASS Text clears its decorative frame: ANTIDOTE / Count
+PASS Text clears its decorative frame: ANTIDOTE / Key
+PASS Hotbar shortcut has no panel: ANTIDOTE
+PASS Hotbar shortcut sits at the top right: ANTIDOTE
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Matrix includes populated subtitles
+PASS Inventory owns gameplay input
+PASS Text renders without truncation: Title / SQUAD INVENTORY
+PASS Quick text is at least 16px: Title
+PASS Text renders without truncation: Label / KEY ITEMS
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / FILES
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / MISSIONS
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / CLOSE [I / Escape]
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Name / ISOLATE PRODUCTION
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / AVAILABLE
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / BACKUP COLD STORE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / START GENERATOR
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / READ DELIVERY MANIFEST
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / TRACKING
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / VERIFY SHIPPING RELEASE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / AVAILABLE
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / SECURE T9-17 CASE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / OPEN SERVICE ROUTE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: DetailTitle / READ DELIVERY MANIFEST
+PASS Quick text is at least 16px: DetailTitle
+PASS Text renders without truncation: DetailStatus / TRACKING
+PASS Quick text is at least 16px: DetailStatus
+PASS Text renders without truncation: Body / Read the shipping manifest
+
+Select this objective to follow it on your HUD. Tracking is local; progress is shared by the squad.
+PASS Quick text is at least 16px: Body
+PASS Overlay subtitle strip clears inventory content
+PASS Closing inventory restores input and cursor
+PASS Reticle stays within 0.5px of viewport center
+PASS HUD groups remain separate: MissionTracker / SquadPanel
+PASS HUD groups remain separate: MissionTracker / HealthPanel
+PASS HUD groups remain separate: MissionTracker / InfectionPanel
+PASS HUD groups remain separate: MissionTracker / WeaponPanel
+PASS HUD groups remain separate: MissionTracker / SurvivalHotbar
+PASS HUD groups remain separate: MissionTracker / InteractionPrompt
+PASS HUD groups remain separate: MissionTracker / Interaction
+PASS HUD groups remain separate: MissionTracker / Feedback
+PASS HUD groups remain separate: MissionTracker / MandatorySubtitles
+PASS HUD groups remain separate: SquadPanel / HealthPanel
+PASS HUD groups remain separate: SquadPanel / InfectionPanel
+PASS HUD groups remain separate: SquadPanel / WeaponPanel
+PASS HUD groups remain separate: SquadPanel / SurvivalHotbar
+PASS HUD groups remain separate: SquadPanel / InteractionPrompt
+PASS HUD groups remain separate: SquadPanel / Interaction
+PASS HUD groups remain separate: SquadPanel / Feedback
+PASS HUD groups remain separate: SquadPanel / MandatorySubtitles
+PASS HUD groups remain separate: HealthPanel / InfectionPanel
+PASS HUD groups remain separate: HealthPanel / WeaponPanel
+PASS HUD groups remain separate: HealthPanel / SurvivalHotbar
+PASS HUD groups remain separate: HealthPanel / InteractionPrompt
+PASS HUD groups remain separate: HealthPanel / Interaction
+PASS HUD groups remain separate: HealthPanel / Feedback
+PASS HUD groups remain separate: HealthPanel / MandatorySubtitles
+PASS HUD groups remain separate: InfectionPanel / WeaponPanel
+PASS HUD groups remain separate: InfectionPanel / SurvivalHotbar
+PASS HUD groups remain separate: InfectionPanel / InteractionPrompt
+PASS HUD groups remain separate: InfectionPanel / Interaction
+PASS HUD groups remain separate: InfectionPanel / Feedback
+PASS HUD groups remain separate: InfectionPanel / MandatorySubtitles
+PASS HUD groups remain separate: WeaponPanel / SurvivalHotbar
+PASS HUD groups remain separate: WeaponPanel / InteractionPrompt
+PASS HUD groups remain separate: WeaponPanel / Interaction
+PASS HUD groups remain separate: WeaponPanel / Feedback
+PASS HUD groups remain separate: WeaponPanel / MandatorySubtitles
+PASS HUD groups remain separate: SurvivalHotbar / InteractionPrompt
+PASS HUD groups remain separate: SurvivalHotbar / Interaction
+PASS HUD groups remain separate: SurvivalHotbar / Feedback
+PASS HUD groups remain separate: SurvivalHotbar / MandatorySubtitles
+PASS HUD groups remain separate: InteractionPrompt / Interaction
+PASS HUD groups remain separate: InteractionPrompt / Feedback
+PASS HUD groups remain separate: InteractionPrompt / MandatorySubtitles
+PASS HUD groups remain separate: Interaction / Feedback
+PASS HUD groups remain separate: Interaction / MandatorySubtitles
+PASS HUD groups remain separate: Feedback / MandatorySubtitles
+PASS Text renders without truncation: PrimaryWeaponKeyText / 1
+PASS Quick text is at least 16px: PrimaryWeaponKeyText
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Character / SAGE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Name / VEGA
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Name / DOC
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / BRIMSTONE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: InfectionStageText / CRITICAL 80%
+PASS Quick text is at least 16px: InfectionStageText
+PASS Text renders without truncation: ReserveAmmoText / / 45
+PASS Quick text is at least 16px: ReserveAmmoText
+PASS Text renders without truncation: UnusedWeaponNameText / CLASSIC
+PASS Quick text is at least 16px: UnusedWeaponNameText
+PASS Text renders without truncation: InteractionPrompt / [5] SELF · ANTIDOTE
+PASS Quick text is at least 16px: InteractionPrompt
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Portrait / G
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Character / GEKKO
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Key / 4
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: CurrentAmmoText / 15
+PASS Quick text is at least 16px: CurrentAmmoText
+PASS Text renders without truncation: WeaponNameText / WARDEN
+PASS Quick text is at least 16px: WeaponNameText
+PASS Text renders without truncation: Key / G
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: Key / 5
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: HealthText / 35<size=65%> / 100</size>
+PASS Quick text is at least 16px: HealthText
+PASS Text renders without truncation: Name / MASON
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 3
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Count / 0
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Status / INFECTED · 80%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: SlotKey / 2
+PASS Quick text is at least 16px: SlotKey
+PASS Text renders without truncation: Portrait / B
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Portrait / S
+PASS Quick text is at least 16px: Portrait
+PASS Legacy text has enough height: TrackedObjective
+PASS Quick legacy text is at least 16px: TrackedObjective
+PASS Legacy text has enough height: MandatorySubtitles
+PASS Quick legacy text is at least 16px: MandatorySubtitles
+PASS Legacy text has enough height: Distance
+PASS Quick legacy text is at least 16px: Distance
+PASS Legacy text has enough height: Feedback
+PASS Quick legacy text is at least 16px: Feedback
+PASS Legacy text has enough height: Location
+PASS Quick legacy text is at least 16px: Location
+PASS Legacy text has enough height: CurrentAction
+PASS Quick legacy text is at least 16px: CurrentAction
+PASS Text clears its decorative frame: HealthPanel / HealthText
+PASS Text clears its decorative frame: InfectionPanel / InfectionStageText
+PASS Text clears its decorative frame: WeaponPanel / PrimaryWeaponKeyText
+PASS Text clears its decorative frame: WeaponPanel / WeaponNameText
+PASS Text clears its decorative frame: WeaponPanel / CurrentAmmoText
+PASS Text clears its decorative frame: WeaponPanel / ReserveAmmoText
+PASS Text clears its decorative frame: WeaponPanel / SlotKey
+PASS Text clears its decorative frame: WeaponPanel / UnusedWeaponNameText
+PASS Text clears its decorative frame: MissionTracker / Location
+PASS Text clears its decorative frame: MissionTracker / TrackedObjective
+PASS Text clears its decorative frame: MissionTracker / CurrentAction
+PASS Text clears its decorative frame: SquadMember_1 / Portrait
+PASS Text clears its decorative frame: SquadMember_1 / Name
+PASS Text clears its decorative frame: SquadMember_1 / Character
+PASS Text clears its decorative frame: SquadMember_1 / Status
+PASS Text clears its decorative frame: SquadMember_2 / Portrait
+PASS Text clears its decorative frame: SquadMember_2 / Name
+PASS Text clears its decorative frame: SquadMember_2 / Character
+PASS Text clears its decorative frame: SquadMember_2 / Status
+PASS Text clears its decorative frame: SquadMember_3 / Portrait
+PASS Text clears its decorative frame: SquadMember_3 / Name
+PASS Text clears its decorative frame: SquadMember_3 / Character
+PASS Text clears its decorative frame: SquadMember_3 / Status
+PASS Text clears its decorative frame: InfectionPanel / InfectionIcon
+PASS Infection icon clears its stage label
+PASS Text clears its decorative frame: FRAG / Count
+PASS Text clears its decorative frame: FRAG / Key
+PASS Hotbar shortcut has no panel: FRAG
+PASS Hotbar shortcut sits at the top right: FRAG
+PASS Text clears its decorative frame: FIRE / Count
+PASS Text clears its decorative frame: FIRE / Key
+PASS Hotbar shortcut has no panel: FIRE
+PASS Hotbar shortcut sits at the top right: FIRE
+PASS Text clears its decorative frame: MEDKIT / Count
+PASS Text clears its decorative frame: MEDKIT / Key
+PASS Hotbar shortcut has no panel: MEDKIT
+PASS Hotbar shortcut sits at the top right: MEDKIT
+PASS Text clears its decorative frame: ANTIDOTE / Count
+PASS Text clears its decorative frame: ANTIDOTE / Key
+PASS Hotbar shortcut has no panel: ANTIDOTE
+PASS Hotbar shortcut sits at the top right: ANTIDOTE
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Matrix includes populated subtitles
+PASS Inventory owns gameplay input
+PASS Text renders without truncation: Title / SQUAD INVENTORY
+PASS Quick text is at least 16px: Title
+PASS Text renders without truncation: Label / KEY ITEMS
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / FILES
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / MISSIONS
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / CLOSE [I / Escape]
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Name / ISOLATE PRODUCTION
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / AVAILABLE
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / BACKUP COLD STORE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / START GENERATOR
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / READ DELIVERY MANIFEST
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / TRACKING
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / VERIFY SHIPPING RELEASE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / AVAILABLE
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / SECURE T9-17 CASE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / OPEN SERVICE ROUTE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: DetailTitle / READ DELIVERY MANIFEST
+PASS Quick text is at least 16px: DetailTitle
+PASS Text renders without truncation: DetailStatus / TRACKING
+PASS Quick text is at least 16px: DetailStatus
+PASS Text renders without truncation: Body / Read the shipping manifest
+
+Select this objective to follow it on your HUD. Tracking is local; progress is shared by the squad.
+PASS Quick text is at least 16px: Body
+PASS Overlay subtitle strip clears inventory content
+PASS Closing inventory restores input and cursor
+PASS Reticle stays within 0.5px of viewport center
+PASS HUD groups remain separate: MissionTracker / SquadPanel
+PASS HUD groups remain separate: MissionTracker / HealthPanel
+PASS HUD groups remain separate: MissionTracker / InfectionPanel
+PASS HUD groups remain separate: MissionTracker / WeaponPanel
+PASS HUD groups remain separate: MissionTracker / SurvivalHotbar
+PASS HUD groups remain separate: MissionTracker / InteractionPrompt
+PASS HUD groups remain separate: MissionTracker / Interaction
+PASS HUD groups remain separate: MissionTracker / Feedback
+PASS HUD groups remain separate: MissionTracker / MandatorySubtitles
+PASS HUD groups remain separate: SquadPanel / HealthPanel
+PASS HUD groups remain separate: SquadPanel / InfectionPanel
+PASS HUD groups remain separate: SquadPanel / WeaponPanel
+PASS HUD groups remain separate: SquadPanel / SurvivalHotbar
+PASS HUD groups remain separate: SquadPanel / InteractionPrompt
+PASS HUD groups remain separate: SquadPanel / Interaction
+PASS HUD groups remain separate: SquadPanel / Feedback
+PASS HUD groups remain separate: SquadPanel / MandatorySubtitles
+PASS HUD groups remain separate: HealthPanel / InfectionPanel
+PASS HUD groups remain separate: HealthPanel / WeaponPanel
+PASS HUD groups remain separate: HealthPanel / SurvivalHotbar
+PASS HUD groups remain separate: HealthPanel / InteractionPrompt
+PASS HUD groups remain separate: HealthPanel / Interaction
+PASS HUD groups remain separate: HealthPanel / Feedback
+PASS HUD groups remain separate: HealthPanel / MandatorySubtitles
+PASS HUD groups remain separate: InfectionPanel / WeaponPanel
+PASS HUD groups remain separate: InfectionPanel / SurvivalHotbar
+PASS HUD groups remain separate: InfectionPanel / InteractionPrompt
+PASS HUD groups remain separate: InfectionPanel / Interaction
+PASS HUD groups remain separate: InfectionPanel / Feedback
+PASS HUD groups remain separate: InfectionPanel / MandatorySubtitles
+PASS HUD groups remain separate: WeaponPanel / SurvivalHotbar
+PASS HUD groups remain separate: WeaponPanel / InteractionPrompt
+PASS HUD groups remain separate: WeaponPanel / Interaction
+PASS HUD groups remain separate: WeaponPanel / Feedback
+PASS HUD groups remain separate: WeaponPanel / MandatorySubtitles
+PASS HUD groups remain separate: SurvivalHotbar / InteractionPrompt
+PASS HUD groups remain separate: SurvivalHotbar / Interaction
+PASS HUD groups remain separate: SurvivalHotbar / Feedback
+PASS HUD groups remain separate: SurvivalHotbar / MandatorySubtitles
+PASS HUD groups remain separate: InteractionPrompt / Interaction
+PASS HUD groups remain separate: InteractionPrompt / Feedback
+PASS HUD groups remain separate: InteractionPrompt / MandatorySubtitles
+PASS HUD groups remain separate: Interaction / Feedback
+PASS HUD groups remain separate: Interaction / MandatorySubtitles
+PASS HUD groups remain separate: Feedback / MandatorySubtitles
+PASS Text renders without truncation: PrimaryWeaponKeyText / 1
+PASS Quick text is at least 16px: PrimaryWeaponKeyText
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Character / SAGE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Name / VEGA
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 2
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Name / DOC
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Character / BRIMSTONE
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: InfectionStageText / CRITICAL 80%
+PASS Quick text is at least 16px: InfectionStageText
+PASS Text renders without truncation: ReserveAmmoText / / 45
+PASS Quick text is at least 16px: ReserveAmmoText
+PASS Text renders without truncation: UnusedWeaponNameText / CLASSIC
+PASS Quick text is at least 16px: UnusedWeaponNameText
+PASS Text renders without truncation: InteractionPrompt / [5] SELF · ANTIDOTE
+PASS Quick text is at least 16px: InteractionPrompt
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Status / INFECTED · 20%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Portrait / G
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Character / GEKKO
+PASS Quick text is at least 16px: Character
+PASS Text renders without truncation: Key / 4
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: CurrentAmmoText / 15
+PASS Quick text is at least 16px: CurrentAmmoText
+PASS Text renders without truncation: WeaponNameText / WARDEN
+PASS Quick text is at least 16px: WeaponNameText
+PASS Text renders without truncation: Key / G
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: Key / 5
+PASS Quick text is at least 16px: Key
+PASS Text renders without truncation: HealthText / 35<size=65%> / 100</size>
+PASS Quick text is at least 16px: HealthText
+PASS Text renders without truncation: Name / MASON
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Count / 3
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Count / 0
+PASS Quick text is at least 16px: Count
+PASS Text renders without truncation: Status / INFECTED · 80%
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: SlotKey / 2
+PASS Quick text is at least 16px: SlotKey
+PASS Text renders without truncation: Portrait / B
+PASS Quick text is at least 16px: Portrait
+PASS Text renders without truncation: Portrait / S
+PASS Quick text is at least 16px: Portrait
+PASS Legacy text has enough height: TrackedObjective
+PASS Quick legacy text is at least 16px: TrackedObjective
+PASS Legacy text has enough height: MandatorySubtitles
+PASS Quick legacy text is at least 16px: MandatorySubtitles
+PASS Legacy text has enough height: Distance
+PASS Quick legacy text is at least 16px: Distance
+PASS Legacy text has enough height: Feedback
+PASS Quick legacy text is at least 16px: Feedback
+PASS Legacy text has enough height: Location
+PASS Quick legacy text is at least 16px: Location
+PASS Legacy text has enough height: CurrentAction
+PASS Quick legacy text is at least 16px: CurrentAction
+PASS Text clears its decorative frame: HealthPanel / HealthText
+PASS Text clears its decorative frame: InfectionPanel / InfectionStageText
+PASS Text clears its decorative frame: WeaponPanel / PrimaryWeaponKeyText
+PASS Text clears its decorative frame: WeaponPanel / WeaponNameText
+PASS Text clears its decorative frame: WeaponPanel / CurrentAmmoText
+PASS Text clears its decorative frame: WeaponPanel / ReserveAmmoText
+PASS Text clears its decorative frame: WeaponPanel / SlotKey
+PASS Text clears its decorative frame: WeaponPanel / UnusedWeaponNameText
+PASS Text clears its decorative frame: MissionTracker / Location
+PASS Text clears its decorative frame: MissionTracker / TrackedObjective
+PASS Text clears its decorative frame: MissionTracker / CurrentAction
+PASS Text clears its decorative frame: SquadMember_1 / Portrait
+PASS Text clears its decorative frame: SquadMember_1 / Name
+PASS Text clears its decorative frame: SquadMember_1 / Character
+PASS Text clears its decorative frame: SquadMember_1 / Status
+PASS Text clears its decorative frame: SquadMember_2 / Portrait
+PASS Text clears its decorative frame: SquadMember_2 / Name
+PASS Text clears its decorative frame: SquadMember_2 / Character
+PASS Text clears its decorative frame: SquadMember_2 / Status
+PASS Text clears its decorative frame: SquadMember_3 / Portrait
+PASS Text clears its decorative frame: SquadMember_3 / Name
+PASS Text clears its decorative frame: SquadMember_3 / Character
+PASS Text clears its decorative frame: SquadMember_3 / Status
+PASS Text clears its decorative frame: InfectionPanel / InfectionIcon
+PASS Infection icon clears its stage label
+PASS Text clears its decorative frame: FRAG / Count
+PASS Text clears its decorative frame: FRAG / Key
+PASS Hotbar shortcut has no panel: FRAG
+PASS Hotbar shortcut sits at the top right: FRAG
+PASS Text clears its decorative frame: FIRE / Count
+PASS Text clears its decorative frame: FIRE / Key
+PASS Hotbar shortcut has no panel: FIRE
+PASS Hotbar shortcut sits at the top right: FIRE
+PASS Text clears its decorative frame: MEDKIT / Count
+PASS Text clears its decorative frame: MEDKIT / Key
+PASS Hotbar shortcut has no panel: MEDKIT
+PASS Hotbar shortcut sits at the top right: MEDKIT
+PASS Text clears its decorative frame: ANTIDOTE / Count
+PASS Text clears its decorative frame: ANTIDOTE / Key
+PASS Hotbar shortcut has no panel: ANTIDOTE
+PASS Hotbar shortcut sits at the top right: ANTIDOTE
+PASS Navigation distance has no panel
+PASS Distance text sits directly under the navigation marker
+PASS Navigation text keeps its full rectangle away from screen edges
+PASS Matrix includes populated subtitles
+PASS Inventory owns gameplay input
+PASS Text renders without truncation: Title / SQUAD INVENTORY
+PASS Quick text is at least 16px: Title
+PASS Text renders without truncation: Label / KEY ITEMS
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / FILES
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / MISSIONS
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Label / CLOSE [I / Escape]
+PASS Quick text is at least 16px: Label
+PASS Text renders without truncation: Name / ISOLATE PRODUCTION
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / AVAILABLE
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / BACKUP COLD STORE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / START GENERATOR
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / READ DELIVERY MANIFEST
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / TRACKING
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / VERIFY SHIPPING RELEASE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / AVAILABLE
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / SECURE T9-17 CASE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: Name / OPEN SERVICE ROUTE
+PASS Quick text is at least 16px: Name
+PASS Text renders without truncation: Status / LOCKED
+PASS Quick text is at least 16px: Status
+PASS Text renders without truncation: DetailTitle / READ DELIVERY MANIFEST
+PASS Quick text is at least 16px: DetailTitle
+PASS Text renders without truncation: DetailStatus / TRACKING
+PASS Quick text is at least 16px: DetailStatus
+PASS Text renders without truncation: Body / Read the shipping manifest
+
+Select this objective to follow it on your HUD. Tracking is local; progress is shared by the squad.
+PASS Quick text is at least 16px: Body
+PASS Overlay subtitle strip clears inventory content
+PASS Closing inventory restores input and cursor
+FAIL Review mouse reaches the Aim action

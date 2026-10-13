@@ -66,7 +66,15 @@ namespace FPS
             if (settingsPanel != null && settingsPanel.activeSelf && settingsPanel.TryGetComponent<SettingsUI>(out var settings) && settings.BlocksBack) return;
             if (InputManager.Instance != null && InputManager.Instance.GetPauseInputDown())
             {
-                if (settingsPanel != null && settingsPanel.activeSelf)
+                if (TeamInventoryUI.IsOpen)
+                {
+                    TeamInventoryUI.Instance.Close();
+                }
+                else if (CampaignHUD.IsDocumentOpen)
+                {
+                    CampaignHUD.Instance.CloseDocument();
+                }
+                else if (settingsPanel != null && settingsPanel.activeSelf)
                 {
                     CloseSettings();
                 }

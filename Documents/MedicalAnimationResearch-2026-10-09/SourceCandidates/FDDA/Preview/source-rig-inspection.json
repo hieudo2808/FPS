@@ -1,0 +1,272 @@
+{
+  "scenes": [
+    "Scene"
+  ],
+  "armatures": [
+    {
+      "name": "hand_armature",
+      "bones": 132,
+      "bone_names": [
+        "bip01",
+        "l_clavicle",
+        "l_upperarm",
+        "l_forearm",
+        "l_forearm_twist",
+        "l_hand",
+        "bip01_l_finger1",
+        "bip01_l_finger11",
+        "bip01_l_finger12",
+        "bip01_l_finger2",
+        "bip01_l_finger21",
+        "bip01_l_finger22",
+        "bip01_l_finger3",
+        "bip01_l_finger31",
+        "bip01_l_finger32",
+        "bip01_l_finger4",
+        "bip01_l_finger41",
+        "bip01_l_finger42",
+        "l_finger0",
+        "l_finger01",
+        "l_finger02",
+        "finger_11_l",
+        "finger_12_l",
+        "finger_13_l",
+        "finger_21_l",
+        "finger_22_l",
+        "finger_23_l",
+        "finger_31_l",
+        "finger_32_l",
+        "finger_33_l",
+        "finger_41_l",
+        "finger_42_l",
+        "finger_43_l",
+        "finger_51_l",
+        "finger_52_l",
+        "finger_53_l",
+        "upperarm_rig_l",
+        "l_upperarm_rig",
+        "l_forearm_twist_rig",
+        "l_hand_rig_location",
+        "lead_gun",
+        "r_clavicle",
+        "r_upperarm",
+        "r_forearm",
+        "r_forearm_twist",
+        "r_hand",
+        "bip01_r_finger1",
+        "bip01_r_finger11",
+        "bip01_r_finger12",
+        "bip01_r_finger2",
+        "bip01_r_finger21",
+        "bip01_r_finger22",
+        "bip01_r_finger3",
+        "bip01_r_finger31",
+        "bip01_r_finger32",
+        "bip01_r_finger4",
+        "bip01_r_finger41",
+        "bip01_r_finger42",
+        "r_finger0",
+        "r_finger01",
+        "r_finger02",
+        "finger_11_r",
+        "finger_12_r",
+        "finger_13_r",
+        "finger_21_r",
+        "finger_22_r",
+        "finger_23_r",
+        "finger_31_r",
+        "finger_32_r",
+        "finger_33_r",
+        "finger_41_r",
+        "finger_42_r",
+        "finger_43_r",
+        "finger_51_r",
+        "finger_52_r",
+        "finger_53_r",
+        "upperarm_rig_r",
+        "forearm_rig_r",
+        "r_forearm_twist_rig",
+        "r_hand_rig_location",
+        "hand_ik_r",
+        "r_hand_rotate",
+        "hand_pole_rig_r",
+        "hand_ik_l",
+        "l_hand_rotate",
+        "hand_pole_rig_l",
+        "l_clavicle_rig",
+        "r_clavicle_rig",
+        "wpn_scope_rig",
+        "wpn_silencer_rig",
+        "r_forearm_twist_rig_rotate",
+        "l_clavicle_child_rig",
+        "r_clavicle_child_rig",
+        "l_forearm_twist_rig_rotate",
+        "r_upperarm_rig",
+        "r_forearm_rig",
+        "r_forearm_twist_rig_0",
+        "r_hand_rig",
+        "bip01_r_finger1_rig",
+        "bip01_r_finger11_rig",
+        "bip01_r_finger12_rig",
+        "bip01_r_finger2_rig",
+        "bip01_r_finger22_rig",
+        "bip01_r_finger3_rig",
+        "bip01_r_finger31_rig",
+        "bip01_r_finger32_rig",
+        "bip01_r_finger4_rig",
+        "bip01_r_finger41_rig",
+        "bip01_r_finger42_rig",
+        "r_finger0_rig",
+        "r_finger01_rig",
+        "r_finger02_rig",
+        "l_upperarm_rig_0",
+        "l_forearm_rig",
+        "l_forearm_twist_rig_0",
+        "l_hand_rig",
+        "bip01_l_finger1_rig",
+        "bip01_l_finger11_rig",
+        "bip01_l_finger12_rig",
+        "bip01_l_finger2_rig",
+        "bip01_l_finger21_rig",
+        "bip01_l_finger22_rig",
+        "bip01_l_finger3_rig",
+        "bip01_l_finger31_rig",
+        "bip01_l_finger32_rig",
+        "bip01_l_finger4_rig",
+        "bip01_l_finger41_rig",
+        "bip01_l_finger42_rig",
+        "l_finger0_rig",
+        "l_finger01_rig",
+        "l_finger02_rig",
+        "bip01_r_finger21_rig"
+      ],
+      "constraints": 103,
+      "matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "cameras": [
+    {
+      "name": "ace31_cw_draw.anm.camera",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        1.5707963705062866,
+        0.0,
+        0.0
+      ],
+      "lens": 50.0
+    },
+    {
+      "name": "Camera",
+      "location": [
+        -8.95837397488317e-16,
+        3.6368321819791466e-14,
+        2.288034778578674e-16
+      ],
+      "rotation": [
+        1.5720908641815186,
+        -0.0,
+        0.0
+      ],
+      "lens": 16.568485260009766
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Anomaly Vanilla hands (ACCURATE)",
+      "verts": 3666,
+      "visible": true,
+      "armatures": [
+        "hand_armature"
+      ]
+    },
+    {
+      "name": "Crosshair",
+      "verts": 8,
+      "visible": true,
+      "armatures": []
+    },
+    {
+      "name": "Ground Plane",
+      "verts": 4,
+      "visible": false,
+      "armatures": []
+    },
+    {
+      "name": "Gunslinger Monolith HANDS (NOT ACCURATE)",
+      "verts": 12644,
+      "visible": false,
+      "armatures": [
+        "hand_armature"
+      ]
+    },
+    {
+      "name": "ICHICROW - THAP Bandit Trenchcoat (NOT ACCURATE)",
+      "verts": 6296,
+      "visible": false,
+      "armatures": [
+        "hand_armature"
+      ]
+    },
+    {
+      "name": "Isthar - Old Dog No Outfithands (VERY ACCURATE)",
+      "verts": 5370,
+      "visible": true,
+      "armatures": [
+        "hand_armature"
+      ]
+    },
+    {
+      "name": "Loner Sunrise Vanilla (NOT RECCOMENDED)",
+      "verts": 7187,
+      "visible": false,
+      "armatures": [
+        "hand_armature"
+      ]
+    },
+    {
+      "name": "Plain Cubes",
+      "verts": 8,
+      "visible": false,
+      "armatures": []
+    },
+    {
+      "name": "Wireframe Squares",
+      "verts": 100,
+      "visible": true,
+      "armatures": []
+    }
+  ],
+  "actions": [
+    "hand_armatureAction",
+    "wpn_hand_no_outfit.ogf 03.007Action"
+  ]
+}

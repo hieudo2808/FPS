@@ -1,0 +1,68 @@
+{
+  "trace": "controlled-20261013-073036-731-a89c0ef0.jsonl",
+  "label": "controlled runtime verification; inputs/configuration may be injected; see report for each intervention",
+  "sampleCount": 977,
+  "phasesObserved": [
+    "BuildUp",
+    "Calm",
+    "Combat",
+    "Peak",
+    "Relax"
+  ],
+  "playerHpObserved": [
+    100.0
+  ],
+  "spawnGroups": [
+    {
+      "multiplier": 0.9,
+      "count": 5,
+      "hp": [
+        90.0
+      ],
+      "damage": [
+        9.0
+      ],
+      "speed": [
+        5.0
+      ],
+      "intervalPairs": 4,
+      "medianConsecutiveCombatIntervalSeconds": 2.22775595238096,
+      "nearestPlayerDistanceMin": 60.62633514404297,
+      "nearestPlayerDistanceMax": 98.47932434082031
+    },
+    {
+      "multiplier": 1.0,
+      "count": 4,
+      "hp": [
+        100.0
+      ],
+      "damage": [
+        10.0
+      ],
+      "speed": [
+        5.0
+      ],
+      "intervalPairs": 3,
+      "medianConsecutiveCombatIntervalSeconds": 2.0163624007936463,
+      "nearestPlayerDistanceMin": 66.85993957519531,
+      "nearestPlayerDistanceMax": 98.82474517822266
+    },
+    {
+      "multiplier": 1.1,
+      "count": 18,
+      "hp": [
+        110.0
+      ],
+      "damage": [
+        11.0
+      ],
+      "speed": [
+        5.0
+      ],
+      "intervalPairs": 17,
+      "medianConsecutiveCombatIntervalSeconds": 1.8262941043083742,
+      "nearestPlayerDistanceMin": 47.01595687866211,
+      "nearestPlayerDistanceMax": 89.52234649658203
+    }
+  ]
+}

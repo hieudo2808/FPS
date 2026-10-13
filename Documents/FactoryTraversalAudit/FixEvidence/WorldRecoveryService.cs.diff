@@ -1,0 +1,31 @@
+--- baseline/WorldRecoveryService.cs
++++ Assets/FPS/Features/World/Runtime/WorldRecoveryService.cs
+@@ -32,8 +32,7 @@
+             foreach (var player in campaign.Players)
+             {
+                 if (!player.CanUseCombat || player.CampaignTransferPending) continue;
+-                if (CampaignPlacement.TryFloor(campaign.Current, player.transform.position, out var floor)
+-                    && CampaignPlacement.Clear(floor, player.StablePlayerId.Value))
++                if (CampaignPlacement.TrySafeFloor(campaign.Current, player.transform.position, player.StablePlayerId.Value, out var floor))
+                     campaignSafePoses[player.NetworkObjectId] = new Pose(floor + Vector3.up * .12f, player.transform.rotation);
+             }
+         }
+@@ -98,7 +97,7 @@
+             pose = default;
+             if (chapter == null || recoveryPoints == null || chapter.arrivals == null) return false;
+             if (campaignSafePoses.TryGetValue(player.NetworkObjectId, out var last)
+-                && CampaignPlacement.TryFloor(chapter, last.position, out var source))
++                && CampaignPlacement.TrySafeFloor(chapter, last.position, player.StablePlayerId.Value, out var source))
+             {
+                 MapRecoveryPoint best = null;
+                 Vector3 destination = default;
+@@ -117,8 +116,7 @@
+             // No tracked floor yet (for example immediately after reconnect). Use only a
+             // validated arrival in this chapter, never nearest geometry in another stacked map.
+             foreach (var arrival in chapter.arrivals)
+-                if (arrival != null && CampaignPlacement.TryFloor(chapter, arrival.position, out var at)
+-                    && CampaignPlacement.Clear(at, player.StablePlayerId.Value))
++                if (arrival != null && CampaignPlacement.TrySafeFloor(chapter, arrival.position, player.StablePlayerId.Value, out var at))
+                 { pose = new Pose(at + Vector3.up * .12f, arrival.rotation); return true; }
+             return false;
+         }

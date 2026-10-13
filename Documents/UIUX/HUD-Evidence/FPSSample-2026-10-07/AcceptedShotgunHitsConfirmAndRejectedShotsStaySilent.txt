@@ -1,0 +1,20 @@
+FIXTURE original Aim binding: Right Button
+PASS Native shotgun candidate equips
+PASS Shotgun fire is accepted by server
+SHOTGUN immediate: HP=9992/10000; enabled=True; active=True; color=RGBA(0.922, 0.910, 0.855, 1.000); expected=RGBA(0.922, 0.910, 0.855, 1.000); until=94.6983; now=94.5183; duration=0.18; delta=0.04790831; visible=True; owner=True/0; shooterOwner=True/0; boundOwner=True; life=Alive
+PASS Accepted shotgun pellets reduce target HP
+PASS Accepted shotgun confirmation is visible on the shooter HUD
+PASS Shotgun body confirmation uses HUD text color
+SHOTGUN next frame: HP=9992/10000; enabled=False; active=True; color=RGBA(0.922, 0.910, 0.855, 1.000); expected=RGBA(0.922, 0.910, 0.855, 1.000); until=94.6983; now=94.76614; duration=0.18; delta=0.2478432; visible=True; owner=True/0; shooterOwner=True/0; boundOwner=True; life=Alive
+PASS Shotgun marker follows its unscaled expiry even when an Editor frame exceeds 0.18 seconds
+PASS Fixture uses the native shotgun pellet count
+PASS Scoped headshot request is accepted
+PASS Headshot shotgun confirmation stays visible in scope
+PASS Real scope artwork is visible during confirmation
+PASS Miss still consumes an accepted shot
+PASS Miss has no hit marker
+PASS Filtered shot request is accepted
+PASS DamageFilter rejection has no confirmation
+PASS Wrong sender is rejected by server
+PASS Rejected fire request has no marker
+PASS Protected PlayerHealth does not confirm damage

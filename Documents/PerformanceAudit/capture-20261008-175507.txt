@@ -1,0 +1,204 @@
+frames=78; profilerFrames=77; fps=3.35; averageMs=298.238; p50Ms=189.122; p95Ms=416.867; p99Ms=502.978; maxMs=6995.148
+over33ms=78; over50ms=78; gcAverageBytes=67738; gcMaxBytes=1634603
+CPU Main Thread: marker | exclusive average ms/frame | inclusive average ms/frame | calls/frame | max individual ms (inclusive rows overlap)
+EditorLoop | 69.0668 | 69.0668 | 4.00 | 161.8712
+RenderForward.RenderLoopJob | 45.6397 | 68.6721 | 4.00 | 203.0677
+PxScene.simulate | 7.3540 | 10.4960 | 10.22 | 43.9029
+BatchRenderer.Flush | 6.7428 | 16.3049 | 3264.00 | 14.5864
+Unaccounted time between: Profiler.SessionMetadata and PlayerLoop | 6.1527 | 6.1527 | 0.01 | 473.7544
+Profiler.FlushMemoryCounters | 6.1165 | 6.1165 | 1.00 | 48.1507
+SamplePerObjectReflectionProbes | 5.5828 | 5.5828 | 3698.00 | 34.6836
+Render.Mesh | 5.4621 | 5.4621 | 2587.00 | 14.4224
+RenderForwardOpaque.Prepare | 4.2932 | 7.5871 | 2.00 | 33.1093
+Idle | 3.5045 | 3.5045 | 2.81 | 24.9944
+Batch.DrawStatic | 2.9229 | 2.9229 | 780.00 | 7.9877
+CanvasUpdate.PreRender | 2.7855 | 2.8072 | 1.00 | 69.6269
+Render.Prepare | 2.1800 | 2.1800 | 2.00 | 28.8834
+ExecuteRenderQueueJob | 2.1257 | 2.2118 | 2.35 | 22.9029
+WaitForJobGroupID | 2.1151 | 11.1781 | 42.42 | 25.3088
+CullPerObjectReflectionProbesJob | 1.9533 | 1.9533 | 0.90 | 12.5915
+UnityEngine.CoreModule.dll!::UpdateFunction.Invoke() [Invoke] | 1.8299 | 3.6783 | 19.22 | 61.3690
+FPS.dll!FPS::CampaignHUD.Update() [Invoke] | 1.7971 | 3.1245 | 1.00 | 25.4910
+FPS.dll!FPS::PlayerMovement.Update() [Invoke] | 1.3490 | 1.5899 | 1.00 | 17.8550
+RenderLoop.CleanupNodeQueue | 1.3214 | 1.3214 | 13.00 | 4.8500
+Clear | 1.2524 | 1.2524 | 2.00 | 88.7622
+NetworkMetrics.DispatchFrame | 1.2366 | 1.2415 | 1.00 | 60.6899
+Batch.DrawInstanced | 1.0800 | 1.0800 | 20.00 | 4.0879
+ApplyPass.PrepareKeywords | 1.0122 | 1.0122 | 777.00 | 16.8488
+CullResults.CreateSharedRendererScene | 1.0055 | 5.8533 | 2.00 | 49.2526
+Camera.Render | 0.9642 | 94.8253 | 2.00 | 239.1079
+FPS.dll!FPS::HUDManager.Update() [Invoke] | 0.8969 | 0.9053 | 1.00 | 4.2653
+RenderForwardAlpha.Prepare | 0.8573 | 0.8573 | 2.00 | 7.5200
+Physics.SwapPhysXBuffersJob | 0.8516 | 0.8516 | 10.22 | 3.0723
+BehaviourUpdate | 0.7650 | 10.9355 | 1.00 | 52.9154
+UpdateScene | 0.6535 | 39.3993 | 1.00 | 110.5750
+NpScene.execution | 0.5918 | 0.5918 | 10.22 | 42.2751
+FPS.dll!FPS::SurvivalPickupPresentation.Update() [Invoke] | 0.5850 | 0.5850 | 72.00 | 1.4539
+MeshSkinning.SkinOnGPU | 0.5536 | 0.6679 | 1.00 | 35.5988
+UnityEngine.UI.dll!UnityEngine.EventSystems::EventSystem.Update() [Invoke] | 0.5006 | 0.5006 | 1.00 | 25.5924
+FPS.dll!FPS::NetworkMatchStateManager.Update() [Invoke] | 0.4835 | 0.4835 | 1.00 | 36.1108
+Profiler.CollectUIStats | 0.4681 | 0.4770 | 1.00 | 13.0896
+RenderForwardOpaque.Sort | 0.4414 | 0.4414 | 6.51 | 4.3451
+FixedUpdate.NewInputFixedUpdate | 0.4382 | 0.6273 | 10.22 | 30.2343
+UnityEngine.UI.dll!UnityEngine.UI::Image.OnEnable() [Invoke] | 0.4367 | 0.4367 | 3.00 | 20.0466
+Canvas.BuildBatch | 0.4149 | 0.4149 | 2.00 | 3.9546
+SceneCulling | 0.4058 | 1.7337 | 2.00 | 11.9569
+TransformChangeSystem | 0.3899 | 0.4528 | 96.36 | 1.6626
+FPS.dll!FPS::CampaignMissionController.Update() [Invoke] | 0.3882 | 0.3901 | 1.00 | 4.4068
+GameObject.ActivateAwakeRecursively | 0.3754 | 1.1898 | 3.00 | 20.9110
+CullPerObjectReflectionProbes | 0.3690 | 0.3690 | 2.00 | 5.5334
+ReflectionProbes.Update | 0.3604 | 0.4008 | 1.00 | 5.4019
+Physics.Raycast | 0.3578 | 0.3578 | 13.53 | 16.1760
+RenderForwardOpaque.Render | 0.3543 | 64.3307 | 2.00 | 203.7361
+Drawing | 0.3461 | 83.3947 | 2.00 | 223.8050
+SkinnedMeshOncePerFrameUpdate | 0.3190 | 0.3190 | 3.99 | 9.2383
+FindActiveLights | 0.3060 | 0.3060 | 2.00 | 3.8237
+FPS.dll!FPS::CampaignSupply.Update() [Invoke] | 0.3036 | 0.3036 | 108.00 | 1.4751
+Unity.TextMeshPro.dll!TMPro::TextMeshProUGUI.OnEnable() [Invoke] | 0.2998 | 0.3490 | 2.00 | 2.8816
+EarlyUpdate.UpdateCanvasRectTransform | 0.2844 | 0.2844 | 1.00 | 16.8678
+Material.SetPassFast | 0.2759 | 0.2904 | 12.00 | 1.4477
+RenderPlayModeViewCameras | 0.2386 | 95.8696 | 1.00 | 245.2485
+ScScene.postBroadPhase2 | 0.2300 | 0.2300 | 9.99 | 1.0679
+RenderForwardAlpha.Sort | 0.2272 | 0.2272 | 3.71 | 8.5027
+FPS.dll!FPS::WorldRecoveryService.Update() [Invoke] | 0.2270 | 0.2944 | 1.00 | 1.6319
+UnityEngine.InputModule.dll!UnityEngineInternal.Input::NativeInputSystem.ShouldRunUpdate() [Invoke] | 0.2242 | 0.2242 | 12.22 | 2.3543
+Canvas.RenderOverlays | 0.2161 | 0.4752 | 7.00 | 3.0933
+Culling | 0.2155 | 2.3896 | 2.00 | 12.3387
+QueuePrepareIntegrateMainThreadObjects | 0.2145 | 0.2717 | 2.00 | 2.7945
+PostUpdateScreenManagerAndInput | 0.1998 | 0.1998 | 1.00 | 4.1986
+FinalizeUpdateTask | 0.1987 | 0.1987 | 10.22 | 1.9844
+Main Thread | 0.1966 | 217.4289 | 1.00 | 791.1810
+RenderForwardAlpha.Render | 0.1943 | 6.9687 | 2.00 | 15.9917
+MeshSkinning.CalcMatrices | 0.1930 | 0.1930 | 23.00 | 0.9152
+Terrain.Trees.Render | 0.1837 | 0.1842 | 1.00 | 2.7313
+EndRenderQueueExtraction | 0.1794 | 4.1902 | 2.00 | 26.7365
+UGUI.Rendering.UpdateBatches | 0.1791 | 3.7595 | 1.00 | 69.9851
+UnityEngine.UIModule.dll!UnityEngine::Canvas.SendWillRenderCanvases() [Invoke] | 0.1690 | 3.0547 | 1.00 | 69.7814
+FPS.dll!FPS::Weapon.Update() [Invoke] | 0.1679 | 0.1679 | 1.00 | 0.9824
+UnityEngine.IMGUIModule.dll!UnityEngine::GUIUtility.SetSkin() [Invoke] | 0.1676 | 0.2942 | 1.00 | 2.8012
+UnityEngine.CoreModule.dll!UnityEngine::RectTransform.SendReapplyDrivenProperties() [Invoke] | 0.1643 | 0.1643 | 8.00 | 2.4452
+FPS.dll!FPS::EnemyAI.Update() [Invoke] | 0.1627 | 0.1627 | 3.00 | 2.1782
+FPS.dll!FPS::CampaignDoor.Update() [Invoke] | 0.1623 | 0.1623 | 10.00 | 0.6904
+CullAllVisibleLights | 0.1617 | 0.4845 | 2.00 | 8.3560
+UpdateScreenManagerAndInput | 0.1615 | 0.1615 | 1.00 | 2.7202
+FPS.dll!FPS::SurvivalHotbar.Update() [Invoke] | 0.1558 | 0.6990 | 1.00 | 7.0627
+FPS.dll!FPS::LagCompensatedTarget.Update() [Invoke] | 0.1506 | 0.1506 | 3.00 | 0.5935
+DestroyCullResults | 0.1496 | 1.4651 | 2.00 | 4.9698
+Unity.TextMeshPro.dll!TMPro::TextMeshProUGUI.OnDisable() [Invoke] | 0.1495 | 0.1941 | 2.00 | 6.1990
+MeshSkinning.Render | 0.1470 | 0.1470 | 27.00 | 1.0096
+FindBrightestDirectionalLight | 0.1447 | 0.1447 | 1.00 | 0.7011
+PrepareSceneNodesJob | 0.1418 | 0.1418 | 1.23 | 3.7230
+UpdateRendererBoundingVolumes | 0.1395 | 0.1395 | 8.73 | 2.5564
+UnityEngine.UI.dll!UnityEngine.UI::Image.OnDisable() [Invoke] | 0.1390 | 0.1390 | 3.00 | 1.9908
+Render.OpaqueGeometry | 0.1366 | 72.2375 | 2.00 | 214.1749
+FixedBehaviourUpdate | 0.1346 | 0.2014 | 10.22 | 2.0074
+CullPerObjectLights | 0.1273 | 0.1312 | 2.01 | 1.3876
+UDPNetworkInterface:FlushSendJob (Burst) | 0.1262 | 0.1262 | 1.74 | 0.6830
+JobHandle.Complete | 0.1261 | 0.5621 | 2.00 | 2.2209
+Physics.SyncTransforms | 0.1215 | 0.3697 | 10.22 | 1.6007
+ScScene.updateDynamics | 0.1176 | 0.1176 | 10.22 | 0.9962
+AudioManager.FixedUpdate | 0.1153 | 0.1153 | 10.22 | 1.9673
+Animators.WriteJob | 0.1152 | 0.6501 | 10.00 | 16.4445
+MeshSkinning.Update | 0.1137 | 0.9748 | 1.00 | 35.8416
+UnityEngine.CoreModule.dll!UnityEngine::Camera.FireOnPostRender() [Invoke] | 0.1089 | 0.2784 | 2.00 | 1.4145
+Gameplay and engine markers by inclusive cost:
+Main Thread | 0.1966 | 217.4289 | 1.00 | 791.1810
+PlayerLoop | 0.0024 | 135.2732 | 3.00 | 245.2488
+RenderPlayModeViewCameras | 0.2386 | 95.8696 | 1.00 | 245.2485
+Camera.Render | 0.9642 | 94.8253 | 2.00 | 239.1079
+Drawing | 0.3461 | 83.3947 | 2.00 | 223.8050
+Render.OpaqueGeometry | 0.1366 | 72.2375 | 2.00 | 214.1749
+RenderForward.RenderLoopJob | 45.6397 | 68.6721 | 4.00 | 203.0677
+RenderForwardOpaque.Render | 0.3543 | 64.3307 | 2.00 | 203.7361
+UpdateScene | 0.6535 | 39.3993 | 1.00 | 110.5750
+BatchRenderer.Flush | 6.7428 | 16.3049 | 3264.00 | 14.5864
+FixedUpdate.PhysicsFixedUpdate | 0.0590 | 11.3433 | 10.22 | 43.9632
+WaitForJobGroupID | 2.1151 | 11.1781 | 42.42 | 25.3088
+Update.ScriptRunBehaviourUpdate | 0.0079 | 10.9434 | 1.00 | 52.9204
+BehaviourUpdate | 0.7650 | 10.9355 | 1.00 | 52.9154
+Physics.RunSimulationStage | 0.0046 | 10.5344 | 10.22 | 43.9058
+Physics.Simulate | 0.0338 | 10.5298 | 10.22 | 43.9053
+PxScene.simulate | 7.3540 | 10.4960 | 10.22 | 43.9029
+Render.TransparentGeometry | 0.0565 | 8.0954 | 2.00 | 31.2381
+RenderForwardOpaque.Prepare | 4.2932 | 7.5871 | 2.00 | 33.1093
+RenderForwardAlpha.Render | 0.1943 | 6.9687 | 2.00 | 15.9917
+Profiler.FlushCounters | 0.0021 | 6.2560 | 1.00 | 48.3283
+Unaccounted time between: Profiler.SessionMetadata and PlayerLoop | 6.1527 | 6.1527 | 0.01 | 473.7544
+Profiler.FlushMemoryCounters | 6.1165 | 6.1165 | 1.00 | 48.1507
+CullResults.CreateSharedRendererScene | 1.0055 | 5.8533 | 2.00 | 49.2526
+SamplePerObjectReflectionProbes | 5.5828 | 5.5828 | 3698.00 | 34.6836
+Render.Mesh | 5.4621 | 5.4621 | 2587.00 | 14.4224
+EngineJob | 0.0274 | 5.1239 | 41.52 | 22.9043
+EndRenderQueueExtraction | 0.1794 | 4.1902 | 2.00 | 26.7365
+PostLateUpdate.PlayerUpdateCanvases | 0.0044 | 3.8458 | 1.00 | 70.0172
+UIEvents.WillRenderCanvases | 0.0023 | 3.7618 | 1.00 | 69.9861
+UGUI.Rendering.UpdateBatches | 0.1791 | 3.7595 | 1.00 | 69.9851
+UnityEngine.CoreModule.dll!::UpdateFunction.Invoke() [Invoke] | 1.8299 | 3.6783 | 19.22 | 61.3690
+Idle | 3.5045 | 3.5045 | 2.81 | 24.9944
+FPS.dll!FPS::CampaignHUD.Update() [Invoke] | 1.7971 | 3.1245 | 1.00 | 25.4910
+UnityEngine.UIModule.dll!UnityEngine::Canvas.SendWillRenderCanvases() [Invoke] | 0.1690 | 3.0547 | 1.00 | 69.7814
+Batch.DrawStatic | 2.9229 | 2.9229 | 780.00 | 7.9877
+Render | 0.0216 | 2.8424 | 1.00 | 69.6548
+CanvasUpdate.PreRender | 2.7855 | 2.8072 | 1.00 | 69.6269
+Culling | 0.2155 | 2.3896 | 2.00 | 12.3387
+ExecuteRenderQueueJob | 2.1257 | 2.2118 | 2.35 | 22.9029
+Render.Prepare | 2.1800 | 2.1800 | 2.00 | 28.8834
+CullPerObjectReflectionProbesJob | 1.9533 | 1.9533 | 0.90 | 12.5915
+NetworkPostLateUpdate | 0.0228 | 1.8578 | 1.00 | 61.3944
+SceneCulling | 0.4058 | 1.7337 | 2.00 | 11.9569
+FPS.dll!FPS::PlayerMovement.Update() [Invoke] | 1.3490 | 1.5899 | 1.00 | 17.8550
+DestroyCullResults | 0.1496 | 1.4651 | 2.00 | 4.9698
+RenderLoop.CleanupNodeQueue | 1.3214 | 1.3214 | 13.00 | 4.8500
+Director.ProcessFrame | 0.0225 | 1.2710 | 25.44 | 16.8489
+Clear | 1.2524 | 1.2524 | 2.00 | 88.7622
+Animators.Update | 0.0285 | 1.2485 | 2.00 | 16.8469
+NetworkMetrics.DispatchFrame | 1.2366 | 1.2415 | 1.00 | 60.6899
+GameObject.ActivateAwakeRecursively | 0.3754 | 1.1898 | 3.00 | 20.9110
+NetworkEarlyUpdate | 0.0064 | 1.0960 | 1.00 | 10.2993
+Batch.DrawInstanced | 1.0800 | 1.0800 | 20.00 | 4.0879
+ApplyPass.PrepareKeywords | 1.0122 | 1.0122 | 777.00 | 16.8488
+PreLateUpdate.DirectorUpdateAnimationBegin | 0.0047 | 1.0017 | 1.00 | 25.8381
+PostLateUpdate.UpdateAllSkinnedMeshes | 0.0084 | 0.9832 | 1.00 | 35.8498
+MeshSkinning.Update | 0.1137 | 0.9748 | 1.00 | 35.8416
+PreLateUpdate.DirectorUpdateAnimationEnd | 0.0017 | 0.9723 | 1.00 | 16.8516
+Physics.FetchPhysXResults | 0.0760 | 0.9276 | 10.22 | 3.0815
+FPS.dll!FPS::HUDManager.Update() [Invoke] | 0.8969 | 0.9053 | 1.00 | 4.2653
+RenderForwardAlpha.Prepare | 0.8573 | 0.8573 | 2.00 | 7.5200
+Physics.SwapPhysXBuffersJob | 0.8516 | 0.8516 | 10.22 | 3.0723
+Director.PrepareFrame | 0.0649 | 0.7274 | 25.44 | 25.4176
+GameObject.Activate | 0.0245 | 0.7027 | 2.00 | 20.9346
+FPS.dll!FPS::SurvivalHotbar.Update() [Invoke] | 0.1558 | 0.6990 | 1.00 | 7.0627
+MeshSkinning.SkinOnGPU | 0.5536 | 0.6679 | 1.00 | 35.5988
+Animators.WriteJob | 0.1152 | 0.6501 | 10.00 | 16.4445
+FixedUpdate.NewInputFixedUpdate | 0.4382 | 0.6273 | 10.22 | 30.2343
+NpScene.execution | 0.5918 | 0.5918 | 10.22 | 42.2751
+FPS.dll!FPS::SurvivalPickupPresentation.Update() [Invoke] | 0.5850 | 0.5850 | 72.00 | 1.4539
+JobHandle.Complete | 0.1261 | 0.5621 | 2.00 | 2.2209
+PostLateUpdate.UpdateAllRenderers | 0.0206 | 0.5214 | 1.00 | 5.5339
+GameObject.Deactivate | 0.0092 | 0.5208 | 12.00 | 11.6809
+UI.RenderOverlays | 0.0315 | 0.5067 | 1.00 | 3.1723
+UnityEngine.UI.dll!UnityEngine.EventSystems::EventSystem.Update() [Invoke] | 0.5006 | 0.5006 | 1.00 | 25.5924
+CullAllVisibleLights | 0.1617 | 0.4845 | 2.00 | 8.3560
+FPS.dll!FPS::NetworkMatchStateManager.Update() [Invoke] | 0.4835 | 0.4835 | 1.00 | 36.1108
+Profiler.CollectEditorStats | 0.0062 | 0.4832 | 1.00 | 13.0968
+Profiler.CollectUIStats | 0.4681 | 0.4770 | 1.00 | 13.0896
+Canvas.RenderOverlays | 0.2161 | 0.4752 | 7.00 | 3.0933
+TransformChangeSystem | 0.3899 | 0.4528 | 96.36 | 1.6626
+RenderForwardOpaque.Sort | 0.4414 | 0.4414 | 6.51 | 4.3451
+UnityEngine.UI.dll!UnityEngine.UI::Image.OnEnable() [Invoke] | 0.4367 | 0.4367 | 3.00 | 20.0466
+Canvas.BuildBatch | 0.4149 | 0.4149 | 2.00 | 3.9546
+UnityEngine.CoreModule.dll!UnityEngine.Experimental.Rendering::ScriptableRuntimeReflectionSystemWrapper.Internal_ScriptableRuntimeReflectionSystemWrapper_TickRealtimeProbes() [Invoke] | 0.0097 | 0.4106 | 1.00 | 5.4136
+FinalizeUpdateRendererBoundingVolumes | 0.0100 | 0.4040 | 4.00 | 2.7322
+ReflectionProbes.Update | 0.3604 | 0.4008 | 1.00 | 5.4019
+PreUpdate.AIUpdate | 0.0072 | 0.3997 | 1.00 | 3.6125
+FPS.dll!FPS::CampaignMissionController.Update() [Invoke] | 0.3882 | 0.3901 | 1.00 | 4.4068
+CullSendEvents | 0.0280 | 0.3841 | 2.00 | 3.8523
+Physics.PrepareSimulationStage | 0.0101 | 0.3798 | 10.22 | 1.6056
+Physics.PublishResultsStage | 0.0081 | 0.3701 | 10.22 | 1.4330
+Physics.SyncTransforms | 0.1215 | 0.3697 | 10.22 | 1.6007
+CullPerObjectReflectionProbes | 0.3690 | 0.3690 | 2.00 | 5.5334
+NetworkFixedUpdate | 0.0669 | 0.3632 | 10.22 | 3.7467
+Physics.Raycast | 0.3578 | 0.3578 | 13.53 | 16.1760
+NavMeshManager | 0.0468 | 0.3556 | 2.00 | 3.4344
+Unity.TextMeshPro.dll!TMPro::TextMeshProUGUI.OnEnable() [Invoke] | 0.2998 | 0.3490 | 2.00 | 2.8816
+TerrainManager.CullAllTerrains | 0.0429 | 0.3474 | 2.00 | 3.0703

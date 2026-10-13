@@ -26,7 +26,7 @@ namespace FPS
         public bool CanInteract => accessObjective != CampaignObjectiveId.None
             && CampaignMissionController.Instance != null && CampaignMissionController.Instance.IsSpawned
             && !CampaignMissionController.Instance.BlocksInput;
-        public string GetInteractText() => $"[{InputManager.Instance?.GetKeyForAction("Interact") ?? KeyCode.F}] Kiểm tra {displayName}";
+        public string GetInteractText() => $"[{SurvivalHotbar.Key("Interact", "F")}] Kiểm tra {displayName}";
         public void Interact(Unity.Netcode.NetworkObject actor) => RequestNetworkInteraction(actor);
         public void RequestNetworkInteraction(Unity.Netcode.NetworkObject actor)
         {

@@ -1,0 +1,291 @@
+{
+  "recovery": {
+    "status": "success",
+    "result": {
+      "gameObject": "FactoryFallRecovery",
+      "component": "FPS.OutOfBoundsRecoveryVolume",
+      "fullTypeName": "FPS.OutOfBoundsRecoveryVolume",
+      "properties": [
+        {
+          "name": "destroyCancellationToken",
+          "type": "CancellationToken",
+          "fullType": "System.Threading.CancellationToken",
+          "value": "System.Threading.CancellationToken",
+          "canWrite": false
+        },
+        {
+          "name": "useGUILayout",
+          "type": "Boolean",
+          "fullType": "System.Boolean",
+          "value": "true",
+          "canWrite": true
+        },
+        {
+          "name": "didStart",
+          "type": "Boolean",
+          "fullType": "System.Boolean",
+          "value": "false",
+          "canWrite": false
+        },
+        {
+          "name": "didAwake",
+          "type": "Boolean",
+          "fullType": "System.Boolean",
+          "value": "false",
+          "canWrite": false
+        },
+        {
+          "name": "runInEditMode",
+          "type": "Boolean",
+          "fullType": "System.Boolean",
+          "value": "false",
+          "canWrite": true
+        },
+        {
+          "name": "allowPrefabModeInPlayMode",
+          "type": "Boolean",
+          "fullType": "System.Boolean",
+          "value": "true",
+          "canWrite": false
+        },
+        {
+          "name": "enabled",
+          "type": "Boolean",
+          "fullType": "System.Boolean",
+          "value": "true",
+          "canWrite": true
+        },
+        {
+          "name": "isActiveAndEnabled",
+          "type": "Boolean",
+          "fullType": "System.Boolean",
+          "value": "true",
+          "canWrite": false
+        },
+        {
+          "name": "transform",
+          "type": "Transform",
+          "fullType": "UnityEngine.Transform",
+          "value": "FactoryFallRecovery",
+          "canWrite": false
+        },
+        {
+          "name": "transformHandle",
+          "type": "TransformHandle",
+          "fullType": "UnityEngine.TransformHandle",
+          "value": "UnityEngine.TransformHandle",
+          "canWrite": false
+        },
+        {
+          "name": "gameObject",
+          "type": "GameObject",
+          "fullType": "UnityEngine.GameObject",
+          "value": "FactoryFallRecovery",
+          "canWrite": false
+        },
+        {
+          "name": "tag",
+          "type": "String",
+          "fullType": "System.String",
+          "value": "Untagged",
+          "canWrite": true
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "fullType": "System.String",
+          "value": "FactoryFallRecovery",
+          "canWrite": true
+        },
+        {
+          "name": "hideFlags",
+          "type": "HideFlags",
+          "fullType": "UnityEngine.HideFlags",
+          "value": "None",
+          "canWrite": true
+        }
+      ],
+      "fields": [
+        {
+          "name": "recoveryService",
+          "type": "WorldRecoveryService",
+          "fullType": "FPS.WorldRecoveryService",
+          "value": "RecoveryService",
+          "isSerializable": true
+        },
+        {
+          "name": "preferredRecoveryPoint",
+          "type": "MapRecoveryPoint",
+          "fullType": "FPS.MapRecoveryPoint",
+          "value": "Recovery_Insertion",
+          "isSerializable": true
+        }
+      ]
+    }
+  },
+  "bounds": {
+    "status": "success",
+    "result": {
+      "gameObject": "FactoryFallRecovery",
+      "component": "BoxCollider",
+      "fullTypeName": "UnityEngine.BoxCollider",
+      "properties": [
+        {
+          "name": "center",
+          "type": "Vector3",
+          "fullType": "UnityEngine.Vector3",
+          "value": "(0, 0, 0)",
+          "canWrite": true
+        },
+        {
+          "name": "size",
+          "type": "Vector3",
+          "fullType": "UnityEngine.Vector3",
+          "value": "(444.06, 3, 428.26)",
+          "canWrite": true
+        },
+        {
+          "name": "enabled",
+          "type": "Boolean",
+          "fullType": "System.Boolean",
+          "value": "true",
+          "canWrite": true
+        },
+        {
+          "name": "attachedRigidbody",
+          "type": "Rigidbody",
+          "fullType": "UnityEngine.Rigidbody",
+          "value": "null",
+          "canWrite": false
+        },
+        {
+          "name": "attachedArticulationBody",
+          "type": "ArticulationBody",
+          "fullType": "UnityEngine.ArticulationBody",
+          "value": "null",
+          "canWrite": false
+        },
+        {
+          "name": "isTrigger",
+          "type": "Boolean",
+          "fullType": "System.Boolean",
+          "value": "true",
+          "canWrite": true
+        },
+        {
+          "name": "contactOffset",
+          "type": "Single",
+          "fullType": "System.Single",
+          "value": "0.01",
+          "canWrite": true
+        },
+        {
+          "name": "bounds",
+          "type": "Bounds",
+          "fullType": "UnityEngine.Bounds",
+          "value": "Center: (-11.03, -6.00, 23.13), Extents: (222.03, 1.50, 214.13)",
+          "canWrite": false
+        },
+        {
+          "name": "hasModifiableContacts",
+          "type": "Boolean",
+          "fullType": "System.Boolean",
+          "value": "false",
+          "canWrite": true
+        },
+        {
+          "name": "providesContacts",
+          "type": "Boolean",
+          "fullType": "System.Boolean",
+          "value": "false",
+          "canWrite": true
+        },
+        {
+          "name": "layerOverridePriority",
+          "type": "Int32",
+          "fullType": "System.Int32",
+          "value": "0",
+          "canWrite": true
+        },
+        {
+          "name": "excludeLayers",
+          "type": "LayerMask",
+          "fullType": "UnityEngine.LayerMask",
+          "value": "UnityEngine.LayerMask",
+          "canWrite": true
+        },
+        {
+          "name": "includeLayers",
+          "type": "LayerMask",
+          "fullType": "UnityEngine.LayerMask",
+          "value": "UnityEngine.LayerMask",
+          "canWrite": true
+        },
+        {
+          "name": "GeometryHolder",
+          "type": "GeometryHolder",
+          "fullType": "UnityEngine.LowLevelPhysics.GeometryHolder",
+          "value": "UnityEngine.LowLevelPhysics.GeometryHolder",
+          "canWrite": false
+        },
+        {
+          "name": "sharedMaterial",
+          "type": "PhysicsMaterial",
+          "fullType": "UnityEngine.PhysicsMaterial",
+          "value": "null",
+          "canWrite": true
+        },
+        {
+          "name": "material",
+          "type": "PhysicsMaterial",
+          "fullType": "UnityEngine.PhysicsMaterial",
+          "value": "",
+          "canWrite": true
+        },
+        {
+          "name": "transform",
+          "type": "Transform",
+          "fullType": "UnityEngine.Transform",
+          "value": "FactoryFallRecovery",
+          "canWrite": false
+        },
+        {
+          "name": "transformHandle",
+          "type": "TransformHandle",
+          "fullType": "UnityEngine.TransformHandle",
+          "value": "UnityEngine.TransformHandle",
+          "canWrite": false
+        },
+        {
+          "name": "gameObject",
+          "type": "GameObject",
+          "fullType": "UnityEngine.GameObject",
+          "value": "FactoryFallRecovery",
+          "canWrite": false
+        },
+        {
+          "name": "tag",
+          "type": "String",
+          "fullType": "System.String",
+          "value": "Untagged",
+          "canWrite": true
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "fullType": "System.String",
+          "value": "FactoryFallRecovery",
+          "canWrite": true
+        },
+        {
+          "name": "hideFlags",
+          "type": "HideFlags",
+          "fullType": "UnityEngine.HideFlags",
+          "value": "None",
+          "canWrite": true
+        }
+      ],
+      "fields": []
+    }
+  }
+}

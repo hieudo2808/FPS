@@ -12,6 +12,7 @@ namespace FPS
         [SerializeField] private SurvivalArmPose thirdPersonLeft = new();
         [SerializeField] private SurvivalArmPose thirdPersonRight = new();
         private SurvivalInventory inventory;
+        private SelfInjectionAnimation selfInjection;
         private Transform arms;
         private Transform cameraTransform;
         private Vector3 appliedShake;
@@ -25,6 +26,7 @@ namespace FPS
         public override void OnNetworkSpawn()
         {
             inventory = GetComponent<SurvivalInventory>();
+            selfInjection = GetComponent<SelfInjectionAnimation>();
             var visibility = GetComponent<PlayerVisibilityController>();
             if (IsOwner)
             {
@@ -65,6 +67,7 @@ namespace FPS
             SurvivalEffects.Blast -= OnBlast;
             RestoreShake();
             RestorePose();
+            selfInjection?.Stop();
             HideWeapons(false);
             if (item != null) Destroy(item);
             if (treatmentAudio != null) Destroy(treatmentAudio);
@@ -72,6 +75,7 @@ namespace FPS
         private void OnDisable()
         {
             RestoreShake(); RestorePose(); HideWeapons(false);
+            selfInjection?.Stop();
             if (item != null) item.SetActive(false);
             if (treatmentAudio != null) treatmentAudio.Stop();
         }
@@ -104,7 +108,15 @@ namespace FPS
                 if (usingItem && treatmentAudio.clip != null) treatmentAudio.Play(); else treatmentAudio.Stop();
                 wasUsing = usingItem;
             }
-            if (usingItem)
+            bool medicalAnimation = usingItem && IsOwner && inventory.IsSelfUse && selfInjection != null
+                && (inventory.ActiveConsumable == ConsumableKind.Antidote
+                    ? selfInjection.Play(inventory.UseProgress) : selfInjection.PlayHeal(inventory.UseProgress));
+            if (!medicalAnimation) selfInjection?.Stop();
+            if (medicalAnimation)
+            {
+                if (item != null) item.SetActive(false);
+            }
+            else if (usingItem)
             {
                 int index = inventory.ActiveConsumable == ConsumableKind.Medkit ? 2 : 3;
                 var catalog = SurvivalCatalog.Load();

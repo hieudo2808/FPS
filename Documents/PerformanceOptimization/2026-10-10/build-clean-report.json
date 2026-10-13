@@ -1,0 +1,45 @@
+{
+  "jobId": "e009fe11",
+  "kind": "build_player",
+  "status": "completed",
+  "progress": 100,
+  "currentStage": "completed",
+  "progressStage": "completed",
+  "startedAt": 1791639361,
+  "updatedAt": 1791639605,
+  "processedItems": 0,
+  "totalItems": 0,
+  "resultSummary": "Player build succeeded for StandaloneWindows64: E:\\Unity\\Project\\FPS\\Builds\\PerformanceOptimization\\Release\\FPS.exe",
+  "error": null,
+  "warnings": [],
+  "reportId": null,
+  "relatedWorkflowId": null,
+  "canCancel": false,
+  "recentProgress": [
+    {
+      "timestamp": 1791639361,
+      "progress": 0,
+      "stage": "queued",
+      "description": "Player build queued for StandaloneWindows64."
+    },
+    {
+      "timestamp": 1791639361,
+      "progress": 5,
+      "stage": "scheduled",
+      "description": "Player build accepted; BuildPipeline will start on the next Editor update."
+    },
+    {
+      "timestamp": 1791639361,
+      "progress": 10,
+      "stage": "building",
+      "description": "Building StandaloneWindows64 player."
+    },
+    {
+      "timestamp": 1791639605,
+      "progress": 100,
+      "stage": "completed",
+      "description": "Player build succeeded for StandaloneWindows64: E:\\Unity\\Project\\FPS\\Builds\\PerformanceOptimization\\Release\\FPS.exe"
+    }
+  ],
+  "terminal": true
+}

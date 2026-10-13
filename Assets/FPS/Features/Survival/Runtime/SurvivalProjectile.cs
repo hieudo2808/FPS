@@ -10,6 +10,9 @@ namespace FPS
         [SerializeField] private SurvivalFireZone fireZonePrefab;
         [SerializeField] private GameObject incendiaryCore;
         [SerializeField] private GameObject fragVisual;
+        [SerializeField, Min(1f)] private float launchSpeed = 28f;
+        [SerializeField, Range(0f, 45f)] private float launchElevation = 10f;
+        [SerializeField, Min(.1f)] private float fuseDuration = 6f;
         private readonly NetworkVariable<ThrowableKind> kind = new();
         private Rigidbody body;
         private Vector3 launchVelocity;
@@ -17,8 +20,16 @@ namespace FPS
         private ulong attacker;
         private double deadline;
         private bool detonated;
-        public void InitializeServer(ThrowableKind throwable, ulong owner, NetworkObject source, Vector3 velocity)
-        { kind.Value = throwable; attacker = owner; thrower = source; launchVelocity = velocity; }
+        public void InitializeServer(ThrowableKind throwable, ulong owner, NetworkObject source, Vector3 direction)
+        {
+            kind.Value = throwable; attacker = owner; thrower = source;
+            Vector3 aim = direction.normalized;
+            Vector3 planar = Vector3.ProjectOnPlane(aim, Vector3.up);
+            // Add the overhand elevation without tipping near-vertical throws backwards.
+            float pitch = Mathf.Min(90f, Mathf.Asin(Mathf.Clamp(aim.y, -1f, 1f)) * Mathf.Rad2Deg + launchElevation) * Mathf.Deg2Rad;
+            launchVelocity = planar.sqrMagnitude < .000001f ? aim * launchSpeed
+                : (planar.normalized * Mathf.Cos(pitch) + Vector3.up * Mathf.Sin(pitch)) * launchSpeed;
+        }
         public override void OnNetworkSpawn()
         {
             body = GetComponent<Rigidbody>();
@@ -30,7 +41,7 @@ namespace FPS
                 foreach (var collider in GetComponentsInChildren<Collider>()) collider.enabled = false;
                 return;
             }
-            deadline = NetworkManager.ServerTime.Time + 2.2;
+            deadline = NetworkManager.ServerTime.Time + fuseDuration;
             if (thrower != null)
                 foreach (var own in GetComponentsInChildren<Collider>())
                     foreach (var player in thrower.GetComponentsInChildren<Collider>()) Physics.IgnoreCollision(own, player);

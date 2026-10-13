@@ -45,8 +45,8 @@
    Đặt item cần lấy (theo mission "lấy vật phẩm") ở vị trí có ý nghĩa với environmental storytelling FALSE
    Test performance (FPS) trên máy cấu hình trung bình, không chỉ máy dev FALSE
 6. Environmental Storytelling & Cutscene
-   Viết outline cốt truyện ngắn gọn: bối cảnh virus, tổ chức cử đội, lý do vào facility FALSE
-   Đặt note/tài liệu/audio log rải rác trong map thay vì kể chuyện qua cutscene dài FALSE
+   Viết outline cốt truyện ngắn gọn: bối cảnh virus, tổ chức cử đội, lý do vào facility TRUE
+   Đặt note/tài liệu/audio log rải rác trong map thay vì kể chuyện qua cutscene dài TRUE
    Cutscene intro (mở đầu mission) — dùng in-engine camera, không cần animation phức tạp FALSE
    Cutscene outro (khi extract thành công/thất bại) — có thể làm 2 bản ngắn FALSE
    Đảm bảo cutscene không bug khi có 4 người (ai trigger, ai bị skip, có bị treo máy người khác không) FALSE

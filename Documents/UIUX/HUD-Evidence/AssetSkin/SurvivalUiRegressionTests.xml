@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Passed" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 15:41:23Z" end-time="2026-10-05 15:41:24Z" duration="1.5186195">
+  <test-suite type="TestSuite" id="1920" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="744" result="Passed" start-time="2026-10-05 15:41:23Z" end-time="2026-10-05 15:41:24Z" duration="1.518620" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1161" name="FPS.UI.Tests.Editor.dll" fullname="E:/Unity/Project/FPS/Library/ScriptAssemblies/FPS.UI.Tests.Editor.dll" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-05 15:41:23Z" end-time="2026-10-05 15:41:24Z" duration="1.417937" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="21156" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1162" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-05 15:41:23Z" end-time="2026-10-05 15:41:24Z" duration="1.311312" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1163" name="Tests" fullname="FPS.Tests" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-05 15:41:23Z" end-time="2026-10-05 15:41:24Z" duration="1.201926" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1153" name="SurvivalUiRegressionTests" fullname="FPS.Tests.SurvivalUiRegressionTests" classname="FPS.Tests.SurvivalUiRegressionTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-05 15:41:23Z" end-time="2026-10-05 15:41:24Z" duration="1.093070" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1155" name="CancellingRebindTwiceCompletesOnceAndPreservesBinding" fullname="FPS.Tests.SurvivalUiRegressionTests.CancellingRebindTwiceCompletesOnceAndPreservesBinding" methodname="CancellingRebindTwiceCompletesOnceAndPreservesBinding" classname="FPS.Tests.SurvivalUiRegressionTests" runstate="Runnable" seed="1857552515" result="Passed" start-time="2026-10-05 15:41:23Z" end-time="2026-10-05 15:41:23Z" duration="0.091050" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1158" name="LongPlayerNamesCannotOverwriteReadinessOrInjectMarkup" fullname="FPS.Tests.SurvivalUiRegressionTests.LongPlayerNamesCannotOverwriteReadinessOrInjectMarkup" methodname="LongPlayerNamesCannotOverwriteReadinessOrInjectMarkup" classname="FPS.Tests.SurvivalUiRegressionTests" runstate="Runnable" seed="629614506" result="Passed" start-time="2026-10-05 15:41:24Z" end-time="2026-10-05 15:41:24Z" duration="0.146017" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1156" name="MainMenuModalBlocksBackgroundAndRestoresItOnBack" fullname="FPS.Tests.SurvivalUiRegressionTests.MainMenuModalBlocksBackgroundAndRestoresItOnBack" methodname="MainMenuModalBlocksBackgroundAndRestoresItOnBack" classname="FPS.Tests.SurvivalUiRegressionTests" runstate="Runnable" seed="890845675" result="Passed" start-time="2026-10-05 15:41:24Z" end-time="2026-10-05 15:41:24Z" duration="0.649048" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1159" name="MissingMatchManagerClearsAuthoredPhaseLabel" fullname="FPS.Tests.SurvivalUiRegressionTests.MissingMatchManagerClearsAuthoredPhaseLabel" methodname="MissingMatchManagerClearsAuthoredPhaseLabel" classname="FPS.Tests.SurvivalUiRegressionTests" runstate="Runnable" seed="1324591478" result="Passed" start-time="2026-10-05 15:41:24Z" end-time="2026-10-05 15:41:24Z" duration="0.008502" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1160" name="PrimaryButtonAndMutedTextHaveReadableContrast" fullname="FPS.Tests.SurvivalUiRegressionTests.PrimaryButtonAndMutedTextHaveReadableContrast" methodname="PrimaryButtonAndMutedTextHaveReadableContrast" classname="FPS.Tests.SurvivalUiRegressionTests" runstate="Runnable" seed="1463060760" result="Passed" start-time="2026-10-05 15:41:24Z" end-time="2026-10-05 15:41:24Z" duration="0.000417" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1154" name="ScopeOpticalCentersStayOnTheCrosshairWhenSwitchingSprites" fullname="FPS.Tests.SurvivalUiRegressionTests.ScopeOpticalCentersStayOnTheCrosshairWhenSwitchingSprites" methodname="ScopeOpticalCentersStayOnTheCrosshairWhenSwitchingSprites" classname="FPS.Tests.SurvivalUiRegressionTests" runstate="Runnable" seed="647861790" result="Passed" start-time="2026-10-05 15:41:24Z" end-time="2026-10-05 15:41:24Z" duration="0.025207" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1157" name="SettingsBindingsStayInsideContentAndDoNotOverlap" fullname="FPS.Tests.SurvivalUiRegressionTests.SettingsBindingsStayInsideContentAndDoNotOverlap" methodname="SettingsBindingsStayInsideContentAndDoNotOverlap" classname="FPS.Tests.SurvivalUiRegressionTests" runstate="Runnable" seed="1518752055" result="Passed" start-time="2026-10-05 15:41:24Z" end-time="2026-10-05 15:41:24Z" duration="0.051865" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/hieud/AppData/LocalLow/HieuDHM/FPS\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

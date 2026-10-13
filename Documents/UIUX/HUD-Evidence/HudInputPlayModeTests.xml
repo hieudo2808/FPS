@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-05 03:36:52Z" end-time="2026-10-05 03:36:52Z" duration="0.6153074">
+  <test-suite type="TestSuite" id="1040" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="21" result="Passed" start-time="2026-10-05 03:36:52Z" end-time="2026-10-05 03:36:52Z" duration="0.615307" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1028" name="FPS.Survival.PlayModeTests.dll" fullname="E:/Unity/Project/FPS/Library/ScriptAssemblies/FPS.Survival.PlayModeTests.dll" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-05 03:36:52Z" end-time="2026-10-05 03:36:52Z" duration="0.595561" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13644" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1029" name="FPS" fullname="FPS" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-05 03:36:52Z" end-time="2026-10-05 03:36:52Z" duration="0.591642" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1030" name="Tests" fullname="FPS.Tests" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-05 03:36:52Z" end-time="2026-10-05 03:36:52Z" duration="0.588403" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1009" name="HudInputPlayModeTests" fullname="FPS.Tests.HudInputPlayModeTests" classname="FPS.Tests.HudInputPlayModeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-05 03:36:52Z" end-time="2026-10-05 03:36:52Z" duration="0.582921" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1010" name="InventoryBackClosesOnlyTheTopOverlayAndRestoresFocus" fullname="FPS.Tests.HudInputPlayModeTests.InventoryBackClosesOnlyTheTopOverlayAndRestoresFocus" methodname="InventoryBackClosesOnlyTheTopOverlayAndRestoresFocus" classname="FPS.Tests.HudInputPlayModeTests" runstate="Runnable" seed="1507559098" result="Passed" start-time="2026-10-05 03:36:52Z" end-time="2026-10-05 03:36:52Z" duration="0.464196" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1011" name="PromptsSwitchOnDerivedGamepadAndReportUnboundActions" fullname="FPS.Tests.HudInputPlayModeTests.PromptsSwitchOnDerivedGamepadAndReportUnboundActions" methodname="PromptsSwitchOnDerivedGamepadAndReportUnboundActions" classname="FPS.Tests.HudInputPlayModeTests" runstate="Runnable" seed="399636602" result="Passed" start-time="2026-10-05 03:36:52Z" end-time="2026-10-05 03:36:52Z" duration="0.096222" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Saving results to: C:/Users/hieud/AppData/LocalLow/HieuDHM/FPS\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
