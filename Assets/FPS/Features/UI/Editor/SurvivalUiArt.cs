@@ -44,7 +44,8 @@ namespace FPS.UI.Editor
             const string root = "Assets/FPS/Features/UI/Content/Resources/HudSkin";
             foreach (string guid in AssetDatabase.FindAssets("t:Texture2D", new[] { root }))
             {
-                var importer = (TextureImporter)AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid));
+                var importer = AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as TextureImporter;
+                if (importer == null) continue;
                 Undo.RecordObject(importer, "Import HUD skin");
                 importer.textureType = TextureImporterType.Sprite;
                 importer.spriteImportMode = SpriteImportMode.Single;

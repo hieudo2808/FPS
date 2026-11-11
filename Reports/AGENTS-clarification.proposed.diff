@@ -1,0 +1,21 @@
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -23,7 +23,7 @@
+   hoàn tất: chữ ghi nhận + âm + hiệu ứng hình, marker chuyển sang bước kế;
+   sai: nói rõ trường nào lệch.
+   Không có ô nào được để trống. Tiếng click đơn thuần không tính là phản hồi.
+-- Hint lấy từ CampaignContentCatalog theo objective hiện tại, không viết cứng trong HUD. Catalog chỉ nêu nguồn cần đọc, không chứa đáp án.
++- Hint lấy từ CampaignContentCatalog theo objective hiện tại, không viết cứng trong HUD. Phần hint chỉ nêu nguồn cần đọc và hành động cần làm, không nêu giá trị hoặc kết luận đáp án đúng.
+ - Vật trang trí thuần túy: không collider, không button. Vật cảnh có collider làm proxy tương tác phải được nhận diện khi nó là mục tiêu của bước hiện tại (viền sáng/đèn/nhãn thật) trước khi người chơi ngắm vào; và ba vật giống nhau phải phân biệt được bằng hình.
+ 
+ ## Scope Rule
+@@ -43,7 +43,8 @@
+ - A locked object must show a lock reason ("Requires: ..."), never silence.
+ - Completing a step must give feedback (text + sound + visual) and move the waypoint to the next target. The new target state must be published before the marker updates.
+ - Facts before comparison: the player must obtain the data (read/inspect) before a choice panel appears, and the panel must show that data next to the choices.
+-- Never put answer values in tracker, hint, or panel text. Hints name the source, not the answer.
++- Tracker and hints must not state correct answer values or conclusions. They name the source and action, without revealing or identifying the correct choice.
++- Evidence shown in a comparison panel must come only from data already collected by the squad and appear next to the choices. Do not reveal uncollected evidence or label, highlight, or auto-select any choice as correct.
+ - Tracker shows every parallel branch, marks the active one, and has a key to switch.
+ - The waypoint targets the interactable body the player must press, shows name + distance, appears at any range, and has a straight-line fallback when no NavMesh route exists.
+ - Hold actions show a progress ring and the bound key; releasing early cancels visibly.

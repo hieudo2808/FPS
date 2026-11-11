@@ -36,6 +36,7 @@ namespace FPS
         private double localStateStartedServerTime;
 
         public event Action<NetworkMatchState, NetworkMatchState> OnStateChanged;
+        public event Action RespawnDeadlineChanged;
 
         public NetworkMatchState State => useLocalState ? localState : state.Value;
         public double StateStartedServerTime => useLocalState ? localStateStartedServerTime : stateStartedServerTime.Value;
@@ -56,6 +57,7 @@ namespace FPS
             if (Instance == null)
             {
                 Instance = this;
+                HudSignals.NotifySourcesChanged();
             }
             else if (Instance != this)
             {
@@ -93,7 +95,7 @@ namespace FPS
         {
             base.OnDestroy();
             if (Instance == this)
-                Instance = null;
+            { Instance = null; HudSignals.NotifySourcesChanged(); }
         }
 
         private void Update()
@@ -242,12 +244,14 @@ namespace FPS
         private void SendRespawnScheduledClientRpc(double dueServerTime, ClientRpcParams clientRpcParams = default)
         {
             localRespawnDueServerTime = dueServerTime;
+            RespawnDeadlineChanged?.Invoke();
         }
 
         [ClientRpc]
         private void SendRespawnCompletedClientRpc(ClientRpcParams clientRpcParams = default)
         {
             localRespawnDueServerTime = -1.0;
+            RespawnDeadlineChanged?.Invoke();
         }
 
         private static ClientRpcParams CreateSingleClientParams(ulong clientId)

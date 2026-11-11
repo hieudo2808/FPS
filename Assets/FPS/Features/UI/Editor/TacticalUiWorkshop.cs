@@ -15,9 +15,9 @@ namespace FPS.UI.Editor
     public static class TacticalUiWorkshop
     {
         const string UiPath = "Assets/FPS/Features/UI/Content/";
-        static TMP_FontAsset Heading => AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(UiPath + "Fonts/Teko-Bold SDF.asset");
+        static TMP_FontAsset Heading => AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(UiPath + "Resources/HudSkin/Fonts/Teko-Bold SDF.asset");
         static TMP_FontAsset Body => AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset");
-        static TMP_FontAsset Narrow => AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(UiPath + "Fonts/Teko-Regular SDF.asset");
+        static TMP_FontAsset Narrow => AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(UiPath + "Resources/HudSkin/Fonts/Teko-Regular SDF.asset");
         static readonly Vector2 TL = new Vector2(0, 1);
         static readonly Vector2 TR = Vector2.one;
         static readonly Vector2 BL = Vector2.zero;
@@ -169,13 +169,16 @@ namespace FPS.UI.Editor
             }
             DropdownTemplateUtility.Normalize(d);
         }
-        static void ConfigureCanvas(Canvas c)
+        static void ConfigureSurfaceImports()
         {
             foreach (string path in new[] { "SurfaceWear", "WornRule", "NavigationShade", "SolidFill", "HudShade" })
             {
                 var importer = AssetImporter.GetAtPath(UiPath + "Sprites/Survival/" + path + ".png") as TextureImporter;
                 if (importer != null && (importer.textureType != TextureImporterType.Sprite || importer.spriteImportMode != SpriteImportMode.Single)) { importer.textureType = TextureImporterType.Sprite; importer.spriteImportMode = SpriteImportMode.Single; importer.mipmapEnabled = false; importer.alphaIsTransparency = true; importer.SaveAndReimport(); }
             }
+        }
+        static void ConfigureCanvas(Canvas c)
+        {
             var s = Ensure<CanvasScaler>(c.gameObject);
             s.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             s.referenceResolution = TacticalUiTheme.ReferenceResolution;
@@ -524,12 +527,84 @@ namespace FPS.UI.Editor
             outline.effectDistance = new Vector2(1.5f, -1.5f);
         }
 
+        [MenuItem("Tools/FPS/UI/Configure HUD Fonts")]
+        public static void ConfigureHudFonts()
+        {
+            SaveAuthoredScenes();
+            const string glyphs = "FACTORY AN LAC B2 0123456789 / []%: \u2014 \u00b7 Tiếng Việt: nhiệm vụ, tài liệu, đồng đội, hồi sinh, thất bại, hoàn thành";
+            const string fallbackPath = UiPath + "Resources/HudSkin/Fonts/HudGlyphFallback.asset";
+            var fallback = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(fallbackPath);
+            if (fallback == null)
+            {
+                fallback = TMP_FontAsset.CreateFontAsset(AssetDatabase.LoadAssetAtPath<Font>("Assets/TextMesh Pro/Fonts/LiberationSans.ttf"));
+                fallback.name = "HudGlyphFallback";
+                AssetDatabase.CreateAsset(fallback, fallbackPath);
+                AssetDatabase.AddObjectToAsset(fallback.material, fallback);
+                AssetDatabase.AddObjectToAsset(fallback.atlasTexture, fallback);
+            }
+            if (!fallback.TryAddCharacters(glyphs, out string fallbackMissing))
+                throw new InvalidOperationException("Missing HUD fallback glyphs: " + fallbackMissing);
+            EditorUtility.SetDirty(fallback);
+            foreach (bool bold in new[] { false, true })
+            {
+                var sdf = HudSkin.FontAsset(bold);
+                sdf.atlasPopulationMode = AtlasPopulationMode.Dynamic;
+                var serialized = new SerializedObject(sdf);
+                serialized.FindProperty("m_SourceFontFile").objectReferenceValue = HudSkin.Font(bold);
+                serialized.FindProperty("m_SourceFontFileGUID").stringValue = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(HudSkin.Font(bold)));
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                sdf.isMultiAtlasTexturesEnabled = true;
+                sdf.TryAddCharacters(glyphs);
+                sdf.fallbackFontAssetTable = new System.Collections.Generic.List<TMP_FontAsset> { fallback };
+                if (!sdf.HasCharacters(glyphs, out uint[] missing, searchFallbacks: true, tryAddCharacter: true))
+                    throw new InvalidOperationException("Missing " + sdf.name + " glyphs: " + string.Join(",", missing));
+                EditorUtility.SetDirty(sdf);
+            }
+            SaveAuthoredScenes();
+        }
+
+        [MenuItem("Tools/FPS/UI/Configure ADS Artwork")]
+        public static void ConfigureAdsArtwork()
+        {
+            SaveAuthoredScenes();
+            var importer = (TextureImporter)AssetImporter.GetAtPath(UiPath + "Resources/HudSkin/ADSReflexDot.png");
+            importer.textureType = TextureImporterType.Sprite;
+            importer.spriteImportMode = SpriteImportMode.Single;
+            var settings = new TextureImporterSettings();
+            importer.ReadTextureSettings(settings);
+            settings.spriteMeshType = SpriteMeshType.FullRect;
+            settings.spriteAlignment = (int)SpriteAlignment.Center;
+            settings.spritePivot = Vector2.one * .5f;
+            importer.SetTextureSettings(settings);
+            importer.spritePixelsPerUnit = 100;
+            importer.wrapMode = TextureWrapMode.Clamp;
+            importer.filterMode = FilterMode.Bilinear;
+            importer.mipmapEnabled = false;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+            importer.isReadable = false;
+            importer.alphaIsTransparency = true;
+            importer.SaveAndReimport();
+            SaveAuthoredScenes();
+        }
+
+        public static void ApplyGameplayLayout(Canvas canvas)
+        {
+                // Move peripheral children back before reapplying the existing idempotent authoring routine.
+                var hud = Find(canvas.transform, "MinimalHUDRoot");
+                var safe = canvas.transform.Find("HudSafeArea");
+                if (safe != null)
+                    foreach (var name in new[] { "HealthPanel", "InfectionPanel", "WeaponPanel", "InteractionPrompt" })
+                    { var item = safe.Find(name); if (item != null) item.SetParent(hud, false); }
+                Gameplay(canvas, false);
+        }
+
         [MenuItem("Tools/FPS/UI/Apply Gameplay HUD Only")]
         public static void ApplyGameplayHud()
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Exit Play Mode before authoring HUD.");
             SaveAuthoredScenes();
             SurvivalUiArt.ConfigureHudSkinImports();
+            ConfigureSurfaceImports();
             var previous = SceneManager.GetActiveScene();
             const string path = "Assets/FPS/Scenes/GameScene.unity";
             var scene = SceneManager.GetSceneByPath(path); bool opened = !scene.isLoaded;
@@ -538,13 +613,7 @@ namespace FPS.UI.Editor
             {
                 var canvas = scene.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Canvas>(true)).First(c => c.isRootCanvas);
                 Undo.RegisterFullObjectHierarchyUndo(canvas.gameObject, "Apply gameplay HUD");
-                // Move peripheral children back before reapplying the existing idempotent authoring routine.
-                var hud = Find(canvas.transform, "MinimalHUDRoot");
-                var safe = canvas.transform.Find("HudSafeArea");
-                if (safe != null)
-                    foreach (var name in new[] { "HealthPanel", "InfectionPanel", "WeaponPanel", "InteractionPrompt" })
-                    { var item = safe.Find(name); if (item != null) item.SetParent(hud, false); }
-                Gameplay(canvas, false);
+                ApplyGameplayLayout(canvas);
                 EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);
             }
             finally
@@ -559,6 +628,8 @@ namespace FPS.UI.Editor
         [MenuItem("Tools/FPS/UI/Save Authored Scenes")]
         public static void SaveAuthoredScenes()
         {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException("Save Gate requires stable Edit Mode; runtime scenes must never be saved.");
             for (int i = 0; i < SceneManager.sceneCount; i++)
             {
                 var scene = SceneManager.GetSceneAt(i);

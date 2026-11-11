@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
@@ -17,6 +18,42 @@ namespace FPS.Tests
     {
         const string SettingsPath = "Assets/FPS/Features/UI/Content/Prefabs/SettingsPanel.prefab";
         const string RosterPath = "Assets/FPS/Features/UI/Content/Prefabs/PlayerEntry_Tactical.prefab";
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void InteractionPromptsAcceptScenesWithoutAHud(bool hasLocalPrompt)
+        {
+            Assert.That(Object.FindAnyObjectByType<HUDManager>(), Is.Null);
+            var root = new GameObject("Interaction prompt regression");
+            root.SetActive(false);
+            try
+            {
+                var interaction = root.AddComponent<InteractionManager>();
+                var promptObject = new GameObject("Prompt", typeof(RectTransform), typeof(TextMeshProUGUI));
+                promptObject.transform.SetParent(root.transform, false);
+                var prompt = promptObject.GetComponent<TextMeshProUGUI>();
+                const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance;
+                if (hasLocalPrompt)
+                    typeof(InteractionManager).GetField("interactPromptText", flags).SetValue(interaction, prompt);
+                var setText = typeof(InteractionManager).GetMethod("SetPromptText", flags);
+                var setVisible = typeof(InteractionManager).GetMethod("SetPromptVisible", flags);
+
+                for (int i = 0; i < 2; i++)
+                {
+                    setVisible.Invoke(interaction, new object[] { false });
+                    if (hasLocalPrompt) Assert.That(promptObject.activeSelf, Is.False);
+                    setText.Invoke(interaction, new object[] { "[F] Pick up Ammo" });
+                    setVisible.Invoke(interaction, new object[] { true });
+                    if (hasLocalPrompt)
+                    {
+                        Assert.That(prompt.text, Is.EqualTo("[F] Pick up Ammo"));
+                        Assert.That(promptObject.activeSelf, Is.True);
+                    }
+                }
+                LogAssert.NoUnexpectedReceived();
+            }
+            finally { Object.DestroyImmediate(root); }
+        }
 
         [Test]
         public void ScopeOpticalCentersStayOnTheCrosshairWhenSwitchingSprites()

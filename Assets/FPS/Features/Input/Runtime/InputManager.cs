@@ -22,14 +22,21 @@ namespace FPS
         public static InputManager Instance { get; private set; }
         private static bool menuInputBlocked;
 
-        public static bool MatchInputBlocked { get; set; }
-        public static bool CinematicInputBlocked { get; set; }
-        public static bool CampaignInputBlocked { get; set; }
+        private static bool matchInputBlocked, cinematicInputBlocked, campaignInputBlocked;
+        public static event Action InputStateChanged;
+        public static bool MatchInputBlocked { get => matchInputBlocked; set => SetBlock(ref matchInputBlocked, value); }
+        public static bool CinematicInputBlocked { get => cinematicInputBlocked; set => SetBlock(ref cinematicInputBlocked, value); }
+        public static bool CampaignInputBlocked { get => campaignInputBlocked; set => SetBlock(ref campaignInputBlocked, value); }
+        private static void SetBlock(ref bool target, bool value)
+        {
+            if (target == value) return;
+            target = value; InputStateChanged?.Invoke();
+        }
 
         public static bool GameplayInputBlocked
         {
             get => menuInputBlocked || MatchInputBlocked || CinematicInputBlocked || CampaignInputBlocked;
-            set => menuInputBlocked = value;
+            set => SetBlock(ref menuInputBlocked, value);
         }
 
         private InputActionAsset actionAsset;
@@ -64,6 +71,7 @@ namespace FPS
                     DontDestroyOnLoad(gameObject);
             }
             InitializeActions();
+            HudSignals.NotifySourcesChanged();
         }
 
         private void OnEnable()
@@ -95,7 +103,10 @@ namespace FPS
             }
 
             if (Instance == this)
+            {
                 Instance = null;
+                HudSignals.NotifySourcesChanged();
+            }
         }
 
         private void InitializeActions()
@@ -118,6 +129,7 @@ namespace FPS
             if (gameplayMap.FindAction("CycleGrenade") == null) AddButton(gameplayMap, "CycleGrenade", "<Keyboard>/3");
             if (gameplayMap.FindAction("Medkit") == null) AddButton(gameplayMap, "Medkit", "<Keyboard>/4");
             if (gameplayMap.FindAction("Antidote") == null) AddButton(gameplayMap, "Antidote", "<Keyboard>/5");
+            if (gameplayMap.FindAction("Track") == null) AddButton(gameplayMap, "Track", "<Keyboard>/t");
 
             actions.Clear();
             foreach (InputAction action in gameplayMap.actions)
@@ -183,6 +195,7 @@ namespace FPS
             AddButton(map, "CycleGrenade", "<Keyboard>/3");
             AddButton(map, "Medkit", "<Keyboard>/4");
             AddButton(map, "Antidote", "<Keyboard>/5");
+            AddButton(map, "Track", "<Keyboard>/t");
             AddButton(map, "Sprint", "<Keyboard>/leftShift");
             AddButton(map, "Pause", "<Keyboard>/escape");
             return asset;
@@ -254,6 +267,8 @@ namespace FPS
         public bool GetInteractInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Interact");
         public bool GetInteractInput() => !GameplayInputBlocked && IsPressed("Interact");
         public bool GetInteractInputUp() => WasReleasedThisFrame("Interact");
+        public bool GetTrackInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Track");
+        public bool GetTrackInput() => !GameplayInputBlocked && IsPressed("Track");
         public bool GetJumpInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Jump");
         public bool GetGrenadeInputDown() => !GameplayInputBlocked && WasPressedThisFrame("Grenade");
         public bool GetCycleGrenadeInputDown() => !GameplayInputBlocked && WasPressedThisFrame("CycleGrenade");

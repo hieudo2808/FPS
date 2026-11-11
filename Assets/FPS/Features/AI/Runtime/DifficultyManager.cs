@@ -46,13 +46,14 @@ namespace FPS
                 return;
             }
             Instance = this;
+            HudSignals.NotifySourcesChanged();
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
             if (Instance == this)
-                Instance = null;
+            { Instance = null; HudSignals.NotifySourcesChanged(); }
         }
 
         public override void OnNetworkSpawn()

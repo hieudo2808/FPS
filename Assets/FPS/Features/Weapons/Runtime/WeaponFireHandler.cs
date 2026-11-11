@@ -25,6 +25,7 @@ namespace FPS
         public int estimatedServerTick;
         public uint inputSequence;
         public byte weaponSlot;
+        public bool continuousAuto;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -32,6 +33,7 @@ namespace FPS
             serializer.SerializeValue(ref estimatedServerTick);
             serializer.SerializeValue(ref inputSequence);
             serializer.SerializeValue(ref weaponSlot);
+            serializer.SerializeValue(ref continuousAuto);
         }
     }
 
@@ -47,6 +49,9 @@ namespace FPS
         public ushort acknowledgedFireSequence;
         public FireRejectReason lastFireResult;
         public int authoritativeShotTick;
+        public WeaponStability stability;
+        public ushort resolvedFireSequence;
+        public bool hasResolvedFireSequence;
 
         public bool Equals(WeaponOwnerState other)
         {
@@ -59,7 +64,10 @@ namespace FPS
                 && equipCompleteTime.Equals(other.equipCompleteTime)
                 && acknowledgedFireSequence == other.acknowledgedFireSequence
                 && lastFireResult == other.lastFireResult
-                && authoritativeShotTick == other.authoritativeShotTick;
+                && authoritativeShotTick == other.authoritativeShotTick
+                && stability.Equals(other.stability)
+                && resolvedFireSequence == other.resolvedFireSequence
+                && hasResolvedFireSequence == other.hasResolvedFireSequence;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -74,6 +82,9 @@ namespace FPS
             serializer.SerializeValue(ref acknowledgedFireSequence);
             serializer.SerializeValue(ref lastFireResult);
             serializer.SerializeValue(ref authoritativeShotTick);
+            serializer.SerializeValue(ref stability);
+            serializer.SerializeValue(ref resolvedFireSequence);
+            serializer.SerializeValue(ref hasResolvedFireSequence);
         }
     }
 
@@ -133,6 +144,7 @@ namespace FPS
         public int ServerReserveAmmo => GetCurrentServerState(false)?.ReserveAmmo ?? 0;
         public bool IsServerReloading => GetCurrentServerState(false)?.IsReloading(GetServerTime()) ?? false;
         public bool IsServerEquipping => GetCurrentServerState(false)?.IsEquipping(GetServerTime()) ?? false;
+        internal WeaponOwnerState DiagnosticOwnerState => ownerWeaponState.Value;
 
         public override void OnNetworkSpawn()
         {
@@ -208,13 +220,7 @@ namespace FPS
         {
             if (senderClientId != OwnerClientId)
             {
-                PublishOwnerState(FireRejectReason.NotOwner, command.sequence, GetServerTick());
-                return false;
-            }
-
-            if (!CanUseCombat())
-            {
-                PublishOwnerState(FireRejectReason.Incapacitated, command.sequence, GetServerTick());
+                PublishFireResult(FireRejectReason.NotOwner, command.sequence, GetServerTick());
                 return false;
             }
 
@@ -222,33 +228,40 @@ namespace FPS
             int currentSlot = weaponManager != null ? weaponManager.CurrentWeaponIndex : 0;
             if (weapon == null || weapon.Data == null || command.weaponSlot != currentSlot)
             {
-                PublishOwnerState(FireRejectReason.WrongWeapon, command.sequence, GetServerTick());
+                PublishFireResult(FireRejectReason.WrongWeapon, command.sequence, GetServerTick());
+                return false;
+            }
+
+            // Sequences belong to a weapon slot, even when combat is interrupted.
+            if (!CanUseCombat())
+            {
+                PublishFireResult(FireRejectReason.Incapacitated, command.sequence, GetServerTick());
                 return false;
             }
 
             WeaponServerState state = GetCurrentServerState(true);
             if (state == null || !state.CanAcceptFireSequence(command.sequence))
             {
-                PublishOwnerState(FireRejectReason.DuplicateSequence, command.sequence, GetServerTick());
+                PublishFireResult(FireRejectReason.DuplicateSequence, command.sequence, GetServerTick());
                 return false;
             }
 
             double now = GetServerTime();
             if (state.IsEquipping(now))
             {
-                PublishOwnerState(FireRejectReason.Equipping, command.sequence, GetServerTick());
+                PublishFireResult(FireRejectReason.Equipping, command.sequence, GetServerTick());
                 return false;
             }
 
             if (!TryConsumeFireRequestBudget(weapon.Data, now))
             {
-                PublishOwnerState(FireRejectReason.CooldownOrAmmo, command.sequence, GetServerTick());
+                PublishFireResult(FireRejectReason.CooldownOrAmmo, command.sequence, GetServerTick());
                 return false;
             }
 
             if (!NetworkMatchStateManager.IsGameplayActive)
             {
-                PublishOwnerState(FireRejectReason.MatchBlocked, command.sequence, GetServerTick());
+                PublishFireResult(FireRejectReason.MatchBlocked, command.sequence, GetServerTick());
                 return false;
             }
 
@@ -258,9 +271,9 @@ namespace FPS
                     command.inputSequence,
                     out Vector3 origin,
                     out Vector3 direction,
-                    out bool aimed))
+                    out bool aimed, out WeaponStabilityContext stabilityContext))
             {
-                PublishOwnerState(FireRejectReason.InvalidAim, command.sequence, GetServerTick());
+                PublishFireResult(FireRejectReason.InvalidAim, command.sequence, GetServerTick());
                 return false;
             }
 
@@ -284,7 +297,7 @@ namespace FPS
                     out double rewindTime);
             if (!okTick)
             {
-                PublishOwnerState(FireRejectReason.InvalidTick, command.sequence, currentServerTick);
+                PublishFireResult(FireRejectReason.InvalidTick, command.sequence, currentServerTick);
                 return false;
             }
 
@@ -298,9 +311,9 @@ namespace FPS
                 senderClientId: senderClientId,
                 validateSender: true,
                 clientTimeAlreadyResolved: true,
-                aimed: aimed);
+                aimed: aimed, stabilityContext: stabilityContext, continuousAuto: command.continuousAuto);
 
-            PublishOwnerState(
+            PublishFireResult(
                 accepted ? FireRejectReason.None : FireRejectReason.CooldownOrAmmo,
                 command.sequence,
                 GetServerTick());
@@ -339,7 +352,7 @@ namespace FPS
             ulong senderClientId,
             bool validateSender,
             bool clientTimeAlreadyResolved,
-            bool aimed)
+            bool aimed, WeaponStabilityContext stabilityContext, bool continuousAuto = false)
         {
             if (!CanUseCombat())
                 return false;
@@ -362,7 +375,11 @@ namespace FPS
 
             WeaponServerState serverState = GetCurrentServerState(true);
             if (serverState == null || !serverState.TryConsumeFire(
-                    weapon.Data, now, fireSequence, enforceSequence: validateSender))
+                    weapon.Data, now, fireSequence, enforceSequence: validateSender,
+                    stabilityContext: stabilityContext,
+                    shotSeed: WeaponBallistics.BuildShotSeed(OwnerClientId, fireSequence,
+                        (byte)Mathf.Clamp(weaponManager != null ? weaponManager.CurrentWeaponIndex : 0, 0, byte.MaxValue)),
+                    continuousAuto: continuousAuto))
                 return false;
 
             if (infectionController == null)
@@ -376,7 +393,7 @@ namespace FPS
             int hitMask = GetHitMask(weaponData);
             float maximumTravelDistance = weaponData.MaximumTravelDistance;
             int projectileCount = Mathf.Max(1, weaponData.projectileCount);
-            float spreadAngle = weaponData.GetSpreadAngle(aimed)
+            float spreadAngle = serverState.LastShotSpread
                 * (infectionController != null ? infectionController.WeaponSwayMultiplier : 1f);
             uint shotSeed = WeaponBallistics.BuildShotSeed(
                 validateSender ? senderClientId : OwnerClientId,
@@ -439,7 +456,8 @@ namespace FPS
 
             if (emitEffects)
             {
-                FireEffectsClientRpc(spawnPosition, direction, fireSequence, aimed);
+                FireEffectsClientRpc(spawnPosition, direction, fireSequence, aimed, spreadAngle,
+                    (byte)Mathf.Clamp(weaponManager != null ? weaponManager.CurrentWeaponIndex : 0, 0, byte.MaxValue));
                 if (appliedDamage)
                 {
                     SendHitConfirmedToAttacker(
@@ -504,6 +522,7 @@ namespace FPS
 
         public void RestoreServerSnapshot(PlayerRuntimeSnapshot snapshot)
         {
+            snapshot.ValidateSchema();
             restoredServerSnapshot = true;
             if (snapshot.weaponSlot0.definitionId.Length > 0)
                 RestoreSlot(snapshot.weaponSlot0);
@@ -636,21 +655,21 @@ namespace FPS
             Vector3 aimOrigin,
             Vector3 aimDirection,
             ushort shotSequence,
-            bool aimed)
+            bool aimed, float spreadAngle, byte weaponSlot)
         {
             if (IsOwner) return;
 
-            Weapon weapon = GetCurrentWeapon();
+            if (weaponManager == null) weaponManager = GetComponent<WeaponManager>();
+            Weapon weapon = weaponManager != null ? weaponManager.GetWeapon(weaponSlot) : null;
             if (weapon == null) return;
 
-            int slot = weaponManager != null ? weaponManager.CurrentWeaponIndex : 0;
             weapon.SpawnVisualProjectiles(
                 aimOrigin,
                 aimDirection,
                 shotSequence,
                 OwnerClientId,
-                (byte)Mathf.Clamp(slot, 0, byte.MaxValue),
-                aimed);
+                weaponSlot,
+                aimed, spreadAngle);
             weapon.PlayMuzzleEffect();
             weaponManager?.CompleteActionsForAcceptedShot();
             weapon.PlayShootSound();
@@ -821,6 +840,13 @@ namespace FPS
             return weaponManager != null ? weaponManager.GetWeapon(slot) : null;
         }
 
+        private void PublishFireResult(FireRejectReason result, ushort sequence, int shotTick)
+        {
+            if (result != FireRejectReason.NotOwner && result != FireRejectReason.WrongWeapon)
+                GetCurrentServerState(false)?.RecordFireResult(sequence);
+            PublishOwnerState(result, sequence, shotTick);
+        }
+
         private void PublishOwnerState(FireRejectReason result, ushort sequence, int shotTick)
         {
             if (!IsServer || !IsSpawned)
@@ -845,7 +871,10 @@ namespace FPS
                 equipCompleteTime = state.EquipCompleteTime,
                 acknowledgedFireSequence = sequence,
                 lastFireResult = result,
-                authoritativeShotTick = shotTick
+                authoritativeShotTick = shotTick,
+                stability = state.Stability,
+                resolvedFireSequence = state.ResolvedFireSequence,
+                hasResolvedFireSequence = state.HasResolvedFireSequence
             };
             presentationState.Value = new WeaponPresentationState
             {

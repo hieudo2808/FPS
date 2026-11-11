@@ -7,9 +7,10 @@ namespace FPS
 {
     public enum GamePhase { BUILD, PEAK, RELAX }
 
-    public class AIDirector : NetworkBehaviour
+    public partial class AIDirector : NetworkBehaviour
     {
         public static AIDirector Instance { get; private set; }
+        public event System.Action CountersChanged;
 
         [Header("Pacing Settings")]
         [SerializeField] private float buildDuration = 45f;
@@ -139,6 +140,7 @@ namespace FPS
             else Destroy(gameObject);
 
             InitializeAdaptiveSystems();
+            HudSignals.NotifySourcesChanged();
         }
 
         private void OnEnable()
@@ -149,8 +151,15 @@ namespace FPS
         private void OnDisable()
         {
             UnsubscribeSpawnEvents();
+            HudSignals.NotifySourcesChanged();
             lastCountedSpawnedEnemy = null;
             lastCountedSpawnFrame = -1;
+        }
+
+        public override void OnDestroy()
+        {
+            if (Instance == this) { Instance = null; HudSignals.NotifySourcesChanged(); }
+            base.OnDestroy();
         }
 
         public override void OnNetworkSpawn()
@@ -163,7 +172,7 @@ namespace FPS
             UpdatePhaseUI(CurrentPhase);
             UpdateZombieCountUI(0, 0);
 
-            if (CanRunServerLogic() && NetworkMatchStateManager.IsGameplayActive && !enableAdaptiveDirector)
+            if (CanRunServerLogic() && NetworkMatchStateManager.IsGameplayActive && (!enableAdaptiveDirector || adaptiveObserveOnly))
                 StartCoroutine(StartFirstWave());
         }
 
@@ -177,8 +186,9 @@ namespace FPS
         private void Update()
         {
             if (!CanRunServerLogic()) return;
-            if (!NetworkMatchStateManager.IsGameplayActive) return;
-
+            using var profilerScope = DirectorMarker.Auto();
+            UpdateOperatingContext();
+            if (RunState != DirectorRunState.Active) return;
             EnsureSpawnEventSubscriptions();
             if (enableAdaptiveDirector)
             {
@@ -197,8 +207,8 @@ namespace FPS
                 UpdateSpawning();
             }
 
-            intensity -= Time.deltaTime * 2f;
-            intensity = Mathf.Clamp(intensity, 0f, 100f);
+            if (!enableAdaptiveDirector || adaptiveObserveOnly)
+                intensity = Mathf.Clamp(intensity - Time.deltaTime * 2f, 0f, 100f);
         }
 
         private void UpdatePacing()
@@ -241,6 +251,13 @@ namespace FPS
         {
             if (!CanRunServerLogic())
                 return;
+
+            if (enableAdaptiveDirector)
+            {
+                InitializeAdaptiveSystems();
+                adaptiveStateMachine.RequestCrescendo(GetDirectorTime() + Mathf.Max(1f, minimumDurationSeconds));
+                if (!adaptiveObserveOnly) return;
+            }
 
             forcedCrescendoUntil = System.Math.Max(
                 forcedCrescendoUntil,
@@ -285,6 +302,14 @@ namespace FPS
             if (!CanRunServerLogic()) return;
             forcedCrescendoUntil = 0;
             intensity = 0;
+            CancelAdaptiveWindow();
+            adaptiveStateMachine.End();
+            needsFreshWindow = true;
+            spawnTimer = phaseTimer = 0;
+            ResetSpawnRequestSnapshot();
+            adaptiveDecision = adaptiveStateMachine.GetDecision();
+            if (enableAdaptiveDirector && !adaptiveObserveOnly)
+                SetAdaptiveState(DirectorPhase.Relax, adaptiveDifficultyMultiplier);
             TransitionTo(GamePhase.RELAX);
         }
 
@@ -293,11 +318,9 @@ namespace FPS
         {
             if (!CanRunServerLogic()) return;
             int alive = 0;
-            foreach (var enemy in FindObjectsByType<EnemyAI>())
+            foreach (var enemy in EnemyAI.PressureRoster)
             {
-                if (!enemy.isActiveAndEnabled) continue;
-                var health = enemy.GetComponent<EnemyHealth>();
-                if (health == null || !health.IsDead) alive++;
+                if (enemy != null && enemy.IsAliveForDirector) alive++;
             }
             SetZombiesAlive(alive);
             lastCountedSpawnedEnemy = null;
@@ -353,13 +376,20 @@ namespace FPS
             InitializeAdaptiveSystems();
             DirectorStepResult result = adaptiveStateMachine.Advance(
                 Time.deltaTime,
-                BuildDirectorInput());
+                BuildDirectorInput(), RunState, GetDirectorTime());
             adaptiveDecision = result.Decision;
-            SetAdaptiveState(result.Phase, adaptiveDifficultyMultiplier);
+            DecisionReason = result.Reason;
+            if (!adaptiveObserveOnly)
+                SetAdaptiveState(result.Phase, adaptiveDifficultyMultiplier);
 
             if (result.PhaseChanged)
             {
-                SetPhase(MapToLegacyPhase(result.Phase));
+                if (!adaptiveObserveOnly)
+                {
+                    SetPhase(MapToLegacyPhase(result.Phase));
+                    spawnTimer = 0;
+                    ResetSpawnRequestSnapshot();
+                }
                 if (showDebugLogs)
                     GameLog.Info(() => $"[AIDirector] Adaptive phase -> {result.Phase}");
             }
@@ -367,30 +397,18 @@ namespace FPS
             if (!result.EnteredRelax)
                 return;
 
-            var metrics = NetworkGameManager.Instance?.AdaptiveMetrics;
-            var samples = metrics?.BuildSamples();
-            DifficultyLevel difficulty = DifficultyManager.Instance != null
-                ? DifficultyManager.Instance.CurrentDifficulty.Value
-                : DifficultyLevel.Medium;
-            DynamicDifficultyEvaluation evaluation = adaptiveDifficultyEvaluator.Evaluate(
-                difficulty,
-                samples,
-                relaxBoundary: true);
-            adaptiveDifficultyMultiplier = evaluation.Multiplier;
-            SetAdaptiveState(result.Phase, adaptiveDifficultyMultiplier);
-            metrics?.ResetEncounter();
+            if (result.Reason == DirectorDecisionReason.Protection && !double.IsNaN(lastDamageTime))
+                ProtectionLatencyMilliseconds = (float)((GetDirectorTime() - lastDamageTime) * 1000);
 
-            if (showDebugLogs)
-            {
-                GameLog.Info(() => $"[AIDirector] Adaptive Relax score={evaluation.TeamPerformanceScore:F3}, "
-                    + $"target={evaluation.TargetMultiplier:F3}, multiplier={evaluation.Multiplier:F3}, "
-                    + $"evidence={evaluation.HasEvidence}");
-            }
+            var metrics = NetworkGameManager.Instance?.AdaptiveMetrics;
+            if (metrics != null && metrics.RequestBoundary(DirectorServerTick))
+                boundaryReason = result.Reason;
         }
 
         private void UpdateAdaptiveSpawning()
         {
-            if (!NetworkMatchStateManager.IsGameplayActive || ZombieFactory.Instance == null)
+            if (RunState != DirectorRunState.Active || CampaignMissionController.Instance != null && CampaignMissionController.Instance.SuppressSpawns
+                || ZombieFactory.Instance == null)
             {
                 ResetSpawnRequestSnapshot();
                 return;
@@ -436,8 +454,6 @@ namespace FPS
                     adaptiveDifficultyMultiplier,
                     1f,
                     adaptiveDifficultyMultiplier);
-            if (zombie != null)
-                intensity += 5f;
         }
 
         private int GetOrCaptureSpawnRequestPlayerCount()
@@ -463,38 +479,7 @@ namespace FPS
 
         private DirectorInput BuildDirectorInput()
         {
-            float weakestHealth01 = 1f;
-            float separation01 = 0f;
-            float idleSeconds = 0f;
-            float recentDownedSeconds = 999f;
-
-            if (PlayerProfiler.Instance != null)
-            {
-                foreach (PlayerProfile profile in PlayerProfiler.Instance.AllProfiles)
-                {
-                    if (profile == null || profile.cachedHealth != null && profile.cachedHealth.IsDead)
-                        continue;
-
-                    float maxHealth = profile.cachedHealth != null
-                        ? Mathf.Max(1f, profile.cachedHealth.MaxHealth)
-                        : 100f;
-                    weakestHealth01 = Mathf.Min(weakestHealth01,
-                        Mathf.Clamp01(profile.currentHealth / maxHealth));
-                    separation01 = Mathf.Max(separation01,
-                        Mathf.Clamp01(profile.distanceToNearestAlly / 30f));
-                    idleSeconds = Mathf.Max(idleSeconds, profile.campingDuration);
-                    if (profile.cachedHealth != null && profile.cachedHealth.LifeState == PlayerLifeState.Downed)
-                        recentDownedSeconds = 0f;
-                }
-            }
-
-            return new DirectorInput(
-                weakestHealth01,
-                separation01,
-                idleSeconds,
-                recentDownedSeconds,
-                ZombiesAlive,
-                intensity);
+            return pressureInput;
         }
 
         private void InitializeAdaptiveSystems()
@@ -548,7 +533,7 @@ namespace FPS
                 if (netObj != null && !netObj.IsSpawned)
                     netObj.Spawn(true);
 
-                intensity += 15f;
+                if (!enableAdaptiveDirector || adaptiveObserveOnly) intensity += 15f;
 
                 ShowAnnouncementClientRpc("SPECIAL INCOMING!");
                 return true;
@@ -590,7 +575,7 @@ namespace FPS
 
             SetZombiesAlive(Mathf.Max(0, ZombiesAlive - 1));
             SetTotalKills(TotalKills + 1);
-            intensity -= 3f;
+            if (!enableAdaptiveDirector || adaptiveObserveOnly) intensity -= 3f;
 
             if (!enableAdaptiveDirector || adaptiveObserveOnly)
                 UpdateLearningModifiers();
@@ -718,16 +703,16 @@ namespace FPS
         {
             if (HasBoundNetworkState)
                 networkZombiesAlive.Value = value;
-            else
-                localZombiesAlive = value;
+            else if (localZombiesAlive != value)
+            { localZombiesAlive = value; CountersChanged?.Invoke(); }
         }
 
         private void SetTotalKills(int value)
         {
             if (HasBoundNetworkState)
                 networkTotalKills.Value = value;
-            else
-                localTotalKills = value;
+            else if (localTotalKills != value)
+            { localTotalKills = value; CountersChanged?.Invoke(); }
         }
 
         private void SetAdaptiveState(DirectorPhase phase, float multiplier)
@@ -760,6 +745,7 @@ namespace FPS
 
         private void UpdateZombieCountUI(int previousValue, int newValue)
         {
+            CountersChanged?.Invoke();
             if (zombieCountText != null)
                 zombieCountText.text = $"Zombies: {ZombiesAlive} | Kills: {TotalKills}";
         }

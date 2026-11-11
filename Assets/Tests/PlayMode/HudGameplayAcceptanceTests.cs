@@ -12,6 +12,7 @@ using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
@@ -25,7 +26,7 @@ namespace FPS.Tests
     public sealed class HudGameplayAcceptanceTests
     {
         const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
-        const string Evidence = "Documents/UIUX/HUD-Evidence/FPSSample-2026-10-07/";
+        const string Evidence = "Reports/UIUX/Bot7Fixes-2026-11-10/After/";
         CampaignMissionController campaign;
         CampaignHUD hud;
         PlayerHealth owner;
@@ -100,6 +101,684 @@ namespace FPS.Tests
         }
 
         [UnityTest]
+        public IEnumerator SelectedUiInputScrollOpacityAndNativeHoldRemainValid()
+        {
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.I));
+            yield return new WaitForSecondsRealtime(.1f);
+            Check(TeamInventoryUI.IsOpen, "I opens the shared inventory");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return null;
+            TeamInventoryUI.Instance.OpenCampaignRecord();
+            yield return null;
+            Check(((TMP_Text)Get(TeamInventoryUI.Instance, "detailBody")).text == hud.JournalRecordText() && UiStateStack.Top == UiScreen.Inventory,
+                "Files retains inventory input ownership and displays the complete campaign record");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.I));
+            yield return new WaitForSecondsRealtime(.1f);
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return null;
+            Check(!TeamInventoryUI.IsOpen && !InputManager.GameplayInputBlocked, "I closes Files and restores gameplay input");
+            yield return HudPanelOpacityChangesOnlyBackgrounds();
+            yield return InventoryMissionAndFileMatchHierarchy();
+            yield return ArtworkScrollAndEventBindingsSurviveStress();
+            campaign.State.discoveredFiles = 0; Call(campaign, "Publish");
+            yield return CampaignHoldAndDebriefRespectCancellationAndAuthority();
+        }
+
+        [UnityTest]
+        public IEnumerator ThreeTabInventoryPreservesRecordProgressAndFocus()
+        {
+            var inventory = TeamInventoryUI.Instance;
+            var state = campaign.State;
+            state.discoveredFiles |= CampaignState.FileBit(CampaignFileId.FactoryManifest);
+            state.completed |= CampaignState.Bit(CampaignObjectiveId.FactoryIsolate);
+            Call(campaign, "Publish");
+            ulong files = state.discoveredFiles, completed = state.completed;
+            var gamepad = InputSystem.AddDevice<Gamepad>();
+            reviewActions.devices = new InputDevice[] { keyboard, mouse, gamepad };
+            try
+            {
+                foreach (string resolution in new[] { "1920x1080", "3840x2160", "1024x768" })
+                foreach (string scale in new[] { "100%", "125%" })
+                {
+                    EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
+                    EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Scale/" + scale);
+                    inventory.OpenCampaignRecord();
+                    yield return null;
+                    var tabs = inventory.GetComponentsInChildren<Button>(true).Where(button => button.name.EndsWith("Tab")).ToArray();
+                    Check(tabs.Select(button => button.name).SequenceEqual(new[] { "KeyItemsTab", "FilesTab", "MissionsTab" }), "Inventory contains exactly the three approved tabs");
+                    Check(((TMP_Text)Get(inventory, "detailBody")).text == hud.JournalRecordText(), "Files preserves all evidence and recorded transmissions");
+                    var selected = (Button)Get(inventory, "selectedRow");
+                    var scroll = ((TMP_Text)Get(inventory, "detailBody")).GetComponentInParent<ScrollRect>();
+                    Canvas.ForceUpdateCanvases(); scroll.verticalNormalizedPosition = 0;
+                    yield return null;
+                    var focused = EventSystem.current.currentSelectedGameObject;
+                    float position = scroll.verticalNormalizedPosition;
+                    for (int tick = 0; tick < 3; tick++)
+                    {
+                        state.tankSpawnRemaining += 1; Call(campaign, "Publish"); yield return null;
+                        Check((Button)Get(inventory, "selectedRow") == selected, "Timer snapshot does not rebuild Files rows");
+                        Check(EventSystem.current.currentSelectedGameObject == focused && Mathf.Abs(scroll.verticalNormalizedPosition - position) < .001f, "Timer snapshot preserves focus and scroll");
+                    }
+                    CheckText(inventory.GetComponentsInChildren<TMP_Text>());
+                    yield return Capture("three-tabs-record-" + resolution + "-" + scale.TrimEnd('%'));
+                    tabs.First(button => button.name == "MissionsTab").onClick.Invoke(); yield return null;
+                    var locked = inventory.GetComponentsInChildren<Button>().First(button => button.GetComponentsInChildren<TMP_Text>().Any(text => text.text == "LOCKED"));
+                    locked.onClick.Invoke(); yield return null;
+                    Check(((TMP_Text)Get(inventory, "detailBody")).text.Contains("Requires:"), "Locked mission states its actual prerequisite");
+                    Check(!inventory.GetComponentsInChildren<TMP_Text>().Any(text => text.text.Contains("RETRY TANK") || text.text.Contains(" / ")), "Inventory has no Retry Tank or slash separated labels");
+                    CheckText(inventory.GetComponentsInChildren<TMP_Text>());
+                    yield return Capture("three-tabs-missions-" + resolution + "-" + scale.TrimEnd('%'));
+                    inventory.Close();
+                }
+                inventory.OpenCampaignRecord(); yield return null;
+                var row = (Button)Get(inventory, "selectedRow");
+                var rect = Bounds(row.GetComponent<RectTransform>());
+                InputSystem.QueueStateEvent(mouse, new MouseState { position = rect.center }); yield return null;
+                InputSystem.QueueStateEvent(mouse, new MouseState { position = rect.center }.WithButton(MouseButton.Left)); yield return null;
+                InputSystem.QueueStateEvent(mouse, new MouseState { position = rect.center }); yield return null;
+                Check(((TMP_Text)Get(inventory, "detailTitle")).text == "Campaign Record", "Mouse opens Campaign Record inside Files");
+                InputSystem.QueueStateEvent(gamepad, new GamepadState().WithButton(GamepadButton.South)); yield return null;
+                InputSystem.QueueStateEvent(gamepad, new GamepadState()); yield return null;
+                Check(UiStateStack.Top == UiScreen.Inventory, "Gamepad Submit keeps Files input ownership");
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Escape)); yield return new WaitForSecondsRealtime(.1f);
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState()); yield return null;
+                Check(!TeamInventoryUI.IsOpen && !InGameMenuUI.IsMenuOpen && !InputManager.GameplayInputBlocked, "One Escape closes Inventory without opening Pause");
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.I)); yield return new WaitForSecondsRealtime(.1f);
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState()); yield return null;
+                Check(TeamInventoryUI.IsOpen, "I reopens the three tab Inventory");
+                Check(state.discoveredFiles == files && state.completed == completed, "Reading and navigation preserve authoritative progress");
+                inventory.Close();
+            }
+            finally
+            {
+                InputSystem.RemoveDevice(gamepad); reviewActions.devices = new InputDevice[] { keyboard, mouse };
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/1920x1080");
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Scale/100%");
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator ShippingNativeFeedbackHasEvidenceAtBothReviewResolutions()
+        {
+            checks.Add("FIXTURE: local host in authored GameScene, Manifest already recorded, actor teleported beside Shipping; RequestHold uses the native server RPC and explicit authority ticks. This is not a natural traversal or remote-client playtest.");
+            campaign.State.discoveredFiles |= CampaignState.FileBit(CampaignFileId.FactoryManifest);
+            Call(campaign, "Publish");
+            var shipping = campaign.Objective(CampaignObjectiveId.FactoryShipping);
+            PlaceBeside(shipping);
+            shipping.RequestNetworkInteraction(owner.NetworkObject);
+            yield return null;
+            Check(CampaignHUD.IsDocumentOpen && (CampaignInteractable)Get(hud, "focused") == shipping,
+                "Shipping opens through the interaction API with its recorded Manifest");
+            Check((int)Get(hud, "first") == -1 && (int)Get(hud, "second") == -1
+                && !((GameObject)Get(hud, "confirmation")).GetComponent<Button>().interactable,
+                "Both Shipping groups begin unselected and confirmation is disabled");
+            campaign.RequestHold(shipping.objectiveId, -1, -1, true);
+            yield return null;
+            Check(!campaign.State.Has(shipping.objectiveId) && ((IDictionary)Get(campaign, "holds")).Count == 0,
+                "Server rejects missing Shipping selections without creating a hold");
+            Check((CampaignShippingGroup)Get(hud, "shippingErrors") == (CampaignShippingGroup.ShipmentSeal | CampaignShippingGroup.DestinationReceivingTime),
+                "Native missing-selection receipt marks both required groups");
+            yield return CaptureReviewResolutions("shipping-missing-selection-native", "Select: Shipment / Seal; Destination / Receiving time");
+            campaign.RequestHold(shipping.objectiveId, -1, -1, false);
+
+            Set(hud, "first", 0); Set(hud, "second", 1); Call(hud, "ClearShippingErrors"); Call(hud, "RenderDocument");
+            float deadline = Time.realtimeSinceStartup + shipping.holdSeconds + 3;
+            while ((CampaignShippingGroup)Get(hud, "shippingErrors") == CampaignShippingGroup.None && Time.realtimeSinceStartup < deadline)
+            {
+                campaign.RequestHold(shipping.objectiveId, 0, 1, true);
+                Call(campaign, "UpdateHolds");
+                yield return null;
+            }
+            campaign.RequestHold(shipping.objectiveId, 0, 1, false);
+            Check(!campaign.State.Has(shipping.objectiveId) && CampaignHUD.IsDocumentOpen
+                && (CampaignShippingGroup)Get(hud, "shippingErrors") == CampaignShippingGroup.ShipmentSeal,
+                "Wrong Shipping command keeps the document open and marks only Shipment / Seal");
+            yield return CaptureReviewResolutions("shipping-wrong-native", "Mismatch: Shipment / Seal");
+
+            hud.CloseDocument(); shipping.RequestNetworkInteraction(owner.NetworkObject);
+            Set(hud, "first", 1); Set(hud, "second", 1); Call(hud, "RenderDocument");
+            deadline = Time.realtimeSinceStartup + shipping.holdSeconds + 3;
+            while (!campaign.State.Has(shipping.objectiveId) && Time.realtimeSinceStartup < deadline)
+            {
+                campaign.RequestHold(shipping.objectiveId, 1, 1, true);
+                Call(campaign, "UpdateHolds");
+                yield return null;
+            }
+            campaign.RequestHold(shipping.objectiveId, 1, 1, false);
+            Check(campaign.State.Has(shipping.objectiveId) && !CampaignHUD.IsDocumentOpen && hud.TrackedObjectiveId != shipping.objectiveId,
+                "Accepted Shipping command closes the document and moves tracking after the authoritative state is complete");
+            yield return CaptureReviewResolutions("shipping-success-native", "Recorded:");
+        }
+
+        [UnityTest]
+        public IEnumerator ComparisonReadsSourceBeforeShowingChoices()
+        {
+            checks.Add("FIXTURE: local host in authored GameScene; chapter/prerequisites and Desk Log are set explicitly, actor teleported beside the authored Intake terminal, authority Update disabled. Source recording itself uses the native RequestDiscoverFile RPC. This is not natural traversal or a remote-client playtest.");
+            var patient = campaign.Objective(CampaignObjectiveId.AsylumPatient);
+            var source = campaign.ContentCatalog.FindFile(CampaignFileId.AsylumPatientRecord);
+            campaign.State.chapter = CampaignChapter.Asylum;
+            campaign.State.completed = CampaignState.Bit(CampaignObjectiveId.AsylumAccess) | CampaignState.Bit(CampaignObjectiveId.AsylumFuse)
+                | CampaignState.Bit(CampaignObjectiveId.AsylumInstall) | CampaignState.Bit(CampaignObjectiveId.AsylumPower);
+            campaign.State.discoveredFiles = CampaignState.FileBit(CampaignFileId.AsylumDeskLog);
+            Call(campaign, "Publish");
+            PlaceBeside(patient);
+            Check(!campaign.State.HasFile(source.id) && CampaignRules.CanReadComparisonSource(campaign.State, patient.objectiveId),
+                "Intake source is initially unrecorded while the authored terminal is readable");
+            var reachableSource = (CampaignInteractable)typeof(CampaignMissionController).GetMethod("ReachableFileSource", Private)
+                .Invoke(campaign, new object[] { source, owner });
+            Check(reachableSource == patient, $"Server can resolve the authored Intake source: active={patient.isActiveAndEnabled} bound={patient.ProvidesFile(source, campaign.ContentCatalog)} reachable={reachableSource?.name ?? "null"}");
+            bool participant = (bool)typeof(CampaignMissionController).GetMethod("IsInsertionParticipant", Private)
+                .Invoke(campaign, new object[] { owner.StablePlayerId.Value });
+            Check(participant, "Local host remains an insertion participant for source discovery");
+            patient.RequestNetworkInteraction(owner.NetworkObject);
+            yield return null;
+            var controls = (RectTransform)Get(hud, "controls");
+            var record = controls.GetComponentsInChildren<Button>().Single(button => button.name == "RECORD SOURCE TO COMPARE");
+            Check(CampaignHUD.IsDocumentOpen && ((Text)Get(hud, "body")).text.Contains(source.body)
+                && controls.Find("Choices") == null && controls.Find("SecondaryChoices") == null && Get(hud, "confirmation") == null,
+                "Unread Intake terminal displays the source and record action without choice groups or a confirmation button");
+            Check(CampaignRules.TryComplete(campaign.State, patient.objectiveId, 1, 0) == CampaignResult.Prerequisite,
+                "Completion rules reject even the correct Intake selection before the source is recorded");
+            campaign.RequestHold(patient.objectiveId, 1, 0, true);
+            yield return null;
+            Check(!campaign.State.Has(patient.objectiveId) && ((IDictionary)Get(campaign, "holds")).Count == 0,
+                "Native server RPC rejects an Intake completion request before source recording");
+            campaign.RequestHold(patient.objectiveId, 1, 0, false);
+            yield return CaptureReviewResolutions("comparison-source-before-recording");
+
+            int changed = 0;
+            bool sourcePublished = false;
+            Action observed = () => { changed++; sourcePublished |= campaign.State.HasFile(source.id); };
+            campaign.Changed += observed;
+            try
+            {
+                PlaceBeside(patient);
+                record = controls.GetComponentsInChildren<Button>().Single(button => button.name == "RECORD SOURCE TO COMPARE");
+                campaign.enabled = true;
+                record.onClick.Invoke();
+                float deadline = Time.realtimeSinceStartup + 3;
+                while (!campaign.State.HasFile(source.id) && Time.realtimeSinceStartup < deadline) yield return null;
+                campaign.enabled = false;
+                yield return null;
+                Check(campaign.State.HasFile(source.id) && changed > 0 && sourcePublished,
+                    "Record button receives source discovery through the native RPC and publishes the recorded source in Changed");
+                var choices = controls.Find("Choices");
+                Check(choices != null && choices.gameObject.activeInHierarchy
+                    && choices.GetComponentsInChildren<Button>().Length == patient.Choices.Length
+                    && controls.GetComponentsInChildren<Button>().All(button => button.name != "RECORD SOURCE TO COMPARE")
+                    && ((GameObject)Get(hud, "confirmation")).activeInHierarchy,
+                    "Published source replaces the read action with the complete choice group and confirmation");
+                Check(((Text)Get(hud, "body")).text.Contains(source.body)
+                    && ((Text)Get(hud, "body")).text.Contains(campaign.ContentCatalog.FindFile(CampaignFileId.AsylumDeskLog).body),
+                    "The comparison document retains Intake source and recorded Desk Log alongside the choices");
+                Check(!campaign.State.Has(patient.objectiveId) && CampaignRules.CanUse(campaign.State, patient.objectiveId) == CampaignResult.Accepted,
+                    "Source recording unlocks comparison without completing the objective");
+                yield return CaptureReviewResolutions("comparison-source-recorded-choices-visible");
+            }
+            finally { campaign.Changed -= observed; }
+        }
+
+        [UnityTest]
+        public IEnumerator SelectedMockupNineScreensHaveRuntimeEvidence()
+        {
+            checks.Add("VISUAL FIXTURE: real GameScene UI; discovered files, locked Backup and hold presentation are explicit fixtures; native hold is covered separately.");
+            campaign.State.discoveredFiles |= CampaignState.FileBit(CampaignFileId.FactoryManifest);
+            Call(campaign, "Publish");
+            var inventory = TeamInventoryUI.Instance;
+            hud.ResetDialogue(); Call(hud, "ClearMessage");
+            var isolate = Object.FindObjectsByType<CampaignInteractable>(FindObjectsInactive.Include)
+                .First(item => item.objectiveId == CampaignObjectiveId.FactoryIsolate);
+            foreach (string resolution in new[] { "1920x1080", "3840x2160", "1024x768" })
+            {
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
+                ChangePhase(CampaignPhase.Exploring);
+                inventory.Close(); hud.CloseDocument();
+                yield return new WaitForSecondsRealtime(.3f);
+                Check(HudLayout.GameplayVisible, "Gameplay HUD is visible at " + resolution);
+                hud.ResetDialogue(); Call(hud, "ClearMessage");
+                Canvas.ForceUpdateCanvases();
+                CheckText(HUDManager.Instance.GetComponentsInChildren<TMP_Text>());
+                Check(Find<TMP_Text>("HealthText").textInfo.characterCount > 0 && Find<TMP_Text>("CurrentAmmoText").textInfo.characterCount > 0, "HUD health and ammo produce visible glyphs");
+                checks.Add("HUD DIAGNOSTIC " + Find<TMP_Text>("HealthText").text + " / " + Find<TMP_Text>("HealthText").font.name + " / " + Find<TMP_Text>("HealthText").fontSharedMaterial.name);
+                yield return Capture("selected-hud-" + resolution);
+
+                inventory.OpenFile(CampaignFileId.FactoryManifest);
+                yield return null;
+                Check(TeamInventoryUI.IsOpen, "Files opens at " + resolution);
+                CheckText(inventory.GetComponentsInChildren<TMP_Text>());
+                var tabLabels = new[] { "KeyItemsTab", "FilesTab", "MissionsTab" }
+                    .Select(name => inventory.GetComponentsInChildren<Button>(true).First(button => button.name == name).GetComponentInChildren<TMP_Text>()).ToArray();
+                for (int i = 1; i < tabLabels.Length; i++)
+                    Check(Bounds(tabLabels[i - 1].rectTransform).xMax + 8 <= Bounds(tabLabels[i].rectTransform).xMin,
+                        "Inventory tab labels retain a visible gap at " + resolution);
+                yield return Capture("selected-files-" + resolution);
+                inventory.GetComponentsInChildren<Button>(true).First(button => button.name == "MissionsTab").onClick.Invoke();
+                yield return null;
+                CheckText(inventory.GetComponentsInChildren<TMP_Text>());
+                yield return Capture("selected-missions-" + resolution);
+                inventory.OpenCampaignRecord();
+                yield return null;
+                Check(TeamInventoryUI.IsOpen && !inventory.GetComponentsInChildren<Button>(true).Any(button => button.name == "JournalTab") && !CampaignHUD.IsDocumentOpen,
+                    "Inventory has three tabs and Campaign Record is in Files at " + resolution);
+                Check(((TMP_Text)Get(inventory, "detailBody")).text == hud.JournalRecordText(), "Files preserves campaign record data");
+                CheckText(inventory.GetComponentsInChildren<TMP_Text>());
+                yield return Capture("selected-campaign-record-" + resolution);
+                inventory.Close();
+
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Preview Device/Manifest Without Recording");
+                yield return null;
+                Check(Find<TMP_Text>("DeviceBody").text.Contains(campaign.ContentCatalog.FindFile(CampaignFileId.FactoryManifest).body), "Manifest displays its recorded source at " + resolution);
+                CheckText(hud.GetComponentsInChildren<TMP_Text>());
+                yield return Capture("selected-manifest-" + resolution);
+                hud.CloseDocument();
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Preview Device/Backup");
+                yield return null;
+                Check(Find<TMP_Text>("DeviceNoticeValue").text.Contains("Requires:"), "Locked device explains its prerequisite at " + resolution);
+                CheckText(hud.GetComponentsInChildren<TMP_Text>());
+                yield return Capture("selected-locked-" + resolution);
+                hud.CloseDocument();
+                hud.Open(isolate);
+                Call(hud, "SetDeviceHolding", true);
+                var ring = (Image)Get(hud, "deviceProgress");
+                var track = (Image)Get(hud, "deviceProgressTrack");
+                ring.gameObject.SetActive(true); track.gameObject.SetActive(true); ring.fillAmount = .6f;
+                yield return Capture("selected-hold-" + resolution);
+                hud.CloseDocument();
+
+                ChangePhase(CampaignPhase.Failed); Call(campaign, "PublishRunSummary");
+                yield return null;
+                Check(CampaignStatusUI.IsDebriefOpen, "Failed summary opens at " + resolution);
+                yield return Capture("selected-failed-" + resolution);
+                ChangePhase(CampaignPhase.Completed);
+                Net(campaign, "phaseStarted", campaign.Now - campaign.settings.endingSeconds - 1);
+                Call(campaign, "PublishRunSummary");
+                yield return null;
+                Check(Find<TMP_Text>("Summary").text == "MISSION COMPLETE", "Completed summary opens at " + resolution);
+                yield return Capture("selected-complete-" + resolution);
+            }
+            EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/1920x1080");
+        }
+
+        [UnityTest]
+        public IEnumerator InventoryMissionAndFileMatchHierarchy()
+        {
+            var inventory = TeamInventoryUI.Instance;
+            campaign.State.discoveredFiles |= CampaignState.FileBit(CampaignFileId.FactoryManifest);
+            Call(campaign, "Publish");
+            foreach (string resolution in new[] { "1920x1080", "3840x2160" })
+            {
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Scale/100%");
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
+                inventory.Toggle();
+                inventory.GetComponentsInChildren<Button>(true).First(button => button.name == "MissionsTab").onClick.Invoke();
+                yield return new WaitForSecondsRealtime(.25f);
+                Canvas.ForceUpdateCanvases();
+                var title = (TMP_Text)Get(inventory, "detailTitle");
+                var status = (TMP_Text)Get(inventory, "detailStatus");
+                var body = (TMP_Text)Get(inventory, "detailBody");
+                var selected = (Button)Get(inventory, "selectedRow");
+                Check(Bounds(status.rectTransform).yMax <= Bounds(title.rectTransform).yMin,
+                    "Mission status sits below its title at " + resolution);
+                Check(Bounds(body.rectTransform.parent.GetComponent<RectTransform>()).yMax <= Bounds(status.rectTransform).yMin,
+                    "Mission body does not overlap status at " + resolution);
+                Check(selected != null && selected.colors.selectedColor.a < .2f && selected.transform.Find("SelectionLine").gameObject.activeSelf,
+                    "Selected mission has a restrained focus fill and visible selection line");
+                yield return Capture("inventory-missions-hierarchy-" + resolution);
+                inventory.Close();
+                inventory.OpenFile(CampaignFileId.FactoryManifest);
+                yield return new WaitForSecondsRealtime(.25f);
+                Canvas.ForceUpdateCanvases();
+                Check(Bounds(status.rectTransform).yMin >= Bounds(title.rectTransform).yMax,
+                    "File category remains above its title at " + resolution);
+                yield return Capture("inventory-file-hierarchy-" + resolution);
+                inventory.Close();
+            }
+            EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/1920x1080");
+        }
+
+        [UnityTest]
+        public IEnumerator HudPanelOpacityChangesOnlyBackgrounds()
+        {
+            bool hadValue = PlayerPrefs.HasKey(HudSkin.PanelOpacityKey);
+            float previous = HudSkin.PanelOpacity;
+            try
+            {
+                var tracker = ((RectTransform)Get(hud, "tracker")).GetComponent<Image>();
+                var trackerText = (TMP_Text)Get(hud, "status");
+                Call(hud, "UpdateTracker", owner);
+                var branchProgress = (TMP_Text)Get(hud, "branchCounts");
+                Check(branchProgress.gameObject.activeInHierarchy && branchProgress.alignment == TextAlignmentOptions.TopRight,
+                    "Factory branch progress is visible and right aligned");
+                Check(branchProgress.text == "0/3\n0/2", "Factory progress starts with the authoritative branch counts");
+                var branchArrow = (Text)Get(hud, "branchArrow");
+                Check(branchArrow.gameObject.activeInHierarchy && branchArrow.text == "→", "Tracked branch shows the approved horizontal arrow with the glyph-capable HUD font");
+                Check(branchArrow.preferredHeight <= branchArrow.rectTransform.rect.height, "Tracked branch arrow has enough vertical space to render");
+                Check(((TMP_Text)Get(hud, "actionLabel")).text.Contains("SWITCH"), "Factory tracker retains its branch switch key");
+                var panels = (Image[])Get(HUDManager.Instance, "opacityPanels");
+                var originalAlphas = (float[])Get(HUDManager.Instance, "opacityPanelAlphas");
+                var hotbar = (SurvivalHotbar)Get(HUDManager.Instance, "survivalHotbar");
+                Check(panels != null && panels.Length == 2, "Health and weapon panel backgrounds are available");
+                Check(hotbar != null, "Hotbar is available");
+                var shades = (Image[])Get(hotbar, "shades");
+                float textAlpha = trackerText.color.a;
+                var healthText = (TMP_Text)Get(HUDManager.Instance, "healthText");
+                var warning = (TMP_Text)Get(HUDManager.Instance, "specialThreatWarningText");
+                float healthAlpha = healthText.color.a, warningAlpha = warning.color.a;
+                var subtitles = (Text)Get(hud, "subtitle");
+                Check(subtitles.GetComponent<Outline>() != null && !((Image)Get(hud, "subtitlePlate")).enabled,
+                    "Subtitles use a text outline without an opaque panel");
+                var menu = Object.FindFirstObjectByType<InGameMenuUI>();
+                Check(menu != null, "In-game menu exists");
+                Call(menu, "TogglePauseMenu"); Call(menu, "OpenSettings");
+                yield return null;
+                var settings = ((GameObject)Get(menu, "settingsPanel")).GetComponent<SettingsUI>();
+                Check(settings != null, "Settings panel exists");
+                ((Button)Get(settings, "graphicsTabButton")).onClick.Invoke();
+                yield return null;
+                var slider = (Slider)Get(settings, "hudOpacitySlider");
+                Check(slider != null && slider.gameObject.activeInHierarchy, "Graphics settings exposes HUD panel opacity");
+                slider.value = .35f;
+                yield return null;
+                Check(Mathf.Abs(HudSkin.PanelOpacity - .35f) < .001f, "Settings slider applies the saved panel opacity");
+                foreach (string resolution in new[] { "1920x1080", "3840x2160" })
+                {
+                    EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
+                    yield return new WaitForSecondsRealtime(.2f);
+                    var opacityLabel = slider.transform.parent.Find("Label").GetComponent<TMP_Text>();
+                    opacityLabel.ForceMeshUpdate();
+                    Check(!opacityLabel.isTextTruncated && !opacityLabel.isTextOverflowing, "Opacity label fits at " + resolution);
+                    yield return Capture("settings-hud-opacity-" + resolution);
+                }
+                menu.ResumeGame();
+                yield return null;
+                foreach (string resolution in new[] { "1920x1080", "3840x2160" })
+                {
+                    EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
+                    foreach (float opacity in new[] { 1f, .35f })
+                    {
+                        HudSkin.SetPanelOpacity(opacity);
+                        yield return new WaitForSecondsRealtime(.2f);
+                        Check(Mathf.Abs(tracker.color.a - opacity) < .001f, "Tracker background follows opacity");
+                        for (int index = 0; index < panels.Length; index++)
+                            Check(Mathf.Abs(panels[index].color.a - originalAlphas[index] * opacity) < .001f, "HUD background follows opacity: " + panels[index].name);
+                        foreach (var shade in shades) Check(Mathf.Abs(shade.color.a - opacity) < .001f, "Hotbar slot background follows opacity");
+                        Check(Mathf.Approximately(trackerText.color.a, textAlpha), "Tracker text remains fully readable");
+                        Check(Mathf.Approximately(healthText.color.a, healthAlpha) && Mathf.Approximately(warning.color.a, warningAlpha), "Health text and special-threat warning alpha do not change");
+                        yield return Capture("hud-opacity-" + Mathf.RoundToInt(opacity * 100) + "-" + resolution);
+                    }
+                }
+            }
+            finally
+            {
+                HudSkin.SetPanelOpacity(previous);
+                if (!hadValue) { PlayerPrefs.DeleteKey(HudSkin.PanelOpacityKey); PlayerPrefs.Save(); }
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/1920x1080");
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator ArtworkScrollAndEventBindingsSurviveStress()
+        {
+            var originalSettings = campaign.settings;
+            var settings = Object.Instantiate(originalSettings);
+            var catalog = Object.Instantiate(campaign.ContentCatalog);
+            settings.contentCatalog = catalog; campaign.settings = settings;
+            var inventory = TeamInventoryUI.Instance;
+            Action countSource = null;
+            TMP_Text optionalReload = null;
+            try
+            {
+                checks.Add("SYNTHETIC STRESS: doubled real file titles/body, all files discovered, reserve counter 999999");
+                foreach (var file in catalog.files.Where(f => f != null))
+                { file.title += " / " + file.title; file.body = file.body + "\n\n" + file.body; file.preview = null; }
+                campaign.State.discoveredFiles = ulong.MaxValue;
+                Call(campaign, "Publish");
+                int sourceChanges = 0;
+                countSource = () => sourceChanges++;
+                HudSignals.SourcesChanged += countSource;
+                for (int frame = 0; frame < 12; frame++) yield return null;
+                Check(sourceChanges == 0, "Idle UI does not rebind lifecycle sources every frame");
+                HudSignals.SourcesChanged -= countSource; countSource = null;
+
+                foreach (string resolution in new[] { "1920x1080", "1280x720", "1024x768", "2560x1080", "3840x2160" })
+                foreach (string scale in resolution == "1920x1080" ? new[] { "100%", "125%" } : new[] { "100%" })
+                {
+                    EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
+                    EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Scale/" + scale);
+                    yield return new WaitForSecondsRealtime(.2f);
+                    inventory.OpenFile(CampaignFileId.FactoryManifest);
+                    yield return null;
+                    Canvas.ForceUpdateCanvases();
+                    CheckText(inventory.GetComponentsInChildren<TMP_Text>());
+                    var detailScroll = inventory.GetComponentsInChildren<ScrollRect>().First(s => s.name == "BodyViewport");
+                    var listScroll = inventory.GetComponentsInChildren<ScrollRect>().First(s => s.name == "ListViewport");
+                    detailScroll.verticalNormalizedPosition = listScroll.verticalNormalizedPosition = 0;
+                    yield return null;
+                    Check(Mathf.Abs(Bounds(detailScroll.content).yMin - Bounds(detailScroll.viewport).yMin) <= 1f,
+                        "Inventory scroll reaches the final line of the long file");
+                    Check(Bounds(listScroll.content).yMin >= Bounds(listScroll.viewport).yMin - 1f,
+                        "Inventory list can reach its final row");
+                    Check(((Image)Get(inventory, "detailIcon")).sprite == (catalog.FindFile(CampaignFileId.FactoryManifest).icon ?? HudSkin.Get("File")), "Missing preview uses the authored file icon");
+                    yield return Capture("asset-files-" + resolution + "-" + scale.Replace("%", ""));
+                    inventory.Close();
+
+                    inventory.OpenCampaignRecord();
+                    var document = (TMP_Text)Get(inventory, "detailBody");
+                    document.text = "SYNTHETIC STRESS / LONGEST REAL FILE DOUBLED WITH PARAGRAPH BREAKS\n\n" + catalog.files.Where(f => f != null).OrderByDescending(f => f.body?.Length ?? 0).First().body.Replace(". ", ".\n\n");
+                    yield return null;
+                    Canvas.ForceUpdateCanvases();
+                    var scroll = document.GetComponentInParent<ScrollRect>();
+                    Check(scroll.content.rect.height > scroll.viewport.rect.height, "Long document uses scroll content");
+                    scroll.verticalNormalizedPosition = 0;
+                    yield return null;
+                    Check(Mathf.Abs(Bounds(scroll.content).yMin - Bounds(scroll.viewport).yMin) <= 1f, "Document scroll reaches the last line");
+                    Check(document.font == Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF"), "Campaign Record uses the campaign text font");
+                    Check(EventSystem.current.currentSelectedGameObject != null, "Document has keyboard/gamepad focus");
+                    yield return Capture("asset-document-" + resolution + "-" + scale.Replace("%", ""));
+                    UiStateStack.TryBack();
+                    yield return null;
+                    Check(UiStateStack.Top == UiScreen.Gameplay && !InputManager.GameplayInputBlocked, "One Back closes only the document");
+                }
+
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/1920x1080");
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Scale/100%");
+                yield return null;
+                var weapon = (Weapon)Get(HUDManager.Instance, "currentWeapon");
+                Check(weapon != null, "HUD binds current weapon after overlays: ownerSpawned=" + owner.IsSpawned
+                    + "; ownerLocal=" + (PlayerHealth.LocalInstance == owner) + "; manager=" + (WeaponManager.LocalInstance != null)
+                    + "; sourceWeapon=" + (WeaponManager.LocalInstance?.CurrentWeapon != null) + "; hudEnabled=" + HUDManager.Instance.isActiveAndEnabled);
+                int ammo = weapon.CurrentAmmo, reserve = weapon.ReservedAmmo;
+                if (Get(HUDManager.Instance, "ammoStatusText") == null)
+                {
+                    optionalReload = new GameObject("Transient optional reload binding", typeof(RectTransform), typeof(TextMeshProUGUI)).GetComponent<TMP_Text>();
+                    optionalReload.enabled = false;
+                    Set(HUDManager.Instance, "ammoStatusText", optionalReload);
+                    checks.Add("FIXTURE: GameScene omits the optional reload label; a non-rendering transient label exercises its event binding.");
+                }
+                weapon.SetLocalAmmoState(3, 999999, true);
+                Check(((TMP_Text)Get(HUDManager.Instance, "currentAmmo")).text == "3"
+                    && ((TMP_Text)Get(HUDManager.Instance, "reservedAmmo")).text == "/ 999999"
+                    && ((TMP_Text)Get(HUDManager.Instance, "ammoStatusText")).text == "RELOADING", "Ammo/reload event renders synchronously");
+                CheckText(new[] { (TMP_Text)Get(HUDManager.Instance, "reservedAmmo") });
+                weapon.SetLocalAmmoState(ammo, reserve, false);
+                int nodes = inventory.GetComponentsInChildren<Transform>(true).Length;
+                for (int i = 0; i < 20; i++) { inventory.Toggle(); inventory.Close(); yield return null; }
+                Check(inventory.GetComponentsInChildren<Transform>(true).Length == nodes, "Twenty overlay cycles keep node count stable");
+            }
+            finally
+            {
+                if (countSource != null) HudSignals.SourcesChanged -= countSource;
+                if (optionalReload != null)
+                { Set(HUDManager.Instance, "ammoStatusText", null); Object.Destroy(optionalReload.gameObject); }
+                inventory.Close(); hud.CloseDocument();
+                campaign.settings = originalSettings; Object.Destroy(settings); Object.Destroy(catalog);
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Scale/100%");
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator CampaignHoldAndDebriefRespectCancellationAndAuthority()
+        {
+            checks.Add("FIXTURE: local host, native hold RPC and synthetic Interact keyboard; explicit authority ticks; simulated remote retry sender/client presentation; synthetic ending state");
+            var target = campaign.Objective(CampaignObjectiveId.FactoryIsolate);
+            var backup = campaign.Objective(CampaignObjectiveId.FactoryBackup);
+            hud.Open(backup);
+            foreach (string resolution in new[] { "1920x1080", "1024x768", "3840x2160" })
+            {
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
+                yield return new WaitForSecondsRealtime(.2f);
+                var notice = Find<TMP_Text>("DeviceNoticeValue");
+                notice.ForceMeshUpdate();
+                Canvas.ForceUpdateCanvases();
+                var system = Find<TMP_Text>("DeviceSystemCaption");
+                var source = Find<TMP_Text>("DeviceSourceCaption");
+                var action = Find<TMP_Text>("DeviceActionCaption");
+                Check(system.text == "Backup" && Find<TMP_Text>("DeviceSystemValue").text == "-", "Device shows the equipment row without inventing a value");
+                Check(Find<TMP_Text>("DeviceControlsHeading").text == "CONTROL / BACKUP" && Find<TMP_Text>("DeviceInstructionsHeading").text == "BACKUP / INSTRUCTIONS", "Device headings identify the current equipment");
+                Check(!Bounds(system.rectTransform).Overlaps(Bounds(source.rectTransform)) && !Bounds(source.rectTransform).Overlaps(Bounds(action.rectTransform))
+                    && !Bounds(action.rectTransform).Overlaps(Bounds(((GameObject)Get(hud, "confirmation")).GetComponent<RectTransform>())), "Three control rows clear one another and the confirmation button");
+                Check(Find<TMP_Text>("DeviceHint").text == "CHECK REQUIREMENTS", "Locked device footer does not misstate the prerequisite");
+                Check(Find<TMP_Text>("DeviceNoticeHeading").text == "LOCKED" && notice.text == "Requires: complete Power / Isolate" && !notice.isTextTruncated && !notice.isTextOverflowing,
+                    "Locked device notice shows the actual prerequisite without clipping at " + resolution);
+                Check(Find<Image>("DeviceLock", true).gameObject.activeSelf, "Locked notice has a lock icon");
+                Check(!Find<TMP_Text>("DeviceBody").text.Contains("SOURCE NOT RECORDED") && Find<TMP_Text>("DeviceSource").text == "NOT REQUIRED" && Find<TMP_Text>("DeviceNoticeHint").text == "CHECK THE REQUIREMENTS.", "Utility device reports that no comparison source is required and keeps its lock reason concise");
+                yield return Capture("device-locked-" + resolution);
+            }
+            var linkedFile = backup.LinkedFile;
+            Check(linkedFile != null && !string.IsNullOrEmpty(linkedFile.body), "Backup has recorded source content to inspect");
+            ulong originalFiles = campaign.State.discoveredFiles;
+            try
+            {
+                campaign.State.discoveredFiles |= CampaignState.FileBit(linkedFile.id);
+                foreach (string resolution in new[] { "1920x1080", "1024x768", "3840x2160" })
+                {
+                    EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
+                    hud.Open(backup);
+                    var deviceBody = Find<TMP_Text>("DeviceBody");
+                    Check(deviceBody.text.Contains(linkedFile.body) && Find<TMP_Text>("DeviceSource").text == "RECORDED", "Utility device labels its linked procedure RECORDED after it is read at " + resolution);
+                    yield return new WaitForSecondsRealtime(.2f);
+                    var viewport = Find<ScrollRect>("DeviceViewport");
+                    Check(viewport.viewport.rect.height > 180 && !Bounds(viewport.viewport).Overlaps(Bounds(Find<TMP_Text>("DeviceNoticeValue").rectTransform)), "Recorded source has a larger reading region clear of the notice at " + resolution);
+                    yield return Capture("device-source-recorded-" + resolution);
+                    deviceBody.text += "\n\nSYNTHETIC SCROLL STRESS\n" + string.Join("\n", Enumerable.Repeat(linkedFile.body, 5));
+                    yield return new WaitForSecondsRealtime(.2f);
+                    Canvas.ForceUpdateCanvases();
+                    var scroll = Find<ScrollRect>("DeviceViewport");
+                    Check(scroll.content.rect.height > scroll.viewport.rect.height && Find<TMP_Text>("DeviceScrollHint") != null, "Long source exposes a scroll hint at " + resolution);
+                    float before = scroll.verticalNormalizedPosition;
+                    ExecuteEvents.Execute(scroll.gameObject, new PointerEventData(EventSystem.current) { scrollDelta = new Vector2(0, -1) }, ExecuteEvents.scrollHandler);
+                    yield return null;
+                    Check(scroll.verticalNormalizedPosition < before, "Scroll wheel event moves the long source at " + resolution);
+                    scroll.verticalNormalizedPosition = 0;
+                    yield return null;
+                    Check(Mathf.Abs(Bounds(scroll.content).yMin - Bounds(scroll.viewport).yMin) <= 1f, "Long source reaches its last line at " + resolution);
+                    yield return Capture("device-source-scroll-synthetic-" + resolution);
+                    hud.CloseDocument(); hud.Open(backup);
+                    yield return null;
+                    Check(Mathf.Abs(scroll.content.anchoredPosition.y) < 1f, "Reopening a device returns to the top at " + resolution);
+                }
+            }
+            finally { campaign.State.discoveredFiles = originalFiles; }
+            hud.CloseDocument();
+            EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/1920x1080");
+            yield return null;
+            owner.GetComponent<PlayerMovement>().enabled = false;
+            owner.GetComponent<MouseMovement>().enabled = false;
+            owner.GetComponent<CharacterController>().enabled = false;
+            owner.GetComponent<InteractionManager>().enabled = false;
+            owner.transform.position = target.TargetPosition - Vector3.up * 1.55f + Vector3.right * .5f;
+            Physics.SyncTransforms();
+            Check(target.InReach(owner, campaign.settings.interactionRange), "Authored isolation panel is reachable");
+            target.RequestNetworkInteraction(owner.NetworkObject);
+            yield return null;
+            Check(CampaignHUD.IsDocumentOpen && (CampaignInteractable)Get(hud, "focused") == target, "Panel opens through the interaction API");
+            Check(Find<TMP_Text>("DeviceControlsHeading").text == "CONTROL / ISOLATE" && Find<TMP_Text>("DeviceInstructionsHeading").text == "PRODUCTION BREAKER / INSTRUCTIONS", "Isolation headings match the approved device composition");
+            Set(hud, "first", 0); Set(hud, "second", 0); Call(hud, "RenderDocument");
+            var interact = reviewActions.FindAction("Interact");
+            interact.ApplyBindingOverride(0, "<Keyboard>/f");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.F));
+            float started = Time.realtimeSinceStartup;
+            while (Time.realtimeSinceStartup - started < Mathf.Min(.35f, target.holdSeconds * .25f))
+            { Call(campaign, "UpdateHolds"); yield return null; }
+            Check(Find<Image>("DeviceHoldProgress", true).fillAmount > 0 && Find<Image>("DeviceHoldProgress", true).gameObject.activeSelf && !campaign.State.Has(target.objectiveId), "Device hold displays progress before completion: held=" + interact.IsPressed() + "; active=" + Get(hud, "holding"));
+            Check(Find<Image>("DeviceHoldTrack", true).gameObject.activeSelf, "Device hold displays a full progress track");
+            Check(Find<TMP_Text>("DeviceState").text == "COMMAND IN PROGRESS" && Find<TMP_Text>("DeviceHint").text == "RELEASE TO CANCEL", "Device shows hold and release instructions");
+            Check(Find<TMP_Text>("DeviceNoticeHeading").text == "COMMAND" && Find<TMP_Text>("DeviceNoticeValue").text == "Hold to confirm" && Find<TMP_Text>("DeviceNoticeHint").text == "RELEASE EARLY TO CANCEL.", "Device notice reflects the active hold");
+            Check(((Image)((GameObject)Get(hud, "confirmation")).GetComponent<Image>()).sprite == SelectedUiTheme.Current.HoldSurface, "Device confirms active hold with the action color");
+            yield return Capture("campaign-hold");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return null;
+            Check(!campaign.State.Has(target.objectiveId) && ((IDictionary)Get(campaign, "holds")).Count == 0,
+                "Releasing early cancels the authoritative hold without completing it");
+            Check(!Find<Image>("DeviceHoldProgress", true).gameObject.activeSelf && Find<TMP_Text>("DeviceHint").text == "", "Cancelled device hold clears its ring and release instruction");
+            Check(!Find<Image>("DeviceHoldTrack", true).gameObject.activeSelf, "Cancelled device hold hides its progress track");
+            Check(Find<TMP_Text>("DeviceNoticeHint").text == "HOLD THE INTERACTION KEY.", "Cancelled hold restores the ready interaction notice");
+            yield return CaptureReviewResolutions("campaign-hold-cancelled", "HOLD CANCELLED");
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.F));
+            float deadline = Time.realtimeSinceStartup + target.holdSeconds + 3;
+            while (!campaign.State.Has(target.objectiveId) && Time.realtimeSinceStartup < deadline)
+            { Call(campaign, "UpdateHolds"); yield return null; }
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            Check(campaign.State.Has(target.objectiveId) && !CampaignHUD.IsDocumentOpen, "Fresh hold completes through the native rules and closes its document");
+            TeamInventoryUI.Instance.Toggle();
+            ChangePhase(CampaignPhase.Failed); Call(campaign, "PublishRunSummary");
+            yield return null;
+            Check(UiStateStack.Top == UiScreen.Debrief && !TeamInventoryUI.IsOpen, "Failure replaces an open inventory with debrief");
+            var retry = Find<Button>("RetryCheckpoint");
+            Check(retry != null, "Host can access checkpoint retry");
+            var isServer = typeof(NetworkBehaviour).GetProperty(nameof(NetworkBehaviour.IsServer));
+            try
+            {
+                isServer.SetValue(campaign, false);
+                Call(CampaignStatusUI.Instance, "Render");
+                Check(retry.gameObject.activeSelf && retry.GetComponentInChildren<TMP_Text>().text == "RETURN TO MENU", "Simulated client debrief exposes RETURN TO MENU");
+                yield return Capture("debrief-client-fixture");
+            }
+            finally { isServer.SetValue(campaign, true); Call(CampaignStatusUI.Instance, "Render"); }
+            foreach (string resolution in new[] { "1920x1080", "1280x720", "1024x768", "3840x2160" })
+            foreach (string scale in resolution == "1920x1080" ? new[] { "100%", "125%" } : new[] { "100%" })
+            {
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Scale/" + scale);
+                yield return new WaitForSecondsRealtime(.2f);
+                CheckText(CampaignStatusUI.Instance.GetComponentsInChildren<TMP_Text>());
+                var retryLabel = retry.GetComponentInChildren<TMP_Text>();
+                Check(retryLabel.textInfo.lineCount == 1 && retry.targetGraphic == retryLabel, "Retry stays on one line and focus highlights its label");
+                yield return Capture("debrief-failed-" + resolution + "-" + scale.Replace("%", ""));
+            }
+            EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/1920x1080");
+            EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Scale/100%");
+            yield return null;
+            Set(campaign, "checkpoint", new CampaignCheckpoint { state = new CampaignState { phase = CampaignPhase.Exploring }, players = new List<CampaignPlayerSave>() });
+            var stage = typeof(NetworkBehaviour).GetField("__rpc_exec_stage", Private | BindingFlags.Public);
+            var beforeStage = stage.GetValue(campaign);
+            try
+            {
+                stage.SetValue(campaign, Enum.Parse(stage.FieldType, "Execute"));
+                Call(campaign, "RetryRpc", false, new RpcParams { Receive = new RpcReceiveParams { SenderClientId = NetworkManager.ServerClientId + 1 } });
+                Check(campaign.State.phase == CampaignPhase.Failed, "Server rejects retry from a simulated remote sender");
+            }
+            finally { stage.SetValue(campaign, beforeStage); }
+            ChangePhase(CampaignPhase.Completed);
+            Net(campaign, "phaseStarted", campaign.Now - campaign.settings.endingSeconds - 1);
+            Call(campaign, "PublishRunSummary");
+            yield return null;
+            Check(CampaignStatusUI.IsDebriefOpen && Find<TMP_Text>("Summary").text.Contains("MISSION COMPLETE"), "Completed campaign renders its native summary after the ending deadline");
+            Check(retry.gameObject.activeSelf && retry.GetComponentInChildren<TMP_Text>().text == "END SESSION", "Completed host debrief exposes END SESSION");
+            UiStateStack.TryBack();
+            Check(UiStateStack.Top == UiScreen.Debrief && InputManager.GameplayInputBlocked, "Back cannot resume a finished campaign");
+            foreach (string resolution in new[] { "1920x1080", "1280x720", "1024x768", "2560x1080", "3840x2160" })
+            foreach (string scale in resolution == "1920x1080" ? new[] { "100%", "125%" } : new[] { "100%" })
+            {
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Scale/" + scale);
+                yield return new WaitForSecondsRealtime(.2f);
+                CheckText(CampaignStatusUI.Instance.GetComponentsInChildren<TMP_Text>());
+                yield return Capture("debrief-completed-" + resolution + "-" + scale.Replace("%", ""));
+            }
+        }
+
+        [UnityTest]
         public IEnumerator AcceptedShotgunHitsConfirmAndRejectedShotsStaySilent()
         {
             var manager = owner.GetComponent<WeaponManager>();
@@ -131,7 +810,7 @@ namespace FPS.Tests
             var marker = (Image)Get(HUDManager.Instance, "hitMarker");
             ushort sequence = 1;
             bool Fire(Vector3 direction, ulong sender, bool validate = false) => (bool)Call(handler, "TryProcessFireServer",
-                owner.transform.position + Vector3.up, direction, 0, NetworkManager.Singleton.ServerTime.Time, sequence++, true, sender, validate, true, false);
+                owner.transform.position + Vector3.up, direction, 0, NetworkManager.Singleton.ServerTime.Time, sequence++, true, sender, validate, true, false, new WeaponStabilityContext { grounded = true }, false);
             try
             {
                 // EnemyHealth supports authoritative unspawned fixtures in a host; the shooter and feedback use NGO.
@@ -417,7 +1096,7 @@ namespace FPS.Tests
             inventory.FragGrenadeCount.Value = 0;
             yield return null;
             var frag = Find<RectTransform>("FRAG");
-            Check(frag.Find("Count").GetComponent<TMP_Text>().text == "0" && frag.Find("Unavailable").gameObject.activeSelf,
+            Check(frag.Find("Count").GetComponent<TMP_Text>().text == "x0" && frag.Find("Unavailable").gameObject.activeSelf,
                 "Empty quick slot has zero and a geometric slash");
             var reserve = Find<TMP_Text>("ReserveAmmoText");
             string liveAmmo = reserve.text;
@@ -435,7 +1114,7 @@ namespace FPS.Tests
             var interactionController = owner.GetComponent<InteractionManager>();
             bool scanning = interactionController.enabled;
             interactionController.enabled = false; // Keep the populated target prompt while capturing the layout fixture.
-            foreach (var resolution in new[] { "1280x720", "1920x1080", "3440x1440" })
+            foreach (var resolution in new[] { "1024x768", "1280x720", "1920x1080", "2560x1080", "3440x1440", "3840x2160" })
                 foreach (var scale in new[] { "100%", "125%" })
                 {
                     EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
@@ -456,15 +1135,13 @@ namespace FPS.Tests
                         "Gameplay subtitles stay at the bottom safe margin");
                     var normalPrompt = Find<RectTransform>("InteractionPrompt", true);
                     var interactionText = Find<Text>("Interaction");
-                    bool updating = hud.enabled;
-                    hud.enabled = false;
+                    yield return new WaitForEndOfFrame();
                     interactionText.text = "INTERACTING 50%";
                     HUDManager.Instance.SetInteractionPrompt("[F] Inspect the isolation panel", true);
-                    yield return new WaitForEndOfFrame();
                     Check(!normalPrompt.gameObject.activeInHierarchy && interactionText.isActiveAndEnabled,
                         "Hold progress replaces the normal interaction prompt in their shared band");
                     CheckLayout();
-                    interactionText.text = ""; hud.enabled = updating;
+                    interactionText.text = "";
                     yield return null; yield return new WaitForEndOfFrame();
                     HUDManager.Instance.SetInteractionPrompt("[F] Inspect the isolation panel", true);
                     yield return Capture("stress-" + resolution + "-" + scale.Replace("%", ""));
@@ -558,17 +1235,18 @@ namespace FPS.Tests
             yield return null;
             hud.CloseDocument();
             yield return null;
-            Check(Find<Text>("CurrentAction").text.Contains("READY"), "Ready count is in the tracker");
+            Check(Find<TMP_Text>("CurrentAction").text.Contains("READY"), "Ready count is in the tracker");
             yield return Capture("preparation-tracker");
-            Call(hud, "OpenJournal");
+            TeamInventoryUI.Instance.OpenCampaignRecord();
             ChangePhase(CampaignPhase.Encounter);
             yield return null; yield return null;
-            Check(!CampaignHUD.IsDocumentOpen && hud.HasMissionTracker, "Countdown transition closes the preparation guide and keeps visible tracker");
-            Check(Find<Text>("CurrentAction").text.Contains("remaining"), "Countdown is in the tracker");
+            TeamInventoryUI.Instance.Close();
+            Check(!CampaignHUD.IsDocumentOpen && !TeamInventoryUI.IsOpen && hud.HasMissionTracker, "Closing Files during countdown restores the visible tracker");
+            Check(Find<TMP_Text>("CurrentAction").text.Contains("remaining"), "Countdown is in the tracker");
             yield return Capture("countdown-tracker");
             ReviewMouse( new MouseState().WithButton(MouseButton.Right));
             yield return null; yield return null;
-            Check(Find<Text>("TrackedObjective").text.Contains("EXTRACTION /"), "ADS keeps countdown in the visible compact tracker");
+            Check(Find<TMP_Text>("TrackedObjective").text.Contains("EXTRACTION /"), "ADS keeps countdown in the visible compact tracker");
             ReviewMouse( new MouseState());
             ChangePhase(CampaignPhase.Failed);
             Call(campaign, "PublishRunSummary");
@@ -592,6 +1270,7 @@ namespace FPS.Tests
             var target = campaign.Objective(hud.TrackedObjectiveId);
             var point = new GameObject("Transient stable navigation target").transform;
             var originalPoint = target.interactionPoint;
+            var originalBody = target.interactionBody;
             var rig = Object.FindAnyObjectByType<HelicopterInsertionRappel>(FindObjectsInactive.Include);
             Assert.That(rig, Is.Not.Null);
             var cameras = owner.GetComponentsInChildren<Camera>(true);
@@ -599,6 +1278,7 @@ namespace FPS.Tests
             try
             {
                 point.position = owner.transform.position + Vector3.forward * 20;
+                target.interactionBody = null;
                 target.interactionPoint = point;
                 Set(hud, "nextNavigationUpdate", float.MaxValue);
                 Call(hud, "UpdateNavigation", owner);
@@ -631,7 +1311,7 @@ namespace FPS.Tests
             }
             finally
             {
-                target.interactionPoint = originalPoint;
+                target.interactionBody = originalBody; target.interactionPoint = originalPoint;
                 Object.Destroy(point.gameObject);
                 if (rig != null) rig.StopPresentation();
                 ChangePhase(CampaignPhase.Exploring);
@@ -657,17 +1337,17 @@ namespace FPS.Tests
             yield return Capture("navigation-behind");
             yield return ReviewMarkerPlacement(target, camera);
             campaign.State.completed |= CampaignState.Bit(CampaignObjectiveId.FactoryIsolate);
-            campaign.State.revision++;
+            Call(campaign, "Publish");
             yield return null;
             Check(hud.TrackedObjectiveId != CampaignObjectiveId.FactoryIsolate, "Shared completion automatically selects a valid objective");
             Check(hud.TryTrackObjective(CampaignObjectiveId.FactoryBackup), "Unlocked objective can be tracked");
-            campaign.State.completed = 0; campaign.State.revision++;
+            campaign.State.completed = 0; Call(campaign, "Publish");
             yield return null;
             Check(hud.TrackedObjectiveId != CampaignObjectiveId.FactoryBackup, "Checkpoint rollback invalidates a locked objective");
-            campaign.State.chapter = CampaignChapter.Asylum; campaign.State.revision++;
+            campaign.State.chapter = CampaignChapter.Asylum; Call(campaign, "Publish");
             yield return null;
             Check(CampaignRules.ChapterOf(hud.TrackedObjectiveId) == CampaignChapter.Asylum, "Chapter change selects a matching objective");
-            campaign.State.chapter = CampaignChapter.Factory; campaign.State.revision++;
+            campaign.State.chapter = CampaignChapter.Factory; Call(campaign, "Publish");
             yield return null;
             hud.TryTrackObjective(CampaignObjectiveId.FactoryIsolate);
             target = campaign.Objective(hud.TrackedObjectiveId);
@@ -694,7 +1374,7 @@ namespace FPS.Tests
                 && Time.realtimeSinceStartup < carvingDeadline) yield return null;
             Check(door.IsOpen && !blocker.enabled, "Completed prerequisites open the door and remove its blocker");
             Check(!NavMesh.Raycast(gateA.position, gateB.position, out _, NavMesh.AllAreas), "Opening the authored door updates the live NavMesh crossing");
-            campaign.State.completed = 0; campaign.State.revision++;
+            campaign.State.completed = 0; Call(campaign, "Publish");
             door.SetOpen(false);
             ApplyDoorFixture();
             hud.TryTrackObjective(CampaignObjectiveId.FactoryIsolate);
@@ -707,7 +1387,14 @@ namespace FPS.Tests
             if (target.InReach(owner, campaign.settings.interactionRange))
             {
                 Call(hud, "UpdateNavigation", owner);
-                Check(!Find<RectTransform>("NavigationMarker", true).gameObject.activeSelf, "An interaction in reach with line of sight suppresses its marker");
+                Check(Find<RectTransform>("NavigationMarker", true).gameObject.activeSelf
+                    && (Vector3)Get(hud, "routeTarget") == target.TargetPosition,
+                    "A reachable interaction keeps its body waypoint until the interaction opens");
+                target.RequestNetworkInteraction(owner.NetworkObject);
+                Call(hud, "UpdateNavigation", owner);
+                Check(CampaignHUD.IsDocumentOpen && !Find<RectTransform>("NavigationMarker", true).gameObject.activeSelf,
+                    "The interaction document suppresses its waypoint while it owns input");
+                hud.CloseDocument();
             }
             else Assert.Fail("The authored isolation point must remain reachable for the proximity review.");
             var previousObjectives = campaign.Current.objectives;
@@ -727,7 +1414,9 @@ namespace FPS.Tests
             testNavigation = NavMesh.AddNavMeshData(data);
             owner.transform.position = new Vector3(10000, .2f, 10000);
             var originalPoint = target.interactionPoint;
+            var originalBody = target.interactionBody;
             var point = new GameObject("Transient HUD navigation target").transform;
+            target.interactionBody = null;
             target.interactionPoint = point;
             try
             {
@@ -737,7 +1426,8 @@ namespace FPS.Tests
                 yield return null;
                 Check(!(bool)Get(hud, "routeComplete"), "Disconnected islands cannot claim a complete route");
                 Check(Find<Text>("Distance").text.Contains("TO TARGET") && !Find<Text>("Distance").text.Contains("ROUTE"), "Partial path labels straight distance explicitly");
-                Check(Find<Text>("CurrentAction").text.Contains("Route unavailable"), "Partial path reports unavailable route");
+                Check(Find<TMP_Text>("TrackedObjective").text == CampaignHUD.ObjectiveAction(target.objectiveId),
+                    "Partial path preserves the objective while its marker reports straight-line fallback");
                 point.position = new Vector3(10000, 5.55f, 10000);
                 Set(hud, "nextNavigationUpdate", 0f);
                 yield return null;
@@ -751,12 +1441,16 @@ namespace FPS.Tests
                 Set(hud, "nextNavigationUpdate", 0f);
                 yield return null;
                 Check(Find<Text>("Distance").text.Contains("LOWER"), "Lower destinations use a height cue without guessing storey numbers");
-                camera.gameObject.SetActive(false);
-                Call(hud, "UpdateNavigation", owner);
-                Check(!Find<RectTransform>("NavigationMarker", true).gameObject.activeSelf && hud.HasMissionTracker, "Missing camera hides marker while tracker survives");
-                camera.gameObject.SetActive(true);
+                var activeCameras = owner.GetComponentsInChildren<Camera>();
+                try
+                {
+                    foreach (var activeCamera in activeCameras) activeCamera.gameObject.SetActive(false);
+                    Call(hud, "UpdateNavigation", owner);
+                    Check(!Find<RectTransform>("NavigationMarker", true).gameObject.activeSelf && hud.HasMissionTracker, "Missing camera hides marker while tracker survives");
+                }
+                finally { foreach (var activeCamera in activeCameras) activeCamera.gameObject.SetActive(true); }
             }
-            finally { target.interactionPoint = originalPoint; testNavigation.Remove(); Object.Destroy(point.gameObject); Object.Destroy(data); }
+            finally { target.interactionBody = originalBody; target.interactionPoint = originalPoint; testNavigation.Remove(); Object.Destroy(point.gameObject); Object.Destroy(data); }
             Check(!campaign.State.Has(CampaignObjectiveId.FactoryIsolate), "Navigation never completes an objective by proximity");
         }
 
@@ -766,16 +1460,18 @@ namespace FPS.Tests
             bool wasLooking = look.enabled;
             var rotation = camera.transform.rotation;
             var originalPoint = target.interactionPoint;
+            var originalBody = target.interactionBody;
             var point = new GameObject("Transient marker bearing target").transform;
             GameObject obstruction = null;
             look.enabled = false;
+            target.interactionBody = null;
             target.interactionPoint = point;
             try
             {
                 point.position = camera.transform.position + rotation * Vector3.forward * 20;
                 Set(hud, "routeComplete", false); Set(hud, "routeComputed", true);
                 Set(hud, "nextNavigationUpdate", float.MaxValue);
-                foreach (string resolution in new[] { "1280x720", "1920x1080", "3440x1440" })
+                foreach (string resolution in new[] { "1024x768", "1280x720", "1920x1080", "2560x1080", "3440x1440" })
                     foreach (string scale in new[] { "100%", "125%" })
                     {
                         EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
@@ -806,8 +1502,8 @@ namespace FPS.Tests
                         Call(hud, "UpdateNavigation", owner); Call(hud, "UpdateTracker", owner);
                         CheckLayout();
                         var tracker = Find<RectTransform>("MissionTracker");
-                        foreach (var label in tracker.GetComponentsInChildren<Text>()) CheckPadding(label.rectTransform, tracker, 32, 24);
-                        Check(tracker.GetComponent<Image>().sprite == null, "Tracker uses a thin border instead of the heavy decorative frame");
+                        foreach (var label in tracker.GetComponentsInChildren<TMP_Text>()) CheckPadding(label.rectTransform, tracker, 24, 12);
+                        Check(tracker.GetComponent<Image>().sprite == SelectedUiTheme.Current.Tracker, "Tracker uses the selected mockup frame");
                         yield return Capture("tracker-marker-" + resolution + "-" + scale.Replace("%", ""));
                     }
 
@@ -818,7 +1514,7 @@ namespace FPS.Tests
                 Call(hud, "UpdateTracker", owner);
                 Check(HudLayout.SecondaryReduced, "Direct review input enables compact tracker");
                 var compact = Find<RectTransform>("MissionTracker");
-                CheckPadding(Find<Text>("TrackedObjective").rectTransform, compact, 32, 24);
+                CheckPadding(Find<TMP_Text>("TrackedObjective").rectTransform, compact, 24, 24);
                 yield return Capture("tracker-compact");
                 InputState.Change(mouse, new MouseState());
 
@@ -857,7 +1553,7 @@ namespace FPS.Tests
             }
             finally
             {
-                target.interactionPoint = originalPoint;
+                target.interactionBody = originalBody; target.interactionPoint = originalPoint;
                 camera.transform.rotation = rotation; look.enabled = wasLooking;
                 InputState.Change(mouse, new MouseState());
                 Set(hud, "nextNavigationUpdate", 0f); Set(hud, "routeComputed", false);
@@ -907,7 +1603,7 @@ namespace FPS.Tests
                     && (g is not TMP_Text tmp || !string.IsNullOrEmpty(tmp.text)))).ToArray();
             for (int i = 0; i < groups.Length; i++)
                 for (int j = i + 1; j < groups.Length; j++)
-                    Check(!Bounds(groups[i]).Overlaps(Bounds(groups[j])), "HUD groups remain separate: " + groups[i].name + " / " + groups[j].name);
+                    Check((groups[i].name == "WeaponPanel" && groups[j].name == "SurvivalHotbar") || !Bounds(groups[i]).Overlaps(Bounds(groups[j])), "HUD groups remain separate: " + groups[i].name + " / " + groups[j].name);
             CheckText(Object.FindObjectsByType<TMP_Text>().Where(t => t.canvas != null && t.canvas.renderMode != RenderMode.WorldSpace));
             foreach (var text in Object.FindObjectsByType<Text>())
                 if (text.isActiveAndEnabled && text.canvas != null && !string.IsNullOrEmpty(text.text))
@@ -919,13 +1615,17 @@ namespace FPS.Tests
             {
                 var panel = Find<RectTransform>(name);
                 if (panel == null || !panel.gameObject.activeInHierarchy) continue;
-                foreach (var text in panel.GetComponentsInChildren<TMP_Text>()) CheckPadding(text.rectTransform, panel, 16, 16);
-                foreach (var text in panel.GetComponentsInChildren<Text>()) CheckPadding(text.rectTransform, panel, 16, 16);
+                float horizontal = name == "MissionTracker" ? 24 : 16;
+                float vertical = name is "MissionTracker" or "WeaponPanel" ? 12 : 16;
+                foreach (var text in panel.GetComponentsInChildren<TMP_Text>().Where(text => text.isActiveAndEnabled && !string.IsNullOrEmpty(text.text)))
+                    CheckPadding(text.rectTransform, panel, horizontal, vertical);
+                foreach (var text in panel.GetComponentsInChildren<Text>().Where(text => text.isActiveAndEnabled && !string.IsNullOrEmpty(text.text)))
+                    CheckPadding(text.rectTransform, panel, horizontal, vertical);
             }
             var squad = Object.FindAnyObjectByType<SquadHUD>();
             foreach (var text in squad.GetComponentsInChildren<TMP_Text>())
                 CheckPadding(text.rectTransform, (RectTransform)text.transform.parent, 16, 12);
-            var infectionIcon = Find<Image>("InfectionIcon");
+            var infectionIcon = Find<Image>("InfectionIcon", true);
             if (infectionIcon.isActiveAndEnabled)
             {
                 CheckPadding(infectionIcon.rectTransform, (RectTransform)infectionIcon.transform.parent, 16, 16);
@@ -936,11 +1636,11 @@ namespace FPS.Tests
                 if (text.name is "Count" or "Key")
                 {
                     var slot = (RectTransform)text.transform.parent;
-                    CheckPadding(text.rectTransform, slot, 12, 12);
+                    if (text.name == "Count") CheckPadding(text.rectTransform, slot, 0, 0);
                     if (text.name == "Key")
                     {
                         Check(slot.Find("Keycap") == null, "Hotbar shortcut has no panel: " + slot.name);
-                        Check(text.alignment == TextAlignmentOptions.TopRight, "Hotbar shortcut sits at the top right: " + slot.name);
+                        Check(text.alignment == (slot.name is "FRAG" or "FIRE" ? TextAlignmentOptions.MidlineLeft : TextAlignmentOptions.Center), "Hotbar shortcut follows the selected mockup alignment: " + slot.name);
                     }
                 }
             CheckNavigation();
@@ -954,7 +1654,7 @@ namespace FPS.Tests
                 && inner.xMax <= outer.xMax - horizontal * scale + .5f
                 && inner.yMin >= outer.yMin + vertical * scale - .5f
                 && inner.yMax <= outer.yMax - vertical * scale + .5f,
-                "Text clears its decorative frame: " + panel.name + " / " + text.name);
+                "Text clears its decorative frame: " + panel.name + " / " + text.name + " / text=" + inner + "; panel=" + outer + "; scale=" + scale);
         }
 
         void CheckNavigation()
@@ -971,7 +1671,9 @@ namespace FPS.Tests
             {
                 var text = Find<Text>(name);
                 if (text != null && text.isActiveAndEnabled && !string.IsNullOrWhiteSpace(text.text))
-                    Check(!label.Overlaps(Bounds(text.rectTransform)), "Navigation distance clears lower text: " + name);
+                    Check(!label.Overlaps(Bounds(text.rectTransform)), "Navigation distance clears lower text: " + name
+                        + "; label=" + label + "; text=" + Bounds(text.rectTransform) + "; screen=" + Screen.width + "x" + Screen.height
+                        + "; scale=" + distance.GetComponentInParent<Canvas>().scaleFactor);
             }
             Check(label.xMin >= safe.xMin + margin - .5f && label.xMax <= safe.xMax - margin + .5f
                 && label.yMin >= safe.yMin + margin - .5f && label.yMax <= safe.yMax - margin + .5f,
@@ -984,7 +1686,8 @@ namespace FPS.Tests
                 if (text.isActiveAndEnabled && text.canvas != null && text.canvas.enabled && !string.IsNullOrEmpty(text.text))
                 {
                     text.ForceMeshUpdate();
-                    Check(!text.isTextTruncated && !text.isTextOverflowing, "Text renders without truncation: " + text.name + " / " + text.text);
+                    Check(!text.isTextTruncated && !text.isTextOverflowing, "Text renders without truncation: " + text.name + " / " + text.text
+                        + " / rect=" + text.rectTransform.rect.size + "; font=" + text.fontSize + "; preferred=" + text.GetPreferredValues(text.text, float.PositiveInfinity, float.PositiveInfinity));
                     bool weaponPrompt = text.transform.parent.name is "FirePrompt" or "AimPrompt";
                     Check(weaponPrompt ? Mathf.Approximately(text.fontSize, 16) : text.fontSize * text.canvas.scaleFactor >= 15.99f,
                         "Text uses its required size: " + text.name);
@@ -997,7 +1700,30 @@ namespace FPS.Tests
             ScreenCapture.CaptureScreenshot(Evidence + name + ".png");
             yield return null;
         }
-        void ChangePhase(CampaignPhase phase) { campaign.State.phase = phase; campaign.State.revision++; }
+        IEnumerator CaptureReviewResolutions(string name, string expectedFeedback = null)
+        {
+            foreach (string resolution in new[] { "1920x1080", "3840x2160" })
+            {
+                EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/" + resolution);
+                yield return new WaitForSecondsRealtime(.2f);
+                if (!string.IsNullOrWhiteSpace(expectedFeedback))
+                {
+                    var feedback = (Text)Get(hud, "feedback");
+                    Check(feedback != null && feedback.text.Contains(expectedFeedback),
+                        "Native receipt remains readable at " + resolution + ": " + expectedFeedback);
+                }
+                yield return Capture(name + "-" + resolution);
+            }
+            EditorApplication.ExecuteMenuItem("Tools/FPS/UI/HUD Review/Resolution/1920x1080");
+        }
+        void PlaceBeside(CampaignInteractable target)
+        {
+            Assert.That(target, Is.Not.Null, "Authored objective fixture exists");
+            owner.transform.position = target.TargetPosition - Vector3.up * 1.55f + Vector3.right * .5f;
+            Physics.SyncTransforms();
+            Check(target.InReach(owner, campaign.settings.interactionRange), "Authored objective is reachable from the fixture position");
+        }
+        void ChangePhase(CampaignPhase phase) { campaign.State.phase = phase; Call(campaign, "Publish"); }
         void ApplyDoorFixture()
         {
             ulong mask = 0;

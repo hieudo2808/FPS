@@ -18,6 +18,7 @@ namespace FPS
         public GameObject SpawnZombie(Vector3 position, Quaternion rotation,
             float hpModifier = 1f, float speedModifier = 1f, float damageModifier = 1f)
         {
+            if (AIDirector.Instance != null && AIDirector.Instance.AdaptiveSpawningBlocked) return null;
             if (IsClientOnly())
             {
                 GameLog.Warning("[ZombieFactory] Client tried to spawn zombie. Ignored - server-authoritative only.");

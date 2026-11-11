@@ -41,6 +41,8 @@ namespace FPS
         }
         public static CampaignPlayerSave Capture(PlayerRuntimeSnapshot s)
         {
+            // Checkpoints cannot resume a live revive deadline after a party timeout.
+            if (s.lifeState == PlayerLifeState.Downed) { s.lifeState = PlayerLifeState.Dead; s.lifeStateDeadline = 0; }
             return new() { playerId = s.sessionPlayerId.Value, position = s.position, rotation = s.rotation,
                 health = s.health, infection = s.infection, lifeState = s.lifeState, equipped = s.equippedWeaponSlot,
                 lifeStateDeadline = s.lifeStateDeadline,
@@ -69,7 +71,7 @@ namespace FPS
     [Serializable]
     public sealed class CampaignCheckpoint
     {
-        public int version = 2;
+        public int version = 4;
         public CampaignState state;
         public List<CampaignPlayerSave> players = new();
         public List<string> claimedSupplies = new();
@@ -83,11 +85,11 @@ namespace FPS
             }
         }
 
-        public void Save()
+        public void Save(string path = null)
         {
             Validate();
             savedUtc = DateTime.UtcNow.ToString("O");
-            string path = SavePath;
+            path ??= SavePath;
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             string temp = path + ".tmp";
             File.WriteAllText(temp, JsonUtility.ToJson(this, true));
@@ -95,38 +97,59 @@ namespace FPS
             if (File.Exists(path)) File.Replace(temp, path, path + ".previous");
             else File.Move(temp, path);
         }
-        public static bool TryLoad(out CampaignCheckpoint checkpoint, out string error)
+        public static bool TryLoad(out CampaignCheckpoint checkpoint, out string error) => TryLoad(SavePath, out checkpoint, out error);
+        public static bool TryLoad(string savePath, out CampaignCheckpoint checkpoint, out string error)
         {
             checkpoint = null; error = "";
-            foreach (string path in new[] { SavePath, SavePath + ".previous" })
+            foreach (string path in new[] { savePath, savePath + ".previous" })
             {
                 if (!File.Exists(path)) continue;
                 try
                 {
                     checkpoint = JsonUtility.FromJson<CampaignCheckpoint>(File.ReadAllText(path));
                     if (checkpoint == null) throw new InvalidDataException("Checkpoint trống.");
-                    if (checkpoint.version == 1)
-                    {
-                        checkpoint.version = 2;
-                        checkpoint.state ??= new CampaignState();
-                        checkpoint.state.discoveredFiles = 0;
-                        checkpoint.state.teamDownedCount = 0;
-                    }
+                    checkpoint.Migrate();
                     checkpoint.Validate();
+                    error = "";
                     return true;
                 }
-                catch (Exception e) when (e is IOException or ArgumentException or UnauthorizedAccessException)
+                catch (Exception e) when (e is IOException or InvalidDataException or ArgumentException or UnauthorizedAccessException)
                 { error = e.Message; checkpoint = null; }
             }
             if (string.IsNullOrEmpty(error)) error = "Chưa có checkpoint đã lưu.";
             return false;
         }
 
+        private void Migrate()
+        {
+            if (version is < 1 or > 4 || state == null || state.version is < 1 or > 3)
+                throw new InvalidDataException("Checkpoint version không được hỗ trợ.");
+            if (version == 1) version = 2;
+            if (version == 2)
+            {
+                state.lastFactoryBranch = CampaignFactoryBranch.None;
+                if (state.chapter == CampaignChapter.Factory && !state.Has(CampaignObjectiveId.FactoryCase))
+                { state.factoryTankDefeated = false; state.tankStage = CampaignTankStage.Dormant; }
+                state.version = 2;
+                version = 3;
+            }
+            if (version == 3)
+            {
+                // Branch schema v2 still allowed the old timeout-as-kill path.
+                CampaignRules.ResetUnverifiedFactoryTank(state);
+                state.version = 3;
+                version = 4;
+            }
+        }
+
         public void Validate()
         {
-            if (version is < 1 or > 2 || state == null || state.version != 1 || players == null || players.Count is < 1 or > 4
+            if (version != 4 || state == null || state.version != 3 || players == null || players.Count is < 1 or > 4
                 || !Enum.IsDefined(typeof(CampaignChapter), state.chapter) || state.phase != CampaignPhase.Exploring
                 || !Enum.IsDefined(typeof(CampaignTankStage), state.tankStage)
+                || !Enum.IsDefined(typeof(CampaignTankWaitReason), state.tankWaitReason)
+                || !float.IsFinite(state.tankSpawnRemaining) || state.tankSpawnRemaining < 0
+                || !Enum.IsDefined(typeof(CampaignFactoryBranch), state.lastFactoryBranch)
                 || state.checkpoint < 0 || state.checkpoint > 5 || state.checkpoint / 2 != (int)state.chapter
                 || claimedSupplies == null || claimedSupplies.Count > 128)
                 throw new InvalidDataException("Checkpoint không tương thích hoặc thiếu dữ liệu.");

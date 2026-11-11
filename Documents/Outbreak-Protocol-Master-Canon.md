@@ -8,7 +8,7 @@ This document specifies the target behavior, not a claim that every runtime/visu
 
 ## Canon
 
-T-9 is a fictional pathogen. The official Biohazard Response Team (BRT) deploys the four-person Vanguard squad to recover evidence from a quarantined factory. Shipment T9-17 leads to An Lac Care Institute, where altered records expose a hidden B2 level. Laboratory B2 stores the original E-02 archive. An anonymous client orders a sample-only export and removal of patient fields; Mira Shaw rejects the concealment order. Vanguard transmits a complete copy, secures both evidence cases and leaves. The quarantine remains. There is no cure, purge, NPC escort or “save every patient” ending.
+T-9 is a fictional pathogen. The official Biohazard Response Team (BRT) deploys the four-person Vanguard squad to recover evidence from a quarantined factory. Shipment T9-17 leads to Northbridge Care Institute, where altered records expose a hidden B2 level. Laboratory B2 stores the original E-02 archive. An anonymous client orders a sample-only export and removal of patient fields; Mira Shaw rejects the concealment order. Vanguard transmits a complete copy, secures both evidence cases and leaves. The quarantine remains. There is no cure, purge, NPC escort or “save every patient” ending.
 
 | Player character | Runtime codename |
 |---|---|
@@ -26,7 +26,7 @@ Netcode for GameObjects 2.13.1 is server authority; Input System 1.20.0 supplies
 ## Chapter beats
 
 1. **Cold Ledger / Factory:** isolate the production branch, engage the cold-store backup, start the generator, reconcile AL-04/K6, survive a mandatory Tank, secure the T9-17 case and open the service route.
-2. **Those Who Never Left / An Lac Care Institute:** read the desk log, recover and install the service fuse, restore power, identify P046, prove the mortuary contradiction and call B2. The Tank can be evaded.
+2. **Those Who Never Left / Northbridge Care Institute:** read the desk log, recover and install the service fuse, restore power, identify P046, prove the mortuary contradiction and call B2. The Tank can be evaded.
 3. **The Unmapped Floor / Laboratory B2:** trace the transfer, read the index, allocate safe power, recover the original E-02 archive and case, then transmit while a Tank creates pressure. Killing that Tank is not required.
 
 ## Incident timeline
@@ -34,12 +34,12 @@ Netcode for GameObjects 2.13.1 is server authority; Input System 1.20.0 supplies
 | Relative event | Record / consequence |
 |---|---|
 | Before the breach | Cole files a stop-work request; Hale retains records; Reed documents electrical and lift faults. |
-| 02:40, incident night | AL-04/K6 is received at An Lac against C12/P046. |
+| 02:40, incident night | AL-04/K6 is received at Northbridge against C12/P046. |
 | 03:05 | Public mortuary entry marks P046 deceased. This is an altered record, not confirmation of death. |
 | 03:50 | The same P046 wristband is recorded in a living transfer to B2. |
 | Containment failure | Quarantine shutters close; the unopened T9-17 case returns to factory storage. |
 | After the breach | The E-02 incident ledger confirms Cole, Hale and Reed dead; patient outcomes beyond documented transfers remain unresolved. |
-| Vanguard insertion | BRT recovers the chain of evidence across Factory, An Lac and B2. |
+| Vanguard insertion | BRT recovers the chain of evidence across Factory, Northbridge and B2. |
 | Lab transmission | The anonymous client demands suppression; Mira rejects it; the full copy reaches outside custody. |
 
 No calendar date, cure mechanism or unsupported patient outcome is implied by these records.
@@ -52,15 +52,15 @@ A required file may be discovered from its physical source or its registered obj
 
 Night operator — Maya Reed. Isolate the PRODUCTION branch at the west breaker before touching the backup feed. Then engage BACKUP COLD STORE at the east breaker and start the generator. Do not isolate the cold store itself: its monitor and sealed cargo must remain refrigerated. The green generator lamp shares an alarm return and can light before the contactor closes; check the physical lever. Logistics must reconcile the shipment and seal independently. Keep the T9-17 case sealed until both checks are complete. Report any instruction to bypass this sequence in the shift ledger.
 
-### FILE_02 · AL-04 Delivery Manifest · FACTORY · REQUIRED
+### FILE_02 · Delivery Manifest · FACTORY · REQUIRED
 
-Dispatch copy. Shipment AL-04; security seal K6; lot T9-17. Destination: An Lac Care Institute, service receiving entrance. Scheduled intake: 02:40, group C12. Security release: Marcus Hale. The public cargo description is temperature-controlled medical stock. Do not replace this page with the contractor's abbreviated receipt: that copy omits the receiving group and service entrance. A return instruction has been added in blue ink: if receiving refuses the sealed case, retain it in factory cold storage and leave the delivery record attached. Neither the seal number nor the destination may be changed by telephone.
+Dispatch copy. Shipment AL-04; security seal K6; lot T9-17. Destination: Northbridge Care Institute, service receiving entrance. Scheduled intake: 02:40, group C12. Security release: Marcus Hale. The public cargo description is temperature-controlled medical stock. Do not replace this page with the contractor's abbreviated receipt: that copy omits the receiving group and service entrance. A return instruction has been added in blue ink: if receiving refuses the sealed case, retain it in factory cold storage and leave the delivery record attached. Neither the seal number nor the destination may be changed by telephone.
 
 ### FILE_03 · B2 Transfer Addendum · FACTORY · REQUIRED
 
-Route amendment to AL-04, seal K6. Receiving authority: Dr. Adrian Cole, technical level B2 beneath An Lac. The sample case was returned unopened to factory cold storage after the internal quarantine shutters closed. Its movement record remains valid and must travel with it. Patient-linked records stayed at the institute under group C12; they are not included in this case. B2 is absent from the public visitor directory. Any recovery team must retain this addendum with the original seal receipt. The contractor requested a sample-only return. Security has not authorized removal of the supporting records.
+Route amendment to AL-04, seal K6. Receiving authority: Dr. Adrian Cole, technical level B2 beneath Northbridge. The sample case was returned unopened to factory cold storage after the internal quarantine shutters closed. Its movement record remains valid and must travel with it. Patient-linked records stayed at the institute under group C12; they are not included in this case. B2 is absent from the public visitor directory. Any recovery team must retain this addendum with the original seal receipt. The contractor requested a sample-only return. Security has not authorized removal of the supporting records.
 
-### FILE_04 · An Lac Security Desk Log · ASYLUM · REQUIRED
+### FILE_04 · Northbridge Security Desk Log · ASYLUM · REQUIRED
 
 02:40 — Received AL-04 under seal K6 for group C12. Public admissions are suspended; technical intake continues through the service entrance. Record P046 against the receiving time, not the earlier appointment time. The upper records room holds the intake sheet. Access requires lower service power; the replacement fuse is in ground-floor maintenance storage. No patient has been discharged through this desk tonight. Staff asking for the public lift must be redirected to security. Marcus Hale instructed us to keep both the public log and technical supplement. The contractor asked for only the public log.
 
@@ -145,51 +145,51 @@ Items are team state derived from objective flags. They cannot be used remotely 
 
 ## Objective truth table
 
-- **1 ISOLATE PRODUCTION** — Open the production breaker. Keep the cold store connected to its backup circuit. Hint: Start with the west breaker marked PRODUCTION.
-- **2 BACKUP COLD STORE** — Engage the cold-store backup feed after isolating production. Hint: The east breaker feeds the cold store; do not restart production.
-- **3 START GENERATOR** — Start the generator only after the backup cold-store feed is engaged. Hint: Check the physical switch, not just the green lamp.
-- **4 READ DELIVERY MANIFEST** — Record the AL-04 manifest before reconciling the shipping release. Hint: Compare shipment, seal and receiving time.
-- **5 VERIFY SHIPPING RELEASE** — Select the shipment and seal, then its destination and receiving time. Hint: Match AL-04 / K6 with AN LAC / 02:40. Choices: AL-03 / K9 | AL-04 / K6 | AL-07 / K2. Secondary: NORTH DEPOT / 06:10 | AN LAC / 02:40 | AN LAC / 04:20.
-- **6 SECURE T9-17 CASE** — Secure the returned case and its B2 transfer addendum. Preserve the seal. Hint: Complete Utilities and Logistics, then clear the Tank threat before collection.
-- **7 OPEN SERVICE ROUTE** — Activate the service interlock. Prepare with the squad before beginning the hold. Hint: Gather living operators at the panel and confirm readiness.
-- **8 READ SECURITY DESK LOG** — Record the technical intake hidden behind the public admissions log. Hint: Group C12 arrived at 02:40; the upper room holds the patient sheet.
+- **1 ISOLATE PRODUCTION** — Isolate production at the isolation panel. Follow Utilities Procedure and keep the cold-store circuit connected. Hint: Read Utilities Procedure for the production isolation step. Hint2: Reopen Utilities Procedure in Files and find the production / backup sequence. Hint3: Use Utilities Procedure to identify the isolation control before engaging backup.
+- **2 BACKUP COLD STORE** — Engage the cold-store backup at the backup panel after Isolate. This enables Generator. Hint: Read the backup-feed step in Utilities Procedure. Hint2: Reopen Utilities Procedure in Files and compare the backup-feed sequence. Hint3: Use Utilities Procedure to distinguish the cold-store backup from production.
+- **3 START GENERATOR** — Start the cold-store generator after Backup. Confirm the physical control to restore power. Hint: Read the generator step in Utilities Procedure. Hint2: Reopen Utilities Procedure in Files and check the physical-control warning. Hint3: Use Utilities Procedure to check the generator control rather than relying on its lamp.
+- **4 READ DELIVERY MANIFEST** — Read the Delivery Manifest to record it in team Files and unlock Verify Shipping Release. Hint: Read the Delivery Manifest at its marked interaction body. Hint2: Open Files in team inventory to reread the Delivery Manifest once recorded. Hint3: Use the Delivery Manifest as the source for the shipping release comparison.
+- **5 VERIFY SHIPPING RELEASE** — Compare the shipping release with the recorded Delivery Manifest. Select both groups to verify Logistics. Hint: Read the recorded Delivery Manifest before comparing the two groups. Hint2: Reopen the Delivery Manifest in Files; compare shipment / seal and destination / receiving time separately. Hint3: Use the Delivery Manifest as the source for each group; no choice is selected for you. Choices: AL-03 / K9 | AL-04 / K6 | AL-07 / K2. Secondary: NORTH DEPOT / 06:10 | NORTHBRIDGE / 02:40 | NORTHBRIDGE / 04:20.
+- **6 SECURE T9-17 CASE** — Recover the sealed evidence case and its records after Power, Logistics and the Tank are confirmed. Hint: Check Power and Logistics progress; the server must confirm the Tank defeat. Hint2: Review the recorded Delivery Manifest and Utilities Procedure for incomplete branch steps. Hint3: Read the B2 Transfer Addendum after collection to continue the evidence trail.
+- **7 OPEN SERVICE ROUTE** — Activate the service-route control cabinet after recovering the case. Prepare for the interlock cycle. Hint: Review the case record before using the service-route control cabinet. Hint2: Reopen the B2 Transfer Addendum in Files to review the recorded route. Hint3: Read the preparation and boarding status after activating the control cabinet.
+- **8 READ SECURITY DESK LOG** — Record the technical intake hidden behind the public admissions log. Hint: Read the Security Desk Log; it points to the upper records room and the service fuse.
 - **9 RECOVER SERVICE FUSE** — Recover the spare fuse from ground-floor maintenance storage. Hint: The fuse is shared by the squad and can be installed by any living operator.
 - **10 INSTALL SERVICE FUSE** — Install the recovered fuse at the lower service panel. Hint: Read the desk log and recover the fuse; neither is consumed by a wrong interaction.
 - **11 RESTORE SERVICE POWER** — Bring the lower service circuit online after fitting the replacement fuse. Hint: The upper records room needs this circuit.
-- **12 IDENTIFY PATIENT** — Select the record matching the desk log's group and receiving time. Hint: Match all three fields: P046 / C12 / 02:40. Choices: P041 / C08 / 01:20 | P046 / C12 / 02:40 | P064 / C12 / 04:20.
-- **13 VERIFY MORTUARY TRANSFER** — Select the discrepancy that requires independent review. Retain the B2 card with the report. Hint: The same reference is listed dead before its live transfer. Choices: CONTRADICTION: DEATH 03:05 / LIVE TRANSFER 03:50 | CONSISTENT: DEATH FOLLOWED BY BODY COLLECTION | UNRELATED PATIENTS WITH SIMILAR REFERENCES.
+- **12 IDENTIFY PATIENT** — Select the record matching the desk log's group and receiving time. Hint: Compare the intake sheet against the group and receiving time recorded in the Security Desk Log. Choices: P041 / C08 / 01:20 | P046 / C12 / 02:40 | P064 / C12 / 04:20.
+- **13 VERIFY MORTUARY TRANSFER** — Select the discrepancy that requires independent review. Retain the B2 card with the report. Hint: Read the Mortuary Transfer Discrepancy and compare its fields with the recorded Intake Record. Choices: CONTRADICTION: DEATH 03:05 / LIVE TRANSFER 03:50 | CONSISTENT: DEATH FOLLOWED BY BODY COLLECTION | UNRELATED PATIENTS WITH SIMILAR REFERENCES.
 - **14 CALL B2 FREIGHT LIFT** — Scan the B2 card. Prepare for the lift cycle and board with the squad. Hint: The card is spent at this panel; it cannot be used remotely from Inventory.
-- **15 TRACE B2 TRANSFER** — Trace the institute transfer into the laboratory index. Hint: Follow T9-17, C12 and P046 together, not a sample identifier alone.
-- **16 READ ARCHIVE INDEX** — Record the original-archive directory before searching the terminal. Hint: E-02 is the unredacted original, not the contractor export.
-- **17 ALLOCATE EMERGENCY POWER** — Keep SAFETY online. Disable TEST RIG before enabling DATA and FREIGHT LIFT. Capacity: six units. Hint: SAFETY + DATA + FREIGHT LIFT = 2 + 2 + 2. TEST RIG stays off.
-- **18 VERIFY ORIGINAL ARCHIVE** — Select the archive matching all three identifiers and preserve its identity table. Hint: Choose E-02 / T9-17 / C12 / P046. Choices: E-01 / T9-03 / C08 | E-02 / T9-17 / C12 / P046 | E-03 / EQUIPMENT ONLY.
+- **15 TRACE B2 TRANSFER** — Trace the institute transfer into the laboratory index. Hint: Follow the institute transfer record to the laboratory index and compare all recorded identifiers.
+- **16 READ ARCHIVE INDEX** — Record the original-archive directory before searching the terminal. Hint: Read the B2 Archive Index and keep the original-archive directory in the journal.
+- **17 ALLOCATE EMERGENCY POWER** — Keep SAFETY online. Disable TEST RIG before enabling DATA and FREIGHT LIFT. Capacity: six units. Hint: Read Emergency Power Allocation before changing the switches; compare its circuit requirements and capacity.
+- **18 VERIFY ORIGINAL ARCHIVE** — Select the archive matching all three identifiers and preserve its identity table. Hint: Compare the original archive against the B2 Archive Index saved in the journal. Choices: E-01 / T9-03 / C08 | E-02 / T9-17 / C12 / P046 | E-03 / EQUIPMENT ONLY.
 - **19 SECURE E-02 CASE** — Secure the original archive in the laboratory evidence case. Retain the factory case as well. Hint: The original must be verified before the sealed case is released.
 - **20 TRANSMIT COMPLETE EVIDENCE** — Prepare the squad, transmit a complete copy to BRT custody and call the freight lift. Do not delete patient fields. Hint: Keep both original cases. Transmission does not require eliminating every infected.
 
-Utilities answer: production branch off → backup cold store on → generator. Shipping answer: AL-04/K6 and An Lac/02:40. Patient answer: P046/C12/02:40. Mortuary answer: deceased 03:05 and live transfer 03:50 is a contradiction. Laboratory power answer: mask 13 (SAFETY + DATA + FREIGHT LIFT, load 6; TEST RIG off). Archive answer: E-02/T9-17/C12/P046. Wrong choices only return feedback; they never consume a key item.
+Utilities answer: production branch off → backup cold store on → generator. Shipping answer: AL-04/K6 and Northbridge/02:40. Patient answer: P046/C12/02:40. Mortuary answer: deceased 03:05 and live transfer 03:50 is a contradiction. Laboratory power answer: mask 13 (SAFETY + DATA + FREIGHT LIFT, load 6; TEST RIG off). Archive answer: E-02/T9-17/C12/P046. Wrong choices only return feedback; they never consume a key item.
 
 ## Dialogue IDs
 
 The server selects a dialogue ID; clients resolve the local catalog entry. Priority 2 is objective-critical/radio, 1 is life-state/special warning, 0 is ordinary bark. Equal-priority lines keep trigger order (client order before Mira's response). Enemy warning audio is never ducked by campaign radio. Late joiners do not replay old radio; current objective, Files and state remain authoritative.
 
-- **D01 · Mira Shaw · Insertion · P2** — Vanguard, this is Mira Shaw, BRT coordination. The helicopter leaves after insertion. Recover the T9-17 case and its records. We need evidence, not a sample-only receipt.
+- **D01 · Mira Shaw · Insertion · P2** — Recover the evidence case and its records. Restore power and verify logistics; choose either branch first.
 - **D02 · Mira Shaw · Factory/Exploring · P2** — Cold Ledger. Restore cold-store power and reconcile the logistics release. Both branches are required; take them in either order.
-- **D03 · Mira Shaw · Asylum/Exploring · P2** — An Lac Care Institute. Those Who Never Left. The factory case stays with Vanguard. Start with the security desk; find who received that shipment.
-- **D04 · Mira Shaw · Laboratory/Exploring · P2** — The Unmapped Floor. B2 is below the institute, absent from its public plans. Trace P046 and find the unredacted E-02 archive.
-- **D05 · Mira Shaw · FactoryGenerator · P2** — Backup power is stable. Preserve the seal and verify the logistics release before collecting T9-17.
-- **D06 · Mira Shaw · FactoryShipping · P2** — AL-04, K6, An Lac at 02:40. That destination was missing from the client's recovery order. Keep the original manifest.
-- **D07 · Mira Shaw · FactoryCase · P2** — T9-17 is secured. The addendum names B2 beneath An Lac. Use the service route and keep the case sealed.
-- **D08 · Mira Shaw · AsylumAccess · P2** — C12 and 02:40 match the factory manifest. Restore service power and check the upper patient records.
+- **D03 · Mira Shaw · Asylum/Exploring · P2** — Northbridge Care Institute. Those Who Never Left. The factory case stays with Vanguard. Start with the security desk; find who received that shipment.
+- **D04 · Mira Shaw · Laboratory/Exploring · P2** — The Unmapped Floor. B2 is below the institute, absent from its public plans. Follow the recorded transfer trail and find the original archive.
+- **D05 · Mira Shaw · FactoryGenerator · P2** — Cold-store power is restored. Keep the evidence case sealed.
+- **D06 · Mira Shaw · FactoryShipping · P2** — Shipping release recorded. Keep the original manifest in Files and continue the remaining branch.
+- **D07 · Mira Shaw · FactoryCase · P2** — The factory case is secured. Keep it sealed and use the service route to continue the investigation.
+- **D08 · Mira Shaw · AsylumAccess · P2** — Security desk log recorded. Restore service power, then inspect the upper patient records.
 - **D09 · Mira Shaw · AsylumPower · P2** — Service power is restored. The records room is accessible. The freight lift still needs security's B2 card.
-- **D10 · Mira Shaw · AsylumPatient · P2** — P046 matches the intake. The public recovery entry points somewhere else internally. Cross-check the mortuary transfer.
-- **D11 · Mira Shaw · AsylumTransfer · P2** — Death at 03:05, live transfer at 03:50. Preserve both entries. The B2 card gives you the route they concealed.
-- **D12 · Mira Shaw · LabPower · P2** — Safety, data and freight lift are live. The test rig stays off. Recover the original record.
-- **D13 · Mira Shaw · LabArchive · P2** — E-02 confirms T9-17, C12 and P046. Cole, Hale and Reed are confirmed dead in the incident ledger. Their records are what we can bring out.
+- **D10 · Mira Shaw · AsylumPatient · P2** — Intake comparison recorded. Keep its original source in Files and inspect the mortuary transfer record.
+- **D11 · Mira Shaw · AsylumTransfer · P2** — Transfer comparison recorded. Preserve both original documents and use the retained access card at the freight lift.
+- **D12 · Mira Shaw · LabPower · P2** — Emergency power configuration recorded. Keep the procedure in Files and inspect the original archive.
+- **D13 · Mira Shaw · LabArchive · P2** — Original archive verified. Preserve the complete records and recover the sealed laboratory case.
 - **D14 · Mira Shaw · LabCase · P2** — Both cases are secured. Copy the full archive to BRT custody before you leave.
 - **D15 · Mira Shaw · Factory/Encounter · P2** — Service interlock is cycling. Hold the control room; the route will wait for the living squad.
 - **D16 · Mira Shaw · Asylum/Encounter · P2** — The B2 lift is cycling. You can evade the Tank. Keep the route to the landing clear and recover anyone downed.
 - **D17 · Mira Shaw · Laboratory/Encounter · P2** — Transmission is running. Keep moving and cover the data path. You do not need to kill the Tank to leave.
-- **D18 · Mira Shaw · AwaitingParty · P2** — The route is ready. Bring every living operator into the boarding zone and hold together. Revive anyone downed first.
+- **D18 · Mira Shaw · AwaitingParty · P2** — The route is ready. Enter the boarding zone and wait for the departure countdown.
 - **D19 · Mira Shaw · Asylum/Transitioning · P2** — Cabin secured. Descending to B2. Wait for the receiving door before moving out.
 - **D20 · Mira Shaw · Completed · P2** — Vanguard is clear with both cases. The complete copy is in BRT custody. The facility remains quarantined. We have the evidence; the investigation starts now.
 - **D21 · Mira Shaw · EvidenceTransmitted · P2** — Complete copy received outside the facility. Patient records included. Keep both cases and board the freight lift.
@@ -203,9 +203,9 @@ The server selects a dialogue ID; clients resolve the local catalog entry. Prior
 
 ## Event and encounter rules
 
-The server publishes state transitions and dialogue IDs. Factory Tank is mandatory after Utilities and Logistics, in a validated arena, with no conflicting special encounter and at least one controllable living player. Asylum Tank is armed after the mortuary confirmation but may be evaded. Lab Tank starts when transmission begins and is pressure only. Unsafe spawn points defer the event rather than soft-locking the team.
+The server publishes state transitions and dialogue IDs. Factory Tank is mandatory after Power and Logistics, in a validated arena, with no conflicting special encounter and at least one controllable living player. Asylum Tank is armed after the mortuary confirmation but may be evaded. Lab Tank starts when transmission begins and is pressure only. Unsafe spawn points defer the event rather than soft-locking the team.
 
-At extraction, connected living players must be in the boarding zone. Downed players must be revived; dead or spectating players do not block boarding. A team wipe fails the campaign. Files and key items survive death. The retry restores the last valid checkpoint and starts a fresh attempt summary.
+At extraction, gather connected living players in the boarding zone and revive downed operators. Dead or spectating players do not block boarding. In Factory, after the server boarding timeout, at least one controllable living operator must remain in the zone throughout the departure countdown; the timeout never teleports anyone or counts the Tank as defeated. Other chapters retain their existing server boarding policy. A team wipe fails the campaign. Files and key items survive death. The retry restores the last valid checkpoint and starts a fresh attempt summary.
 
 ## Ending
 

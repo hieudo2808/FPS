@@ -7,6 +7,9 @@ namespace FPS
 {
     public class HUDManager : SceneSingleton<HUDManager>
     {
+        private static SelectedUiTheme Theme => SelectedUiTheme.Current;
+        private TMP_Text selectedHealthCaption;
+        private float selectedCanvasScale;
         [Header("Legacy Disconnect")]
         [SerializeField] private Button disconnectButton;
 
@@ -71,17 +74,19 @@ namespace FPS
         [Header("Prompts")]
         [SerializeField] private TextMeshProUGUI interactionPromptText;
         private bool interactionPromptRequested;
+        private Image interactionLock;
+        public bool HasInteractionPrompt => interactionPromptRequested && interactionPromptText != null;
         [SerializeField] private GameObject waveAnnouncementPanel;
         [SerializeField] private TextMeshProUGUI waveAnnouncementText;
 
         [Header("Special Threat")]
         [SerializeField] private TextMeshProUGUI specialThreatWarningText;
 
-        private static readonly Color TextColor = TacticalUiTheme.Text;
-        private static readonly Color MutedColor = TacticalUiTheme.Muted;
-        private static readonly Color AccentColor = TacticalUiTheme.Accent;
-        private static readonly Color WarningColor = new Color(0.94f, 0.68f, 0.23f, 1f);
-        private static readonly Color CriticalColor = new Color(0.95f, 0.24f, 0.24f, 1f);
+        private static Color TextColor => Theme.Text;
+        private static Color MutedColor => Theme.Muted;
+        private static Color AccentColor => Theme.Accent;
+        private static Color WarningColor => Theme.Text;
+        private static Color CriticalColor => Theme.Danger;
 
         private WeaponManager weaponManager;
         private Weapon currentWeapon;
@@ -97,26 +102,142 @@ namespace FPS
         private Vector3 specialThreatWorldPosition;
         private int validatedCrosshairScreenWidth = -1;
         private int validatedCrosshairScreenHeight = -1;
+        private Vector2 validatedHudSize;
         private bool crosshairAlignmentWarningIssued;
         private RectTransform adsReticleRect;
         private Canvas adsReticleCanvas;
         private Sprite adsReticleSprite;
-        private Texture2D adsReticleTexture;
         private SurvivalHotbar survivalHotbar;
         private RectTransform peripheralRoot;
         private GameObject centerHudRoot;
         private InputManager promptInput;
         private TMP_Text primaryKeyLabel, secondaryKeyLabel;
+        private Image[] opacityPanels;
+        private float[] opacityPanelAlphas;
+
+        private AIDirector boundDirector;
+        private DifficultyManager boundDifficulty;
+        private NetworkGameManager boundNetwork;
+        private NetworkMatchStateManager boundMatch;
+
+        private void OnEnable()
+        {
+            HudSkin.PanelOpacityChanged += ApplyPanelOpacity;
+            ApplyPanelOpacity(HudSkin.PanelOpacity);
+            HudSignals.SourcesChanged += BindSources;
+            InputManager.InputStateChanged += UpdateHudVisibility;
+            UiStateStack.Changed += UpdateHudVisibility;
+            CampaignHUD.InteractionMessageChanged += UpdateInteractionPromptVisibility;
+            SpecialThreatSignal.Raised += OnSpecialThreatRaised;
+            BindSources();
+        }
+
+        private void OnDisable()
+        {
+            HudSkin.PanelOpacityChanged -= ApplyPanelOpacity;
+            HudSignals.SourcesChanged -= BindSources;
+            InputManager.InputStateChanged -= UpdateHudVisibility;
+            UiStateStack.Changed -= UpdateHudVisibility;
+            CampaignHUD.InteractionMessageChanged -= UpdateInteractionPromptVisibility;
+            SpecialThreatSignal.Raised -= OnSpecialThreatRaised;
+            UnbindSources();
+            CancelInvoke(nameof(UpdateMatchFlowInfo));
+            UpdateHudVisibility();
+            ClearCombatFeedback();
+            if (specialThreatWarningText != null) specialThreatWarningText.enabled = false;
+            if (interactionPromptText != null) interactionPromptText.gameObject.SetActive(false);
+        }
+
+        private void BindSources()
+        {
+            UnbindSources();
+            promptInput = InputManager.Instance;
+            if (promptInput != null) promptInput.PromptBindingsChanged += UpdateWeaponPromptBindings;
+            TryAcquireLocalPlayerHealth();
+            TryAcquireWeaponManager();
+            TryAcquireSurvivalInventory();
+            if (weaponManager != null) weaponManager.WeaponIndexChanged += OnWeaponIndexChanged;
+            UpdateWeaponUI();
+            boundDirector = AIDirector.Instance;
+            if (boundDirector != null) boundDirector.CountersChanged += UpdateCombatInfo;
+            boundDifficulty = DifficultyManager.Instance;
+            if (boundDifficulty != null) boundDifficulty.CurrentDifficulty.OnValueChanged += OnDifficultyChanged;
+            boundNetwork = NetworkGameManager.HasInstance ? NetworkGameManager.Instance : null;
+            if (boundNetwork != null)
+            {
+                boundNetwork.OnClientConnected += UpdateCombatInfo;
+                boundNetwork.OnClientDisconnected += UpdateCombatInfo;
+            }
+            boundMatch = NetworkMatchStateManager.Instance;
+            if (boundMatch != null)
+            {
+                boundMatch.OnStateChanged += OnMatchChanged;
+                boundMatch.RespawnDeadlineChanged += RefreshMatch;
+            }
+            UpdateWeaponPromptBindings(); UpdateCombatInfo(); RefreshMatch(); UpdateHudVisibility();
+        }
+
+        private void UnbindSources()
+        {
+            if (promptInput != null) promptInput.PromptBindingsChanged -= UpdateWeaponPromptBindings;
+            if (weaponManager != null) weaponManager.WeaponIndexChanged -= OnWeaponIndexChanged;
+            if (currentWeapon != null) currentWeapon.AmmoChanged -= UpdateAmmoInfo;
+            if (survivalInventory != null) survivalInventory.InventoryChanged -= UpdateSurvivalInventoryUI;
+            if (boundDirector != null) boundDirector.CountersChanged -= UpdateCombatInfo;
+            if (boundDifficulty != null) boundDifficulty.CurrentDifficulty.OnValueChanged -= OnDifficultyChanged;
+            if (boundNetwork != null)
+            {
+                boundNetwork.OnClientConnected -= UpdateCombatInfo;
+                boundNetwork.OnClientDisconnected -= UpdateCombatInfo;
+            }
+            if (boundMatch != null)
+            {
+                boundMatch.OnStateChanged -= OnMatchChanged;
+                boundMatch.RespawnDeadlineChanged -= RefreshMatch;
+            }
+            UnsubscribeInfection(); UnsubscribeHealth();
+            weaponManager = null; currentWeapon = unusedWeapon = null; survivalInventory = null;
+        }
+
+        private void OnWeaponIndexChanged(int index) => UpdateWeaponUI();
+        private void OnDifficultyChanged(DifficultyLevel before, DifficultyLevel after) => UpdateCombatInfo();
+        private void OnMatchChanged(NetworkMatchState before, NetworkMatchState after) => RefreshMatch();
+        private void RefreshMatch()
+        {
+            CancelInvoke(nameof(UpdateMatchFlowInfo));
+            UpdateMatchFlowInfo();
+            if (playerHealth != null && playerHealth.IsDead)
+                InvokeRepeating(nameof(UpdateMatchFlowInfo), .25f, .25f);
+        }
+
+        private void UpdateHudVisibility()
+        {
+            bool visible = isActiveAndEnabled && HudLayout.GameplayVisible;
+            UpdateInteractionPromptVisibility();
+            if (adsReticleRect != null) adsReticleRect.GetComponent<Image>().enabled = visible;
+            if (scopeOverlayImage != null) scopeOverlayImage.enabled = visible;
+            if (healthText == null) return;
+            peripheralRoot ??= HudLayout.PeripheralRoot(healthText.canvas.rootCanvas);
+            peripheralRoot.gameObject.SetActive(visible);
+            if (centerHudRoot == null && healthText.canvas.rootCanvas.transform.Find("MinimalHUDRoot") is Transform center)
+                centerHudRoot = center.gameObject;
+            if (centerHudRoot != null) centerHudRoot.SetActive(visible);
+        }
 
         private void Start()
         {
+            ConfigureVitalsPresentation();
+            ConfigureSelectedPresentation();
+            HudLayout.PeripheralRoot(healthText.canvas.rootCanvas).gameObject.AddComponent<SelectedUiTypography>();
+            CacheOpacityPanels();
+            if (firePromptText != null) firePromptText.transform.parent.gameObject.SetActive(false);
+            if (aimPromptText != null) aimPromptText.transform.parent.gameObject.SetActive(false);
             // Director phases are internal pacing state, not player-facing HUD information.
             if (phaseText != null)
             {
                 phaseText.text = string.Empty;
                 phaseText.gameObject.SetActive(false);
             }
-            SpecialThreatSignal.Raised += OnSpecialThreatRaised;
             EnsureSpecialThreatWarning();
             SetAimHudVisible(false, false);
             weaponManager = WeaponManager.LocalInstance;
@@ -156,46 +277,122 @@ namespace FPS
             UpdateInfectionUI(0f, 0f, InfectionStage.None);
             UpdateAmmoInfo();
             UpdateCombatInfo();
-            UpdateMatchFlowInfo();
+            BindSources();
+        }
+
+        private void CacheOpacityPanels()
+        {
+            if (healthText == null || healthText.canvas == null) return;
+            var images = healthText.canvas.rootCanvas.GetComponentsInChildren<Image>(true);
+            opacityPanels = System.Array.FindAll(images, image => image.name is "HealthReadabilityPlate" or "WeaponFrame");
+            opacityPanelAlphas = System.Array.ConvertAll(opacityPanels, image => image.color.a);
+            ApplyPanelOpacity(HudSkin.PanelOpacity);
+        }
+
+        private void ApplyPanelOpacity(float opacity)
+        {
+            if (opacityPanels == null) return;
+            for (int index = 0; index < opacityPanels.Length; index++)
+                HudSkin.SetPanelAlpha(opacityPanels[index], opacityPanelAlphas[index], opacity);
+        }
+
+        private void ConfigureVitalsPresentation()
+        {
+            if (healthFill == null || infectionFill == null || infectionStageText == null) return;
+            var healthPanel = healthFill.rectTransform.parent as RectTransform;
+            var infectionPanel = infectionFill.rectTransform.parent;
+            if (healthPanel == null || infectionPanel == healthPanel) return;
+            healthPanel.sizeDelta = new Vector2(healthPanel.sizeDelta.x, 150);
+            var infectionRect = infectionFill.rectTransform;
+            infectionRect.SetParent(healthPanel, false);
+            var healthRect = healthFill.rectTransform;
+            infectionRect.anchorMin = healthRect.anchorMin;
+            infectionRect.anchorMax = healthRect.anchorMax;
+            infectionRect.pivot = healthRect.pivot;
+            infectionRect.anchoredPosition = healthRect.anchoredPosition;
+            infectionRect.sizeDelta = healthRect.sizeDelta;
+            infectionFill.fillOrigin = 1;
+            infectionRect.SetSiblingIndex(healthRect.GetSiblingIndex() + 1);
+            var label = infectionStageText.rectTransform;
+            label.SetParent(healthPanel, false);
+            label.anchorMin = label.anchorMax = label.pivot = new Vector2(0, 1);
+            label.anchoredPosition = new Vector2(64, -75);
+            label.sizeDelta = new Vector2(262, 30);
+            if (sepsisWarning != null) sepsisWarning.transform.SetParent(healthPanel, false);
+            infectionPanel.gameObject.SetActive(false);
+        }
+
+        private void ConfigureSelectedPresentation()
+        {
+            if (healthFill == null || weaponIcon == null) return;
+            var health = (RectTransform)healthFill.transform.parent;
+            var weapon = (RectTransform)weaponIcon.transform.parent;
+            HudLayout.Corner(health, Vector2.zero, Vector2.zero, new Vector2(340, 138));
+            HudLayout.Corner(weapon, new Vector2(1, 0), Vector2.zero, new Vector2(526, 218));
+            foreach (var text in health.GetComponentsInChildren<TMP_Text>(true))
+            { text.font = Theme.BodyFont; text.fontSharedMaterial = text.font.material; text.fontSize = Theme.Body; text.color = Theme.Text; }
+            foreach (var text in weapon.GetComponentsInChildren<TMP_Text>(true))
+            { text.font = Theme.BodyFont; text.fontSharedMaterial = text.font.material; text.fontSize = Theme.Body; text.color = Theme.Text; }
+            void Put(Transform parent, string name, float x, float y, float w, float h, float pw, float ph)
+            {
+                var rect = parent.Find(name) as RectTransform;
+                if (rect != null) SelectedUiTheme.Place(rect, x, y, w, h, pw, ph);
+            }
+            SelectedUiTheme.Surface(health.Find("HealthReadabilityPlate").GetComponent<Image>(), Theme.Vitals);
+            SelectedUiTheme.Surface(weapon.Find("WeaponFrame").GetComponent<Image>(), Theme.Loadout);
+            foreach (string name in new[] { "HealthIcon", "HealthFrame" }) health.Find(name)?.gameObject.SetActive(false);
+            Put(health, "HealthText", 108, 26, 200, 56, 340, 138);
+            healthText.font = Theme.NumericFont; healthText.fontSharedMaterial = healthText.font.material; healthText.fontSize = Theme.Title; healthText.overflowMode = TextOverflowModes.Overflow;
+            var healthCaption = new GameObject("HealthCaption", typeof(RectTransform), typeof(TextMeshProUGUI));
+            healthCaption.transform.SetParent(health, false);
+            SelectedUiTheme.Place(healthCaption.GetComponent<RectTransform>(), 24, 40, 84, 32, 340, 138);
+            var caption = healthCaption.GetComponent<TMP_Text>(); caption.font = Theme.BodyFont;
+            selectedHealthCaption = caption;
+            caption.text = "HEALTH"; caption.fontSize = Theme.Small; caption.color = Theme.Text; caption.raycastTarget = false;
+            Put(health, "InfectionStageText", 24, 70, 284, 30, 340, 138);
+            infectionStageText.fontSize = Theme.Small;
+            Put(health, "HealthTrack", 24, 100, 260, 6, 340, 138);
+            Put(health, "HealthBar", 24, 100, 260, 6, 340, 138);
+            SelectedUiTheme.Place(infectionFill.rectTransform, 24, 100, 260, 6, 340, 138);
+            healthFill.color = Theme.Text; infectionFill.color = Theme.Muted;
+            Put(weapon, "PrimaryWeaponKeyText", 60, 136, 28, 32, 526, 218);
+            Put(weapon, "WeaponNameText", 88, 136, 136, 32, 526, 218);
+            Put(weapon, "WeaponIcon", 214, 132, 120, 38, 526, 218);
+            Put(weapon, "CurrentAmmoText", 398, 132, 52, 40, 526, 218);
+            Put(weapon, "ReserveAmmoText", 448, 132, 56, 40, 526, 218);
+            currentAmmo.font = Theme.NumericFont; currentAmmo.fontSharedMaterial = currentAmmo.font.material; currentAmmo.fontSize = Theme.Body; currentAmmo.overflowMode = TextOverflowModes.Overflow;
+            reservedAmmo.font = Theme.NumericFont; reservedAmmo.fontSharedMaterial = reservedAmmo.font.material; reservedAmmo.fontSize = Theme.Body; reservedAmmo.overflowMode = TextOverflowModes.Overflow;
+            reservedAmmo.textWrappingMode = currentAmmo.textWrappingMode = TextWrappingModes.NoWrap;
+            var secondary = weapon.Find("SecondaryWeaponSlot");
+            Put(weapon, "SecondaryWeaponSlot", 60, 174, 444, 32, 526, 218);
+            if (secondary != null)
+            {
+                Put(secondary, "SlotKey", 0, 0, 28, 32, 444, 32);
+                Put(secondary, "UnusedWeaponNameText", 28, 0, 136, 32, 444, 32);
+                Put(secondary, "UnusedWeaponIcon", 164, 0, 64, 28, 444, 32);
+            }
+            if (ammoTypeUI != null) ammoTypeUI.gameObject.SetActive(false);
         }
 
         private void Update()
         {
-            if (promptInput != InputManager.Instance)
-            {
-                if (promptInput != null) promptInput.PromptBindingsChanged -= UpdateWeaponPromptBindings;
-                promptInput = InputManager.Instance;
-                if (promptInput != null) promptInput.PromptBindingsChanged += UpdateWeaponPromptBindings;
-                UpdateWeaponPromptBindings();
-            }
-            if (healthText != null)
-            {
-                peripheralRoot ??= HudLayout.PeripheralRoot(healthText.canvas.rootCanvas);
-                peripheralRoot.gameObject.SetActive(HudLayout.GameplayVisible);
-                if (centerHudRoot == null && healthText.canvas.rootCanvas.transform.Find("MinimalHUDRoot") is Transform center)
-                    centerHudRoot = center.gameObject;
-                if (centerHudRoot != null) centerHudRoot.SetActive(HudLayout.GameplayVisible);
-                if (adsReticleRect != null) adsReticleRect.GetComponent<Image>().enabled = HudLayout.GameplayVisible;
-                if (scopeOverlayImage != null) scopeOverlayImage.enabled = HudLayout.GameplayVisible;
-                if (interactionPromptText != null) HudLayout.CentralBand(interactionPromptText.rectTransform, healthText.canvas, HudLayout.InteractionBottom, 52);
-            }
-            TryAcquireLocalPlayerHealth();
-            TryAcquireWeaponManager();
-            TryAcquireSurvivalInventory();
             ValidateCrosshairAlignmentIfNeeded();
-
-            if (weaponManager != null)
-            {
-                UpdateAmmoInfo();
-            }
-
-            UpdateCombatInfo();
-            UpdateMatchFlowInfo();
             UpdateCombatFeedback();
             UpdateSpecialThreatWarning();
         }
 
-        private void LateUpdate() => UpdateInteractionPromptVisibility();
+        private void LateUpdate()
+        {
+            if (selectedHealthCaption == null || healthText == null || healthText.canvas == null) return;
+            float scale = healthText.canvas.scaleFactor;
+            if (Mathf.Approximately(scale, selectedCanvasScale)) return;
+            selectedCanvasScale = scale;
+            selectedHealthCaption.fontSize = Theme.Small * scale >= TacticalUiTheme.MinimumReadableTextPixels ? Theme.Small : Theme.Body;
+            float captionWidth = Mathf.Max(84, selectedHealthCaption.GetPreferredValues(selectedHealthCaption.text, float.PositiveInfinity, float.PositiveInfinity).x + 2);
+            SelectedUiTheme.Place(selectedHealthCaption.rectTransform, 24, 40, captionWidth, 32, 340, 138);
+            float numberLeft = Mathf.Max(108, 24 + captionWidth + (captionWidth > 84 ? 8 : 0));
+            SelectedUiTheme.Place(healthText.rectTransform, numberLeft, 26, 316 - numberLeft, 56, 340, 138);
+        }
 
         private void UpdateInteractionPromptVisibility()
         {
@@ -206,6 +403,7 @@ namespace FPS
 
         protected override void OnDestroy()
         {
+            UnbindSources();
             base.OnDestroy();
             if (promptInput != null) promptInput.PromptBindingsChanged -= UpdateWeaponPromptBindings;
 
@@ -226,20 +424,7 @@ namespace FPS
                 else
                     DestroyImmediate(adsReticleRect.gameObject);
             }
-            if (adsReticleSprite != null)
-            {
-                if (Application.isPlaying)
-                    Destroy(adsReticleSprite);
-                else
-                    DestroyImmediate(adsReticleSprite);
-            }
-            if (adsReticleTexture != null)
-            {
-                if (Application.isPlaying)
-                    Destroy(adsReticleTexture);
-                else
-                    DestroyImmediate(adsReticleTexture);
-            }
+
         }
 
         private void OnSpecialThreatRaised(Vector3 worldPosition, float durationSeconds)
@@ -312,9 +497,8 @@ namespace FPS
 
         private void TryAcquireLocalPlayerHealth()
         {
-            var network = NetworkManager.Singleton;
-            var player = network != null && network.IsConnectedClient ? network.LocalClient?.PlayerObject : null;
-            var localHealth = player != null ? player.GetComponent<PlayerHealth>() : null;
+            var localHealth = PlayerHealth.LocalInstance;
+            var player = localHealth != null ? localHealth.gameObject : null;
             if (localHealth != null && !localHealth.IsOwner) localHealth = null;
             if (playerHealth == localHealth) return;
             UnsubscribeHealth();
@@ -360,7 +544,7 @@ namespace FPS
             Canvas canvas = healthText != null ? healthText.canvas : GetComponentInParent<Canvas>();
             if (canvas == null) return;
             var root = new GameObject("SurvivalHotbar", typeof(RectTransform));
-            root.transform.SetParent(HudLayout.PeripheralRoot(canvas), false);
+            root.transform.SetParent(weaponIcon != null ? weaponIcon.transform.parent : HudLayout.PeripheralRoot(canvas), false);
             survivalHotbar = root.AddComponent<SurvivalHotbar>();
             survivalHotbar.Bind(survivalInventory);
             if (grenadeCount != null) grenadeCount.transform.parent.gameObject.SetActive(false);
@@ -402,14 +586,15 @@ namespace FPS
 
         public void UpdateWeaponUI()
         {
-            if (WeaponManager.LocalInstance == null) return;
-
-            GameObject currentObj = WeaponManager.LocalInstance.CurrentWeapon;
-            GameObject unusedObj = WeaponManager.LocalInstance.UnusedWeapon;
+            var manager = weaponManager != null ? weaponManager : WeaponManager.LocalInstance;
+            if (currentWeapon != null) currentWeapon.AmmoChanged -= UpdateAmmoInfo;
+            GameObject currentObj = manager != null ? manager.CurrentWeapon : null;
+            GameObject unusedObj = manager != null ? manager.UnusedWeapon : null;
 
             currentWeapon = currentObj != null ? currentObj.GetComponent<Weapon>() : null;
             unusedWeapon = unusedObj != null && unusedObj != currentObj ? unusedObj.GetComponent<Weapon>() : null;
 
+            if (isActiveAndEnabled && currentWeapon != null) currentWeapon.AmmoChanged += UpdateAmmoInfo;
             UpdateWeaponVisuals();
             UpdateAmmoInfo();
         }
@@ -437,11 +622,15 @@ namespace FPS
             {
                 reservedAmmo.text = $"/ {currentWeapon.ReservedAmmo}";
                 reservedAmmo.color = currentWeapon.ReservedAmmo <= 0 ? WarningColor : MutedColor;
+                float reserveWidth = Mathf.Max(56, reservedAmmo.GetPreferredValues(reservedAmmo.text, float.PositiveInfinity, float.PositiveInfinity).x + 4);
+                SelectedUiTheme.Place(reservedAmmo.rectTransform, 504 - reserveWidth, 132, reserveWidth, 40, 526, 218);
+                if (currentAmmo != null) SelectedUiTheme.Place(currentAmmo.rectTransform, 452 - reserveWidth, 132, 52, 40, 526, 218);
             }
 
             if (ammoStatusText != null)
             {
-                if (currentWeapon.CurrentAmmo <= 0 && currentWeapon.ReservedAmmo <= 0)
+                if (currentWeapon.IsReloading) { ammoStatusText.text = "RELOADING"; ammoStatusText.color = WarningColor; }
+                else if (currentWeapon.CurrentAmmo <= 0 && currentWeapon.ReservedAmmo <= 0)
                 {
                     ammoStatusText.text = "DRY";
                     ammoStatusText.color = CriticalColor;
@@ -554,8 +743,11 @@ namespace FPS
             if (target == null) return;
 
             Sprite icon = weapon != null && weapon.Data != null ? weapon.Data.weaponIcon : null;
+            if (icon == null && weapon != null && weapon.Data != null && weapon.Data.weaponName == "Warden") icon = Theme.WardenIcon;
+            if (weapon != null && weapon.Data != null && weapon.Data.weaponName == "Classic") icon = HudSkin.Get("Selected/Classic");
             target.sprite = icon;
             target.enabled = icon != null;
+            target.color = Theme.Muted;
         }
 
         private string GetWeaponName(Weapon weapon, string fallback)
@@ -574,7 +766,27 @@ namespace FPS
                 return;
 
             if (!string.IsNullOrEmpty(text))
-                interactionPromptText.text = text;
+            {
+                bool locked = text.StartsWith("\U0001F512 ", System.StringComparison.Ordinal);
+                interactionPromptText.text = locked ? text.Substring(3) : text;
+                interactionPromptText.textWrappingMode = TextWrappingModes.Normal;
+                interactionPromptText.overflowMode = TextOverflowModes.Overflow;
+                if (locked && interactionLock == null)
+                {
+                    interactionLock = new GameObject("InteractionLock", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+                    interactionLock.transform.SetParent(interactionPromptText.transform, false);
+                    HudSkin.Apply(interactionLock, "Locked", Theme.Text);
+                    interactionLock.raycastTarget = false;
+                    interactionLock.rectTransform.anchorMin = interactionLock.rectTransform.anchorMax = new Vector2(.5f, .5f);
+                    interactionLock.rectTransform.sizeDelta = new Vector2(24, 24);
+                }
+                if (interactionLock != null)
+                {
+                    interactionLock.gameObject.SetActive(locked);
+                    interactionLock.rectTransform.anchoredPosition = new Vector2(-Mathf.Min(interactionPromptText.rectTransform.rect.width,
+                        interactionPromptText.preferredWidth) * .5f - 20, 0);
+                }
+            }
             interactionPromptRequested = visible;
             UpdateInteractionPromptVisibility();
         }
@@ -589,7 +801,7 @@ namespace FPS
             if (healthText != null)
             {
                 int maxRounded = Mathf.CeilToInt(max);
-                healthText.text = $"{currentRounded}<size=65%> / {maxRounded}</size>";
+                healthText.text = $"{currentRounded} / {maxRounded}";
                 healthText.color = healthColor;
             }
 
@@ -781,43 +993,12 @@ namespace FPS
             adsReticleRect.anchoredPosition = Vector2.zero;
             adsReticleRect.SetAsLastSibling();
             Image graphic = reticle.GetComponent<Image>();
-            graphic.sprite = CreateAdsReticleSprite();
-            graphic.color = Color.white;
+            graphic.sprite = adsReticleSprite = HudSkin.Get("ADSReflexDot");
+            graphic.color = Theme.Text;
+            var outline = reticle.AddComponent<Outline>();
+            outline.effectColor = Theme.Background;
+            outline.effectDistance = Vector2.one * (.7f / Mathf.Max(.01f, adsReticleCanvas.scaleFactor));
             graphic.raycastTarget = false;
-        }
-
-        private Sprite CreateAdsReticleSprite()
-        {
-            if (adsReticleSprite != null)
-                return adsReticleSprite;
-
-            const int size = 32;
-            adsReticleTexture = new Texture2D(size, size, TextureFormat.RGBA32, false)
-            {
-                name = "Runtime_ADSReflexReticle",
-                filterMode = FilterMode.Bilinear,
-                wrapMode = TextureWrapMode.Clamp
-            };
-            Vector2 center = Vector2.one * size * .5f;
-            for (int y = 0; y < size; y++)
-            for (int x = 0; x < size; x++)
-            {
-                float distance = Vector2.Distance(new Vector2(x + .5f, y + .5f), center) / (size * .5f);
-                Color pixel = new Color(.15f, 1f, .8f, .22f * (1f - Mathf.SmoothStep(.44f, 1f, distance)));
-                if (distance <= .44f)
-                    pixel = new Color(.02f, .06f, .07f, .9f); // contrast on light backgrounds
-                if (distance <= .3f)
-                    pixel = new Color(.15f, 1f, .8f, 1f); // 3 px reflex core in a 10 px image
-                adsReticleTexture.SetPixel(x, y, pixel);
-            }
-            adsReticleTexture.Apply(false, true);
-            adsReticleSprite = Sprite.Create(
-                adsReticleTexture,
-                new Rect(0f, 0f, size, size),
-                Vector2.one * .5f,
-                size);
-            adsReticleSprite.name = "Runtime_ADSReflexReticle";
-            return adsReticleSprite;
         }
 
         public void SetScopeVisible(bool visible)
@@ -874,14 +1055,17 @@ namespace FPS
 
         private void ValidateCrosshairAlignmentIfNeeded()
         {
+            Vector2 hudSize = peripheralRoot != null ? peripheralRoot.rect.size : Vector2.zero;
             if (validatedCrosshairScreenWidth == Screen.width
-                && validatedCrosshairScreenHeight == Screen.height)
+                && validatedCrosshairScreenHeight == Screen.height && validatedHudSize == hudSize)
             {
                 return;
             }
 
             validatedCrosshairScreenWidth = Screen.width;
             validatedCrosshairScreenHeight = Screen.height;
+            validatedHudSize = hudSize;
+            RefreshInteractionLayout(CampaignHUD.Instance != null ? CampaignHUD.Instance.InteractionBandBottom : HudLayout.InteractionBottom);
             if (ValidateCrosshairAlignment(out float pixelError))
             {
                 crosshairAlignmentWarningIssued = false;
@@ -894,6 +1078,15 @@ namespace FPS
             crosshairAlignmentWarningIssued = true;
             GameLog.Warning(() =>
                 $"[HUD] Crosshair is {pixelError:F2}px away from screen center at {Screen.width}x{Screen.height}; allowed error is 0.5px.");
+        }
+
+        public float RefreshInteractionLayout(float bottom)
+        {
+            if (interactionPromptText == null) return HudLayout.InteractionHeight;
+            HudLayout.CentralBand(interactionPromptText.rectTransform, interactionPromptText.canvas, bottom, HudLayout.InteractionHeight);
+            float height = Mathf.Max(HudLayout.InteractionHeight, interactionPromptText.preferredHeight);
+            interactionPromptText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+            return height;
         }
 
         private void EnsureScopeOverlay()
@@ -960,6 +1153,7 @@ namespace FPS
 
         private void OnLocalLifeStateChanged(PlayerLifeState previous, PlayerLifeState current)
         {
+            RefreshMatch();
             ClearCombatFeedback();
             UpdateHealthUI(playerHealth.CurrentHealth, playerHealth.MaxHealth);
         }
@@ -1020,7 +1214,7 @@ namespace FPS
                 ref vignetteVelocity, .15f, Mathf.Infinity, Time.unscaledDeltaTime);
             if (healthDangerBackground != null)
             {
-                healthDangerBackground.color = new Color(.78f, .05f, .05f, vignetteAlpha);
+                healthDangerBackground.color = SelectedUiTheme.WithAlpha(Theme.Danger, vignetteAlpha);
                 healthDangerBackground.enabled = visible && vignetteAlpha > .001f;
             }
             for (int i = 0; i < damageCues.Length; i++)

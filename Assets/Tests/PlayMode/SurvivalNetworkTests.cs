@@ -6,6 +6,9 @@ using System.Reflection;
 using NUnit.Framework;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using Unity.Multiplayer.Tools.NetworkSimulator.Runtime;
+using Unity.Networking.Transport;
+using Unity.Networking.Transport.Utilities;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -14,7 +17,7 @@ using Object = UnityEngine.Object;
 namespace FPS.Tests
 {
     /// <summary>Real NGO host/client transport in one process. Client physics copies are excluded.</summary>
-    public sealed class SurvivalNetworkTests
+    public sealed partial class SurvivalNetworkTests
     {
         const string Content = "Assets/FPS/Features/Survival/Content/Prefabs/";
         const string PlayerPrefab = "Assets/FPS/Features/Characters/Content/Players/Brimstone/BrimstonePlayer.prefab";
@@ -25,7 +28,11 @@ namespace FPS.Tests
         static readonly string[] PlayerNames = { "Clove", "Brimstone", "Gekko", "Sage" };
         static string PlayerPath(string character) => $"Assets/FPS/Features/Characters/Content/Players/{character}/{character}Player.prefab";
         const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
-        NetworkManager host, client;
+        NetworkManager host, client, observer;
+        NetworkSimulator recoilSimulator;
+        static readonly int[] RecoilNetworkDelays = { 0, 50, 100 };
+        static readonly string[] RecoilProfileNames = { "Vandal", "Classic", "Odin", "Operator", "Bucky" };
+        static readonly int[] RecoilFrameRates = { 30, 60, 144 };
         PlayerHealth actor, teammate;
         SurvivalInventory serverInventory, clientInventory;
         UnityEngine.AI.NavMeshDataInstance feedbackNavigation;
@@ -39,8 +46,31 @@ namespace FPS.Tests
             host = CreateManager("Survival test host");
             client = CreateManager("Survival test client");
             host.SetSingleton();
+            if (TestContext.CurrentContext.Test.MethodName != nameof(WardenRecoilPredictsAndReconcilesAcrossRealOwnerRpc)
+                && TestContext.CurrentContext.Test.MethodName != nameof(ProfileRecoilPredictsAndReconcilesAcrossRealOwnerRpc))
+                yield return StartNetwork();
+        }
+
+        IEnumerator StartNetwork(int delay = -1)
+        {
+            if (delay >= 0)
+            {
+                recoilSimulator = new GameObject("Warden network conditions").AddComponent<NetworkSimulator>();
+                recoilSimulator.ConnectionPreset = NetworkSimulatorPreset.Create("Warden " + delay,
+                    packetDelayMs: delay, packetJitterMs: delay == 50 ? 10 : delay == 100 ? 20 : 0,
+                    packetLossPercent: delay == 100 ? 2 : 0);
+            }
             Assert.That(host.StartHost(), Is.True);
             Assert.That(client.StartClient(), Is.True);
+            if (recoilSimulator != null)
+            {
+                // Configure latency before the handshake so the client's initial RTT is representative.
+                var hostDriver = host.GetComponent<UnityTransport>().GetNetworkDriver();
+                Assert.That(hostDriver.CurrentSettings.TryGet<SimulatorUtility.Parameters>(out var simulation), Is.True);
+                simulation.PacketDelayMs = simulation.PacketJitterMs = simulation.PacketDropInterval = 0;
+                simulation.PacketDropPercentage = 0;
+                hostDriver.ModifySimulatorStageParameters(simulation);
+            }
             yield return Until(() => client.IsConnectedClient && host.ConnectedClients.Count == 2, "client connection");
             yield return Until(() => client.LocalClient.PlayerObject != null, "client player spawn");
             actor = host.ConnectedClients[client.LocalClientId].PlayerObject.GetComponent<PlayerHealth>();
@@ -75,9 +105,17 @@ namespace FPS.Tests
         public IEnumerator TearDown()
         {
             if (feedbackNavigation.valid) feedbackNavigation.Remove();
+            if (recoilSimulator != null)
+            {
+                recoilSimulator.ConnectionPreset = NetworkSimulatorPresets.None;
+                Object.Destroy(recoilSimulator.gameObject);
+            }
+            if (observer != null) observer.Shutdown();
             if (client != null) client.Shutdown();
             if (host != null) host.Shutdown();
             yield return null;
+            if (observer != null) Object.Destroy(observer.gameObject);
+            observer = null;
             if (client != null) Object.Destroy(client.gameObject);
             if (host != null) Object.Destroy(host.gameObject);
             yield return null;
@@ -95,15 +133,552 @@ namespace FPS.Tests
 
         void DisableClientColliders()
         {
-            if (client == null || client.SpawnManager == null) return;
-            foreach (var obj in client.SpawnManager.SpawnedObjectsList)
-                foreach (var collider in obj.GetComponentsInChildren<Collider>()) collider.enabled = false;
+            DisableFor(client);
+            DisableFor(observer);
+            void DisableFor(NetworkManager peer)
+            {
+                if (peer == null || peer.SpawnManager == null) return;
+                foreach (var obj in peer.SpawnManager.SpawnedObjectsList)
+                    foreach (var collider in obj.GetComponentsInChildren<Collider>()) collider.enabled = false;
+            }
         }
 
         static T Field<T>(object target, string name) => (T)target.GetType().GetField(name, Private).GetValue(target);
         static void SetField(object target, string name, object value) => target.GetType().GetField(name, Private).SetValue(target, value);
         static void Invoke(object target, string name, params object[] args) => target.GetType().GetMethod(name, Private).Invoke(target, args);
         void FinishSoon() => Field<NetworkVariable<double>>(serverInventory, "useDeadline").Value = serverInventory.ServerNow;
+
+        [UnityTest]
+        public IEnumerator WardenCameraHandlesDelayedKickCompensationAndClamp()
+        {
+            var player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPath("Clove")));
+            player.GetComponent<PlayerMovement>().enabled = false;
+            var look = player.GetComponent<MouseMovement>();
+            look.enabled = false;
+            player.GetComponent<NetworkObject>().Spawn();
+            var manager = player.GetComponent<WeaponManager>();
+            manager.TryReplacePrimaryWeaponServer(PrimaryWeaponId.Warden);
+            manager.SetEquippedWeaponServer(0);
+            yield return Until(() => !player.GetComponent<WeaponFireHandler>().IsServerEquipping, "camera fixture equip");
+            var weapon = manager.GetWeapon(0);
+            weapon.enabled = false;
+            var data = Object.Instantiate(weapon.Data);
+            var profile = Object.Instantiate(data.recoilPattern);
+            data.recoilPattern = profile;
+            profile.snappiness = 10000;
+            SetField(weapon, "weaponData", data);
+            var recoil = player.GetComponent<RecoilController>();
+            recoil.enabled = false;
+            try
+            {
+                var state = new WeaponStability();
+                state.Fire(profile, weapon.StabilityTime - .2, data.FireInterval,
+                    new WeaponStabilityContext { grounded = true }, 1);
+                weapon.ReconcileStability(new WeaponOwnerState { stability = state, hasResolvedFireSequence = true });
+                recoil.Bind(weapon, false);
+                Invoke(recoil, "Update");
+                Assert.That(-look.XRotation, Is.GreaterThan(.1f), "200 ms late first frame must retain its remaining kick");
+                recoil.Release(weapon);
+                Assert.That(look.XRotation, Is.EqualTo(0).Within(.0001));
+
+                CheckDelta(.3f, .1f, .05f, -.05f);
+                CheckDelta(.3f, .1f, 0f, 0f);
+                CheckDelta(.4f, -.6f, .1f, -.7f);
+                CheckDelta(-.4f, .6f, -.1f, .7f);
+                CheckDelta(.4f, 0f, .1f, -.1f); // Rejected prediction removes only uncompensated kick.
+
+                SetField(look, "xRotation", -89.95f);
+                SetField(recoil, "currentPattern", profile);
+                SetField(recoil, "targetRecoil", new Vector2(.6f, 0));
+                Invoke(recoil, "Update");
+                Assert.That(Field<Vector2>(recoil, "recoverableRecoil").x, Is.EqualTo(.05f).Within(.0001));
+                SetField(recoil, "targetRecoil", Vector2.zero);
+                Invoke(recoil, "Update");
+                Assert.That(look.XRotation, Is.EqualTo(-89.95f).Within(.0001), "clamped kick cannot return un-applied degrees");
+
+                void CheckDelta(float before, float after, float debt, float expected)
+                {
+                    SetField(look, "xRotation", -debt);
+                    SetField(recoil, "currentPattern", profile);
+                    SetField(recoil, "currentRecoil", new Vector2(before, 0));
+                    SetField(recoil, "targetRecoil", new Vector2(after, 0));
+                    SetField(recoil, "recoverableRecoil", new Vector2(debt, 0));
+                    SetField(recoil, "timeSinceLastShot", 0f);
+                    Invoke(recoil, "Update");
+                    Assert.That(look.XRotation, Is.EqualTo(-(debt + expected)).Within(.0001), $"model {before}->{after}, debt={debt}");
+                    Invoke(recoil, "Clear");
+                }
+            }
+            finally
+            {
+                Invoke(recoil, "Clear");
+                player.GetComponent<NetworkObject>().Despawn();
+                Object.Destroy(profile);
+                Object.Destroy(data);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator JumpFireUsesPostMoveContextAndLandingRestoresGrounding()
+        {
+            var floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            floor.transform.position = new Vector3(100, -.5f, 0);
+            floor.transform.localScale = new Vector3(20, 1, 20);
+            var player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPath("Clove")), new Vector3(100, 5, 0), Quaternion.identity);
+            var movement = player.GetComponent<PlayerMovement>();
+            movement.enabled = false;
+            player.GetComponent<MouseMovement>().enabled = false;
+            player.GetComponent<NetworkObject>().Spawn();
+            var controller = player.GetComponent<CharacterController>();
+            try
+            {
+                Physics.SyncTransforms();
+                controller.Move(Vector3.down * 10);
+                Assert.That(controller.isGrounded, Is.True, "fixture must contact floor before jumping");
+                var input = new PlayerInputPayload { sequence = 17, tick = 100, jumpPressed = true,
+                    yaw = 32, pitch = -7, move = new Vector2(.5f, 0) };
+                Invoke(movement, "SimulateTick", input, 1f / 60);
+                Assert.That(movement.StabilityContext.grounded, Is.False, "jump-start tick must be airborne after Move");
+                var profile = AssetDatabase.LoadAssetAtPath<WeaponData>("Assets/FPS/Features/Weapons/Content/Warden/Warden.asset").recoilPattern;
+                Assert.That(profile.GetSpread(0, movement.StabilityContext), Is.EqualTo(10).Within(.0001));
+                Invoke(movement, "RecordServerAim", input, 100);
+                Field<NetworkTimer>(movement, "networkTimer").CurrentTick = 101;
+                Field<PlayerInputPayload[]>(movement, "inputBuffer")[100] = input;
+                Field<PlayerStatePayload[]>(movement, "stateBuffer")[100] =
+                    (PlayerStatePayload)typeof(PlayerMovement).GetMethod("CaptureState", Private).Invoke(movement, new object[] { 100 });
+                SetField(movement, "hasTickedOnce", true);
+                SetField(movement, "aimHeld", true); // Live state must not replace the chosen historical sample.
+                Assert.That(movement.TryGetPredictedFireAim(17, out var ownerAim, out var ownerAds, out var ownerContext), Is.True);
+                Assert.That(movement.TryBuildServerAim(100, 17, out _, out var serverAim, out var serverAds, out var serverContext), Is.True);
+                Assert.That(ownerAds || serverAds || ownerContext.aimed || serverContext.aimed, Is.False);
+                Assert.That(ownerContext.grounded || serverContext.grounded, Is.False);
+                Assert.That(ownerContext.normalizedSpeed, Is.EqualTo(serverContext.normalizedSpeed).Within(.0001));
+                Assert.That(Vector3.Distance(ownerAim, serverAim), Is.LessThan(.0001));
+
+                float bottomOffset = controller.bounds.min.y - player.transform.position.y;
+                controller.enabled = false;
+                player.transform.position = new Vector3(100, .05f - bottomOffset, 0);
+                controller.enabled = true;
+                SetField(movement, "verticalVelocity", -10f);
+                Physics.SyncTransforms();
+                Invoke(movement, "SimulateTick", new PlayerInputPayload(), .02f);
+                Assert.That(controller.isGrounded, Is.True, "fixture lands in this Move");
+                Assert.That(movement.StabilityContext.grounded, Is.True, "landing must be captured on the same tick");
+
+                // Replay can re-simulate an older sprint command after infection disables sprinting.
+                var infection = player.GetComponent<PlayerInfectionController>();
+                infection.SetInfectionServer(100);
+                Assert.That(infection.CanSprint, Is.False);
+                input.sprint = true;
+                input.jumpPressed = false;
+                Field<PlayerInputPayload[]>(movement, "inputBuffer")[100] = input;
+                Invoke(movement, "ReplayFrom", 100);
+                Invoke(movement, "RecordServerAim", input, 100);
+                infection.SetInfectionServer(0); // Reading history must not substitute the live permission.
+                Assert.That(movement.TryGetPredictedFireAim(17, out _, out _, out ownerContext), Is.True);
+                Assert.That(movement.TryBuildServerAim(100, 17, out _, out _, out _, out serverContext), Is.True);
+                Assert.That(serverContext.sprinting, Is.False, "server simulated the sprint restriction");
+                Assert.That(ownerContext.sprinting, Is.False, "owner history must retain the effective replayed sprint context");
+            }
+            finally
+            {
+                player.GetComponent<NetworkObject>().Despawn();
+                Object.Destroy(floor);
+            }
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator WardenReconnectRestoresYawTransitionAcrossARealDisconnect()
+            => ReconnectRecoil("Warden");
+
+        [UnityTest]
+        public IEnumerator ProfileReconnectRestoresRecoilAcrossARealDisconnect(
+            [Values("Vandal", "Odin", "Operator", "Bucky")] string name)
+            => ReconnectRecoil(name);
+
+        IEnumerator ReconnectRecoil(string name)
+        {
+            var source = AssetDatabase.LoadAssetAtPath<WeaponData>($"Assets/FPS/Features/Weapons/Content/{name}/{name}.asset");
+            var profile = Object.Instantiate(source.recoilPattern);
+            bool transition = profile.yawSwitchChance > 0;
+            if (transition) profile.yawSwitchChance = 1;
+            ushort shotCount = (ushort)(transition ? profile.protectedShots + 1 : 1);
+            var primary = (PrimaryWeaponId)Enum.Parse(typeof(PrimaryWeaponId), name);
+            var data = Object.Instantiate(source);
+            data.recoilPattern = profile;
+            var player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPath("Clove")));
+            player.GetComponent<PlayerMovement>().enabled = false;
+            player.GetComponent<MouseMovement>().enabled = false;
+            var serverState = new WeaponServerState();
+            serverState.EnsureInitialized(1, data);
+            yield return Until(() => host.ServerTime.Time > shotCount * source.FireInterval, "reconnect clock warmup");
+            double transitionStart = host.ServerTime.Time;
+            for (ushort shot = 1; shot <= shotCount; shot++)
+                Assert.That(serverState.TryConsumeFire(data, transitionStart - (shotCount - shot) * (double)data.FireInterval,
+                    shot, true, new WeaponStabilityContext { grounded = true }, shot), Is.True);
+            serverState.RecordFireResult(shotCount);
+            var snapshot = actor.CaptureRuntimeSnapshot();
+            snapshot.primaryWeaponId = primary;
+            snapshot.equippedWeaponSlot = 0;
+            snapshot.weaponSlot0 = serverState.Capture(0, source);
+            snapshot.revision = 42;
+            var expected = snapshot.weaponSlot0.stability;
+            Assert.That(expected.acceptedShots, Is.EqualTo(shotCount));
+            if (transition) Assert.That(expected.yawFromSign, Is.Not.EqualTo(expected.yawToSign));
+            host.DisconnectClient(client.LocalClientId);
+            client.Shutdown(discardMessageQueue: true);
+            yield return Until(() => host.ConnectedClients.Count == 1, "real client disconnect");
+            Object.Destroy(client.gameObject);
+            yield return null;
+            client = CreateManager("reconnected recoil client");
+            Assert.That(client.StartClient(), Is.True);
+            yield return Until(() => client.IsConnectedClient && host.ConnectedClients.Count == 2, "new peer reconnect");
+            player.GetComponent<PlayerHealth>().PrepareReconnect(snapshot);
+            player.GetComponent<NetworkObject>().SpawnWithOwnership(client.LocalClientId);
+            ulong id = player.GetComponent<NetworkObject>().NetworkObjectId;
+            yield return Until(() => client.SpawnManager.SpawnedObjects.ContainsKey(id), "restored owner replica");
+            var owner = client.SpawnManager.SpawnedObjects[id];
+            owner.GetComponent<PlayerMovement>().enabled = false;
+            owner.GetComponent<MouseMovement>().enabled = false;
+            var manager = owner.GetComponent<WeaponManager>();
+            yield return Until(() => manager.ActivePrimaryWeaponId == primary
+                && manager.GetWeapon(0).PredictedStability.Equals(expected)
+                && owner.GetComponent<PlayerHealth>().IsInputReady, "snapshot and restore acknowledgement");
+            double restoreElapsed = host.ServerTime.Time - transitionStart;
+            var weapon = manager.GetWeapon(0);
+            System.IO.File.AppendAllText("Documents/Warden/Recoil-v2/Evidence/network-clock.txt",
+                $"reconnect host={host.ServerTime.Time:F4} client={client.ServerTime.Time:F4} weapon={weapon.StabilityTime:F4} bound={Field<WeaponFireHandler>(weapon, "cachedFireHandler") != null}\n");
+            yield return Until(() => weapon.StabilityTime > expected.yawSwitchStartTime + .001,
+                "buffered owner clock reaches the transition start");
+            weapon.enabled = false;
+            Assert.That(player.GetComponent<WeaponFireHandler>().CaptureWeaponSnapshot(0).stability.Equals(expected), Is.True);
+            Assert.That(Field<int>(weapon, "pendingServerShots"), Is.Zero);
+            if (transition)
+            {
+                // Reconnecting can outlast the transition; its original absolute phase must survive either way.
+                double restoredTime = weapon.StabilityTime;
+                float phase = Mathf.Clamp01((float)((restoredTime - expected.yawSwitchStartTime) / profile.yawSwitchDuration));
+                float direction = Mathf.Lerp(expected.yawFromSign, expected.yawToSign, phase);
+                Assert.That(weapon.PredictedStability.YawDirectionAt(source.recoilPattern, restoredTime),
+                    Is.EqualTo(direction).Within(.0001), "reconnect must continue or finish the original transition, never restart it");
+            }
+            foreach (double offset in new[] { 0.0, .15, .3, .45, .6 })
+            {
+                double time = expected.yawSwitchStartTime + offset;
+                Assert.That(weapon.PredictedStability.YawDirectionAt(source.recoilPattern, time),
+                    Is.EqualTo(expected.YawDirectionAt(profile, time)).Within(.0001));
+                Assert.That(weapon.PredictedStability.TargetAt(source.recoilPattern, time, data.FireInterval),
+                    Is.EqualTo(expected.TargetAt(profile, time, data.FireInterval)));
+            }
+            var recoil = owner.GetComponent<RecoilController>();
+            recoil.Bind(weapon, false);
+            yield return null;
+            yield return Until(() => Mathf.Abs(owner.GetComponent<MouseMovement>().XRotation) < .01f,
+                "reconnected camera settles", 2);
+            recoil.Release(weapon);
+            Assert.That(owner.GetComponent<MouseMovement>().XRotation, Is.EqualTo(0).Within(.01));
+            System.IO.File.AppendAllText("Documents/Warden/Recoil-v2/Evidence/reconnect.txt",
+                $"profile={name}; restore elapsed={restoreElapsed:F4}s; settled elapsed={host.ServerTime.Time - transitionStart:F4}s; transitionStart={expected.yawSwitchStartTime:F6}; state/ACK matched\n");
+            Object.Destroy(profile);
+            Object.Destroy(data);
+        }
+
+        [UnityTest]
+        public IEnumerator WardenCameraCadenceAndLifecycleStayClean([ValueSource(nameof(RecoilFrameRates))] int fps)
+        {
+            var player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPath("Clove")));
+            player.GetComponent<PlayerMovement>().enabled = false;
+            var look = player.GetComponent<MouseMovement>();
+            look.enabled = false;
+            player.GetComponent<NetworkObject>().Spawn();
+            var manager = player.GetComponent<WeaponManager>();
+            manager.TryReplacePrimaryWeaponServer(PrimaryWeaponId.Warden);
+            manager.SetEquippedWeaponServer(0);
+            yield return Until(() => !player.GetComponent<WeaponFireHandler>().IsServerEquipping, "cadence fixture equip");
+            var weapon = manager.GetWeapon(0);
+            weapon.enabled = false;
+            var recoil = player.GetComponent<RecoilController>();
+            recoil.enabled = false;
+            float previousCapture = Time.captureDeltaTime;
+            Time.captureDeltaTime = 1f / fps;
+            // Use the presentation clock for deterministic cadence; real RPC timing has its own matrix test.
+            SetField(weapon, "cachedFireHandler", null);
+            try
+            {
+                yield return null;
+                foreach (bool aimed in new[] { false, true })
+                foreach (int shots in new[] { 1, 3, 15 })
+                {
+                    var state = new WeaponStability();
+                    double nextShot = Time.timeAsDouble;
+                    int fired = 0;
+                    float peak = 0;
+                    while (fired < shots)
+                    {
+                        while (fired < shots && Time.timeAsDouble >= nextShot)
+                        {
+                            state.Fire(weapon.Data.recoilPattern, nextShot, weapon.Data.FireInterval,
+                                new WeaponStabilityContext { grounded = true, aimed = aimed }, (uint)++fired);
+                            weapon.ReconcileStability(new WeaponOwnerState { stability = state });
+                            recoil.Bind(weapon, aimed);
+                            nextShot += weapon.Data.FireInterval;
+                        }
+                        Invoke(recoil, "Update");
+                        peak = Mathf.Max(peak, -look.XRotation);
+                        Assert.That(float.IsFinite(look.XRotation) && float.IsFinite(look.YRotation), Is.True);
+                        yield return null;
+                    }
+                    Assert.That(peak, Is.GreaterThan(.01f), $"{fps} FPS aimed={aimed} shots={shots} visible kick");
+                    yield return Settle();
+                    recoil.Release(weapon);
+                }
+
+                Kick();
+                var beforeSwitch = weapon.PredictedStability;
+                weapon.enabled = true;
+                manager.SetEquippedWeaponServer(1);
+                AssertClean("weapon switch");
+                Assert.That(weapon.PredictedStability.Equals(beforeSwitch), Is.True, "switch preserves the burst model");
+                manager.SetEquippedWeaponServer(0);
+                weapon.enabled = false;
+                SetField(weapon, "cachedFireHandler", null);
+                Kick();
+                weapon.SetLocalAmmoState(14, 30, true);
+                yield return Settle();
+                weapon.SetLocalAmmoState(15, 29, false);
+                AssertClean("reload");
+                Kick();
+                Invoke(player.GetComponent<PlayerHealth>(), "Die");
+                AssertClean("death");
+                player.GetComponent<PlayerHealth>().Respawn(Vector3.zero, Quaternion.identity);
+                AssertClean("respawn");
+                System.IO.File.AppendAllText("Documents/Warden/Recoil-v2/Evidence/camera-cadence.txt",
+                    $"{fps} FPS cadence: hip/ADS x 1/3/15 shots; switch/reload/death/respawn passed\n");
+
+                void Kick()
+                {
+                    var state = new WeaponStability();
+                    state.Fire(weapon.Data.recoilPattern, Time.timeAsDouble, weapon.Data.FireInterval,
+                        new WeaponStabilityContext { grounded = true }, 1);
+                    weapon.ReconcileStability(new WeaponOwnerState { stability = state });
+                    recoil.Bind(weapon, false);
+                    Invoke(recoil, "Update");
+                    Assert.That(-look.XRotation, Is.GreaterThan(.01f));
+                }
+                IEnumerator Settle()
+                {
+                    for (int frame = 0; frame < 2 * fps; frame++)
+                    {
+                        yield return null;
+                        Invoke(recoil, "Update");
+                    }
+                    AssertClean("recovery within two seconds");
+                }
+                void AssertClean(string phase)
+                {
+                    Assert.That(Mathf.Abs(look.XRotation), Is.LessThan(.01f), phase + " pitch");
+                    Assert.That(Mathf.Abs(Mathf.DeltaAngle(0, look.YRotation)), Is.LessThan(.01f), phase + " yaw");
+                }
+            }
+            finally
+            {
+                Time.captureDeltaTime = previousCapture;
+                recoil.Release(weapon);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator WardenRecoilPredictsAndReconcilesAcrossRealOwnerRpc([ValueSource(nameof(RecoilNetworkDelays))] int delay)
+            => RecoilAcrossRealOwnerRpc("Warden", delay);
+
+        [UnityTest]
+        public IEnumerator ProfileRecoilPredictsAndReconcilesAcrossRealOwnerRpc(
+            [ValueSource(nameof(RecoilProfileNames))] string name, [ValueSource(nameof(RecoilNetworkDelays))] int delay)
+            => RecoilAcrossRealOwnerRpc(name, delay);
+
+        IEnumerator RecoilAcrossRealOwnerRpc(string name, int delay)
+        {
+            yield return StartNetwork(delay);
+            observer = CreateManager("recoil observer");
+            Assert.That(observer.StartClient(), Is.True);
+            yield return Until(() => observer.IsConnectedClient && host.ConnectedClients.Count == 3, "observer connection");
+            int jitter = delay == 50 ? 10 : delay == 100 ? 20 : 0;
+            int loss = delay == 100 ? 2 : 0;
+            Assert.That(recoilSimulator.IsAvailable && recoilSimulator.IsConnected, Is.True, "installed simulator must control the real transport");
+            actor.transform.position = Vector3.right * 50;
+            teammate.transform.position = Vector3.left * 50;
+            var player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPath("Clove")));
+            var serverMovement = player.GetComponent<PlayerMovement>();
+            serverMovement.enabled = false;
+            player.GetComponent<MouseMovement>().enabled = false;
+            player.GetComponent<NetworkObject>().SpawnWithOwnership(client.LocalClientId);
+            ulong id = player.GetComponent<NetworkObject>().NetworkObjectId;
+            yield return Until(() => client.SpawnManager.SpawnedObjects.ContainsKey(id), "recoil owner spawn");
+            yield return Until(() => observer.SpawnManager.SpawnedObjects.ContainsKey(id), "recoil observer spawn");
+            var owner = client.SpawnManager.SpawnedObjects[id];
+            var ownerMovement = owner.GetComponent<PlayerMovement>();
+            ownerMovement.enabled = false;
+            var look = owner.GetComponent<MouseMovement>();
+            look.enabled = false;
+            var serverManager = player.GetComponent<WeaponManager>();
+            var ownerManager = owner.GetComponent<WeaponManager>();
+            int slot = name == "Classic" ? 1 : 0;
+            var primary = name == "Classic" ? PrimaryWeaponId.Warden : (PrimaryWeaponId)Enum.Parse(typeof(PrimaryWeaponId), name);
+            Assert.That(serverManager.TryReplacePrimaryWeaponServer(primary), Is.True);
+            serverManager.SetEquippedWeaponServer(slot);
+            var serverFire = player.GetComponent<WeaponFireHandler>();
+            var ownerFire = owner.GetComponent<WeaponFireHandler>();
+            yield return Until(() => ownerManager.ActivePrimaryWeaponId == primary
+                && ownerManager.CurrentWeaponIndex == slot && !serverFire.IsServerEquipping, name + " equip");
+            yield return new WaitForSeconds(.15f);
+            var weapon = ownerManager.GetWeapon(slot);
+            yield return Until(() => !weapon.IsEquipPresentationActive, "owner equip deadline");
+            // Runtime RTT changes need time for NGO's local/server clock offsets to converge.
+            yield return Until(() => Math.Abs(client.LocalTime.Time - client.ServerTime.Time
+                - client.NetworkTimeSystem.LocalBufferSec - client.NetworkTimeSystem.ServerBufferSec
+                - client.NetworkConfig.NetworkTransport.GetCurrentRtt(NetworkManager.ServerClientId) / 2000d)
+                < 1d / client.NetworkConfig.TickRate, "clock offsets after latency change", 15);
+            Assert.That(weapon.Data.recoilPattern.useStabilityCurves, Is.True);
+            weapon.enabled = false;
+            var recoil = owner.GetComponent<RecoilController>();
+            SetField(serverMovement, "isGrounded", true);
+            SetField(ownerMovement, "isGrounded", true);
+            Assert.That(owner.GetComponent<PlayerHealth>().CanUseCombat, Is.True);
+            Assert.That(ownerFire.IsOwner && !ownerFire.IsServer, Is.True);
+
+            // Freeze locomotion and supply one real aim sample; fire, RPC, rejection, NV and camera remain live.
+            uint inputSequence = 1;
+            int tick = client.ServerTime.Tick;
+            var input = new PlayerInputPayload { sequence = inputSequence, tick = tick,
+                yaw = look.YRotation, pitch = look.XRotation };
+            Invoke(serverMovement, "RecordServerAim", input, tick);
+            SetField(ownerMovement, "localCommandSequence", inputSequence);
+            SetField(ownerMovement, "hasTickedOnce", true);
+            Field<NetworkTimer>(ownerMovement, "networkTimer").CurrentTick = tick + 1;
+            Field<PlayerInputPayload[]>(ownerMovement, "inputBuffer")[tick % 2048] = input;
+            Field<PlayerStatePayload[]>(ownerMovement, "stateBuffer")[tick % 2048] = new PlayerStatePayload { grounded = true };
+            Field<NetworkTimer>(serverMovement, "networkTimer").CurrentTick = tick;
+
+            Assert.That(Field<bool>(weapon, "combatInputBlocked"), Is.False, "owner combat input");
+            Assert.That(weapon.IsEquipPresentationActive, Is.False, "owner equip clock");
+            int initialAmmo = weapon.Data.magazineSize;
+            Assert.That(weapon.CurrentAmmo, Is.EqualTo(initialAmmo), "owner ammo");
+            Assert.That(look.BodyCam.isActiveAndEnabled, Is.True, "owner aim camera");
+            Assert.That(Field<WeaponFireHandler>(weapon, "cachedFireHandler"), Is.EqualTo(ownerFire), "owner binding");
+            double fireStarted = Time.realtimeSinceStartupAsDouble;
+            ownerMovement.TryGetLatestFireReference(out _, out int actionTick);
+            Field<NetworkVariable<WeaponOwnerState>>(serverFire, "ownerWeaponState").OnValueChanged += (_, value) =>
+                System.IO.File.AppendAllText("Documents/Warden/Recoil-v2/Evidence/network-clock.txt",
+                    $"delay={delay} receive sequence={value.resolvedFireSequence} tick={host.ServerTime.Tick} realAge={Time.realtimeSinceStartupAsDouble - fireStarted:F4} frameDelta={Time.unscaledDeltaTime:F4} rtt={host.NetworkConfig.NetworkTransport.GetCurrentRtt(client.LocalClientId)} clientRtt={client.NetworkConfig.NetworkTransport.GetCurrentRtt(NetworkManager.ServerClientId)} result={value.lastFireResult}\n");
+            System.IO.File.AppendAllText("Documents/Warden/Recoil-v2/Evidence/network-clock.txt",
+                $"delay={delay} before hostTick={host.ServerTime.Tick} clientTick={client.ServerTime.Tick} localTick={client.LocalTime.Tick} actionTick={actionTick} inputTick={tick} rate={client.NetworkConfig.TickRate} hostTime={host.ServerTime.Time:F4} clientTime={client.ServerTime.Time:F4} localTime={client.LocalTime.Time:F4} rtt={host.NetworkConfig.NetworkTransport.GetCurrentRtt(client.LocalClientId)}\n");
+            Invoke(weapon, "FireBullet");
+            Invoke(weapon, "FireBullet");
+            System.IO.File.AppendAllText("Documents/Warden/Recoil-v2/Evidence/network-clock.txt",
+                $"delay={delay} FireBullet cost={Time.realtimeSinceStartupAsDouble - fireStarted:F4}s\n");
+            Assert.That(weapon.PredictedStability.index, Is.EqualTo(Mathf.Min(2, weapon.Data.recoilPattern.MaximumStabilityIndex)).Within(.001));
+            Invoke(recoil, "Update");
+            if (name != "Operator" && name != "Bucky")
+                Assert.That(Mathf.Abs(look.XRotation), Is.GreaterThan(.01f), "predicted recoil applies to canonical aim");
+            yield return Until(() => Field<NetworkVariable<WeaponOwnerState>>(ownerFire, "ownerWeaponState").Value
+                .resolvedFireSequence == 2, "coalesced accepted/rejected acknowledgement");
+            var authoritative = Field<NetworkVariable<WeaponOwnerState>>(serverFire, "ownerWeaponState").Value;
+            System.IO.File.AppendAllText("Documents/Warden/Recoil-v2/Evidence/network-clock.txt",
+                $"delay={delay} ACK hostTick={host.ServerTime.Tick} receiveTick={authoritative.authoritativeShotTick} clientTick={client.ServerTime.Tick} result={authoritative.lastFireResult} index={authoritative.stability.index} rtt={host.NetworkConfig.NetworkTransport.GetCurrentRtt(client.LocalClientId)}\n");
+            int accepted = authoritative.stability.hasShot ? 1 : 0;
+            if (delay == 0) Assert.That(authoritative.lastFireResult, Is.EqualTo(FireRejectReason.CooldownOrAmmo));
+            else Assert.That(authoritative.lastFireResult == FireRejectReason.CooldownOrAmmo
+                || authoritative.lastFireResult == FireRejectReason.InvalidTick, Is.True, "only a valid timing rejection is allowed");
+            if (accepted == 0)
+            {
+                Assert.That(authoritative.lastFireResult, Is.EqualTo(FireRejectReason.InvalidTick));
+                Assert.That(authoritative.stability.Equals(default), Is.True, "rejected shots cannot advance model or RNG");
+            }
+            Assert.That(authoritative.stability.index, Is.EqualTo(accepted).Within(.001));
+            Assert.That(weapon.PredictedStability.Equals(authoritative.stability), Is.True);
+            Assert.That(Field<int>(weapon, "pendingServerShots"), Is.Zero);
+            Assert.That(serverFire.ServerMagazineAmmo, Is.EqualTo(initialAmmo - accepted));
+            var observed = observer.SpawnManager.SpawnedObjects[id];
+            var observedManager = observed.GetComponent<WeaponManager>();
+            yield return Until(() => observedManager.ActivePrimaryWeaponId == primary
+                && observedManager.CurrentWeaponIndex == slot, "observer weapon selection");
+            Assert.That(observed.GetComponent<WeaponFireHandler>().IsOwner, Is.False);
+            Assert.That(observedManager.GetWeapon(slot).PredictedStability.hasShot, Is.False,
+                "observer effects must not run owner prediction");
+            Assert.That(observed.GetComponent<MouseMovement>().XRotation, Is.Zero);
+
+            // The model recovers first; exponential camera smoothing has a separate settling tail.
+            double recoveryEnd = authoritative.stability.lastShotTime + weapon.Data.FireInterval
+                + weapon.Data.recoilPattern.Evaluate(weapon.Data.recoilPattern.recoveryTime, authoritative.stability.index);
+            yield return Until(() => weapon.StabilityTime >= recoveryEnd && Mathf.Abs(look.XRotation) < .01f,
+                "camera recovery including smoothing tail", 2f);
+            Assert.That(Mathf.Abs(look.XRotation), Is.LessThan(.01), "recovery returns only applied recoil");
+            SetField(look, "xRotation", -89.9f);
+            var applied = look.ApplyRecoil(5, 0);
+            Assert.That(applied.x, Is.EqualTo(.1f).Within(.001));
+            look.ApplyRecoil(-applied.x, 0);
+            Assert.That(look.XRotation, Is.EqualTo(-89.9f).Within(.001));
+            SetField(look, "xRotation", 0f);
+            look.SetCosmeticRecoil(2f);
+            Invoke(look, "RenderRotation");
+            Assert.That(look.XRotation, Is.Zero, "cosmetic pop cannot enter input aim");
+            Assert.That(Vector3.Angle(look.AimDirection, look.BodyCam.transform.forward), Is.EqualTo(2).Within(.01));
+            look.SetCosmeticRecoil(0);
+            recoil.Release(weapon);
+
+            // A delayed command from another slot cannot acknowledge this weapon's predictions.
+            var ready = Field<NetworkVariable<bool>>(player.GetComponent<PlayerHealth>(), "networkInputReady");
+            ready.Value = false;
+            try
+            {
+                Invoke(serverFire, "TryProcessRuntimeFire", new FireCommand { weaponSlot = (byte)(1 - slot), sequence = 102 }, client.LocalClientId);
+                var afterWrongSlot = Field<NetworkVariable<WeaponOwnerState>>(serverFire, "ownerWeaponState").Value;
+                Assert.That(afterWrongSlot.resolvedFireSequence, Is.EqualTo(2));
+                Assert.That(afterWrongSlot.lastFireResult, Is.EqualTo(FireRejectReason.WrongWeapon));
+            }
+            finally { ready.Value = true; }
+
+            if (weapon.Data.fireMode == FireMode.Auto)
+            {
+                double deadline = weapon.StabilityTime;
+                for (ushort sequence = 3; sequence <= 12; sequence++)
+                {
+                    while (weapon.StabilityTime < deadline) yield return null;
+                    tick = client.ServerTime.Tick;
+                    inputSequence++;
+                    input = new PlayerInputPayload { sequence = inputSequence, tick = tick,
+                        yaw = look.YRotation, pitch = look.XRotation };
+                    Invoke(serverMovement, "RecordServerAim", input, tick);
+                    SetField(ownerMovement, "localCommandSequence", inputSequence);
+                    Field<NetworkTimer>(ownerMovement, "networkTimer").CurrentTick = tick + 1;
+                    Field<PlayerInputPayload[]>(ownerMovement, "inputBuffer")[tick % 2048] = input;
+                    Field<PlayerStatePayload[]>(ownerMovement, "stateBuffer")[tick % 2048] = new PlayerStatePayload { grounded = true };
+                    SetField(weapon, "continuousAutoFire", sequence > 3);
+                    Invoke(weapon, "FireBullet");
+                    Assert.That(Field<ushort>(weapon, "fireSequence"), Is.EqualTo(sequence));
+                    deadline = Field<double>(weapon, "autoNextFireTime");
+                    yield return null;
+                }
+                yield return Until(() => Field<NetworkVariable<WeaponOwnerState>>(ownerFire, "ownerWeaponState").Value.resolvedFireSequence == 12,
+                    "held continuation acknowledgement drains");
+                var heldState = Field<NetworkVariable<WeaponOwnerState>>(serverFire, "ownerWeaponState").Value;
+                Assert.That(weapon.PredictedStability.Equals(heldState.stability), Is.True,
+                    "held bit, original samples and pending replay must converge after jitter/rejections");
+                Assert.That(Field<int>(weapon, "pendingServerShots"), Is.Zero);
+                Assert.That(weapon.CurrentAmmo, Is.EqualTo(serverFire.ServerMagazineAmmo));
+                System.IO.File.AppendAllText("Reports/Recoil-Implementation-2026-11-03/Evidence/r5-held-network.csv",
+                    $"{name},{delay},{host.NetworkConfig.NetworkTransport.GetCurrentRtt(client.LocalClientId)},{heldState.stability.index},{initialAmmo-serverFire.ServerMagazineAmmo},{heldState.lastFireResult},0,true\n");
+            }
+
+            ulong rtt = host.NetworkConfig.NetworkTransport.GetCurrentRtt(client.LocalClientId);
+            const string matrix = "Reports/Recoil-Implementation-2026-11-03/Evidence/network-matrix.csv";
+            if (!System.IO.File.Exists(matrix)) System.IO.File.WriteAllText(matrix,
+                "profile,delay,jitter,loss,rtt,hostClock,ownerClock,accepted,lastResult,pending,stateMatches\n");
+            System.IO.File.AppendAllText(matrix, FormattableString.Invariant(
+                $"{name},{delay},{jitter},{loss},{rtt},{host.ServerTime.Time:F6},{client.ServerTime.Time:F6},{accepted},{authoritative.lastFireResult},{Field<int>(weapon, "pendingServerShots")},{weapon.PredictedStability.Equals(authoritative.stability)}\n"));
+            Debug.Log($"RECOIL_OWNER_RPC_PASS profile={name} delay={delay} jitter={jitter} loss={loss} RTT={rtt} ms");
+        }
 
         [UnityTest]
         public IEnumerator DirectionalDamageUsesRealOwnerRpcForEveryDamageSource()
@@ -301,7 +876,7 @@ namespace FPS.Tests
         }
 
         [UnityTest]
-        public IEnumerator ClientPlayersThrowWithAllFiveWeaponsAndPreserveLegs([ValueSource(nameof(PlayerNames))] string character)
+        public IEnumerator ClientPlayersThrowWithAllSixWeaponsAndPreserveLegs([ValueSource(nameof(PlayerNames))] string character)
         {
             actor.transform.position = Vector3.right * 50;
             teammate.transform.position = Vector3.left * 50;
@@ -322,11 +897,11 @@ namespace FPS.Tests
             Assert.That(ownerInventory.IsOwner, Is.True);
             Assert.That(ownerInventory.IsServer, Is.False);
 
-            for (int weapon = 0; weapon < 5; weapon++)
+            for (int weapon = 0; weapon < 6; weapon++)
             {
-                var primary = (PrimaryWeaponId)Mathf.Min(weapon, 3);
-                int slot = weapon == 4 ? 1 : 0;
-                string label = weapon == 4 ? "Classic" : primary.ToString();
+                var primary = (PrimaryWeaponId)Mathf.Min(weapon, 4);
+                int slot = weapon == 5 ? 1 : 0;
+                string label = weapon == 5 ? "Classic" : primary.ToString();
                 Assert.That(manager.TryReplacePrimaryWeaponServer(primary), Is.True, label);
                 manager.SetEquippedWeaponServer(slot);
                 yield return Until(() => ownerManager.ActivePrimaryWeaponId == primary && ownerManager.CurrentWeaponIndex == slot,
@@ -349,7 +924,11 @@ namespace FPS.Tests
                 // to enter windup instead of assuming equal wall-clock progress.
                 yield return Until(() => fp.GetLayerWeight(fp.GetLayerIndex(GrenadeThrowDefinition.LayerName)) > .5f
                     && tp.GetLayerWeight(tp.GetLayerIndex(GrenadeThrowDefinition.LayerName)) > .5f, label + " both rigs in windup", 1);
-                Assert.That(inventory.FragGrenadeCount.Value, Is.EqualTo(3), label + " stock retained in windup");
+                Assert.That(inventory.FragGrenadeCount.Value, Is.EqualTo(3), label + " stock retained in windup"
+                    + $"; hostElapsed={inventory.ServerNow - inventory.ThrowState.StartedAt:F4}"
+                    + $" ownerElapsed={ownerInventory.ServerNow - ownerInventory.ThrowState.StartedAt:F4}"
+                    + $" release={inventory.ThrowState.ReleaseAt - inventory.ThrowState.StartedAt:F4}"
+                    + $" frame={Time.unscaledDeltaTime:F4}");
                 Assert.That(fp.GetLayerWeight(fp.GetLayerIndex(GrenadeThrowDefinition.LayerName)), Is.GreaterThan(.5f), label + " owner 1P");
                 Assert.That(tp.GetLayerWeight(tp.GetLayerIndex(GrenadeThrowDefinition.LayerName)), Is.GreaterThan(.5f), label + " host 3P");
                 AssertHeldGrenade(ownerAnimation, true);
@@ -369,7 +948,7 @@ namespace FPS.Tests
                 Assert.That(thirdPersonRenderers.All(r => !r.forceRenderingOff), Is.True, label + " 3P gun restored");
                 yield return Until(() => !host.SpawnManager.SpawnedObjectsList.Any(o => o.GetComponent<SurvivalProjectile>() != null), label + " projectile expires");
             }
-            Debug.Log(character + "_CLIENT_FIVE_GUNS_LEGS_PASS");
+            Debug.Log(character + "_CLIENT_SIX_GUNS_LEGS_PASS");
         }
 
         static void AssertHeldGrenade(GrenadeThrowAnimation animation, bool firstPerson)

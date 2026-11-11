@@ -38,6 +38,8 @@ namespace FPS
         [Header("Mouse Settings")]
         [SerializeField] private Slider sensitivitySlider;
         [SerializeField] private TextMeshProUGUI sensitivityValueText;
+        private Slider hudOpacitySlider;
+        private TextMeshProUGUI hudOpacityValueText;
 
         [Header("Keybindings")]
         [SerializeField] private Button fireKeyBtn;
@@ -76,11 +78,13 @@ namespace FPS
 
         private void InitializeUi()
         {
+            EnsureHudOpacitySlider();
             UnregisterRuntimeListeners();
             AttachButtonResetters();
             InitializeTabs();
             InitializeAudioSettings();
             InitializeGraphicsSettings();
+            InitializeAudioSlider(hudOpacitySlider, hudOpacityValueText, HudSkin.PanelOpacity, HudSkin.SetPanelOpacity);
             InitializeMouseSettings();
             InitializeKeybindings();
 
@@ -113,6 +117,24 @@ namespace FPS
             sfxVolumeSlider?.onValueChanged.RemoveAllListeners();
             qualityDropdown?.onValueChanged.RemoveAllListeners();
             sensitivitySlider?.onValueChanged.RemoveAllListeners();
+            hudOpacitySlider?.onValueChanged.RemoveAllListeners();
+        }
+
+        private void EnsureHudOpacitySlider()
+        {
+            if (hudOpacitySlider != null || graphicsPanel == null || sensitivitySlider == null || sensitivitySlider.transform.parent == null) return;
+            var row = Instantiate(sensitivitySlider.transform.parent.gameObject, graphicsPanel.transform, false);
+            row.name = "HudOpacitySliderRow";
+            var rect = (RectTransform)row.transform;
+            rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, -330f);
+            var label = row.transform.Find("Label")?.GetComponent<TextMeshProUGUI>();
+            if (label != null) label.text = "HUD panel opacity";
+            hudOpacityValueText = row.transform.Find("ValueText")?.GetComponent<TextMeshProUGUI>();
+            hudOpacitySlider = row.GetComponentInChildren<Slider>(true);
+            hudOpacitySlider.name = "HudOpacitySlider";
+            hudOpacitySlider.onValueChanged = new Slider.SliderEvent();
+            hudOpacitySlider.wholeNumbers = false;
+            hudOpacitySlider.minValue = 0f; hudOpacitySlider.maxValue = 1f;
         }
 
         private void AttachButtonResetters()
@@ -385,6 +407,8 @@ namespace FPS
             SetSliderWithoutNotify(masterVolumeSlider, masterVolumeValueText, 0.5f);
             SetSliderWithoutNotify(musicVolumeSlider, musicVolumeValueText, 0.5f);
             SetSliderWithoutNotify(sfxVolumeSlider, sfxVolumeValueText, 0.5f);
+            HudSkin.SetPanelOpacity(1f);
+            SetSliderWithoutNotify(hudOpacitySlider, hudOpacityValueText, 1f);
 
             if (InputManager.Instance != null)
             {

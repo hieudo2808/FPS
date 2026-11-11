@@ -60,9 +60,18 @@ namespace FPS
             }
             ScanForInteractable();
 
-            if (currentInteractable != null && currentInteractable.CanInteract)
+            if (InputManager.Instance?.GetTrackInputDown() == true)
             {
-                if (GetInteractInputDown())
+                if (CampaignMissionController.Instance?.State.chapter == CampaignChapter.Factory)
+                    CampaignHUD.Instance?.CycleTrackedBranch();
+                else if (currentInteractable is ILockedInteractable locked && !currentInteractable.CanInteract && locked.CanInspect)
+                    locked.TrackLockedObjective();
+                else CampaignHUD.Instance?.CycleTrackedBranch();
+            }
+
+            if (currentInteractable != null)
+            {
+                if (currentInteractable.CanInteract && GetInteractInputDown())
                     TryInteract();
 
                 // Pickups/interactables have higher context priority than treatment.
@@ -121,9 +130,17 @@ namespace FPS
             {
                 IInteractable interactable = hit.collider.GetComponentInParent<IInteractable>();
 
-                if (interactable != null && interactable.CanInteract && (!(interactable is CampaignSupply supply) || supply.HasCapacity(survivalInventory)) && (!(interactable is PickupItem item) || SurvivalRules.Capacity(item.Type) == 0 || (survivalInventory != null && survivalInventory.CanAdd(item.Type, item.ItemAmount))))
+                bool inspectable = interactable is ILockedInteractable locked && locked.CanInspect;
+                if (interactable != null && (interactable.CanInteract || inspectable)
+                    && (!(interactable is CampaignSupply supply) || supply.HasCapacity(survivalInventory))
+                    && (!(interactable is PickupItem item) || SurvivalRules.Capacity(item.Type) == 0 || (survivalInventory != null && survivalInventory.CanAdd(item.Type, item.ItemAmount))))
                 {
-                    if (interactable == currentInteractable) return;
+                    if (interactable == currentInteractable)
+                    {
+                        SetPromptText(interactable.CanInteract ? interactable.GetInteractText()
+                            : ((ILockedInteractable)interactable).GetLockedText());
+                        return;
+                    }
 
                     DeselectCurrent();
                     SelectNew(interactable, hit.collider.transform);
@@ -144,7 +161,8 @@ namespace FPS
             currentPickupPresentation = hitTransform.GetComponentInParent<SurvivalPickupPresentation>();
             currentPickupPresentation?.Highlight(true);
 
-            SetPromptText(interactable.GetInteractText());
+            SetPromptText(interactable.CanInteract ? interactable.GetInteractText()
+                : interactable is ILockedInteractable locked ? locked.GetLockedText() : interactable.GetInteractText());
             SetPromptVisible(true);
         }
 
@@ -297,7 +315,7 @@ namespace FPS
         {
             if (interactPromptText != null)
                 interactPromptText.text = text;
-            else if (HUDManager.Instance != null)
+            else if (HUDManager.HasInstance)
                 HUDManager.Instance.SetInteractionPrompt(text, true);
         }
 
@@ -305,7 +323,7 @@ namespace FPS
         {
             if (interactPromptText != null)
                 interactPromptText.gameObject.SetActive(visible);
-            else if (HUDManager.Instance != null)
+            else if (HUDManager.HasInstance)
                 HUDManager.Instance.SetInteractionPrompt(null, visible);
         }
     }

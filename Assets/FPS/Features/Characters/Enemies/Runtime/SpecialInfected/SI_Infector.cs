@@ -80,6 +80,12 @@ namespace FPS
         public float FixedMaxHealth => SoloMaxHealth;
         public bool IsPerformingImplant => isPerformingImplant;
         public bool LastRetreatSucceeded => lastRetreatSucceeded;
+        public override bool TryGetPressureThreat(out Transform target)
+        {
+            target = currentTargetTransform;
+            return CanReportPressure(target, currentInfectorState == InfectorState.Implant,
+                currentInfectorState == InfectorState.Approach || currentInfectorState == InfectorState.Stalk);
+        }
 
         protected override bool UsesGenericServerBrain => false;
         protected override bool AutoTriggerPrimaryAbility => false;

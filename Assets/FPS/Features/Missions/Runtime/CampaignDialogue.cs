@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace FPS
@@ -50,7 +51,14 @@ namespace FPS
             _ => CampaignDialogueId.None
         };
 
-        public static string InsertionBriefing => Catalog(CampaignDialogueId.InsertionBriefing);
+        public static string InsertionBriefing
+        {
+            get
+            {
+                string text = Catalog(CampaignDialogueId.InsertionBriefing);
+                return string.Join("\n", text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries).Take(2));
+            }
+        }
         public static string ObjectiveLine(CampaignObjectiveId id) => Catalog(ForObjective(id));
         public static string ChapterLine(CampaignChapter chapter) => Catalog(chapter switch
         {
@@ -72,32 +80,6 @@ namespace FPS
                 }
             if (state.evidenceTransmitted)
                 text.AppendLine(Catalog(CampaignDialogueId.EvidenceTransmitted));
-            return text.ToString();
-        }
-
-        public static string AccessInstructions(CampaignState state, CampaignObjectiveId objective)
-        {
-            var text = new StringBuilder();
-            void Step(CampaignObjectiveId id, string description) => text.AppendLine((state.Has(id) ? "[DONE] " : "[ ] ") + description);
-            if (objective == CampaignObjectiveId.FactoryRoute)
-            {
-                Step(CampaignObjectiveId.FactoryGenerator, "Restore cold-store power: isolate, backup, generator.");
-                Step(CampaignObjectiveId.FactoryShipping, "Verify the AL-04 manifest in logistics.");
-                Step(CampaignObjectiveId.FactoryCase, "Recover the T9-17 evidence case.");
-                Step(CampaignObjectiveId.FactoryRoute, "Activate the service-route control cabinet.");
-                text.Append("Interlock cycle: 60 seconds. The squad must hold the staging zone for 5 seconds.");
-            }
-            else if (objective == CampaignObjectiveId.AsylumLift)
-            {
-                Step(CampaignObjectiveId.AsylumAccess, "Read the security desk log.");
-                Step(CampaignObjectiveId.AsylumFuse, "Recover the service fuse from ground-floor storage.");
-                Step(CampaignObjectiveId.AsylumPower, "Install the fuse and power the lower service panel.");
-                Step(CampaignObjectiveId.AsylumPatient, "Confirm P046 in the upper records room.");
-                Step(CampaignObjectiveId.AsylumTransfer, "Cross-check the mortuary transfer and take the B2 card.");
-                Step(CampaignObjectiveId.AsylumLift, "Scan the card at the freight-lift panel.");
-                text.Append("Lift cycle: 35 seconds. Hold the cabin for 5 seconds before descent.");
-            }
-            else text.Append("Complete the current objective in the team inventory.");
             return text.ToString();
         }
     }

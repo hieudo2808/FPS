@@ -112,12 +112,14 @@ namespace FPS
             UpdateWeaponVisibility(networkedWeaponIndex.Value);
             CurrentWeapon?.GetComponent<Weapon>()?.PrepareFirstPersonPresentation(false);
             ReportCurrentWeaponTelemetry();
+            HudSignals.NotifySourcesChanged();
         }
 
         public override void OnNetworkDespawn()
         {
             if (IsOwner && LocalInstance == this)
                 LocalInstance = null;
+            HudSignals.NotifySourcesChanged();
 
             networkedWeaponIndex.OnValueChanged -= OnWeaponChanged;
             networkedPrimaryWeapon.OnValueChanged -= OnPrimaryWeaponChanged;
@@ -434,6 +436,7 @@ namespace FPS
                 state.equipCompleteTime);
             Weapon weapon = GetWeapon(state.slotIndex);
             weapon?.SetLocalAmmoState(state.magazineAmmo, state.reserveAmmo, state.isReloading);
+            weapon?.ReconcileStability(state);
             weapon?.ApplyAuthoritativePresentation(
                 state.equipCompleteTime, state.isReloading, state.reloadCompleteTime, state.reloadTimeline);
 

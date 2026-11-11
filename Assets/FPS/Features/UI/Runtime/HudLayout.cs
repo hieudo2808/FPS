@@ -7,15 +7,15 @@ namespace FPS
     public static class HudLayout
     {
         public const float Margin = 28f;
-        public const float VitalsWidth = 350f;
-        public const float CombatWidth = 420f;
+        public const float VitalsWidth = 340f;
+        public const float CombatWidth = 526f;
         public const float SubtitleBottom = 16f;
         public const float SubtitleHeight = 128f;
         public const float InteractionBottom = 160f;
         public const float InteractionHeight = 64f;
         public const float FeedbackBottom = 236f;
         public const float FeedbackHeight = 40f;
-        public static readonly Color Plate = new Color(.025f, .03f, .028f, .94f);
+        public static Color Plate => SelectedUiTheme.Current.Plate;
 
         public static void ConfigureCanvas(Canvas canvas)
         {
@@ -48,11 +48,13 @@ namespace FPS
         {
             var root = PeripheralRoot(canvas);
             float width = root.rect.width;
-            float left = Margin + VitalsWidth + 24f;
-            float right = width - Margin - CombatWidth - 24f;
+            float left = VitalsWidth + 24f;
+            float right = width - CombatWidth - 24f;
+            float bandWidth = Mathf.Max(160f, Mathf.Min(820f, right - left));
+            float center = Mathf.Clamp(width * .5f, left + bandWidth * .5f, right - bandWidth * .5f);
             rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(.5f, 0f);
-            rect.anchoredPosition = new Vector2((left + right - width) * .5f, bottom);
-            rect.sizeDelta = new Vector2(Mathf.Max(240f, Mathf.Min(820f, right - left)), height);
+            rect.anchoredPosition = new Vector2(center - width * .5f, bottom);
+            rect.sizeDelta = new Vector2(bandWidth, height);
         }
 
         public static bool SecondaryReduced => InputManager.Instance != null

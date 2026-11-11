@@ -107,6 +107,7 @@ namespace FPS
             }
 
             Instance = this;
+            HudSignals.NotifySourcesChanged();
             DontDestroyOnLoad(gameObject);
             settings = hardeningConfig != null ? hardeningConfig.ToSettings() : NetworkHardeningSettings.Default;
             NetworkHardeningRuntime.Apply(settings);
@@ -138,24 +139,51 @@ namespace FPS
             if (manager == null || !manager.IsListening || !manager.IsServer || Telemetry == null)
                 return;
 
-            Telemetry.SealBefore(manager.ServerTime.Tick, ApplyTelemetrySnapshot);
+            int tick = manager.ServerTime.Tick;
+            var director = AIDirector.Instance;
+            int? boundary = AdaptiveMetrics?.PendingBoundaryTick;
+            if (boundary.HasValue && tick > boundary.Value)
+            {
+                // Finalize before publishing >B. All callbacks for <=B have run.
+                Telemetry.SealBefore(boundary.Value + 1, ApplyTelemetrySnapshot);
+                director?.FinalizeAdaptiveBoundary(Telemetry.SealedThroughTick);
+            }
+            Telemetry.SealBefore(tick, ApplyTelemetrySnapshot);
         }
 
         private void ApplyTelemetrySnapshot(ServerTelemetrySnapshot snapshot)
         {
-            if (!playerRegistry.TryGetByStableId(snapshot.PlayerId, out PlayerSessionRecord record))
-                return;
+            if (!TryGetRegisteredActor(snapshot.PlayerId, out PlayerHealth health)) return;
+            health.GetComponent<PlayerCombatTelemetry>()?.ApplyAggregateSnapshot(snapshot, GetServerTime());
+            var director = AIDirector.Instance;
+            if (director == null || director.AcceptsAdaptiveMetrics)
+                AdaptiveMetrics?.Record(snapshot, health.MaxHealth);
+            if (snapshot.ShotsFired > 0)
+                AIDirector.Instance?.RecordDirectorShot(snapshot.PlayerId.Value, GetServerTime());
+        }
 
+        public bool TryGetRegisteredActor(SessionPlayerId id, out PlayerHealth health)
+        {
+            health = null;
             NetworkManager manager = NetworkManager.Singleton;
-            if (manager == null
+            if (!id.IsValid || manager == null || !manager.IsServer || playerRegistry == null
+                || !playerRegistry.TryGetByStableId(id, out PlayerSessionRecord record)
                 || !manager.ConnectedClients.TryGetValue(record.ClientId, out NetworkClient client)
-                || client.PlayerObject == null)
-            {
-                return;
-            }
+                || client.PlayerObject == null || !client.PlayerObject.IsSpawned) return false;
+            health = client.PlayerObject.GetComponent<PlayerHealth>();
+            return health != null && health.StablePlayerId.Equals(id);
+        }
 
-            client.PlayerObject.GetComponent<PlayerCombatTelemetry>()?.ApplyAggregateSnapshot(snapshot, GetServerTime());
-            AdaptiveMetrics?.Record(snapshot);
+        public void NotifyDirectorDamage(PlayerHealth source, float actualDamage)
+        {
+            if (source != null && TryGetRegisteredActor(source.StablePlayerId, out var actor) && actor == source)
+                AIDirector.Instance?.RecordDirectorDamage(source.StablePlayerId.Value, GetServerTime(), actualDamage, source.MaxHealth);
+        }
+
+        public void NotifyDirectorDown(PlayerHealth source)
+        {
+            if (source != null && TryGetRegisteredActor(source.StablePlayerId, out var actor) && actor == source)
+                AIDirector.Instance?.RecordDirectorDown(source.StablePlayerId.Value, GetServerTime());
         }
 
         private async Task InitializeUnityServicesAsync(CancellationToken cancellationToken)
@@ -173,6 +201,12 @@ namespace FPS
 
                     string profile = playerName.Split(' ')[0];
                     profile = profile.Substring(0, Mathf.Min(profile.Length, 30));
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    // Two local Players share Windows PlayerPrefs. The opt-in harness
+                    // supplies a process-local profile, still using real UGS sign-in.
+                    if (!string.IsNullOrEmpty(DirectorAcceptanceHarness.AuthenticationProfile))
+                        profile = DirectorAcceptanceHarness.AuthenticationProfile;
+#endif
                     if (!string.Equals(AuthenticationService.Instance.Profile, profile, StringComparison.Ordinal))
                         AuthenticationService.Instance.SwitchProfile(profile);
 
@@ -1207,6 +1241,7 @@ namespace FPS
             playerRegistry.Clear();
             PickupTransactions?.Clear();
             Telemetry?.Clear();
+            AdaptiveMetrics?.ResetSession();
             if (clearReconnectCredentials)
             {
                 localStablePlayerId = default;
@@ -1291,6 +1326,10 @@ namespace FPS
 
         private static string GetLocalPlayerName()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (!string.IsNullOrEmpty(DirectorAcceptanceHarness.AuthenticationProfile))
+                return DirectorAcceptanceHarness.AuthenticationProfile;
+#endif
             string fallback = $"Player{UnityEngine.Random.Range(1000, 9999)}";
             string value = PlayerPrefs.GetString("PlayerName", fallback).Trim();
             if (string.IsNullOrEmpty(value))
@@ -1351,6 +1390,7 @@ namespace FPS
                 : CleanupTransportAsync(clearReconnectCredentials: true);
             _ = DisposeAfterCleanupAsync(cleanup);
             Instance = null;
+            HudSignals.NotifySourcesChanged();
             NetworkHardeningRuntime.Reset();
         }
 

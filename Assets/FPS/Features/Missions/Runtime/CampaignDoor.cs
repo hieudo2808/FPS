@@ -30,7 +30,9 @@ namespace FPS
         public void Interact(Unity.Netcode.NetworkObject actor) => RequestNetworkInteraction(actor);
         public void RequestNetworkInteraction(Unity.Netcode.NetworkObject actor)
         {
-            if (CanInteract) CampaignHUD.Instance?.OpenGate(this);
+            if (!CanInteract) return;
+            var access = CampaignRules.Availability(CampaignMissionController.Instance.State, accessObjective);
+            CampaignHUD.Instance?.ShowMessage(access.IsLocked ? "Requires: " + access.Reason : CampaignHUD.ObjectiveAction(accessObjective));
         }
         private void Update()
         {

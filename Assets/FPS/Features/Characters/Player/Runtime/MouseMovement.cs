@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace FPS
 {
+    [DefaultExecutionOrder(-200)]
     public class MouseMovement : NetworkBehaviour
     {
         private const string MouseSensitivityKey = "MouseSensitivity";
@@ -25,6 +26,9 @@ namespace FPS
         private float yRotation = 0f;
         private float lookSensitivityMultiplier = 1f;
         private bool subscribedToSettings;
+        private RecoilController recoilController;
+        private Vector2 cosmeticRecoil;
+        public Vector3 AimDirection => transform.TransformDirection(Quaternion.Euler(xRotation, 0f, 0f) * Vector3.forward);
 
         public static MouseMovement LocalInstance { get; private set; }
 
@@ -40,6 +44,7 @@ namespace FPS
 
         private void Awake()
         {
+            recoilController = GetComponent<RecoilController>();
             // Older player prefabs serialized the retired 10..500 range. Keep
             // runtime behavior canonical even if an un-upgraded prefab is loaded.
             minSensitivity = SettingsManager.MinMouseSensitivity;
@@ -184,23 +189,42 @@ namespace FPS
             float mouseX = lookDelta.x * effectiveSensitivity;
             float mouseY = lookDelta.y * effectiveSensitivity;
 
+            float beforePitch = xRotation;
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, minRotationX, maxRotationX);
 
             yRotation += mouseX;
+            recoilController?.ConsumeLookCompensation(new Vector2(beforePitch - xRotation, mouseX));
 
-            bodyCam.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-            transform.localRotation = Quaternion.Euler(0, yRotation, 0f);
+            RenderRotation();
         }
 
-        public void ApplyRecoil(float pitchOffset, float yawOffset)
+        public Vector2 ApplyRecoil(float pitchOffset, float yawOffset)
         {
-            if (!IsOwner) return;
-            
+            if (!IsOwner) return Vector2.zero;
+            float beforePitch = xRotation;
             xRotation -= pitchOffset;
             xRotation = Mathf.Clamp(xRotation, minRotationX, maxRotationX);
 
             yRotation += yawOffset;
+            RenderRotation();
+            return new Vector2(beforePitch - xRotation, yawOffset);
+        }
+
+        public void SetCosmeticRecoil(float pitch) => SetCosmeticRecoil(new Vector2(pitch, 0));
+        public void SetCosmeticRecoil(Vector2 offset) => cosmeticRecoil = offset;
+
+        private void LateUpdate()
+        {
+            if (IsOwner) RenderRotation();
+        }
+
+        private void RenderRotation()
+        {
+            if (bodyCam != null)
+                bodyCam.transform.localRotation = Quaternion.Euler(
+                    Mathf.Clamp(xRotation - cosmeticRecoil.x, minRotationX, maxRotationX), cosmeticRecoil.y, 0f);
+            transform.localRotation = Quaternion.Euler(0f, yRotation, 0f);
         }
 
         public void SetSensitivity(float newSensitivity)

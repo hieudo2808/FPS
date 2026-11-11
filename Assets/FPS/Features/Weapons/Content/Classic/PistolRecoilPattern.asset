@@ -12,6 +12,135 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3215e8370a783e469d986faabf04bf0, type: 3}
   m_Name: PistolRecoilPattern
   m_EditorClassIdentifier: Assembly-CSharp::FPS.RecoilPattern
+  useStabilityCurves: 1
+  pitchEnvelope:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 3
+    value: 1
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  yawEnvelope:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  firingError:
+  - time: 0
+    value: 0.4
+    inTangent: 0
+    outTangent: 0
+    mode: 2
+  - time: 1
+    value: 0.8
+    inTangent: 0.042896617
+    outTangent: 0.042896625
+    mode: 2
+  - time: 3
+    value: 1.8
+    inTangent: 0
+    outTangent: 0
+    mode: 0
+  recoveryTime:
+  - time: 0
+    value: 0.025
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 4
+    value: 0.3
+    inTangent: 0.38148525
+    outTangent: 0.003050931
+    mode: 1
+  walkingError:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 0
+  - time: 0.275
+    value: 1.1
+    inTangent: 0
+    outTangent: 0
+    mode: 0
+  - time: 0.62
+    value: 2.1
+    inTangent: 3.6288788
+    outTangent: 0
+    mode: 0
+  runningError:
+  - time: 0.601
+    value: 2.3
+    inTangent: 3.6288788
+    outTangent: 0
+    mode: 0
+  jumpingError:
+  - time: 0
+    value: 7
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  sprintRecoilMultiplier: {x: 1, y: 1}
+  adsRecoilMultiplier: {x: 1, y: 1}
+  aimedFiringError: []
+  cameraPopPitchCurve:
+  - time: 0
+    value: 0
+    inTangent: 7.689672
+    outTangent: 0
+    mode: 1
+  - time: 0.025
+    value: 0.15
+    inTangent: -0.037077
+    outTangent: -0.037076
+    mode: 1
+  - time: 1
+    value: 0
+    inTangent: -0.172203
+    outTangent: -0.172203
+    mode: 1
+  cameraPopYawCurve:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 0.025
+    value: 0.15
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 1
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  cameraPopScale: {x: 1, y: 1}
+  cameraRecoilFollow: {x: 0.8, y: 0.8}
+  adsCameraRecoilFollow: {x: 1, y: 1}
+  hipPitchCameraFollow:
+  - time: 0
+    value: 0
+    inTangent: -0.0054213763
+    outTangent: 0
+    mode: 1
+  - time: 3
+    value: 1
+    inTangent: 0.52790296
+    outTangent: 0.5278984
+    mode: 2
+  protectedShots: 0
+  yawSwitchDuration: 0.6
+  yawSwitchChance: 0
+  tapEfficiency: 4
+  adsErrorMultiplier: 1
+  adsErrorAddend: 0
+  cameraPop: 0.15
   shots:
   - {x: 2.2, y: 0}
   - {x: 2.5, y: -0.35}

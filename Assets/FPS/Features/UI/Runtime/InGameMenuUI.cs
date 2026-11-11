@@ -16,11 +16,8 @@ namespace FPS
         [SerializeField] private Button leaveMatchButton;
         [SerializeField] private Button closeSettingsButton;
 
-        private bool isPaused = false;
-        private bool wasCursorVisible = false;
-        private CursorLockMode previousCursorLockMode;
         private bool initialized;
-        public static bool IsMenuOpen { get; private set; }
+        public static bool IsMenuOpen => UiStateStack.Contains(UiScreen.Pause) || UiStateStack.Contains(UiScreen.Settings);
 
         private void Start()
         {
@@ -29,7 +26,8 @@ namespace FPS
             if (settingsPanel != null) settingsPanel.SetActive(false);
 
             RegisterUiListeners();
-            SetGameplayInputBlocked(false);
+            UiStateStack.Remove(UiScreen.Settings);
+            UiStateStack.Remove(UiScreen.Pause);
             initialized = true;
         }
 
@@ -42,7 +40,8 @@ namespace FPS
         private void OnDisable()
         {
             UnregisterUiListeners();
-            SetGameplayInputBlocked(false);
+            UiStateStack.Remove(UiScreen.Settings);
+            UiStateStack.Remove(UiScreen.Pause);
         }
 
         private void RegisterUiListeners()
@@ -66,87 +65,36 @@ namespace FPS
             if (settingsPanel != null && settingsPanel.activeSelf && settingsPanel.TryGetComponent<SettingsUI>(out var settings) && settings.BlocksBack) return;
             if (InputManager.Instance != null && InputManager.Instance.GetPauseInputDown())
             {
-                if (TeamInventoryUI.IsOpen)
-                {
-                    TeamInventoryUI.Instance.Close();
-                }
-                else if (CampaignHUD.IsDocumentOpen)
-                {
-                    CampaignHUD.Instance.CloseDocument();
-                }
-                else if (settingsPanel != null && settingsPanel.activeSelf)
-                {
-                    CloseSettings();
-                }
-                else
-                {
-                    TogglePauseMenu();
-                }
+                if (!UiStateStack.TryBack()) TogglePauseMenu();
             }
         }
 
         private void TogglePauseMenu()
         {
-            isPaused = !isPaused;
-
-            if (pausePanel != null)
-            {
-                pausePanel.SetActive(isPaused);
-            }
-
-            if (isPaused)
-            {
-                // Lưu lại trạng thái chuột trước khi pause
-                wasCursorVisible = Cursor.visible;
-                previousCursorLockMode = Cursor.lockState;
-
-                // Mở khóa chuột để click UI
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-                SetGameplayInputBlocked(true);
-            }
-            else
-            {
-                // Khôi phục trạng thái chuột
-                Cursor.visible = wasCursorVisible;
-                Cursor.lockState = previousCursorLockMode;
-                SetGameplayInputBlocked(false);
-            }
+            if (IsMenuOpen) ResumeGame();
+            else if (UiStateStack.Top == UiScreen.Gameplay)
+                UiStateStack.Push(UiScreen.Pause, pausePanel, ResumeGame);
         }
 
         public void ResumeGame()
         {
-            ClearUiSelection();
-            if (isPaused)
-            {
-                TogglePauseMenu();
-            }
+            UiStateStack.Remove(UiScreen.Settings);
+            UiStateStack.Remove(UiScreen.Pause);
         }
 
         private void OpenSettings()
         {
-            ClearUiSelection();
-            if (pausePanel != null) pausePanel.SetActive(false);
-            if (settingsPanel != null) settingsPanel.SetActive(true);
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-            SetGameplayInputBlocked(true);
+            if (!UiStateStack.Contains(UiScreen.Pause)) return;
+            UiStateStack.Push(UiScreen.Settings, settingsPanel, CloseSettings);
         }
 
-        private void CloseSettings()
-        {
-            ClearUiSelection();
-            if (settingsPanel != null) settingsPanel.SetActive(false);
-            if (pausePanel != null) pausePanel.SetActive(true);
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-            SetGameplayInputBlocked(true);
-        }
+        private void CloseSettings() => UiStateStack.Remove(UiScreen.Settings);
 
         private void OnDestroy()
         {
             UnregisterUiListeners();
-            SetGameplayInputBlocked(false);
+            UiStateStack.Remove(UiScreen.Settings);
+            UiStateStack.Remove(UiScreen.Pause);
         }
 
         private static void ClearUiSelection()
@@ -154,14 +102,9 @@ namespace FPS
             EventSystem.current?.SetSelectedGameObject(null);
         }
 
-        private static void SetGameplayInputBlocked(bool blocked)
-        {
-            IsMenuOpen = blocked;
-            InputManager.GameplayInputBlocked = blocked;
-        }
-
         private void LeaveMatch()
         {
+            UiStateStack.Clear();
             ClearUiSelection();
             if (NetworkGameManager.Instance != null)
             {

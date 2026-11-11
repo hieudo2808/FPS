@@ -12,6 +12,8 @@ The timing correction separates gameplay locks from full clip durations, followi
 
 The WeaponCamera FOV is 43.383067, taken from the first-person model settings. The held-model viewer FOV 25 was not used as an ADS gameplay setting.
 
+As of 2026-10-21, Warden uses layer 6 and Grenade Throw uses layer 7. The throw must evaluate after every weapon layer so Warden cannot overwrite the right arm while throwing. Warden's three `ActiveWeaponLayer` transition conditions use 6; runtime code resolves layer indices by name. See ../Grenade/Runtime-20261021-Fixed/verification.md for the regression and live before/after captures. Layer indices in the original verification below describe the 2026-10-03 integration.
+
 ## Attachments
 
 Magazine attaches to Magazine, extra magazine to Magazine_Extra, scope to Reflex, and bullet to Bullet1. The four attachment wrappers have local position zero, rotation identity, and scale one under their respective imported bones. The previous extra local `(0,0,180)` rotated the scope, magazine and bullet backwards. Removing it also moves the scope's offset geometry to the correct side of Reflex, so its foot sits on the top rail behind the magazine well. Bullet mesh geometry has its pointed end along local negative X; the corrected bone transform maps that to the gun's positive X barrel direction.

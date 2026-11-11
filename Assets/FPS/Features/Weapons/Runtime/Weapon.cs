@@ -29,6 +29,21 @@ namespace FPS
         [SerializeField] private WeaponData weaponData;
 
         private RecoilController recoilController;
+        private readonly WeaponStabilityPrediction stabilityPrediction = new();
+        public WeaponStability PredictedStability => stabilityPrediction.State;
+        public double StabilityTime => cachedFireHandler != null && cachedFireHandler.IsSpawned
+            ? cachedFireHandler.NetworkManager.ServerTime.Time : Time.timeAsDouble;
+
+        public void ReconcileStability(WeaponOwnerState state)
+        {
+            if (weaponData == null || weaponData.recoilPattern == null
+                || !weaponData.recoilPattern.useStabilityCurves) return;
+            stabilityPrediction.Reconcile(weaponData.recoilPattern, weaponData.FireInterval,
+                state.stability, state.hasResolvedFireSequence, state.resolvedFireSequence);
+            pendingServerShots = stabilityPrediction.PendingCount;
+            if (state.hasResolvedFireSequence && !NetworkSequence.IsNewer(fireSequence, state.resolvedFireSequence))
+                fireSequence = state.resolvedFireSequence;
+        }
         private PlayerCombatTelemetry combatTelemetry;
         private WeaponFireHandler cachedFireHandler;
         private WeaponManager cachedWeaponManager;
@@ -52,10 +67,15 @@ namespace FPS
         [Tooltip("Magazine shown in hand during reload.")]
         [SerializeField] private GameObject magazineInHand;
 
+        public event System.Action AmmoChanged;
+        private int reportedAmmo = -1, reportedReserve = -1;
+        private bool reportedReload;
         private int currentAmmo;
         private int reservedAmmo;
 
         private bool canShoot = true;
+        private double autoNextFireTime;
+        private bool continuousAutoFire;
         private bool isReloading = false;
         private bool isOwner = false;
         private Coroutine burstCoroutine;
@@ -126,7 +146,10 @@ namespace FPS
             bool lostOwnership = isOwner && !owner;
             isOwner = owner;
             if (lostOwnership)
+            {
+                continuousAutoFire = false;
                 ForceExitAimPresentation();
+            }
             if (isOwner)
             {
                 CacheOwnerDependencies();
@@ -171,6 +194,7 @@ namespace FPS
 
         private void OnEnable()
         {
+            continuousAutoFire = false;
             reloadPresentationTimeline = default;
             canShoot    = weaponData != null;
             isReloading = false;
@@ -191,6 +215,9 @@ namespace FPS
 
         private void OnDisable()
         {
+            continuousAutoFire = false;
+            stabilityPrediction.ClearPending();
+            if (recoilController != null) recoilController.Release(this);
             reloadPresentationTimeline = default;
             ForceExitAimPresentation();
             StopAllCoroutines();
@@ -207,6 +234,10 @@ namespace FPS
         {
             if (!isOwner) return;
             if (weaponData == null) return;
+
+            if (InputManager.Instance == null || !InputManager.Instance.GetFireInput()
+                || InputManager.Instance.GetFireInputDown() || isReloading || IsEquipping())
+                continuousAutoFire = false;
 
             if (!HasCombatPermission())
             {
@@ -484,8 +515,20 @@ namespace FPS
                     break;
 
                 case FireMode.Auto:
-                    if (InputManager.Instance != null && InputManager.Instance.GetFireInput() && canShoot)
-                        StartCoroutine(ShootCooldown());
+                    if (InputManager.Instance != null && InputManager.Instance.GetFireInput()
+                        && canShoot && StabilityTime >= autoNextFireTime)
+                    {
+                        try
+                        {
+                            ushort before = fireSequence;
+                            FireBullet();
+                            if (fireSequence != before) continuousAutoFire = true;
+                        }
+                        catch (System.Exception ex)
+                        {
+                            GameLog.Error($"[Weapon] Exception during FireBullet: {ex.Message}\n{ex.StackTrace}");
+                        }
+                    }
                     break;
 
                 case FireMode.Burst:
@@ -562,9 +605,6 @@ namespace FPS
                 return;
             }
 
-            if (recoilController != null && weaponData.recoilPattern != null)
-                recoilController.Fire(weaponData.recoilPattern);
-
             Camera cam = ResolveAimCamera();
             if (cam == null) return;
 
@@ -572,6 +612,17 @@ namespace FPS
             // then starts lowering the physical scope so the owner can see the
             // weapon/arms Fire (bolt/round) animation without a transform snap.
             bool aimed = aimRequested;
+            WeaponStabilityContext stabilityContext = movement.StabilityContext;
+            Vector3 shotDirection = cachedMouseMovement != null ? cachedMouseMovement.AimDirection : cam.transform.forward;
+            if (movement.TryGetPredictedFireAim(inputSequence, out Vector3 sampledDirection,
+                    out bool sampledAim, out WeaponStabilityContext sampledContext))
+            {
+                shotDirection = sampledDirection;
+                aimed = sampledAim;
+                stabilityContext = sampledContext;
+            }
+            aimed &= weaponData.supportsAim;
+            stabilityContext.aimed = aimed;
             if (aimed && weaponData.exitAimAfterShot)
                 BeginExitAimAfterShot();
 
@@ -592,25 +643,39 @@ namespace FPS
             if (weaponData.shootSound != null && AudioManager.Instance != null)
                 AudioManager.Instance.PlaySFXSound(weaponData.shootSound);
 
-            Ray centerRay = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            Ray centerRay = new Ray(cam.transform.position, shotDirection);
             ushort sequence = unchecked(++fireSequence);
             ulong ownerClientId = cachedFireHandler != null ? cachedFireHandler.OwnerClientId : 0;
             byte weaponSlot = (byte)Mathf.Clamp(
                 cachedWeaponManager != null ? cachedWeaponManager.CurrentWeaponIndex : 0,
                 0,
                 byte.MaxValue);
-            SpawnVisualProjectiles(
-                centerRay.origin,
-                centerRay.direction,
-                sequence,
-                ownerClientId,
-                weaponSlot,
-                aimed);
-
             bool networkRequest = cachedFireHandler != null
                 && cachedFireHandler.IsSpawned
                 && cachedFireHandler.NetworkManager != null
                 && cachedFireHandler.NetworkManager.IsListening;
+            var profile = weaponData.recoilPattern;
+            uint shotSeed = WeaponBallistics.BuildShotSeed(ownerClientId, sequence, weaponSlot);
+            double now = StabilityTime;
+            bool continuousAuto = weaponData.fireMode == FireMode.Auto && continuousAutoFire;
+            float spread = profile != null && profile.useStabilityCurves
+                ? stabilityPrediction.Fire(profile, weaponData.FireInterval, sequence, now,
+                    stabilityContext, shotSeed, networkRequest, continuousAuto)
+                : weaponData.GetSpreadAngle(aimed);
+            if (weaponData.fireMode == FireMode.Auto)
+                autoNextFireTime = WeaponFireClock.ShotTime(now, autoNextFireTime,
+                    weaponData.FireInterval, continuousAuto) + weaponData.FireInterval;
+            spread *= cachedInfection != null ? cachedInfection.WeaponSwayMultiplier : 1f;
+            if (recoilController != null && profile != null)
+            {
+                if (profile.useStabilityCurves) recoilController.Bind(this, aimed, shotSeed);
+                else recoilController.Fire(profile);
+            }
+            SpawnVisualProjectiles(
+                centerRay.origin,
+                centerRay.direction,
+                shotSeed,
+                aimed, spread);
             if (networkRequest)
             {
                 pendingServerShots++;
@@ -620,6 +685,7 @@ namespace FPS
                     estimatedServerTick = serverTick,
                     inputSequence = inputSequence,
                     weaponSlot = weaponSlot,
+                    continuousAuto = continuousAuto,
                 });
             }
             else
@@ -679,7 +745,12 @@ namespace FPS
             ushort shotSequence,
             ulong ownerClientId,
             byte weaponSlot,
-            bool aimed)
+            bool aimed, float resolvedSpread = -1f)
+            => SpawnVisualProjectiles(aimOrigin, aimDirection,
+                WeaponBallistics.BuildShotSeed(ownerClientId, shotSequence, weaponSlot), aimed, resolvedSpread);
+
+        private void SpawnVisualProjectiles(Vector3 aimOrigin, Vector3 aimDirection,
+            uint shotSeed, bool aimed, float resolvedSpread)
         {
             if (weaponData == null || weaponData.bulletPrefab == null)
                 return;
@@ -692,9 +763,8 @@ namespace FPS
             float maximumTravelDistance = weaponData.MaximumTravelDistance;
             if (cachedInfection == null)
                 cachedInfection = GetComponentInParent<PlayerInfectionController>();
-            float spreadAngle = weaponData.GetSpreadAngle(aimed)
+            float spreadAngle = resolvedSpread >= 0f ? resolvedSpread : weaponData.GetSpreadAngle(aimed)
                 * (cachedInfection != null ? cachedInfection.WeaponSwayMultiplier : 1f);
-            uint shotSeed = WeaponBallistics.BuildShotSeed(ownerClientId, shotSequence, weaponSlot);
             int projectileCount = Mathf.Max(1, weaponData.projectileCount);
             int hitMask = GetVisualHitMask();
 
@@ -938,6 +1008,7 @@ namespace FPS
             if (isReloading) return;
             if (IsEquipping() || Time.unscaledTime < nextReloadRequestTime) return;
 
+            continuousAutoFire = false;
             ForceExitAimPresentation();
 
             if (cachedFireHandler != null && cachedFireHandler.IsSpawned && cachedFireHandler.NetworkManager != null && cachedFireHandler.NetworkManager.IsListening)
@@ -1200,6 +1271,11 @@ namespace FPS
 
         public void ReportCombatTelemetry()
         {
+            if (reportedAmmo != currentAmmo || reportedReserve != reservedAmmo || reportedReload != isReloading)
+            {
+                reportedAmmo = currentAmmo; reportedReserve = reservedAmmo; reportedReload = isReloading;
+                AmmoChanged?.Invoke();
+            }
             if (!isOwner) return;
             if (weaponData == null) return;
 
@@ -1212,8 +1288,6 @@ namespace FPS
         private void CacheOwnerDependencies()
         {
             recoilController = GetComponentInParent<RecoilController>();
-            if (recoilController == null)
-                recoilController = FindAnyObjectByType<RecoilController>();
 
             cachedFireHandler = GetComponentInParent<WeaponFireHandler>();
             cachedWeaponManager = GetComponentInParent<WeaponManager>();
@@ -1259,6 +1333,9 @@ namespace FPS
                 return;
 
             combatInputBlocked = true;
+            continuousAutoFire = false;
+            stabilityPrediction.ClearPending();
+            if (recoilController != null) recoilController.Release(this);
             reloadPresentationTimeline = default;
             ForceExitAimPresentation();
             StopAllCoroutines();

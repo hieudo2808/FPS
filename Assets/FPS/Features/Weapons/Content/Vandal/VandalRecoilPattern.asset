@@ -12,6 +12,220 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3215e8370a783e469d986faabf04bf0, type: 3}
   m_Name: VandalRecoilPattern
   m_EditorClassIdentifier: Assembly-CSharp::FPS.RecoilPattern
+  useStabilityCurves: 1
+  pitchEnvelope:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 1
+    value: 0.4
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 2
+    value: 0.9
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 7
+    value: 7.6
+    inTangent: 0.967771
+    outTangent: 0.967771
+    mode: 2
+  - time: 8.773702
+    value: 7.455394
+    inTangent: 0.138619
+    outTangent: 0.138619
+    mode: 2
+  - time: 10.48918
+    value: 8.083668
+    inTangent: 0.019691
+    outTangent: 0.019691
+    mode: 2
+  - time: 12.802314
+    value: 7.534721
+    inTangent: 0.018103
+    outTangent: 0.018103
+    mode: 2
+  - time: 14.871182
+    value: 8.162995
+    inTangent: 0.049517
+    outTangent: 0.049517
+    mode: 2
+  - time: 17.608381
+    value: 7.772705
+    inTangent: 0.040253
+    outTangent: 0.040253
+    mode: 2
+  - time: 19.819836
+    value: 8.362191
+    inTangent: 0.034535
+    outTangent: 0.034535
+    mode: 2
+  - time: 22.202414
+    value: 7.93136
+    inTangent: 0.089791
+    outTangent: 0.089791
+    mode: 2
+  yawEnvelope:
+  - time: 0
+    value: 0
+    inTangent: 0.009512
+    outTangent: 0.009512
+    mode: 2
+  - time: 3
+    value: 0.15
+    inTangent: 0.113663
+    outTangent: 0.113663
+    mode: 2
+  - time: 12.352562
+    value: 2
+    inTangent: 0.149601
+    outTangent: 0.149601
+    mode: 2
+  - time: 14.953112
+    value: 1.9382
+    inTangent: 0.016825
+    outTangent: 0.016825
+    mode: 2
+  - time: 17.167585
+    value: 2.081012
+    inTangent: 0
+    outTangent: 0
+    mode: 2
+  - time: 19.308876
+    value: 1.9382
+    inTangent: 0.008243
+    outTangent: 0.008243
+    mode: 2
+  - time: 21.808086
+    value: 2.119264
+    inTangent: -0.003875
+    outTangent: -0.003875
+    mode: 2
+  - time: 24.053804
+    value: 1.919812
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  firingError:
+  - time: 0
+    value: 0.25
+    inTangent: 0
+    outTangent: 0
+    mode: 2
+  - time: 1
+    value: 0.3
+    inTangent: 0.181966
+    outTangent: -0.000834
+    mode: 2
+  - time: 2
+    value: 0.35
+    inTangent: 0.181869
+    outTangent: 0.181869
+    mode: 1
+  - time: 5
+    value: 1
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  recoveryTime:
+  - time: 0
+    value: 0.025
+    inTangent: 0.2210704
+    outTangent: 0
+    mode: 1
+  - time: 6
+    value: 0.375
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  walkingError:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 0
+  - time: 0.275
+    value: 3
+    inTangent: 0
+    outTangent: 0
+    mode: 0
+  - time: 0.601
+    value: 5
+    inTangent: 3.6288788
+    outTangent: 0
+    mode: 0
+  runningError:
+  - time: 0.601
+    value: 6
+    inTangent: 3.6288788
+    outTangent: 0
+    mode: 0
+  jumpingError:
+  - time: 0
+    value: 10
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  sprintRecoilMultiplier: {x: 1.8, y: 1}
+  adsRecoilMultiplier: {x: 0.7, y: 0.7}
+  aimedFiringError: []
+  cameraPopPitchCurve:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 0.01
+    value: 0.15
+    inTangent: -0.059356
+    outTangent: -0.059356
+    mode: 2
+  - time: 1
+    value: 0
+    inTangent: -0.2993582
+    outTangent: -0.29936376
+    mode: 2
+  cameraPopYawCurve:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 0.01
+    value: 0.15
+    inTangent: -0.059356
+    outTangent: -0.059356
+    mode: 2
+  - time: 1
+    value: 0
+    inTangent: -0.2993582
+    outTangent: -0.29936376
+    mode: 2
+  cameraPopScale: {x: 1, y: 0}
+  cameraRecoilFollow: {x: 1, y: 1}
+  adsCameraRecoilFollow: {x: 1, y: 1}
+  hipPitchCameraFollow:
+  - time: 0
+    value: 0
+    inTangent: 0.0011315164
+    outTangent: 0.0024416363
+    mode: 2
+  - time: 7
+    value: 1
+    inTangent: 0.4436298
+    outTangent: 0.4436266
+    mode: 2
+  protectedShots: 6
+  yawSwitchDuration: 0.6
+  yawSwitchChance: 0.1
+  tapEfficiency: 6
+  adsErrorMultiplier: 1.15
+  adsErrorAddend: -0.13
+  cameraPop: 0.15
   shots:
   - {x: 1.25, y: 0}
   - {x: 1.35, y: -0.12}

@@ -14,6 +14,9 @@ namespace FPS
         [Min(1)] public float labEncounterSeconds = 90;
         [Min(0)] public float preparationSeconds = 5;
         [Min(0)] public float boardingSeconds = 5;
+        [Min(1)] public float readyTimeoutSeconds = 20;
+        [Min(1)] public float boardingTimeoutSeconds = 20;
+        [Min(1)] public float tankSpawnTimeoutSeconds = 20;
         [Min(0)] public float transferSeconds = 6;
         [Min(1)] public float endingSeconds = 10;
         [Min(1)] public float disconnectGraceSeconds = 30;

@@ -19,6 +19,7 @@ namespace FPS
         public const int HudOrder = 0;
         public const int CampaignOrder = 20;
         public const int MenuOrder = 100;
+        public const float MinimumReadableTextPixels = 16f;
         public static readonly Vector2 ReferenceResolution = new Vector2(1920, 1080);
 
         public static ColorBlock ButtonColors(bool primary = false)

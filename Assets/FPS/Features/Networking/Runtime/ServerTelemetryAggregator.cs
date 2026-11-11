@@ -82,6 +82,7 @@ namespace FPS
         private readonly SortedDictionary<int, Dictionary<ulong, Accumulator>> pending = new();
         private readonly List<int> ticksToSeal = new();
         private readonly List<ulong> playersToSeal = new();
+        public int SealedThroughTick { get; private set; } = int.MinValue;
 
         public int PendingTickCount => pending.Count;
 
@@ -92,7 +93,7 @@ namespace FPS
             int magazineAmmo,
             int magazineSize)
         {
-            if (!playerId.IsValid)
+            if (!playerId.IsValid || serverTick <= SealedThroughTick)
                 return;
 
             Accumulator accumulator = Get(playerId, serverTick);
@@ -108,7 +109,7 @@ namespace FPS
             float authoritativeHealth,
             float damageTaken)
         {
-            if (!playerId.IsValid)
+            if (!playerId.IsValid || serverTick <= SealedThroughTick)
                 return;
 
             Accumulator accumulator = Get(playerId, serverTick);
@@ -118,13 +119,13 @@ namespace FPS
 
         public void RecordPickup(SessionPlayerId playerId, int serverTick)
         {
-            if (playerId.IsValid)
+            if (playerId.IsValid && serverTick > SealedThroughTick)
                 Get(playerId, serverTick).PickupCount++;
         }
 
         public void RecordKill(SessionPlayerId playerId, int serverTick, bool headshot)
         {
-            if (!playerId.IsValid)
+            if (!playerId.IsValid || serverTick <= SealedThroughTick)
                 return;
 
             Accumulator accumulator = Get(playerId, serverTick);
@@ -135,7 +136,7 @@ namespace FPS
 
         public void RecordShot(SessionPlayerId playerId, int serverTick, bool hit, bool headshot = false)
         {
-            if (!playerId.IsValid)
+            if (!playerId.IsValid || serverTick <= SealedThroughTick)
                 return;
 
             Accumulator accumulator = Get(playerId, serverTick);
@@ -150,7 +151,7 @@ namespace FPS
 
         public void RecordDowned(SessionPlayerId playerId, int serverTick)
         {
-            if (playerId.IsValid)
+            if (playerId.IsValid && serverTick > SealedThroughTick)
                 Get(playerId, serverTick).DownedCount++;
         }
 
@@ -197,6 +198,7 @@ namespace FPS
 
                 pending.Remove(tick);
             }
+            SealedThroughTick = Math.Max(SealedThroughTick, exclusiveServerTick - 1);
         }
 
         public void Clear()
@@ -204,6 +206,7 @@ namespace FPS
             pending.Clear();
             ticksToSeal.Clear();
             playersToSeal.Clear();
+            SealedThroughTick = int.MinValue;
         }
 
         private Accumulator Get(SessionPlayerId playerId, int serverTick)

@@ -23,6 +23,7 @@ namespace FPS.Tests
             string previousBindings = input.ActionsAsset.SaveBindingOverridesAsJson();
             var previousDevices = input.ActionsAsset.devices;
             var backgroundBehavior = InputSystem.settings.backgroundBehavior;
+            var editorInputBehavior = InputSystem.settings.editorInputBehaviorInPlayMode;
             bool wasBlocked = InputManager.GameplayInputBlocked;
             Mouse mouse = InputSystem.AddDevice<Mouse>();
             GameObject player = null;
@@ -32,9 +33,14 @@ namespace FPS.Tests
                 for (int i = 0; i < aim.bindings.Count; i++) aim.ApplyBindingOverride(i, "");
                 aim.ApplyBindingOverride(0, "<Mouse>/rightButton");
                 InputSystem.settings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
+                // REST-driven Test Runner does not give the Game View focus.
+                InputSystem.settings.editorInputBehaviorInPlayMode =
+                    InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
                 InputSystem.EnableDevice(mouse);
                 input.ActionsAsset.devices = new InputDevice[] { mouse };
                 aim.Enable();
+                Assert.That(aim.controls.Count, Is.EqualTo(1));
+                Assert.That(aim.controls[0], Is.SameAs(mouse.rightButton), "Aim must bind to the synthetic mouse.");
                 InputManager.GameplayInputBlocked = false;
                 player = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(
                     "Assets/FPS/Features/Characters/Content/Players/Clove/ClovePlayer.prefab"));
@@ -46,6 +52,7 @@ namespace FPS.Tests
                 player.GetComponent<PlayerVisibilityController>().SetupVisibility(true);
                 var weapons = player.GetComponentsInChildren<Weapon>(true);
                 int tested = 0;
+                int inputFrames = 0;
                 foreach (var weapon in weapons)
                 {
                     if (weapon.Data == null || !weapon.Data.supportsAim) continue;
@@ -108,8 +115,13 @@ namespace FPS.Tests
                         if (pressed) state = state.WithButton(MouseButton.Right);
                         InputSystem.QueueStateEvent(mouse, state);
                         InputSystem.Update();
+                        inputFrames++;
                         Assert.That(mouse.rightButton.isPressed, Is.EqualTo(pressed), "Synthetic RMB state");
-                        Assert.That(input.GetAimInput(), Is.EqualTo(pressed), "Aim action must receive the synthetic RMB");
+                        Assert.That(input.GetAimInput(), Is.EqualTo(pressed),
+                            $"Aim action must receive the synthetic RMB: {weapon.name}, enabled={aim.enabled}, " +
+                            $"phase={aim.phase}, controls={aim.controls.Count}, singleton={InputManager.Instance == input}, " +
+                            $"frame={inputFrames}, updateMode={InputSystem.settings.updateMode}, " +
+                            $"control={(aim.controls.Count > 0 ? aim.controls[0].path : "none")}");
                         Invoke(weapon, "UpdateAimPresentation");
                         yield return null;
                     }
@@ -121,6 +133,7 @@ namespace FPS.Tests
                 input.ActionsAsset.LoadBindingOverridesFromJson(previousBindings);
                 input.ActionsAsset.devices = previousDevices;
                 InputSystem.settings.backgroundBehavior = backgroundBehavior;
+                InputSystem.settings.editorInputBehaviorInPlayMode = editorInputBehavior;
                 InputManager.GameplayInputBlocked = wasBlocked;
                 InputSystem.RemoveDevice(mouse);
                 if (player != null) Object.Destroy(player);

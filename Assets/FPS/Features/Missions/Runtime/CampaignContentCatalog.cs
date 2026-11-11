@@ -84,7 +84,10 @@ namespace FPS
         public CampaignObjectiveId id;
         public string title;
         [TextArea(3, 20)] public string instructions;
+        public string result;
         public string hint;
+        public string hint2;
+        public string hint3;
         public string[] choices = Array.Empty<string>();
         public string[] secondaryChoices = Array.Empty<string>();
         public CampaignFileId file;

@@ -16,6 +16,8 @@ namespace FPS
             return Hash(low ^ RotateLeft(high, 13) ^ ((uint)shotSequence << 8) ^ weaponSlot);
         }
 
+        public static float CosmeticYawSign(uint shotSeed) => (Hash(shotSeed ^ 0xC2B2AE35u) & 1u) == 0 ? -1f : 1f;
+
         public static Vector3 GetProjectileDirection(
             Vector3 forward,
             float coneHalfAngleDegrees,

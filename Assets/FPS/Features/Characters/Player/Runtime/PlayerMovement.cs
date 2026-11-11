@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace FPS
 {
+    [DefaultExecutionOrder(-100)]
     public class PlayerMovement : NetworkBehaviour
     {
         private struct ServerAimSample
@@ -15,6 +16,7 @@ namespace FPS
             public float yaw;
             public float pitch;
             public bool aim;
+            public WeaponStabilityContext stabilityContext;
         }
 
         [Header("References")]
@@ -329,10 +331,9 @@ namespace FPS
 
             var input = BuildInputForTick(tick);
 
-            inputBuffer[index] = input;
-
             transform.rotation = Quaternion.Euler(0f, input.yaw, 0f);
-            SimulateTick(input, TICK_DT);
+            input = SimulateTick(input, TICK_DT);
+            inputBuffer[index] = input;
 
             if (IsServer)
             {
@@ -451,7 +452,12 @@ namespace FPS
             out Vector3 origin,
             out Vector3 direction,
             out bool aim)
+            => TryBuildServerAim(inputTick, inputSequence, out origin, out direction, out aim, out _);
+
+        public bool TryBuildServerAim(int inputTick, uint inputSequence, out Vector3 origin,
+            out Vector3 direction, out bool aim, out WeaponStabilityContext stabilityContext)
         {
+            stabilityContext = StabilityContext;
             origin = default;
             direction = default;
             aim = false;
@@ -468,6 +474,7 @@ namespace FPS
                     origin = sample.origin;
                     direction = Quaternion.Euler(sample.pitch, sample.yaw, 0f) * Vector3.forward;
                     aim = sample.aim;
+                    stabilityContext = sample.stabilityContext;
                     return direction.sqrMagnitude > 0.999f;
                 }
 
@@ -482,6 +489,7 @@ namespace FPS
                         origin = s.origin;
                         direction = Quaternion.Euler(s.pitch, s.yaw, 0f) * Vector3.forward;
                         aim = s.aim;
+                        stabilityContext = s.stabilityContext;
                         return direction.sqrMagnitude > 0.999f;
                     }
                 }
@@ -496,6 +504,7 @@ namespace FPS
             {
                 direction = Quaternion.Euler(lastInput.pitch, lastInput.yaw, 0f) * Vector3.forward;
                 aim = lastInput.aim;
+                stabilityContext.aimed = aim;
             }
             else
             {
@@ -509,7 +518,8 @@ namespace FPS
             if (IsOwner)
             {
                 inputSequence = localCommandSequence;
-                int netTick = NetworkManager != null && NetworkManager.IsListening ? NetworkManager.ServerTime.Tick : 0;
+                // Owner actions use NGO's local clock; ServerTime is buffered for remote presentation.
+                int netTick = NetworkManager != null && NetworkManager.IsListening ? NetworkManager.LocalTime.Tick : 0;
                 inputTick = netTick > 0 ? netTick : (networkTimer != null ? networkTimer.CurrentTick : 0);
                 return true;
             }
@@ -743,7 +753,10 @@ namespace FPS
                 origin = desiredOrigin,
                 yaw = input.yaw,
                 pitch = input.pitch,
-                aim = input.aim
+                aim = input.aim,
+                stabilityContext = new WeaponStabilityContext {
+                    normalizedSpeed = Mathf.Clamp01(planarSpeed / Mathf.Max(0.001f, speed)),
+                    grounded = isGrounded, sprinting = serverSprinting, aimed = input.aim }
             };
         }
 
@@ -806,7 +819,8 @@ namespace FPS
                     continue;
 
                 transform.rotation = Quaternion.Euler(0f, input.yaw, 0f);
-                SimulateTick(input, TICK_DT);
+                input = SimulateTick(input, TICK_DT);
+                inputBuffer[index] = input;
 
                 stateBuffer[index] = CaptureState(tick);
             }
@@ -973,7 +987,7 @@ namespace FPS
         // SIMULATION — Client = Server, same dt
         // ==========================================
 
-        private void SimulateTick(PlayerInputPayload input, float dt)
+        private PlayerInputPayload SimulateTick(PlayerInputPayload input, float dt)
         {
             if (infectionController != null && !infectionController.CanSprint)
                 input.sprint = false;
@@ -984,14 +998,15 @@ namespace FPS
                 controller = GetComponent<CharacterController>();
 
             if (controller == null || !controller.enabled)
-                return;
+                return input;
 
             isGrounded = CheckGrounded();
 
             if (isGrounded && verticalVelocity < 0f)
                 verticalVelocity = -2f;
 
-            if (input.jumpPressed && isGrounded)
+            bool jumping = input.jumpPressed && isGrounded;
+            if (jumping)
                 verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * GRAVITY);
 
             verticalVelocity += GRAVITY * gravityScale * dt;
@@ -1013,7 +1028,8 @@ namespace FPS
             totalMove.y = verticalVelocity;
             totalMove += externalVelocity;
 
-            controller.Move(totalMove * dt);
+            CollisionFlags collisions = controller.Move(totalMove * dt);
+            isGrounded = !jumping && (collisions & CollisionFlags.Below) != 0;
 
             if (externalVelocity.sqrMagnitude > 0.0001f)
             {
@@ -1021,6 +1037,32 @@ namespace FPS
                 if (externalVelocity.sqrMagnitude < 0.0001f)
                     externalVelocity = Vector3.zero;
             }
+            // Fire history must retain the command after simulation applies movement restrictions.
+            return input;
+        }
+
+        public WeaponStabilityContext StabilityContext => new WeaponStabilityContext {
+            normalizedSpeed = Mathf.Clamp01(planarSpeed / Mathf.Max(0.001f, speed)),
+            grounded = isGrounded, sprinting = IsSprinting, aimed = aimHeld };
+
+        public bool TryGetPredictedFireAim(uint sequence, out Vector3 direction,
+            out bool aimed, out WeaponStabilityContext context)
+        {
+            direction = default;
+            aimed = false;
+            context = StabilityContext;
+            if (!hasTickedOnce || inputBuffer == null || networkTimer == null) return false;
+            int index = PositiveModulo(networkTimer.CurrentTick - 1, BUFFER_SIZE);
+            var input = inputBuffer[index];
+            if (input.sequence != sequence) return false;
+            var state = stateBuffer[index];
+            direction = Quaternion.Euler(input.pitch, input.yaw, 0f) * Vector3.forward;
+            aimed = input.aim;
+            context = new WeaponStabilityContext {
+                normalizedSpeed = Mathf.Clamp01(state.planarSpeed / Mathf.Max(0.001f, speed)),
+                grounded = state.grounded, sprinting = input.sprint && input.move.sqrMagnitude > 0.01f,
+                aimed = aimed };
+            return true;
         }
 
         public bool IsSprinting => (IsServer ? serverSprinting : sprintHeld && cachedMove.sqrMagnitude > 0.01f)

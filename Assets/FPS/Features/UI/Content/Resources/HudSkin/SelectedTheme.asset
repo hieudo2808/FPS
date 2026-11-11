@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aac641b7d1bbd4649ac07948cee034e9, type: 3}
+  m_Name: SelectedTheme
+  m_EditorClassIdentifier: FPS::FPS.SelectedUiTheme
+  Text: {r: 0.9529412, g: 0.9529412, b: 0.9529412, a: 1}
+  Muted: {r: 0.68235296, g: 0.69803923, b: 0.69803923, a: 1}
+  Accent: {r: 0.9137255, g: 0.6509804, b: 0.29803923, a: 1}
+  Danger: {r: 0.84705883, g: 0.29411766, b: 0.29411766, a: 1}
+  Background: {r: 0.078431375, g: 0.09411765, b: 0.09411765, a: 1}
+  Border: {r: 0.38431373, g: 0.41568628, b: 0.39607844, a: 1}
+  Paper: {r: 0.83137256, g: 0.84705883, b: 0.8352941, a: 1}
+  DeviceSurface: {r: 0.1254902, g: 0.14901961, b: 0.14901961, a: 1}
+  CampaignBackdrop: {r: 0, g: 0, b: 0, a: 0.6696562}
+  DeviceBackdrop: {r: 0, g: 0, b: 0, a: 0.97548497}
+  Selection: {r: 1, g: 1, b: 1, a: 0.010022826}
+  SelectionFocus: {r: 1, g: 1, b: 1, a: 0.021980947}
+  SelectionPressed: {r: 1, g: 1, b: 1, a: 0.046964195}
+  Small: 18
+  Body: 24
+  Title: 36
+  PanelAlpha: 0.9899772
+  LegacyBody: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
+  BodyFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  NumericFont: {fileID: 11400000, guid: d0f0bf716f26dd144ada58ec2fbc7a45, type: 2}
+  Panel: {fileID: 21300000, guid: 30adf21326740b94dbc79fb2abe3312e, type: 3}
+  Tracker: {fileID: 21300000, guid: 87b5d508855606a4582a13dc59a4b1d5, type: 3}
+  Vitals: {fileID: 21300000, guid: cea8c5e3a0a2af248982dc2a95053044, type: 3}
+  Loadout: {fileID: 21300000, guid: d4b71091e4007eb468d6a29cf1ad2705, type: 3}
+  ControlBezel: {fileID: 21300000, guid: 9cde2a03ff30eb84fa6db0e21fbaa489, type: 3}
+  ManifestBezel: {fileID: 21300000, guid: 9281477339b660f4b9fd40fbb775c3bd, type: 3}
+  Module: {fileID: 21300000, guid: fcdb2c7aae945984594930a9545ab0fb, type: 3}
+  Screen: {fileID: 21300000, guid: 3d1b7434e1d7fdf4f916411b0a85a52c, type: 3}
+  ModuleHeader: {fileID: 21300000, guid: bcd47bddbb238764aa49dfebab70d9b1, type: 3}
+  Sidebar: {fileID: 21300000, guid: a480c814e131b2f4ea1702cff4f058d8, type: 3}
+  PaperArea: {fileID: 21300000, guid: 3c566508a0414e44aa4c3eef1bbc6a69, type: 3}
+  PaperSurface: {fileID: 21300000, guid: d9f0b4fc9afca0a439b1083f915f7a71, type: 3}
+  NoticeSurface: {fileID: 21300000, guid: 3afde04f4f6d7f54a9902deeb8cca479, type: 3}
+  HoldSurface: {fileID: 21300000, guid: e3a071052324970498bf959ed82660fb, type: 3}
+  LockedSurface: {fileID: 21300000, guid: 91133e0301bd9c247892c34c4c0dc0d7, type: 3}
+  WardenIcon: {fileID: 21300000, guid: 3ba78e6a50b45ca458f14d7750028ca6, type: 3}
+  Divider: {fileID: 21300000, guid: 2e3f0ae0d7816c94bbec8784ad7e770c, type: 3}
+  Keycap: {fileID: 21300000, guid: 56f9390d45a16a94e8aeda45a2eec712, type: 3}
+  ReturnKey: {fileID: 21300000, guid: 94a001fb00a15e4458bfdeffa76539d4, type: 3}
+  DeviceHeader: {fileID: 21300000, guid: 5cd57accb2c37cf45b81f7e09020ce4f, type: 3}
+  DeviceFooter: {fileID: 21300000, guid: 83d4d45a7576a004ea9b3a4e59a496a8, type: 3}

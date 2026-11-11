@@ -105,6 +105,11 @@ namespace FPS
         public bool IsStaggered => isStaggered;
         public bool IsStaggerImmune => isStaggered || Time.time < staggerImmunityUntil;
         public bool IsPerformingAbility => isPerformingAbility;
+        public override bool TryGetPressureThreat(out Transform target)
+        {
+            target = CurrentTarget;
+            return !isDead && !isStaggered && CanReportPressure(target, isPerformingAbility, true);
+        }
         public float LastSlamTime => lastSlamTime;
 
         public float AccumulatedDamage

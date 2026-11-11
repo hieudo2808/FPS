@@ -1,0 +1,258 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3215e8370a783e469d986faabf04bf0, type: 3}
+  m_Name: BattleRifleDefaultRecoil
+  m_EditorClassIdentifier: FPS::FPS.RecoilPattern
+  useStabilityCurves: 1
+  pitchEnvelope:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 1
+    value: 0.6
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 2
+    value: 1.5
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 3
+    value: 2.5
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 4
+    value: 3.75
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 6
+    value: 6
+    inTangent: 0.85714287
+    outTangent: 0.85714287
+    mode: 2
+  - time: 7.5
+    value: 6.75
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 8.773702
+    value: 7.455394
+    inTangent: 0.44616514
+    outTangent: 0.44616514
+    mode: 2
+  - time: 10.48918
+    value: 8.083668
+    inTangent: 0.019690927
+    outTangent: 0.019690927
+    mode: 2
+  - time: 12.802314
+    value: 7.534721
+    inTangent: 0.018103043
+    outTangent: 0.018103043
+    mode: 2
+  - time: 14.871182
+    value: 8.162995
+    inTangent: 0.049517445
+    outTangent: 0.049517445
+    mode: 2
+  - time: 17.608381
+    value: 7.772705
+    inTangent: 0.04025254
+    outTangent: 0.04025254
+    mode: 2
+  - time: 19.819836
+    value: 8.362191
+    inTangent: 0.034534954
+    outTangent: 0.034534954
+    mode: 2
+  - time: 22.202414
+    value: 7.93136
+    inTangent: 0.089791
+    outTangent: 0.089791
+    mode: 2
+  yawEnvelope:
+  - time: 0
+    value: 0
+    inTangent: 0.009512
+    outTangent: 0.009512
+    mode: 2
+  - time: 3
+    value: 0.15
+    inTangent: 0.113663
+    outTangent: 0.113663
+    mode: 2
+  - time: 8.357543
+    value: 1.3373636
+    inTangent: 0.09143004
+    outTangent: 0.09143004
+    mode: 2
+  - time: 15.310655
+    value: 1.2755636
+    inTangent: 0.008836789
+    outTangent: 0.008836789
+    mode: 2
+  - time: 17.525127
+    value: 1.4183756
+    inTangent: 0
+    outTangent: 0
+    mode: 2
+  - time: 19.66642
+    value: 1.2755636
+    inTangent: 0.008243046
+    outTangent: 0.008243046
+    mode: 2
+  - time: 22.16563
+    value: 1.4566275
+    inTangent: -0.003875304
+    outTangent: -0.003875304
+    mode: 2
+  - time: 24.411346
+    value: 1.2571756
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  firingError:
+  - time: 0
+    value: 0.15
+    inTangent: 0
+    outTangent: 0.09206375
+    mode: 2
+  - time: 1
+    value: 0.25
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 2
+    value: 0.6
+    inTangent: 0.2125
+    outTangent: 0.08114728
+    mode: 2
+  - time: 5
+    value: 1
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  recoveryTime:
+  - time: 0
+    value: 0.025
+    inTangent: 0.2210704
+    outTangent: 0
+    mode: 1
+  - time: 2
+    value: 0.15
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 5
+    value: 0.4
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  walkingError:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 0
+  - time: 0.275
+    value: 3
+    inTangent: 0
+    outTangent: 0
+    mode: 0
+  - time: 0.601
+    value: 5
+    inTangent: 3.6288788
+    outTangent: 0
+    mode: 0
+  runningError:
+  - time: 0.601
+    value: 6
+    inTangent: 3.6288788
+    outTangent: 0
+    mode: 0
+  jumpingError:
+  - time: 0
+    value: 10
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  sprintRecoilMultiplier: {x: 1.5, y: 1.5}
+  adsRecoilMultiplier: {x: 0.7, y: 0.7}
+  aimedFiringError: []
+  cameraPopPitchCurve:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 0.01
+    value: 0.15
+    inTangent: -0.059356
+    outTangent: -0.059356
+    mode: 2
+  - time: 1
+    value: 0
+    inTangent: -0.2993582
+    outTangent: -0.29936376
+    mode: 2
+  cameraPopYawCurve:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 0.01
+    value: 0.15
+    inTangent: -0.059356
+    outTangent: -0.059356
+    mode: 2
+  - time: 1
+    value: 0
+    inTangent: -0.2993582
+    outTangent: -0.29936376
+    mode: 2
+  cameraPopScale: {x: 1, y: 0}
+  cameraRecoilFollow: {x: 1, y: 1}
+  adsCameraRecoilFollow: {x: 1, y: 1}
+  hipPitchCameraFollow:
+  - time: 0
+    value: 0
+    inTangent: 0.0011315164
+    outTangent: 0.0024416363
+    mode: 2
+  - time: 7
+    value: 1
+    inTangent: 0.4436298
+    outTangent: 0.4436266
+    mode: 2
+  protectedShots: 3
+  yawSwitchDuration: 0.6
+  yawSwitchChance: 0.07
+  tapEfficiency: 9
+  adsErrorMultiplier: 1.15
+  adsErrorAddend: -0.13
+  cameraPop: 0.15
+  shots: []
+  snappiness: 20
+  returnSpeed: 5
+  resetCooldown: 0.25
+  pitchJitter: 0.12
+  yawJitter: 0.25
+  sustainedPitch: 0.6
+  sustainedYaw: 1.5
+  sustainedDirectionHoldShots: 3
+  variationSeed: 1337

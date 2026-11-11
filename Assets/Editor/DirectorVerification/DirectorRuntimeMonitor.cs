@@ -32,6 +32,7 @@ public sealed class DirectorRuntimeMonitor : EditorWindow
     Vector2 scroll;
     ZombieFactory observedFactory;
     SpecialInfectedRegistry observedSpecialRegistry;
+    AIDirector observedDirector;
     static Text runtimeHud;
 
     [Serializable] public sealed class PlayerRow
@@ -43,11 +44,16 @@ public sealed class DirectorRuntimeMonitor : EditorWindow
     {
         public string playerId;
         public int shots, kills, downs;
+        public string evidence;
+        public float combatExposureSeconds, cumulativeDamageMaxHealth;
         public float headshotRatio, damageTakenNorm, downedCountNorm, ammoEfficiency;
         public bool eligibilityKnown, eligible;
     }
     [Serializable] public sealed class Snapshot
     {
+        public int schemaVersion = 2, livingEnemyCount, sampleCount, eligibleCount, serverTick;
+        public bool collectorPresent;
+        public string runState, decisionReason;
         public string recordType = "sample", utc, scene, role, mode, legacyPhase, adaptivePhase;
         public double gameSeconds;
         public int frame, directorAlive, observedLivingEnemyHealth, totalKills, adaptivePhaseIndex;
@@ -60,10 +66,20 @@ public sealed class DirectorRuntimeMonitor : EditorWindow
     }
     [Serializable] sealed class CaptureHeader
     {
+        public int schemaVersion = 2;
         public string recordType = "header", utc, unityVersion;
         public string label = "natural runtime observation; no injected inputs";
         public string method = "Editor polling every 0.5s wall time; not an event-complete trace or spawn-request log";
         public double samplePeriodSeconds = SamplePeriod;
+    }
+    [Serializable] sealed class EvaluationRow
+    {
+        public int schemaVersion = 2;
+        public string recordType = "evaluation", runId, reason, holdReason, utc;
+        public int attemptId, encounterId, boundaryTick;
+        public float score, target, multiplierBefore, multiplierAfter;
+        public bool applied, hasEvidence, hasPerformanceScore;
+        public MetricRow[] metrics;
     }
     [Serializable] sealed class CaptureFooter
     {
@@ -189,6 +205,9 @@ public sealed class DirectorRuntimeMonitor : EditorWindow
         s.directorFound = director != null;
         if (director != null)
         {
+            s.serverTick = director.DirectorServerTick;
+            s.runState = authority ? director.RunState.ToString() : "UnavailableOnClient";
+            s.decisionReason = authority ? director.DecisionReason.ToString() : "UnavailableOnClient";
             s.directorActive = director.isActiveAndEnabled;
             s.legacyPhase = director.CurrentPhase.ToString();
             s.adaptivePhase = director.AdaptivePhase.ToString();
@@ -224,18 +243,43 @@ public sealed class DirectorRuntimeMonitor : EditorWindow
         else s.mode = "No live AIDirector instance";
         foreach (var enemy in UnityEngine.Object.FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None))
             if (enemy.gameObject.activeInHierarchy && !enemy.IsDead) s.observedLivingEnemyHealth++;
+        s.livingEnemyCount = s.observedLivingEnemyHealth; // schema 1 name retained for old readers
         var players = new List<PlayerRow>();
         foreach (var player in UnityEngine.Object.FindObjectsByType<PlayerHealth>(FindObjectsSortMode.None))
             players.Add(new PlayerRow { objectName = player.name, clientId = player.IsSpawned ? player.OwnerClientId.ToString(CultureInfo.InvariantCulture) : "unspawned", lifeState = player.LifeState.ToString(), hp = player.CurrentHealth, maxHp = player.MaxHealth });
         s.players = players.ToArray();
         var metrics = authority ? NetworkGameManager.Instance?.AdaptiveMetrics : null;
         s.metricsAvailable = metrics != null;
+        s.collectorPresent = metrics != null;
         var rows = new List<MetricRow>();
         if (metrics != null)
             foreach (var sample in metrics.BuildSamples())
-                rows.Add(new MetricRow { playerId = sample.StablePlayerId.ToString(CultureInfo.InvariantCulture), shots = sample.ShotsFired, kills = sample.Kills, downs = sample.DownedCount, headshotRatio = sample.HeadshotRatio, damageTakenNorm = sample.DamageTakenNorm, downedCountNorm = sample.DownedCountNorm, ammoEfficiency = sample.AmmoEfficiency, eligibilityKnown = s.policyAvailable, eligible = s.policyAvailable && sample.ShotsFired >= s.minimumShots && sample.Kills >= s.minimumKills });
+                rows.Add(Metric(sample));
         s.metrics = rows.ToArray();
+        s.sampleCount = rows.Count;
+        foreach (var row in rows) if (row.eligible) s.eligibleCount++;
         return s;
+    }
+
+    static MetricRow Metric(PlayerPerformanceSample sample, DynamicDifficultyPolicy? configured = null)
+        => new MetricRow { playerId = sample.StablePlayerId.ToString(CultureInfo.InvariantCulture), shots = sample.ShotsFired,
+            kills = sample.Kills, downs = sample.DownedCount, headshotRatio = sample.HeadshotRatio,
+            damageTakenNorm = sample.DamageTakenNorm, downedCountNorm = sample.DownedCountNorm, ammoEfficiency = sample.AmmoEfficiency,
+            eligibilityKnown = true, eligible = sample.HasEvidence(configured ?? DynamicDifficultyPolicy.Default) || sample.HasDistress,
+            evidence = sample.Classify(configured ?? DynamicDifficultyPolicy.Default).ToString(), combatExposureSeconds = sample.CombatExposureSeconds,
+            cumulativeDamageMaxHealth = sample.CumulativeDamageMaxHealth };
+
+    void OnEvaluation(DirectorEvaluationRecord record)
+    {
+        if (writer == null) return;
+        var rows = new MetricRow[record.Samples.Count];
+        for (int i = 0; i < rows.Length; i++) rows[i] = Metric(record.Samples[i], record.Policy);
+        writer.WriteLine(JsonUtility.ToJson(new EvaluationRow { utc = UtcNow(), runId = record.RunId,
+            attemptId = record.AttemptId, encounterId = record.EncounterId, boundaryTick = record.BoundaryTick,
+            reason = record.Reason.ToString(), holdReason = record.HoldReason, score = record.Evaluation.TeamPerformanceScore,
+            target = record.Evaluation.TargetMultiplier, multiplierBefore = record.MultiplierBefore,
+            multiplierAfter = record.Evaluation.Multiplier, applied = record.Applied,
+            hasEvidence = record.Evaluation.HasEvidence, hasPerformanceScore = record.Evaluation.HasPerformanceScore, metrics = rows }));
     }
 
     void OnEnable()
@@ -251,6 +295,7 @@ public sealed class DirectorRuntimeMonitor : EditorWindow
         StopCapture();
         if (observedFactory != null) observedFactory.OnZombieSpawned -= OnSpawn;
         if (observedSpecialRegistry != null) observedSpecialRegistry.OnSpecialSpawned -= OnSpecialSpawn;
+        if (observedDirector != null) observedDirector.EvaluationCompleted -= OnEvaluation;
     }
     void OnSpecialSpawn(GameObject enemy) => WriteSpawn(enemy, "special-spawn");
     void OnSpawn(GameObject enemy) => WriteSpawn(enemy, "common-spawn");
@@ -283,6 +328,12 @@ public sealed class DirectorRuntimeMonitor : EditorWindow
         try
         {
             current = ReadSnapshot();
+            if (observedDirector != AIDirector.Instance)
+            {
+                if (observedDirector != null) observedDirector.EvaluationCompleted -= OnEvaluation;
+                observedDirector = AIDirector.Instance;
+                if (observedDirector != null) observedDirector.EvaluationCompleted += OnEvaluation;
+            }
             if (observedFactory != ZombieFactory.Instance)
             {
                 if (observedFactory != null) observedFactory.OnZombieSpawned -= OnSpawn;

@@ -16,6 +16,9 @@ namespace FPS
         Relax
     }
 
+    public enum DirectorRunState { Active, Suspended, Ended }
+    public enum DirectorDecisionReason { Pacing, Protection, Recovery, Crescendo, NoActors, CampaignSuspended, Terminal }
+
     public readonly struct DirectorInput
     {
         public readonly float WeakestHealth01;
@@ -24,6 +27,9 @@ namespace FPS
         public readonly float RecentDownedSeconds;
         public readonly int CurrentAlive;
         public readonly float Intensity;
+        public readonly bool ProtectionRequired;
+        public readonly bool RecoverySafe;
+        public readonly int ParticipantCount;
 
         public DirectorInput(
             float weakestHealth01,
@@ -31,7 +37,10 @@ namespace FPS
             float idleSeconds,
             float recentDownedSeconds,
             int currentAlive,
-            float intensity)
+            float intensity,
+            bool protectionRequired = false,
+            bool recoverySafe = true,
+            int participantCount = 1)
         {
             WeakestHealth01 = Clamp01(weakestHealth01);
             TeamSeparation01 = Clamp01(teamSeparation01);
@@ -39,6 +48,9 @@ namespace FPS
             RecentDownedSeconds = recentDownedSeconds;
             CurrentAlive = Math.Max(0, currentAlive);
             Intensity = Math.Max(0f, intensity);
+            ProtectionRequired = protectionRequired;
+            RecoverySafe = recoverySafe;
+            ParticipantCount = Math.Max(0, participantCount);
         }
 
         private static float Clamp01(float value)
@@ -96,7 +108,7 @@ namespace FPS
             peakIntensityThreshold: 80f,
             weakestHealthFloor01: 0.2f,
             recentDownedGraceSeconds: 20f,
-            specialCooldownSeconds: 15f,
+            specialCooldownSeconds: 5f,
             idleBuildUpDelay: 0.25f,
             separationBuildUpDelay: 0.25f);
 
@@ -138,17 +150,20 @@ namespace FPS
         public readonly bool PhaseChanged;
         public readonly bool EnteredRelax;
         public readonly DirectorDecision Decision;
+        public readonly DirectorDecisionReason Reason;
 
         public DirectorStepResult(
             DirectorPhase phase,
             bool phaseChanged,
             bool enteredRelax,
-            DirectorDecision decision)
+            DirectorDecision decision,
+            DirectorDecisionReason reason = DirectorDecisionReason.Pacing)
         {
             Phase = phase;
             PhaseChanged = phaseChanged;
             EnteredRelax = enteredRelax;
             Decision = decision;
+            Reason = reason;
         }
     }
 
@@ -158,6 +173,12 @@ namespace FPS
         private DirectorPhase phase;
         private float phaseElapsed;
         private DirectorInput lastInput;
+        private float recoveryElapsed;
+        private double now;
+        private double crescendoExpiresAt = double.NegativeInfinity;
+        private DirectorRunState runState = DirectorRunState.Active;
+        private bool ended;
+        public DirectorDecisionReason Reason { get; private set; }
 
         public DirectorStateMachine(DirectorPolicy policy)
         {
@@ -169,21 +190,74 @@ namespace FPS
         public DirectorPhase Phase => phase;
         public float PhaseElapsedSeconds => phaseElapsed;
 
-        public DirectorStepResult Advance(float deltaSeconds, DirectorInput input)
+        public void Reset(double serverTime = 0)
+        {
+            phase = DirectorPhase.Calm;
+            phaseElapsed = recoveryElapsed = 0;
+            crescendoExpiresAt = double.NegativeInfinity;
+            now = serverTime;
+            lastInput = default;
+            runState = DirectorRunState.Suspended;
+            ended = false;
+            Reason = DirectorDecisionReason.CampaignSuspended;
+        }
+
+        public void End()
+        {
+            Reset(now);
+            phase = DirectorPhase.Relax;
+            runState = DirectorRunState.Ended;
+            ended = true;
+            Reason = DirectorDecisionReason.Terminal;
+        }
+
+        public void RequestCrescendo(double expiresAt)
+        {
+            if (!double.IsNaN(expiresAt) && !double.IsInfinity(expiresAt))
+                crescendoExpiresAt = Math.Max(crescendoExpiresAt, expiresAt);
+        }
+
+        public DirectorStepResult Advance(float deltaSeconds, DirectorInput input,
+            DirectorRunState operatingState = DirectorRunState.Active, double serverTime = double.NaN)
         {
             lastInput = input;
-            phaseElapsed += Math.Max(0f, deltaSeconds);
+            float elapsed = float.IsFinite(deltaSeconds) ? Math.Max(0f, deltaSeconds) : 0;
+            now = double.IsNaN(serverTime) ? now + elapsed : serverTime;
+            runState = ended ? DirectorRunState.Ended : operatingState;
+            if (runState != DirectorRunState.Active || input.ParticipantCount == 0)
+            {
+                Reason = runState == DirectorRunState.Ended ? DirectorDecisionReason.Terminal
+                    : input.ParticipantCount == 0 ? DirectorDecisionReason.NoActors : DirectorDecisionReason.CampaignSuspended;
+                if (runState == DirectorRunState.Ended) crescendoExpiresAt = double.NegativeInfinity;
+                return new DirectorStepResult(phase, false, false, GetDecision(), Reason);
+            }
+            phaseElapsed += elapsed;
+            Reason = DirectorDecisionReason.Pacing;
 
             bool phaseChanged = false;
             bool enteredRelax = false;
 
-            if (ShouldProtectTeam(input) && phase != DirectorPhase.Calm && phase != DirectorPhase.Relax)
+            bool protect = ShouldProtectTeam(input);
+            if (protect && phase != DirectorPhase.Relax)
             {
                 phaseChanged = true;
                 enteredRelax = true;
                 TransitionTo(DirectorPhase.Relax);
+                Reason = DirectorDecisionReason.Protection;
             }
-            else
+            else if (phase != DirectorPhase.Relax && crescendoExpiresAt >= now)
+            {
+                // A request is consumed once. Repeated requests during Peak never
+                // restart its timer or extend its configured maximum duration.
+                crescendoExpiresAt = double.NegativeInfinity;
+                if (phase != DirectorPhase.Peak)
+                {
+                    phaseChanged = true;
+                    TransitionTo(DirectorPhase.Peak);
+                }
+                Reason = DirectorDecisionReason.Crescendo;
+            }
+            if (!phaseChanged)
             {
                 switch (phase)
                 {
@@ -204,8 +278,7 @@ namespace FPS
                         break;
 
                     case DirectorPhase.Combat:
-                        if (input.Intensity >= policy.PeakIntensityThreshold
-                            || phaseElapsed >= policy.CombatDurationSeconds)
+                        if (phaseElapsed >= policy.CombatDurationSeconds)
                         {
                             phaseChanged = true;
                             TransitionTo(DirectorPhase.Peak);
@@ -222,10 +295,19 @@ namespace FPS
                         break;
 
                     case DirectorPhase.Relax:
-                        if (phaseElapsed >= policy.RelaxDurationSeconds)
+                        Reason = protect ? DirectorDecisionReason.Protection : DirectorDecisionReason.Recovery;
+                        recoveryElapsed = !protect && input.RecoverySafe && input.Intensity <= 35f
+                            ? recoveryElapsed + elapsed : 0;
+                        if (phaseElapsed >= policy.RelaxDurationSeconds && recoveryElapsed >= 3f)
                         {
                             phaseChanged = true;
-                            TransitionTo(DirectorPhase.Calm);
+                            bool pendingCrescendo = crescendoExpiresAt >= now;
+                            TransitionTo(pendingCrescendo ? DirectorPhase.Peak : DirectorPhase.Calm);
+                            if (pendingCrescendo)
+                            {
+                                crescendoExpiresAt = double.NegativeInfinity;
+                                Reason = DirectorDecisionReason.Crescendo;
+                            }
                         }
                         break;
                 }
@@ -235,7 +317,7 @@ namespace FPS
                 phase,
                 phaseChanged,
                 enteredRelax,
-                GetDecision());
+                GetDecision(), Reason);
         }
 
         public DirectorDecision GetDecision()
@@ -262,17 +344,18 @@ namespace FPS
 
             return new DirectorDecision(
                 phase,
-                spawnRateMultiplier,
-                (phase == DirectorPhase.BuildUp || phase == DirectorPhase.Peak)
-                    && phaseElapsed >= policy.SpecialCooldownSeconds,
-                lastInput.WeakestHealth01 <= policy.WeakestHealthFloor01,
+                runState == DirectorRunState.Active && lastInput.ParticipantCount > 0 ? spawnRateMultiplier : 0,
+                runState == DirectorRunState.Active && lastInput.ParticipantCount > 0
+                    && phase == DirectorPhase.Peak && !ShouldProtectTeam(lastInput)
+                    && phaseElapsed + .00001f >= policy.SpecialCooldownSeconds,
+                ShouldProtectTeam(lastInput),
                 lastInput.TeamSeparation01,
                 lastInput.IdleSeconds);
         }
 
         private bool ShouldProtectTeam(DirectorInput input)
         {
-            return input.WeakestHealth01 <= policy.WeakestHealthFloor01
+            return input.ProtectionRequired || input.Intensity >= policy.PeakIntensityThreshold
                 || (input.RecentDownedSeconds >= 0f
                     && input.RecentDownedSeconds <= policy.RecentDownedGraceSeconds);
         }
@@ -288,8 +371,11 @@ namespace FPS
         {
             phase = nextPhase;
             phaseElapsed = 0f;
+            recoveryElapsed = 0f;
         }
     }
+
+    public enum PerformanceEvidence { Insufficient, Performance, Distress }
 
     public readonly struct PlayerPerformanceSample
     {
@@ -301,6 +387,9 @@ namespace FPS
         public readonly int ShotsFired;
         public readonly int Kills;
         public readonly int DownedCount;
+        public readonly float CombatExposureSeconds;
+        public readonly float CumulativeDamageMaxHealth;
+        public readonly bool IsFinite;
 
         private PlayerPerformanceSample(
             ulong stablePlayerId,
@@ -310,7 +399,7 @@ namespace FPS
             float ammoEfficiency,
             int shotsFired,
             int kills,
-            int downedCount)
+            int downedCount, float combatExposureSeconds, float cumulativeDamageMaxHealth)
         {
             StablePlayerId = stablePlayerId;
             HeadshotRatio = Clamp01(headshotRatio);
@@ -320,6 +409,11 @@ namespace FPS
             ShotsFired = Math.Max(0, shotsFired);
             Kills = Math.Max(0, kills);
             DownedCount = Math.Max(0, downedCount);
+            CombatExposureSeconds = Math.Max(0, combatExposureSeconds);
+            CumulativeDamageMaxHealth = Math.Max(0, cumulativeDamageMaxHealth);
+            IsFinite = float.IsFinite(headshotRatio) && float.IsFinite(damageTakenNorm)
+                && float.IsFinite(downedCountNorm) && float.IsFinite(ammoEfficiency)
+                && float.IsFinite(combatExposureSeconds) && float.IsFinite(cumulativeDamageMaxHealth);
         }
 
         public static PlayerPerformanceSample Create(
@@ -330,7 +424,7 @@ namespace FPS
             float ammoEfficiency,
             int shotsFired,
             int kills,
-            int downedCount)
+            int downedCount, float combatExposureSeconds = 0, float cumulativeDamageMaxHealth = 0)
         {
             return new PlayerPerformanceSample(
                 stablePlayerId,
@@ -340,14 +434,21 @@ namespace FPS
                 ammoEfficiency,
                 shotsFired,
                 kills,
-                downedCount);
+                downedCount, combatExposureSeconds, cumulativeDamageMaxHealth);
         }
 
         public bool HasEvidence(DynamicDifficultyPolicy policy)
         {
-            return ShotsFired >= policy.MinimumShots
+            return IsFinite && ShotsFired >= policy.MinimumShots
                 && Kills >= policy.MinimumKills;
         }
+
+        public bool HasDistress => IsFinite && (DownedCount > 0
+            || CombatExposureSeconds >= 5f && CumulativeDamageMaxHealth >= .30f);
+
+        public PerformanceEvidence Classify(DynamicDifficultyPolicy policy)
+            => HasEvidence(policy) ? PerformanceEvidence.Performance
+                : HasDistress ? PerformanceEvidence.Distress : PerformanceEvidence.Insufficient;
 
         private static float Clamp01(float value)
         {
@@ -433,19 +534,21 @@ namespace FPS
         public readonly float TeamPerformanceScore;
         public readonly bool HasEvidence;
         public readonly bool Updated;
+        public readonly bool HasPerformanceScore;
 
         public DynamicDifficultyEvaluation(
             float multiplier,
             float targetMultiplier,
             float teamPerformanceScore,
             bool hasEvidence,
-            bool updated)
+            bool updated, bool hasPerformanceScore = true)
         {
             Multiplier = multiplier;
             TargetMultiplier = targetMultiplier;
             TeamPerformanceScore = teamPerformanceScore;
             HasEvidence = hasEvidence;
             Updated = updated;
+            HasPerformanceScore = hasEvidence && hasPerformanceScore;
         }
     }
 
@@ -470,22 +573,24 @@ namespace FPS
                 return new DynamicDifficultyEvaluation(currentMultiplier, currentMultiplier, 0.5f, false, false);
 
             List<float> playerScores = new List<float>();
+            bool hasDistress = false;
             if (samples != null)
             {
                 for (int i = 0; i < samples.Count; i++)
                 {
                     PlayerPerformanceSample sample = samples[i];
+                    hasDistress |= sample.HasDistress;
                     if (sample.HasEvidence(policy))
                         playerScores.Add(GetPlayerScore(sample));
                 }
             }
 
-            if (playerScores.Count == 0)
+            if (playerScores.Count == 0 && !hasDistress)
                 return new DynamicDifficultyEvaluation(currentMultiplier, currentMultiplier, 0.5f, false, false);
 
             playerScores.Sort();
-            float weakest = playerScores[0];
-            float median = GetMedian(playerScores);
+            float weakest = playerScores.Count > 0 ? playerScores[0] : policy.NeutralScore;
+            float median = playerScores.Count > 0 ? GetMedian(playerScores) : policy.NeutralScore;
             float weightedTeamScore = Clamp01(
                 median * policy.MedianPlayerWeight
                 + weakest * policy.WeakestPlayerWeight);
@@ -499,6 +604,10 @@ namespace FPS
                 Math.Max(policy.GlobalMinMultiplier, tierMin),
                 Math.Min(policy.GlobalMaxMultiplier, tierMax));
 
+            if (hasDistress)
+                target = Math.Min(playerScores.Count > 0 ? target : float.MaxValue,
+                    Math.Max(Math.Max(policy.GlobalMinMultiplier, tierMin), currentMultiplier - .05f));
+
             currentMultiplier = Clamp(currentMultiplier,
                 Math.Max(policy.GlobalMinMultiplier, tierMin),
                 Math.Min(policy.GlobalMaxMultiplier, tierMax));
@@ -511,7 +620,7 @@ namespace FPS
                 target,
                 teamScore,
                 hasEvidence: true,
-                updated: updated);
+                updated: updated, hasPerformanceScore: playerScores.Count > 0);
         }
 
         public void Reset()

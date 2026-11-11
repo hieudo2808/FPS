@@ -47,6 +47,7 @@ namespace FPS
         protected int capturedSpawnPlayerCount = 1;
         private EnemyScalingSnapshot scalingSnapshot;
         private bool hasScalingSnapshot;
+        private float capturedAdaptiveMultiplier = 1f;
         
         public SpecialType Type => specialType;
         public bool AllowedInSoloMode => allowedInSoloMode;
@@ -67,6 +68,9 @@ namespace FPS
         protected virtual void ApplySpecialScaling()
         {
             capturedSpawnPlayerCount = ResolvePlayerCountForSpawn();
+            var director = AIDirector.Instance;
+            capturedAdaptiveMultiplier = director != null && director.AdaptiveDirectorEnabled && !director.AdaptiveObserveOnly
+                ? director.AdaptiveDifficultyMultiplier : 1f;
             DifficultyStats difficulty = DifficultyManager.Instance != null
                 ? DifficultyManager.Instance.GetCurrentStats()
                 : new DifficultyStats { hpMultiplier = 1f, damageMultiplier = 1f };
@@ -77,7 +81,7 @@ namespace FPS
                 specialType,
                 capturedSpawnPlayerCount,
                 authoredHealth * Mathf.Max(0.01f, specialHPMultiplier),
-                difficulty.hpMultiplier,
+                difficulty.hpMultiplier * capturedAdaptiveMultiplier,
                 difficulty.damageMultiplier,
                 scalingProfile);
             hasScalingSnapshot = true;
@@ -122,7 +126,7 @@ namespace FPS
 
         protected float ScaleDamage(float authoredDamage)
         {
-            return Mathf.Max(0f, authoredDamage) * ScalingSnapshot.DamageAndStatusMultiplier;
+            return Mathf.Max(0f, authoredDamage) * ScalingSnapshot.DamageAndStatusMultiplier * capturedAdaptiveMultiplier;
         }
 
         protected float ScaleStatus(float authoredAmount)

@@ -8,6 +8,30 @@ namespace FPS
 {
     public class EnemyAI : NetworkBehaviour, IPoolResettable
     {
+        private static readonly HashSet<EnemyAI> pressureRoster = new HashSet<EnemyAI>();
+        public static HashSet<EnemyAI> PressureRoster => pressureRoster;
+        private EnemyHealth pressureHealth;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetPressureRoster() => pressureRoster.Clear();
+
+        public bool IsAliveForDirector => isActiveAndEnabled && currentState != State.Dead
+            && (pressureHealth == null || !pressureHealth.IsDead);
+
+        public virtual bool TryGetPressureThreat(out Transform target)
+        {
+            target = player;
+            return CanReportPressure(target, currentState == State.Attack, currentState == State.Chase);
+        }
+
+        protected bool CanReportPressure(Transform target, bool attacking, bool approaching)
+        {
+            if (!IsAliveForDirector || target == null || (!attacking && !approaching)) return false;
+            // Attacks legitimately stop navigation. Chasing needs an already valid
+            // complete path; this observation never issues a new path calculation.
+            return attacking || agent != null && agent.enabled && agent.isOnNavMesh
+                && agent.hasPath && !agent.pathPending && agent.pathStatus == NavMeshPathStatus.PathComplete;
+        }
         public void ResetForPool() => ResetAI();
 
         [Header("References")]
@@ -155,6 +179,7 @@ namespace FPS
 
         public override void OnDestroy()
         {
+            pressureRoster.Remove(this);
             base.OnDestroy();
 
             EnemyHealth health = GetComponent<EnemyHealth>();
@@ -169,6 +194,7 @@ namespace FPS
 
         public override void OnNetworkSpawn()
         {
+            pressureRoster.Add(this);
             replicatedState.OnValueChanged += OnReplicatedStateChanged;
             ConfigureNetworkTransform();
             if (IsServer)
@@ -207,6 +233,7 @@ namespace FPS
 
         public override void OnNetworkDespawn()
         {
+            pressureRoster.Remove(this);
             CancelMotionLock();
             replicatedState.OnValueChanged -= OnReplicatedStateChanged;
             base.OnNetworkDespawn();
@@ -214,11 +241,14 @@ namespace FPS
 
         protected virtual void OnDisable()
         {
+            pressureRoster.Remove(this);
             CancelMotionLock();
         }
 
         protected virtual void OnEnable()
         {
+            pressureHealth = GetComponent<EnemyHealth>();
+            pressureRoster.Add(this);
             if (animator != null)
             {
                 CacheAnimatorParameterSupport();

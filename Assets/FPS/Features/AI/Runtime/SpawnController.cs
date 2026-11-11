@@ -61,7 +61,8 @@ namespace FPS
 
             int maxAlive = Math.Max(1, (int)Math.Round(
                 baseMaxAlive * staticStats.maxAliveMultiplier * adaptiveMultiplier));
-            bool canSpawn = director.Phase != DirectorPhase.Relax && currentAlive < maxAlive;
+            bool canSpawn = phaseMultiplier > 0f && !director.ProtectWeakestPlayer
+                && director.Phase != DirectorPhase.Relax && currentAlive < maxAlive;
             float specialChance = Clamp01(staticStats.specialSpawnChance * adaptiveMultiplier);
             bool spawnSpecial = canSpawn
                 && specialEnabled

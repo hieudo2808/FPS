@@ -9,7 +9,9 @@ Implemented for `ClovePlayer.prefab`, `BrimstonePlayer.prefab`, `GekkoPlayer.pre
 - The grenade visual is held at the authored hand until release, then disappears. Both peers play from server time, so 1P owner and 3P observers stay in phase.
 - Starting another grenade, weapon switching, shooting, reload and medical use are rejected while the throw is active. Sprint/death/respawn cancels before release without consuming a grenade.
 - Frag and incendiary use the same throw animation; only the projectile behavior differs.
-- All five weapon models are hidden during the action and restored afterward in both views. This includes the Operator, Odin and Bucky replacements that share the primary inventory slot.
+- All six weapon models are hidden during the action and restored afterward in both views. This includes the Operator, Odin, Bucky and Warden replacements that share the primary inventory slot.
+
+On 2026-10-21, Warden's right-hand throw was fixed by moving its first-person layer before Grenade Throw and updating its three layer-index transition conditions. The client regression is now `ClientPlayersThrowWithAllSixWeaponsAndPreserveLegs`; all four character cases passed, covering 24 throws. The new prefab animation regression also passed for all four characters within the 19/19 WeaponTimingTests run. See [runtime verification and before/after GIFs](Runtime-20261021-Fixed/verification.md). The original integration results below predate this Warden fix.
 
 ## Brimstone bone axes
 
@@ -28,7 +30,7 @@ The selected source clips are:
 
 The other 66 FBX grenade clips (idle, aim directions, crouch/run, underhand, secondary and duplicate montage variants) were unused by the project after the audit. They were archived with their `.meta` files before removal in `Grenade-unused-source-backup.zip`; `Archived-source-manifest.json` contains SHA-256 hashes for all 132 archived files.
 
-Verification:
+Original integration verification:
 
 - The earlier Clove-only suite passed 6/6 (`Clove-Grenade-Tests.json`). The four-player tests are parameterized by character rather than copied into separate fixtures.
 - Final four-player run: **12/12 passed** (four host-owned cases plus four client-owned five-weapon cases per player); XML is saved as `Documents/Grenade/FourPlayers-Final-Tests.xml`.

@@ -36,6 +36,7 @@ namespace FPS
         private float updateBudget;
         private bool initialized;
         private bool transferred;
+        private bool boardingOverrideUsed;
         private CampaignRunSummary runSummary = new();
         private double campaignStartedAt;
         private int attemptKillBaseline;
@@ -43,6 +44,7 @@ namespace FPS
         private readonly Dictionary<CampaignDialogueId, double> dialogueHistory = new();
         private SpecialInfectedRegistry dialogueSpecialRegistry;
         public event Action Changed;
+        private readonly CampaignFeedbackBuffer feedbackBuffer = new();
         public CampaignState State => state;
         public CampaignRunSummary RunSummary => runSummary;
         public CampaignContentCatalog ContentCatalog => settings != null ? settings.contentCatalog : null;
@@ -80,10 +82,14 @@ namespace FPS
             Instance = this;
             claimedSupplies = new NetworkList<FixedString64Bytes>();
             insertionRoster = new NetworkList<CampaignInsertionParticipant>();
+            HudSignals.NotifySourcesChanged();
         }
         public override void OnNetworkSpawn()
         {
+            feedbackBuffer.Reset();
             CampaignHUD.Instance?.ResetDialogue();
+            readyCount.OnValueChanged += OnReadyCount;
+            transferLocked.OnValueChanged += OnTransferLock;
             replicatedState.OnValueChanged += OnState;
             replicatedSummary.OnValueChanged += OnSummary;
             if (IsServer)
@@ -95,26 +101,32 @@ namespace FPS
             else
             {
                 Decode(replicatedState.Value);
+                feedbackBuffer.Reset(state.revision);
                 if (replicatedSummary.Value.Length > 0) OnSummary(default, replicatedSummary.Value);
             }
         }
         public override void OnNetworkDespawn()
         {
+            feedbackBuffer.Reset();
             ReleaseTankTracking();
             CampaignHUD.Instance?.ResetDialogue();
             if (dialogueSpecialRegistry != null) dialogueSpecialRegistry.OnSpecialSpawned -= OnSpecialSpawned;
             dialogueSpecialRegistry = null;
+            readyCount.OnValueChanged -= OnReadyCount;
+            transferLocked.OnValueChanged -= OnTransferLock;
             replicatedState.OnValueChanged -= OnState;
             replicatedSummary.OnValueChanged -= OnSummary;
             if (IsServer && NetworkManager != null) NetworkManager.OnClientDisconnectCallback -= OnDisconnected;
         }
         public override void OnDestroy()
         {
-            if (Instance == this) Instance = null;
+            if (Instance == this) { Instance = null; HudSignals.NotifySourcesChanged(); }
             claimedSupplies?.Dispose();
             insertionRoster?.Dispose();
             base.OnDestroy();
         }
+        private void OnReadyCount(int before, int after) => Changed?.Invoke();
+        private void OnTransferLock(bool before, bool after) => Changed?.Invoke();
         private void OnState(FixedString4096Bytes before, FixedString4096Bytes after) => Decode(after);
         private void OnSummary(FixedString4096Bytes before, FixedString4096Bytes after)
         {
@@ -129,6 +141,7 @@ namespace FPS
             if (!IsServer) initialized = true;
             if (!IsServer && hadState && state != null && (state.discoveredFiles & ~previousFiles) != 0)
                 CampaignHUD.Instance?.ShowMessage("NEW FILE ADDED");
+            feedbackBuffer.Apply(state, DeliverObjectiveFeedback);
             Changed?.Invoke();
             ConfigureChapterServices();
             RefreshDocuments();
@@ -221,7 +234,8 @@ namespace FPS
         {
             CampaignPhase previous = state.phase;
             state.phase = phase; phaseStarted.Value = Now; boardingSince = closingSince = countdownSince = -1;
-            if (phase != CampaignPhase.Transitioning) transferLocked.Value = false;
+            state.partyGate = default;
+            if (phase != CampaignPhase.Transitioning) { transferLocked.Value = false; boardingOverrideUsed = false; }
             if (phase is CampaignPhase.Preparing or CampaignPhase.AwaitingParty or CampaignPhase.Completed or CampaignPhase.Failed)
                 AIDirector.Instance?.EndCampaignEncounter();
             holds.Clear();
@@ -253,6 +267,7 @@ namespace FPS
 
         private void BeginAttempt()
         {
+            AIDirector.Instance?.BeginAdaptiveAttempt();
             campaignStartedAt = Now;
             attemptKillBaseline = AIDirector.Instance != null ? AIDirector.Instance.TotalKills : 0;
             state.teamDownedCount = 0;
@@ -384,13 +399,18 @@ namespace FPS
         }
         private void UpdatePreparation()
         {
-            if (state.tankStage == CampaignTankStage.Pending) { countdownSince = -1; return; }
             var people = Players.Where(p => p.LifeState != PlayerLifeState.Dead && p.LifeState != PlayerLifeState.Spectating).ToArray();
             bool evadeTank = state.chapter == CampaignChapter.Asylum && state.tankStage == CampaignTankStage.Active;
-            bool all = people.Length > 0 && !HasDisconnectGrace() && people.All(p => p.CanUseCombat
-                && Current.Contains(Current.preparationArea, p.transform.position) && (evadeTank || ready.Contains(p.OwnerClientId)));
-            if (!all) { countdownSince = -1; return; }
+            bool solo = people.Length == 1;
+            var inside = people.Where(p => p.CanUseCombat && Current.Contains(Current.preparationArea, p.transform.position)).ToArray();
+            int qualified = inside.Count(p => evadeTank || solo || ready.Contains(p.OwnerClientId));
+            var gate = CampaignRules.EvaluatePartyGate(true, people.Length, inside.Length, people.Count(p => ready.Contains(p.OwnerClientId)), qualified,
+                people.Count(p => p.LifeState == PlayerLifeState.Downed), HasDisconnectGrace(), CampaignRules.TankAllowsExit(state),
+                settings.readyTimeoutSeconds - (float)(Now - phaseStarted.Value));
+            if (!gate.canCountdown) { countdownSince = -1; PublishPartyGate(gate); return; }
             if (countdownSince < 0) countdownSince = Now;
+            gate.countdownRemaining = Mathf.Max(0, Mathf.CeilToInt(settings.preparationSeconds - (float)(Now - countdownSince)));
+            PublishPartyGate(gate);
             if (Now - countdownSince < settings.preparationSeconds) return;
             SaveCheckpoint((int)state.chapter * 2 + 1, preparing: true);
             ready.Clear(); readyCount.Value = 0;
@@ -406,19 +426,35 @@ namespace FPS
         }
         private void UpdateBoarding()
         {
-            if (!CampaignRules.TankAllowsExit(state)) { boardingSince = -1; return; }
             var people = Players.Where(p => p.LifeState != PlayerLifeState.Dead && p.LifeState != PlayerLifeState.Spectating).ToArray();
-            bool all = people.Length > 0 && !HasDisconnectGrace() && people.All(p => p.CanUseCombat && Current.Contains(Current.boardingArea, p.transform.position));
-            if (!all) { boardingSince = -1; return; }
+            int inside = people.Count(p => p.CanUseCombat && Current.Contains(Current.boardingArea, p.transform.position));
+            var gate = CampaignRules.EvaluatePartyGate(false, people.Length, inside, 0, inside,
+                people.Count(p => p.LifeState == PlayerLifeState.Downed), HasDisconnectGrace(), CampaignRules.TankAllowsExit(state),
+                settings.boardingTimeoutSeconds - (float)(Now - phaseStarted.Value));
+            if (!gate.canCountdown) { boardingSince = -1; PublishPartyGate(gate); return; }
             if (boardingSince < 0) boardingSince = Now;
-            if (Now - boardingSince >= settings.boardingSeconds) { transferred = false; SetPhase(CampaignPhase.Transitioning); }
+            gate.countdownRemaining = Mathf.Max(0, Mathf.CeilToInt(settings.boardingSeconds - (float)(Now - boardingSince)));
+            PublishPartyGate(gate);
+            if (Now - boardingSince >= settings.boardingSeconds)
+            {
+                boardingOverrideUsed = gate.overrideActive;
+                transferred = false; SetPhase(CampaignPhase.Transitioning);
+            }
+        }
+        private void PublishPartyGate(CampaignPartyGateStatus gate)
+        {
+            if (state.partyGate.Equals(gate)) return;
+            state.partyGate = gate;
+            Publish();
         }
         private void UpdateTransition()
         {
             if (!transferLocked.Value)
             {
                 var people = Players.Where(p => !p.IsDead).ToArray();
-                if (HasDisconnectGrace() || people.Length == 0 || people.Any(p => !p.CanUseCombat || !Current.Contains(Current.boardingArea, p.transform.position)))
+                bool anyoneBoarded = people.Any(p => p.CanUseCombat && Current.Contains(Current.boardingArea, p.transform.position));
+                if (people.Length == 0 || (boardingOverrideUsed ? !anyoneBoarded
+                    : HasDisconnectGrace() || people.Any(p => !p.CanUseCombat || !Current.Contains(Current.boardingArea, p.transform.position))))
                 { SetPhase(CampaignPhase.AwaitingParty); return; }
             }
             if (Current.entryDoor != null && !Current.entryDoor.IsClosed) { closingSince = -1; return; }
@@ -449,6 +485,7 @@ namespace FPS
             }
             state.chapter++;
             state.tankStage = CampaignTankStage.Dormant;
+            state.tankWaitReason = CampaignTankWaitReason.None; state.tankSpawnRemaining = 0; state.tankFallback = false;
             SetPhase(CampaignPhase.Exploring);
             readingUntil = Now + settings.readingGraceSeconds;
             SaveCheckpoint((int)state.chapter * 2);
@@ -523,16 +560,25 @@ namespace FPS
             EmitDialogue(CampaignDialogueId.OperatorDowned);
         }
 
-        public void RequestDiscoverFile(CampaignFileId id) { if (IsSpawned) DiscoverFileRpc((byte)id); }
+        public void RequestDiscoverFile(CampaignFileId id)
+        {
+            if (!IsSpawned) return;
+            if (IsServer) DiscoverFileForClient(id, NetworkManager.ServerClientId);
+            else DiscoverFileRpc((byte)id);
+        }
 
         [Rpc(SendTo.Server, RequireOwnership = false)]
         private void DiscoverFileRpc(byte rawId, RpcParams rpc = default)
         {
             if (!Enum.IsDefined(typeof(CampaignFileId), rawId)) return;
-            CampaignFileId id = (CampaignFileId)rawId;
+            DiscoverFileForClient((CampaignFileId)rawId, rpc.Receive.SenderClientId);
+        }
+
+        private void DiscoverFileForClient(CampaignFileId id, ulong client)
+        {
             CampaignFileDefinition definition = ContentCatalog?.FindFile(id);
             if (definition == null || BlocksInput || settings == null) return;
-            if (!TryPlayer(rpc.Receive.SenderClientId, out var actor) || !actor.CanUseCombat) return;
+            if (!TryPlayer(client, out var actor) || !actor.CanUseCombat) return;
             // The client sends only an ID. The server chooses a registered, reachable source;
             // optional lore never receives the objective/console fallback.
             CampaignInteractable document = ReachableFileSource(definition, actor);
@@ -540,19 +586,22 @@ namespace FPS
                 document != null && IsInsertionParticipant(actor.StablePlayerId.Value), document != null);
             if (result == CampaignResult.Accepted)
             {
-                state.discoveredFiles |= CampaignState.FileBit(id);
+                CampaignRules.RecordFile(state, id);
                 Publish();
+                if (id == CampaignFileId.FactoryManifest)
+                    ObjectiveFeedbackRpc(Unity.Netcode.NetworkManager.ServerClientId, CampaignObjectiveId.FactoryManifest, result, state.revision);
             }
             if (result == CampaignResult.Accepted || result == CampaignResult.AlreadyDone)
-                FileDiscoveryFeedbackRpc(id, result, state.revision, RpcTarget.Single(rpc.Receive.SenderClientId, RpcTargetUse.Temp));
-            else Feedback(rpc.Receive.SenderClientId, result);
+                FileDiscoveryFeedbackRpc(id, result, state.revision, RpcTarget.Single(client, RpcTargetUse.Temp));
+            else Feedback(client, result);
         }
 
         [Rpc(SendTo.SpecifiedInParams, InvokePermission = RpcInvokePermission.Server)]
         private void FileDiscoveryFeedbackRpc(CampaignFileId id, CampaignResult result, uint revision, RpcParams rpc = default)
         {
             TeamInventoryUI.Instance?.AcknowledgeFile(id, revision);
-            CampaignHUD.Instance?.ShowMessage(result == CampaignResult.AlreadyDone ? "FILE ALREADY RECORDED" : "NEW FILE ADDED");
+            if (id != CampaignFileId.FactoryManifest || result == CampaignResult.AlreadyDone)
+                CampaignHUD.Instance?.ShowMessage(result == CampaignResult.AlreadyDone ? "FILE ALREADY RECORDED" : "NEW FILE ADDED");
         }
         public void RequestPowerSelection(int mask) => PowerSelectionRpc(mask);
         [Rpc(SendTo.Server, RequireOwnership = false)]
@@ -576,7 +625,9 @@ namespace FPS
             var item = Objective(id);
             var result = CampaignRules.CanUse(state, id);
             if (!actor.CanUseCombat || BlocksInput) return;
-            if (item == null || result != CampaignResult.Accepted) { Feedback(client, result); return; }
+            if (item == null || result != CampaignResult.Accepted) { ObjectiveFeedback(client, id, result, first, second); return; }
+            if (id == CampaignObjectiveId.FactoryShipping && CampaignRules.ShippingMissing(first, second) != CampaignShippingGroup.None)
+            { ObjectiveFeedback(client, id, CampaignResult.MissingSelection, first, second); return; }
             if (!item.InReach(actor, settings.interactionRange)) { Feedback(client, CampaignResult.OutOfRange); return; }
             if (holds.TryGetValue(client, out var existing) && existing.action == 0 && existing.objective == id && existing.first == first && existing.second == second)
             { existing.lease = Now + .7; return; }
@@ -607,8 +658,7 @@ namespace FPS
                 if (preparation && !Current.Contains(Current.preparationArea, actor.transform.position)) { holds.Remove(pair.Key); continue; }
                 var result = CampaignRules.TryComplete(state, h.objective, h.first, h.second);
                 holds.Remove(pair.Key);
-                Feedback(pair.Key, result);
-                if (result != CampaignResult.Accepted) continue;
+                if (result != CampaignResult.Accepted) { ObjectiveFeedback(pair.Key, h.objective, result, h.first, h.second); continue; }
                 if (preparation) { ready.Clear(); readyCount.Value = 0; phaseStarted.Value = Now; }
                 else if (h.objective is CampaignObjectiveId.FactoryGenerator or CampaignObjectiveId.FactoryShipping or CampaignObjectiveId.FactoryCase or CampaignObjectiveId.LabPower)
                 {
@@ -616,6 +666,7 @@ namespace FPS
                 }
                 else readingUntil = Math.Max(readingUntil, Now + settings.readingGraceSeconds);
                 Publish();
+                ObjectiveFeedbackRpc(pair.Key, h.objective, result, state.revision);
                 EmitDialogue(CampaignDialogue.ForObjective(h.objective));
                 if (h.objective == CampaignObjectiveId.LabTransmit)
                 {
@@ -664,6 +715,19 @@ namespace FPS
         private void FeedbackRpc(ulong target, byte result)
         { if (NetworkManager.LocalClientId == target) CampaignHUD.Instance?.ShowResult((CampaignResult)result); }
 
+        [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
+        private void ObjectiveFeedbackRpc(ulong target, CampaignObjectiveId objective, CampaignResult result, uint revision,
+            CampaignShippingGroup missing = CampaignShippingGroup.None, CampaignShippingGroup mismatch = CampaignShippingGroup.None)
+        {
+            if (result == CampaignResult.Accepted || NetworkManager.LocalClientId == target)
+                feedbackBuffer.Add(new(objective, result, revision, missing, mismatch), state, DeliverObjectiveFeedback);
+        }
+        private void ObjectiveFeedback(ulong target, CampaignObjectiveId id, CampaignResult result, int first, int second) =>
+            ObjectiveFeedbackRpc(target, id, result, state.revision,
+                id == CampaignObjectiveId.FactoryShipping && result == CampaignResult.MissingSelection ? CampaignRules.ShippingMissing(first, second) : 0,
+                id == CampaignObjectiveId.FactoryShipping && result == CampaignResult.WrongAnswer ? CampaignRules.ShippingMismatch(first, second) : 0);
+        private void DeliverObjectiveFeedback(CampaignObjectiveFeedback feedback) => CampaignHUD.Instance?.ShowObjectiveResult(feedback);
+
         public bool IsSupplyClaimed(string id) => claimedSupplies != null && claimedSupplies.Contains(new FixedString64Bytes(id));
         public void RequestSupply(string id, bool medicine) => SupplyRpc(new FixedString64Bytes(id), medicine);
         [Rpc(SendTo.Server, RequireOwnership = false)]
@@ -698,7 +762,7 @@ namespace FPS
         {
             state.checkpoint = index;
             if(index % 2 == 0) state.supplyPartySize = Mathf.Clamp(Players.Count(p=>p.LifeState!=PlayerLifeState.Spectating),1,4);
-            var saved = state.Copy(); saved.phase = CampaignPhase.Exploring;
+            var saved = state.Copy(); saved.phase = CampaignPhase.Exploring; saved.partyGate = default;
             if (saved.tankStage == CampaignTankStage.Active) saved.tankStage = CampaignTankStage.Pending;
             if (preparing)
             {
@@ -715,8 +779,6 @@ namespace FPS
                 if (checkpoint.players.Count >= 4) break;
                 if (checkpoint.players.Any(p => p.playerId == retained.sessionPlayerId.Value)) continue;
                 var absent = CampaignPlayerSave.Capture(retained);
-                // No teammate can revive a disconnected actor after the reservation grace.
-                if (absent.lifeState == PlayerLifeState.Downed) { absent.lifeState = PlayerLifeState.Dead; absent.lifeStateDeadline = 0; }
                 checkpoint.players.Add(absent);
             }
             foreach (var id in claimedSupplies) checkpoint.claimedSupplies.Add(id.ToString());
@@ -734,8 +796,7 @@ namespace FPS
             if (fromDisk && !CampaignCheckpoint.TryLoad(out checkpoint, out var error)) { Debug.LogWarning(error); return; }
             if (checkpoint == null) return;
             ClearEnemies(); holds.Clear(); releaseRequired.Clear(); ready.Clear(); readyCount.Value = 0;
-            state = checkpoint.state.Copy(); claimedSupplies.Clear();
-            if (state.Has(CampaignObjectiveId.FactoryCase)) state.factoryTankDefeated = true; // Old checkpoints predate scripted Tanks.
+            state = CampaignRules.RestoreCheckpoint(checkpoint.state, state.revision); claimedSupplies.Clear();
             if (state.tankStage == CampaignTankStage.Active) state.tankStage = CampaignTankStage.Pending;
             transferLocked.Value = false; transferred = false;
             rosterSnapshots.Clear();
@@ -761,12 +822,13 @@ namespace FPS
             transferLocked.Value = false; transferred = false; disconnected.Clear();
             BeginAttempt();
             phaseStarted.Value = Now; readingUntil = Now + settings.readingGraceSeconds; Publish();
-            CheckpointRestoredRpc();
+            CheckpointRestoredRpc(state.revision);
         }
 
         [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
-        private void CheckpointRestoredRpc()
+        private void CheckpointRestoredRpc(uint revision)
         {
+            feedbackBuffer.Reset(revision);
             TeamInventoryUI.Instance?.CancelPendingFile();
             CampaignHUD.Instance?.ShowMessage("CHECKPOINT RESTORED");
         }

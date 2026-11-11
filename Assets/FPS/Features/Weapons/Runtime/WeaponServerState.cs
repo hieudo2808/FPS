@@ -5,6 +5,17 @@ namespace FPS
     public sealed class WeaponServerState
     {
         private int weaponInstanceId;
+        public WeaponStability Stability { get; private set; }
+        public float LastShotSpread { get; private set; }
+        public ushort ResolvedFireSequence { get; private set; }
+        public bool HasResolvedFireSequence { get; private set; }
+
+        public void RecordFireResult(ushort sequence)
+        {
+            if (!HasResolvedFireSequence || NetworkSequence.IsNewer(sequence, ResolvedFireSequence))
+                ResolvedFireSequence = sequence;
+            HasResolvedFireSequence = true;
+        }
         private bool initialized;
         private int magazineAmmo;
         private int reserveAmmo;
@@ -75,6 +86,9 @@ namespace FPS
             if (initialized && weaponInstanceId == currentWeaponInstanceId)
                 return;
 
+            Stability = default;
+            ResolvedFireSequence = 0;
+            HasResolvedFireSequence = false;
             weaponInstanceId = currentWeaponInstanceId;
             initialized = true;
             reloadTimeline = default;
@@ -90,14 +104,18 @@ namespace FPS
 
         public bool CanAcceptFireSequence(ushort sequence)
         {
-            return !hasAcceptedFireSequence || NetworkSequence.IsNewer(sequence, lastAcceptedFireSequence);
+            return (!hasAcceptedFireSequence || NetworkSequence.IsNewer(sequence, lastAcceptedFireSequence))
+                && (!HasResolvedFireSequence || NetworkSequence.IsNewer(sequence, ResolvedFireSequence));
         }
 
         public bool TryConsumeFire(
             WeaponData weaponData,
             double now,
             ushort fireSequence = 0,
-            bool enforceSequence = false)
+            bool enforceSequence = false,
+            WeaponStabilityContext stabilityContext = default,
+            uint shotSeed = 0,
+            bool continuousAuto = false)
         {
             if (weaponData == null)
                 return false;
@@ -131,9 +149,17 @@ namespace FPS
             if (interruptPerShellReload)
                 CancelReload();
 
+            var stability = Stability;
+            var profile = weaponData.recoilPattern;
+            double shotTime = WeaponFireClock.ShotTime(now, nextAllowedFireTime, weaponData.FireInterval,
+                continuousAuto && weaponData.fireMode == FireMode.Auto);
+            stabilityContext.aimed &= weaponData.supportsAim;
+            LastShotSpread = profile != null && profile.useStabilityCurves
+                ? stability.Fire(profile, shotTime, weaponData.FireInterval, stabilityContext, shotSeed)
+                : weaponData.GetSpreadAngle(stabilityContext.aimed);
+            Stability = stability;
             magazineAmmo--;
-            double baseTime = System.Math.Max(now, nextAllowedFireTime);
-            nextAllowedFireTime = baseTime + weaponData.FireInterval;
+            nextAllowedFireTime = shotTime + weaponData.FireInterval;
             if (enforceSequence)
             {
                 lastAcceptedFireSequence = fireSequence;
@@ -259,7 +285,10 @@ namespace FPS
                 reloadTimeline = reloadTimeline,
                 equipCompleteTime = equipCompleteTime,
                 lastAcceptedFireSequence = lastAcceptedFireSequence,
-                hasAcceptedFireSequence = hasAcceptedFireSequence
+                hasAcceptedFireSequence = hasAcceptedFireSequence,
+                stability = Stability,
+                resolvedFireSequence = ResolvedFireSequence,
+                hasResolvedFireSequence = HasResolvedFireSequence
             };
         }
 
@@ -277,6 +306,9 @@ namespace FPS
             equipCompleteTime = snapshot.equipCompleteTime;
             lastAcceptedFireSequence = snapshot.lastAcceptedFireSequence;
             hasAcceptedFireSequence = snapshot.hasAcceptedFireSequence;
+            Stability = snapshot.stability;
+            ResolvedFireSequence = snapshot.resolvedFireSequence;
+            HasResolvedFireSequence = snapshot.hasResolvedFireSequence;
         }
     }
 }

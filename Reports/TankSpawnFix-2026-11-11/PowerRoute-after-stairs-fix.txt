@@ -1,0 +1,21 @@
+EXISTING CampaignWorld/Factory/Map_v2/ColdLedger_Extension/Director/DirectorSpawnService/Anchors/Z05_ColdStorage/Tank_ColdStorage_1 scene=GameScene zone=CampaignWorld/Factory/Map_v2/ColdLedger_Extension/Director/DirectorSpawnService/Zones/Z05_ColdStorage local=(90.00, 0.05, 82.50) types=Special
+EXISTING CampaignWorld/Factory/Map_v2/ColdLedger_Extension/Director/DirectorSpawnService/Anchors/Z05_ColdStorage/Tank_ColdStorage_2 scene=GameScene zone=CampaignWorld/Factory/Map_v2/ColdLedger_Extension/Director/DirectorSpawnService/Zones/Z05_ColdStorage local=(94.00, 0.05, 86.50) types=Special
+CHAPTER ROOT CampaignWorld/Factory anchors=58
+SITE FactoryGenerator (97.9, 0.6, 32.4)
+SITE FactoryIsolate (102.9, 0.6, 13.8)
+SITE FactoryBackup (77.9, 0.6, 16.4)
+static candidates=635
+RESULT FactoryGenerator: strict=True chosen=(76.9, 0.1, 115.0) d=85 validAnchors=16: Anchor_02@57, Anchor_01@61, Anchor_03@56, Anchor_04@52, Anchor_02@52, Anchor_08@97, Anchor_09@100, Anchor_01@85, Anchor_02@73, Anchor_05@79, Anchor_06@91, Anchor_07@97, Anchor_08@103, Anchor_15@71, Tank_ColdStorage_1@51, Tank_ColdStorage_2@54
+GRID FactoryGenerator: lineOfSight=0 routeBlocked=69 valid=566
+CANDIDATE FactoryGenerator (121.90, 0.05, 28.87) straight=24
+CANDIDATE FactoryGenerator (115.90, 0.05, 49.87) straight=25
+CANDIDATE FactoryGenerator (124.90, 0.05, 31.87) straight=27
+CANDIDATE FactoryGenerator (124.90, 0.05, 28.87) straight=27
+CANDIDATE FactoryGenerator (118.90, 0.05, 49.87) straight=27
+CANDIDATE FactoryGenerator (124.90, 0.05, 25.87) straight=28
+CANDIDATE FactoryGenerator (118.90, 0.05, 52.87) straight=29
+CANDIDATE FactoryGenerator (121.90, 0.05, 49.87) straight=30
+RESULT FactoryIsolate: strict=False chosen=(0.0, 0.0, 0.0) d=104 validAnchors=0: 
+GRID FactoryIsolate: lineOfSight=0 routeBlocked=635 valid=0
+RESULT FactoryBackup: strict=False chosen=(0.0, 0.0, 0.0) d=80 validAnchors=0: 
+GRID FactoryBackup: lineOfSight=0 routeBlocked=635 valid=0

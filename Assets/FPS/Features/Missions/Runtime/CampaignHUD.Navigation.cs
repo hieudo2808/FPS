@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using TMPro;
 
 namespace FPS
 {
@@ -12,7 +13,8 @@ namespace FPS
         public CampaignObjectiveId TrackedObjectiveId { get; private set; }
         public event Action TrackingChanged;
         public bool HasMissionTracker => tracker != null && tracker.gameObject.activeInHierarchy;
-        private Text locationLabel, actionLabel, navigation;
+        private Text navigation, branchArrow;
+        private TMP_Text locationLabel, actionLabel, branchCounts, outcomeLabel;
         private RectTransform tracker, marker;
         private Image destinationIcon;
         private RectTransform routeIcon;
@@ -25,23 +27,36 @@ namespace FPS
         private float nextNavigationUpdate, routeDistance;
         private Vector3 routeTarget;
         private bool routeComplete, hasRouteTarget, routeComputed;
+        private float nextCueUntil;
         private readonly Rect[] markerObstacles = new Rect[4];
+        private readonly Vector3[] hudCorners = new Vector3[4];
 
-        public bool TryTrackObjective(CampaignObjectiveId id)
+        public bool TryTrackObjective(CampaignObjectiveId id, bool allowLocked = false)
         {
-            if (Campaign == null || !CampaignObjectiveSelection.CanTrack(Campaign.State, id)
+            if (Campaign == null || (!CampaignObjectiveSelection.CanTrack(Campaign.State, id)
+                && (!allowLocked || !CampaignObjectiveSelection.CanInspect(Campaign.State, id)))
                 || Campaign.Current?.objectives == null
-                || !Campaign.Current.objectives.Any(o => o != null && !o.documentOnly && o.objectiveId == id)) return false;
+                || !Campaign.Current.objectives.Any(o => o != null && o.objectiveId == id && (o.interactionBody != null || !o.documentOnly))) return false;
             SetTracked(id);
             return true;
+        }
+
+        public void CycleTrackedBranch()
+        {
+            if (Campaign == null || Campaign.State.chapter != CampaignChapter.Factory || Campaign.State.phase != CampaignPhase.Exploring) return;
+            var target = CampaignObjectiveSelection.CycleFactoryBranch(Campaign.State, TrackedObjectiveId);
+            if (target != CampaignObjectiveId.None) SetTracked(target);
         }
 
         private void SetTracked(CampaignObjectiveId id)
         {
             if (TrackedObjectiveId == id) return;
             TrackedObjectiveId = id;
+            nextThreatCheck = 0;
             nextNavigationUpdate = 0; routeComputed = false;
+            RefreshHintTarget();
             TrackingChanged?.Invoke();
+            RefreshTracker();
         }
 
         private void ResolveTracking(PlayerHealth owner)
@@ -52,13 +67,14 @@ namespace FPS
             nextNavigationUpdate = 0; routeComputed = false;
             trackableIds.Clear();
             if (Campaign.Current?.objectives != null)
-                foreach (var item in Campaign.Current.objectives.Where(o => o != null && !o.documentOnly)
+                foreach (var item in Campaign.Current.objectives.Where(o => o != null && (o.interactionBody != null || !o.documentOnly))
                     .OrderBy(o => CatalogOrder(o.objectiveId)))
                     if (!trackableIds.Contains(item.objectiveId)) trackableIds.Add(item.objectiveId);
             SetTracked(CampaignObjectiveSelection.Resolve(Campaign.State, trackableIds, TrackedObjectiveId, id =>
             {
                 var item = Campaign.Objective(id);
-                return item != null && TryGuidancePath(owner.transform.position, item.Point, item) ? routeDistance : (float?)null;
+                return item == null ? null : TryGuidancePath(owner.transform.position, item.TargetPosition, item)
+                    ? routeDistance : Vector3.Distance(owner.transform.position, item.TargetPosition);
             }));
         }
 
@@ -73,38 +89,51 @@ namespace FPS
         private void BuildNavigation(Transform safe)
         {
             tracker = Box(safe, "MissionTracker", Vector2.zero, Vector2.one);
-            tracker.GetComponent<Image>().color = HudLayout.Plate;
-            var border = tracker.gameObject.AddComponent<Outline>();
-            border.effectColor = new Color(.35f, .39f, .36f); border.effectDistance = new Vector2(2, -2);
-            HudLayout.Corner(tracker, new Vector2(0, 1), new Vector2(28, -28), new Vector2(468, 196));
-            locationLabel = Label(tracker, "Location", Vector2.up, Vector2.one, 24);
-            locationLabel.rectTransform.offsetMin = new Vector2(32, -52);
-            locationLabel.rectTransform.offsetMax = new Vector2(-32, -24);
-            locationLabel.color = HudSkin.Accent;
-            status = Label(tracker, "TrackedObjective", Vector2.zero, Vector2.one, 24);
+            SelectedUiTheme.Surface(tracker.GetComponent<Image>(), Theme.Tracker);
+            HudLayout.Corner(tracker, new Vector2(0, 1), Vector2.zero, new Vector2(421, 194));
+            locationLabel = DeviceText(tracker, "Location", Vector2.up, Vector2.one, 24, FontStyles.Normal);
+            locationLabel.rectTransform.offsetMin = new Vector2(24, -36);
+            locationLabel.rectTransform.offsetMax = new Vector2(-24, -12);
+            locationLabel.color = Theme.Muted; locationLabel.fontSize = Theme.Small;
+            status = DeviceText(tracker, "TrackedObjective", Vector2.zero, Vector2.one, 24, FontStyles.Bold);
             status.rectTransform.offsetMin = new Vector2(32, 84);
-            status.rectTransform.offsetMax = new Vector2(-32, -56);
-            status.fontStyle = FontStyle.Bold;
-            actionLabel = Label(tracker, "CurrentAction", Vector2.up, Vector2.one, 24);
+            status.rectTransform.offsetMax = new Vector2(-32, -64);
+            actionLabel = DeviceText(tracker, "CurrentAction", Vector2.zero, Vector2.one, 24, FontStyles.Normal);
             actionLabel.rectTransform.offsetMin = new Vector2(32, -172);
             actionLabel.rectTransform.offsetMax = new Vector2(-32, -116);
+            branchCounts = DeviceText(tracker, "BranchProgress", Vector2.zero, Vector2.one, 24, FontStyles.Normal);
+            branchCounts.fontSize = Theme.Small;
+            branchCounts.alignment = TextAlignmentOptions.TopRight;
+            branchCounts.rectTransform.offsetMin = new Vector2(24, 34);
+            branchCounts.rectTransform.offsetMax = new Vector2(-68, -76);
+            branchArrow = Label(tracker, "BranchArrow", Vector2.up, Vector2.up, 24);
+            branchArrow.rectTransform.pivot = Vector2.up;
+            branchArrow.rectTransform.sizeDelta = new Vector2(24, 40);
+            branchArrow.verticalOverflow = VerticalWrapMode.Overflow;
+            branchArrow.text = "▶";
+            outcomeLabel = DeviceText(tracker, "ExpectedResult", Vector2.zero, Vector2.one, 18, FontStyles.Normal);
+            outcomeLabel.color = Theme.Muted;
             marker = Box(safe, "NavigationMarker", Vector2.zero, Vector2.one);
             marker.GetComponent<Image>().color = Color.clear;
             marker.anchorMin = marker.anchorMax = marker.pivot = new Vector2(.5f, .5f);
-            marker.sizeDelta = new Vector2(228, 110);
+            marker.sizeDelta = new Vector2(360, 128);
             var icon = Box(marker, "Destination", Vector2.zero, Vector2.one);
             icon.anchorMin = icon.anchorMax = new Vector2(.5f, .5f);
             icon.sizeDelta = new Vector2(28, 28);
-            destinationIcon = icon.GetComponent<Image>(); HudSkin.Apply(destinationIcon, "FPSSample/GoalMarkerCentre", HudSkin.Accent);
+            destinationIcon = icon.GetComponent<Image>(); HudSkin.Apply(destinationIcon, "FPSSample/GoalMarkerCentre", Theme.Text);
             routeIcon = Box(marker, "RouteCorner", Vector2.zero, Vector2.one);
             routeIcon.GetComponent<Image>().color = Color.clear;
             routeIcon.anchorMin = routeIcon.anchorMax = new Vector2(.5f, .5f); routeIcon.sizeDelta = new Vector2(34, 24);
             var arrow = Box(routeIcon, "Arrow", Vector2.zero, Vector2.one);
             arrow.anchorMin = arrow.anchorMax = new Vector2(.5f, .5f); arrow.sizeDelta = new Vector2(32, 24);
             arrow.localRotation = Quaternion.identity;
-            HudSkin.Apply(arrow.GetComponent<Image>(), "FPSSample/GoalMarker", HudSkin.Accent);
+            HudSkin.Apply(arrow.GetComponent<Image>(), "FPSSample/GoalMarker", Theme.Text);
             navigation = Label(marker, "Distance", new Vector2(.025f, -.20f), new Vector2(.975f, .35f), 24);
             navigation.alignment = TextAnchor.MiddleCenter;
+            navigation.resizeTextForBestFit = true;
+            navigation.resizeTextMinSize = 16;
+            navigation.resizeTextMaxSize = 24;
+            navigation.horizontalOverflow = HorizontalWrapMode.Overflow;
             marker.gameObject.SetActive(false);
         }
 
@@ -114,11 +143,11 @@ namespace FPS
             tracker.gameObject.SetActive(visible);
             if (!visible) return;
             var s = Campaign.State;
-            locationLabel.text = s.chapter switch { CampaignChapter.Factory => "FACTORY", CampaignChapter.Asylum => "AN LAC", _ => "B2 / LABORATORY" };
+            locationLabel.text = s.chapter switch { CampaignChapter.Factory => "FACTORY", CampaignChapter.Asylum => "NORTHBRIDGE", _ => "B2 / LABORATORY" };
             var item = s.phase == CampaignPhase.Exploring ? Campaign.Objective(TrackedObjectiveId) : null;
             status.text = s.phase switch
             {
-                CampaignPhase.Exploring => item != null ? item.Title : "Recover the T9-17 evidence",
+                CampaignPhase.Exploring => item != null ? ObjectiveAction(item.objectiveId) : "Recover the evidence case",
                 CampaignPhase.Preparing => s.tankStage == CampaignTankStage.Active ? "Evade the Tank" : "Prepare for extraction",
                 CampaignPhase.Encounter => "Hold the extraction route",
                 CampaignPhase.AwaitingParty => "Board with the squad",
@@ -127,69 +156,114 @@ namespace FPS
                 CampaignPhase.Completed => "Campaign complete",
                 _ => "Mission failed"
             };
-            bool factoryTank = s.phase == CampaignPhase.Exploring && s.chapter == CampaignChapter.Factory
-                && CampaignRules.UtilitiesReady(s) && CampaignRules.LogisticsReady(s) && !s.factoryTankDefeated
-                && !s.Has(CampaignObjectiveId.FactoryCase);
-            if (factoryTank) status.text = "Eliminate the Tank";
+            bool factoryTank = CampaignRules.TankIsNext(s);
+            if (factoryTank) status.text = s.tankStage == CampaignTankStage.Active ? "Eliminate the Tank"
+                : "Tank incoming";
+            float captionSize = Theme.Small * canvas.scaleFactor >= TacticalUiTheme.MinimumReadableTextPixels ? Theme.Small : Theme.Body;
+            actionLabel.fontSize = branchCounts.fontSize = locationLabel.fontSize = captionSize;
+            actionLabel.lineSpacing = branchCounts.lineSpacing = captionSize == Theme.Small ? 5 : 3;
             actionLabel.text = s.phase switch
             {
-                CampaignPhase.Exploring => ObjectiveAction(TrackedObjectiveId) + (hasRouteTarget && routeComputed && !routeComplete ? "\nRoute unavailable" : ""),
-                CampaignPhase.Preparing => $"READY {Campaign.ReadyCount}/{Campaign.ActivePlayerCount} / Gather at the panel",
+                CampaignPhase.Preparing => CampaignRules.PartyGateText(s.partyGate, true),
                 CampaignPhase.Encounter => $"{Mathf.CeilToInt(Campaign.Remaining)}s remaining / Defend the approach",
-                CampaignPhase.AwaitingParty => "Enter the boarding area / Wait for the squad",
+                CampaignPhase.AwaitingParty => CampaignRules.PartyGateText(s.partyGate, false),
                 CampaignPhase.Transitioning => "Wait for the receiving door",
                 _ => ""
             };
-            if (factoryTank) actionLabel.text = "Regroup in open space / Protect the evidence case";
+            if (factoryTank) actionLabel.text = CampaignRules.TankStatus(s);
+            bool factoryBranches = s.phase == CampaignPhase.Exploring && s.chapter == CampaignChapter.Factory;
+            if (factoryBranches)
+            {
+                string branches = FactoryBranchProgress();
+                if (!factoryTank) actionLabel.text = branches.Replace("▶", "  ") + "\n"
+                    + (CampaignRules.CanSwitchFactoryBranch(s) ? $"{SurvivalHotbar.Key("Track", "T")}  SWITCH" : "");
+            }
             bool reduced = HudLayout.SecondaryReduced;
             if (reduced && s.phase == CampaignPhase.Encounter)
                 status.text = $"EXTRACTION / {Mathf.CeilToInt(Campaign.Remaining)}s";
             else if (reduced && s.phase == CampaignPhase.Preparing)
                 status.text = s.tankStage == CampaignTankStage.Active ? "EVADE TANK / GATHER" : $"READY {Campaign.ReadyCount}/{Campaign.ActivePlayerCount}";
-            tracker.sizeDelta = new Vector2(468, reduced ? 80 : 196);
+            tracker.sizeDelta = new Vector2(421, reduced ? 88 : 194);
+            tracker.anchoredPosition = Vector2.zero;
             locationLabel.gameObject.SetActive(!reduced); actionLabel.gameObject.SetActive(!reduced);
-            status.rectTransform.offsetMin = new Vector2(32, reduced ? 24 : 84);
-            status.rectTransform.offsetMax = new Vector2(-32, reduced ? -24 : -56);
-            status.alignment = reduced ? TextAnchor.MiddleLeft : TextAnchor.UpperLeft;
+            branchCounts.gameObject.SetActive(!reduced && factoryBranches);
+            branchArrow.gameObject.SetActive(!reduced && factoryBranches && branchArrow.text.Length > 0);
+            status.rectTransform.offsetMin = new Vector2(24, reduced ? 24 : 122);
+            status.rectTransform.offsetMax = new Vector2(-24, reduced ? -24 : -40);
+            status.fontSize = Theme.Body;
+            bool longTitle = status.GetPreferredValues(status.text, 10000, 1000).x > 373;
+            float extra = !reduced && longTitle && captionSize == Theme.Body ? 30 : 0;
+            if (longTitle && captionSize == Theme.Small) status.fontSize = Theme.Small;
+            tracker.sizeDelta = new Vector2(421, (reduced ? 88 : 194) + extra);
+            status.alignment = reduced ? TextAlignmentOptions.MidlineLeft : TextAlignmentOptions.TopLeft;
+            actionLabel.rectTransform.offsetMin = new Vector2(24, 34);
+            actionLabel.rectTransform.offsetMax = new Vector2(-68, -76 - extra);
+            branchCounts.rectTransform.offsetMax = new Vector2(-68, -76 - extra);
+            if (extra > 0) branchArrow.rectTransform.anchoredPosition += new Vector2(0, -extra);
+            string expected = item != null ? Campaign.ContentCatalog?.FindObjective(item.objectiveId)?.result : "";
+            bool showOutcome = !reduced && !string.IsNullOrWhiteSpace(expected);
+            outcomeLabel.gameObject.SetActive(showOutcome);
+            if (showOutcome)
+            {
+                outcomeLabel.text = "Then: " + expected;
+                outcomeLabel.fontSize = captionSize;
+                outcomeLabel.rectTransform.anchorMin = new Vector2(0, 1);
+                outcomeLabel.rectTransform.anchorMax = Vector2.one;
+                outcomeLabel.rectTransform.pivot = new Vector2(.5f, 1);
+                outcomeLabel.rectTransform.offsetMin = new Vector2(24, -tracker.sizeDelta.y - 54);
+                outcomeLabel.rectTransform.offsetMax = new Vector2(-24, -tracker.sizeDelta.y + 12);
+                tracker.sizeDelta += new Vector2(0, 66);
+            }
         }
 
-        public static string ObjectiveAction(CampaignObjectiveId id) => id switch
+        // The catalog is the only source of objective names.
+        public static string ObjectiveAction(CampaignObjectiveId id)
+            => CampaignMissionController.Instance?.ContentCatalog?.FindObjective(id)?.title ?? string.Empty;
+
+        private string FactoryBranchProgress()
         {
-            CampaignObjectiveId.FactoryIsolate => "Inspect the electrical isolation panel",
-            CampaignObjectiveId.FactoryBackup => "Configure the cold-store backup",
-            CampaignObjectiveId.FactoryGenerator => "Restore cold-store power",
-            CampaignObjectiveId.FactoryManifest => "Read the shipping manifest",
-            CampaignObjectiveId.FactoryShipping => "Cross-check the shipping record",
-            CampaignObjectiveId.FactoryCase => "Secure the evidence case",
-            CampaignObjectiveId.FactoryRoute => "Open the service route",
-            CampaignObjectiveId.AsylumAccess => "Read the security desk log",
-            CampaignObjectiveId.AsylumFuse => "Recover the service fuse",
-            CampaignObjectiveId.AsylumInstall => "Install the fuse",
-            CampaignObjectiveId.AsylumPower => "Power the lower service panel",
-            CampaignObjectiveId.AsylumPatient => "Inspect the upper records",
-            CampaignObjectiveId.AsylumTransfer => "Cross-check the mortuary record",
-            CampaignObjectiveId.AsylumLift => "Scan the card at the freight lift",
-            CampaignObjectiveId.LabTrace => "Read the laboratory trace record",
-            CampaignObjectiveId.LabIndex => "Inspect the laboratory index",
-            CampaignObjectiveId.LabPower => "Allocate power at the control panel",
-            CampaignObjectiveId.LabArchive => "Cross-check the archive record",
-            CampaignObjectiveId.LabCase => "Secure the laboratory evidence case",
-            CampaignObjectiveId.LabTransmit => "Transmit evidence and call the lift",
-            _ => "Check the mission list"
-        };
+            var s = Campaign.State;
+            int power = CampaignRules.FactoryProgress(s, CampaignFactoryBranch.Power);
+            int logistics = CampaignRules.FactoryProgress(s, CampaignFactoryBranch.Logistics);
+            branchCounts.text = $"{power}/3\n{logistics}/2";
+            string branches = FormatFactoryBranches(TrackedObjectiveId);
+            int active = branches.IndexOf('▶');
+            branchArrow.fontSize = Mathf.RoundToInt(actionLabel.fontSize);
+            branchArrow.text = active < 0 ? "" : "→";
+            branchArrow.rectTransform.anchoredPosition = new Vector2(24, active == 0 ? -75 : -102);
+            return branches;
+        }
+
+        private static string FormatFactoryBranches(CampaignObjectiveId tracked)
+        {
+            bool powerActive = tracked is CampaignObjectiveId.FactoryIsolate or CampaignObjectiveId.FactoryBackup or CampaignObjectiveId.FactoryGenerator;
+            bool logisticsActive = tracked is CampaignObjectiveId.FactoryManifest or CampaignObjectiveId.FactoryShipping;
+            return $"{(powerActive ? "▶" : "  ")}  Power\n{(logisticsActive ? "▶" : "  ")}  Logistics";
+        }
+
+        private string NavigationAction() => CampaignRules.TankIsNext(Campaign.State) ? CampaignRules.TankStatus(Campaign.State)
+            : Campaign.State.phase == CampaignPhase.Preparing ? CampaignRules.PartyGateText(Campaign.State.partyGate, true)
+            : Campaign.State.phase == CampaignPhase.AwaitingParty ? CampaignRules.PartyGateText(Campaign.State.partyGate, false)
+            : ObjectiveAction(TrackedObjectiveId);
 
         private void UpdateNavigation(PlayerHealth owner)
         {
-            ResolveTracking(owner);
             var phase = Campaign.State.phase;
             if (!HudLayout.GameplayVisible || panel.gameObject.activeSelf || !owner.CanUseCombat
                 || phase is not (CampaignPhase.Exploring or CampaignPhase.Preparing or CampaignPhase.AwaitingParty))
             { marker.gameObject.SetActive(false); return; }
-            var item = phase == CampaignPhase.Exploring ? Campaign.Objective(TrackedObjectiveId) : null;
+            var item = phase == CampaignPhase.Exploring && !CampaignRules.TankIsNext(Campaign.State) ? Campaign.Objective(TrackedObjectiveId) : null;
             var volume = phase == CampaignPhase.Preparing ? Campaign.Current?.preparationArea : Campaign.Current?.boardingArea;
-            hasRouteTarget = phase == CampaignPhase.Exploring ? item != null : volume != null;
+            bool tankTarget = CampaignRules.TankIsNext(Campaign.State) && Campaign.State.tankStage == CampaignTankStage.Active;
+            hasRouteTarget = phase == CampaignPhase.Exploring ? item != null || tankTarget : volume != null;
             if (!hasRouteTarget) { marker.gameObject.SetActive(false); return; }
-            routeTarget = item != null ? item.Point : volume.bounds.center - Vector3.up * (volume.bounds.extents.y - .1f);
+            Vector3 tankPosition = default;
+            bool routeToTank = tankTarget && Campaign.TryGetTankTarget(out tankPosition);
+            if (routeToTank)
+                routeTarget = tankPosition;
+            else if (item != null) routeTarget = item.TargetPosition;
+            else if (volume != null) routeTarget = volume.bounds.center - Vector3.up * (volume.bounds.extents.y - .1f);
+            else { hasRouteTarget = false; marker.gameObject.SetActive(false); return; }
             if (Time.unscaledTime >= nextNavigationUpdate)
             {
                 nextNavigationUpdate = Time.unscaledTime + 1f;
@@ -199,8 +273,7 @@ namespace FPS
                 routeComputed = true;
             }
             var camera = owner.GetComponentInChildren<Camera>();
-            if (camera == null || item != null && item.InReach(owner, Campaign.settings.interactionRange)
-                || item == null && volume.bounds.Contains(owner.transform.position))
+            if (camera == null)
             { marker.gameObject.SetActive(false); return; }
             Vector3 point = routeTarget;
             bool corner = false;
@@ -214,35 +287,38 @@ namespace FPS
                 { point = routeCorners[nextRouteCorner] + Vector3.up * .65f; corner = true; }
             }
             float scale = canvas.scaleFactor;
+            float pulse = nextCueUntil > Time.unscaledTime ? 1f + .12f * Mathf.Sin(Time.unscaledTime * 18f) : 1f;
+            marker.localScale = Vector3.one * pulse;
             var bounds = Screen.safeArea;
-            float horizontalInset = (marker.rect.width * .5f + HudLayout.Margin) * scale;
+            float horizontalInset = (marker.rect.width * .5f * pulse + HudLayout.Margin) * scale;
             bounds.xMin += horizontalInset; bounds.xMax -= horizontalInset;
-            bounds.yMin += (marker.rect.height * .7f + HudLayout.Margin) * scale;
-            bounds.yMax -= (marker.rect.height * .5f + HudLayout.Margin) * scale;
+            bounds.yMin += (marker.rect.height * .7f * pulse + HudLayout.Margin) * scale;
+            bounds.yMax -= (marker.rect.height * .5f * pulse + HudLayout.Margin) * scale;
             if (bounds.width <= 0 || bounds.height <= 0) { marker.gameObject.SetActive(false); return; }
             var screenCenter = camera.pixelRect.center;
             var position = HudMarkerProjection.Project(camera, point, bounds, out bool edge);
             var bearing = position - screenCenter;
+            bool nearReticle = !edge && (position - screenCenter).sqrMagnitude < 48 * 48;
             var central = Screen.safeArea;
-            central.xMin += (HudLayout.Margin + HudLayout.VitalsWidth + 24) * scale;
-            central.xMax -= (HudLayout.Margin + HudLayout.CombatWidth + 24) * scale;
             central.yMin += HudLayout.SubtitleBottom * scale;
-            central.yMax = Screen.safeArea.yMin + (HudLayout.FeedbackBottom + HudLayout.FeedbackHeight) * scale;
+            feedback.rectTransform.GetWorldCorners(hudCorners);
+            central.xMin = hudCorners[0].x; central.xMax = hudCorners[2].x;
+            central.yMax = hudCorners[2].y;
             // Avoid the full distance-label rectangle, rather than only its marker anchor.
-            float labelHalfWidth = Mathf.Max(0, marker.rect.width * .5f - 60) * scale;
-            float labelDepth = Mathf.Max(0, marker.rect.height * .7f - 60) * scale;
+            float labelHalfWidth = Mathf.Max(0, marker.rect.width * .5f * pulse - 60) * scale;
+            float labelDepth = Mathf.Max(0, marker.rect.height * .7f * pulse - 60) * scale;
             central.xMin -= labelHalfWidth; central.xMax += labelHalfWidth;
             central.yMin -= labelDepth; central.yMax += labelDepth;
             var centralWithMargin = new Rect(central.xMin - 60 * scale, central.yMin - 60 * scale,
                 central.width + 120 * scale, central.height + 120 * scale);
-            if (edge || centralWithMargin.Contains(position))
+            if (!nearReticle && (edge || centralWithMargin.Contains(position)))
             {
                 var left = Screen.safeArea;
                 left.xMax = left.xMin + 400 * scale; left.yMax = left.yMin + 650 * scale;
                 var right = Screen.safeArea;
-                right.xMin = right.xMax - 470 * scale; right.yMax = right.yMin + 422 * scale;
-                var top = Screen.safeArea;
-                top.xMax = top.xMin + 500 * scale; top.yMin = top.yMax - 232 * scale;
+                right.xMin = right.xMax - (HudLayout.CombatWidth + 50) * scale; right.yMax = right.yMin + 650 * scale;
+                tracker.GetWorldCorners(hudCorners);
+                var top = Rect.MinMaxRect(hudCorners[0].x, hudCorners[0].y, hudCorners[2].x, hudCorners[2].y);
                 markerObstacles[0] = left; markerObstacles[1] = right; markerObstacles[2] = top;
                 markerObstacles[3] = central;
                 position = HudMarkerProjection.AvoidHud(position, bounds, markerObstacles, 60 * scale);
@@ -250,14 +326,15 @@ namespace FPS
             var root = (RectTransform)marker.parent;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(root, position, null, out var local);
             marker.anchoredPosition = local;
-            bool nearReticle = !edge && (position - screenCenter).sqrMagnitude < 48 * 48;
+            navigation.rectTransform.anchorMin = new Vector2(.025f, nearReticle ? .65f : -.20f);
+            navigation.rectTransform.anchorMax = new Vector2(.975f, nearReticle ? 1.2f : .35f);
             destinationIcon.gameObject.SetActive(!edge && !corner && !nearReticle);
-            routeIcon.gameObject.SetActive((edge || corner) && !nearReticle);
+            routeIcon.gameObject.SetActive((edge || corner || !routeComplete) && !nearReticle);
             routeIcon.localRotation = Quaternion.Euler(0, 0, Mathf.Atan2(bearing.y, bearing.x) * Mathf.Rad2Deg - 90);
-            string distance = routeComplete ? $"{Mathf.CeilToInt(routeDistance)}m ROUTE" : $"{Mathf.CeilToInt(Vector3.Distance(owner.transform.position, routeTarget))}m TO TARGET";
+            string distance = routeComplete ? $"{Mathf.CeilToInt(routeDistance)} m" : $"{Mathf.CeilToInt(Vector3.Distance(owner.transform.position, routeTarget))} m TO TARGET";
             float height = routeTarget.y - owner.transform.position.y;
             navigation.text = distance + (height >= 2.5f ? "\nHIGHER" : height <= -2.5f ? "\nLOWER" : "");
-            navigation.color = routeComplete ? TacticalUiTheme.Text : TacticalUiTheme.Muted;
+            navigation.color = routeComplete ? Theme.Text : Theme.Muted;
             marker.gameObject.SetActive(true);
         }
 

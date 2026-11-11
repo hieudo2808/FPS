@@ -26,6 +26,9 @@ namespace FPS
         public double equipCompleteTime;
         public ushort lastAcceptedFireSequence;
         public bool hasAcceptedFireSequence;
+        public WeaponStability stability;
+        public ushort resolvedFireSequence;
+        public bool hasResolvedFireSequence;
 
         public bool Equals(WeaponRuntimeSnapshot other)
         {
@@ -39,7 +42,10 @@ namespace FPS
                 && reloadTimeline.Equals(other.reloadTimeline)
                 && equipCompleteTime.Equals(other.equipCompleteTime)
                 && lastAcceptedFireSequence == other.lastAcceptedFireSequence
-                && hasAcceptedFireSequence == other.hasAcceptedFireSequence;
+                && hasAcceptedFireSequence == other.hasAcceptedFireSequence
+                && stability.Equals(other.stability)
+                && resolvedFireSequence == other.resolvedFireSequence
+                && hasResolvedFireSequence == other.hasResolvedFireSequence;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -55,6 +61,9 @@ namespace FPS
             serializer.SerializeValue(ref equipCompleteTime);
             serializer.SerializeValue(ref lastAcceptedFireSequence);
             serializer.SerializeValue(ref hasAcceptedFireSequence);
+            serializer.SerializeValue(ref stability);
+            serializer.SerializeValue(ref resolvedFireSequence);
+            serializer.SerializeValue(ref hasResolvedFireSequence);
         }
     }
 
@@ -102,9 +111,16 @@ namespace FPS
             };
         }
 
+        public void ValidateSchema()
+        {
+            if (schemaVersion != NetworkProtocol.SnapshotSchemaVersion)
+                throw new InvalidOperationException($"Unsupported player snapshot schema {schemaVersion}.");
+        }
+
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref schemaVersion);
+            ValidateSchema();
             serializer.SerializeValue(ref revision);
             serializer.SerializeValue(ref sessionPlayerId);
             serializer.SerializeValue(ref roleId);

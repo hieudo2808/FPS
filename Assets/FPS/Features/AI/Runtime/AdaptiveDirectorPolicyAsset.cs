@@ -13,7 +13,7 @@ namespace FPS
         [SerializeField] private float peakIntensityThreshold = 80f;
         [SerializeField, Range(0f, 1f)] private float weakestHealthFloor01 = 0.2f;
         [SerializeField] private float recentDownedGraceSeconds = 20f;
-        [SerializeField] private float specialCooldownSeconds = 15f;
+        [SerializeField] private float specialCooldownSeconds = 5f;
         [SerializeField] private float idleBuildUpDelay = 0.25f;
         [SerializeField] private float separationBuildUpDelay = 0.25f;
 

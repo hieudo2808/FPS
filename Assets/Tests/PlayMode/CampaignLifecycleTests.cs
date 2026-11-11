@@ -64,6 +64,27 @@ namespace FPS.Tests
         }
 
         [UnityTest]
+        public IEnumerator ObjectiveInteractablesRespectCampaignPrerequisites()
+        {
+            campaign.State.chapter = CampaignChapter.Factory;
+            campaign.State.phase = CampaignPhase.Exploring;
+            var objective = new GameObject("Locked campaign objective").AddComponent<CampaignInteractable>();
+            objective.objectiveId = CampaignObjectiveId.FactoryGenerator;
+            try
+            {
+                Assert.That(objective.CanInteract, Is.False);
+                campaign.State.completed = CampaignState.Bit(CampaignObjectiveId.FactoryIsolate)
+                    | CampaignState.Bit(CampaignObjectiveId.FactoryBackup);
+                Assert.That(objective.CanInteract, Is.True);
+            }
+            finally
+            {
+                Object.Destroy(objective.gameObject);
+            }
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator TankDespawnDoesNotCountAsKill_DeathUnlocksFactory()
         {
             campaign.State.phase = CampaignPhase.Exploring;
@@ -81,8 +102,8 @@ namespace FPS.Tests
             enemyRoot.SetActive(true);
             typeof(CampaignMissionController).GetField("campaignTank", Private).SetValue(campaign, health);
             campaign.State.tankStage = CampaignTankStage.Active;
-            health.OnDeathServer += (Action)Delegate.CreateDelegate(typeof(Action), campaign,
-                typeof(CampaignMissionController).GetMethod("OnCampaignTankKilled", Private));
+            var killed = typeof(CampaignMissionController).GetMethod("OnCampaignTankKilled", Private);
+            health.OnDeathServer += () => killed.Invoke(campaign, new object[] { health });
             health.TakeDamage(health.MaxHealth + 1);
             Assert.That(campaign.State.tankStage, Is.EqualTo(CampaignTankStage.Resolved));
             Assert.That(campaign.State.factoryTankDefeated, Is.True);

@@ -7,7 +7,8 @@ namespace FPS
     /// <summary>Event-driven compact quick-use HUD. Bind is safe to call repeatedly.</summary>
     public sealed class SurvivalHotbar : MonoBehaviour
     {
-        private readonly Image[] icons = new Image[4], selection = new Image[4], rings = new Image[4], empty = new Image[4];
+        private static SelectedUiTheme Theme => SelectedUiTheme.Current;
+        private readonly Image[] icons = new Image[4], selection = new Image[4], rings = new Image[4], empty = new Image[4], shades = new Image[4];
         private readonly TMP_Text[] counts = new TMP_Text[4], keys = new TMP_Text[4];
         private TMP_Text prompt, cycleHint;
         private SurvivalInventory inventory;
@@ -33,6 +34,12 @@ namespace FPS
         }
 
         private void MarkDirty() => dirty = true;
+        private void OnEnable() { HudSkin.PanelOpacityChanged += ApplyPanelOpacity; ApplyPanelOpacity(HudSkin.PanelOpacity); }
+        private void OnDisable() => HudSkin.PanelOpacityChanged -= ApplyPanelOpacity;
+        private void ApplyPanelOpacity(float opacity)
+        {
+            foreach (var shade in shades) HudSkin.SetPanelAlpha(shade, 1f, opacity);
+        }
         private void OnDestroy()
         {
             if (inventory != null) inventory.InventoryChanged -= MarkDirty;
@@ -50,8 +57,8 @@ namespace FPS
         private static TMP_Text Label(string name, Transform parent, Vector2 size, Vector2 position, int fontSize)
         {
             var text = Rect(name, parent, size, position).gameObject.AddComponent<TextMeshProUGUI>();
-            text.fontSize = fontSize; text.alignment = TextAlignmentOptions.Center;
-            text.color = TacticalUiTheme.Text; text.raycastTarget = false;
+            text.font = Theme.BodyFont; text.fontSize = Theme.Size(fontSize); text.alignment = TextAlignmentOptions.Center;
+            text.color = Theme.Text; text.raycastTarget = false;
             text.textWrappingMode = TextWrappingModes.NoWrap; text.overflowMode = TextOverflowModes.Ellipsis;
             return text;
         }
@@ -70,28 +77,29 @@ namespace FPS
             if (icons[0] != null) return;
             var catalog = SurvivalCatalog.Load();
             var root = (RectTransform)transform;
-            HudLayout.Corner(root, new Vector2(1, 0), new Vector2(-HudLayout.Margin, 216), new Vector2(420, 104));
+            HudLayout.Corner(root, new Vector2(1, 0), new Vector2(-56, 86), new Vector2(420, 80));
             string[] artwork = { "Frag", "Fire", "Medkit", "Antidote" };
             for (int i = 0; i < 4; i++)
             {
-                var slot = Rect(Names[i], root, new Vector2(98, 100), new Vector2(-159 + i * 106, 0));
-                HudSkin.Apply(Picture("Shade", slot, new Vector2(98, 100), Vector2.zero, Color.white), "Slot", Color.white);
-                selection[i] = Picture("Selected", slot, new Vector2(98, 100), Vector2.zero, HudSkin.Accent);
-                HudSkin.Apply(selection[i], "SlotSelected", HudSkin.Accent);
+                var slot = Rect(Names[i], root, new Vector2(80, 52), new Vector2(-158 + i * 100, 0));
+                shades[i] = Picture("Shade", slot, new Vector2(80, 52), Vector2.zero, Color.white);
+                HudSkin.Apply(shades[i], "Slot", Color.white);
+                selection[i] = Picture("Selected", slot, new Vector2(80, 52), Vector2.zero, Theme.Accent);
+                SelectedUiTheme.Surface(selection[i], Theme.Module); selection[i].color = Theme.Text;
                 selection[i].fillCenter = false;
-                icons[i] = Picture("Icon", slot, new Vector2(56, 56), new Vector2(-5, -3), Color.white);
-                icons[i].sprite = HudSkin.Get(artwork[i]);
+                icons[i] = Picture("Icon", slot, new Vector2(32, 32), new Vector2(-16, 0), Color.white);
+                icons[i].sprite = HudSkin.Get("Selected/" + artwork[i]);
                 icons[i].preserveAspect = true;
-                counts[i] = Label("Count", slot, new Vector2(32, 30), new Vector2(21, -23), 26);
+                counts[i] = Label("Count", slot, new Vector2(38, 28), new Vector2(18, 0), 18);
                 counts[i].fontStyle = FontStyles.Bold;
                 counts[i].gameObject.AddComponent<Outline>().effectDistance = new Vector2(1.5f, -1.5f);
-                keys[i] = Label("Key", slot, new Vector2(32, 28), new Vector2(21, 24), 24);
-                keys[i].alignment = TextAlignmentOptions.TopRight;
+                keys[i] = Label("Key", slot, new Vector2(80, 34), new Vector2(0, 40), 18);
+                keys[i].alignment = i < 2 ? TextAlignmentOptions.MidlineLeft : TextAlignmentOptions.Center;
                 keys[i].gameObject.AddComponent<Outline>().effectDistance = new Vector2(1f, -1f);
-                empty[i] = Picture("Unavailable", slot, new Vector2(48, 6), new Vector2(-5, -3), TacticalUiTheme.Muted);
-                HudSkin.Apply(empty[i], "Unavailable", TacticalUiTheme.Muted);
+                empty[i] = Picture("Unavailable", slot, new Vector2(48, 6), new Vector2(-5, -3), Theme.Muted);
+                HudSkin.Apply(empty[i], "Unavailable", Theme.Muted);
                 empty[i].rectTransform.localRotation = Quaternion.Euler(0, 0, 45);
-                rings[i] = Picture("Progress", slot, new Vector2(64, 64), new Vector2(-5, -3), HudSkin.Accent);
+                rings[i] = Picture("Progress", slot, new Vector2(44, 44), new Vector2(-16, 0), Theme.Accent);
                 rings[i].sprite = i >= 2 ? HudSkin.Get("FPSSample/GoalProgress") : catalog?.progressRing;
                 rings[i].type = Image.Type.Filled;
                 rings[i].fillMethod = Image.FillMethod.Radial360; rings[i].fillOrigin = (int)Image.Origin360.Top;
@@ -99,12 +107,13 @@ namespace FPS
                 rings[i].fillAmount = 0;
                 rings[i].transform.SetSiblingIndex(counts[i].transform.GetSiblingIndex());
             }
-            cycleHint = Label("SelectionDetail", root, new Vector2(420, 34), new Vector2(0, 77), 24);
-            prompt = Label("MedicalAction", root, new Vector2(420, 34), new Vector2(0, 113), 24);
+            cycleHint = Label("SelectionDetail", root, new Vector2(420, 34), new Vector2(-114, 40), 18);
+            prompt = Label("MedicalAction", root, new Vector2(420, 34), new Vector2(0, 80), 24);
             prompt.gameObject.AddComponent<Shadow>().effectDistance = new Vector2(1.5f, -1.5f);
             cycleHint.gameObject.AddComponent<Shadow>().effectDistance = new Vector2(1.5f, -1.5f);
             prompt.text = cycleHint.text = "";
             graphics = GetComponentsInChildren<Graphic>(true);
+            ApplyPanelOpacity(HudSkin.PanelOpacity);
         }
 
         private void Update()
@@ -125,7 +134,7 @@ namespace FPS
             if (dirty) RefreshPresentation();
             int active = inventory.ActiveConsumable == ConsumableKind.Medkit ? 2 : 3;
             for (int i = 2; i < 4; i++) rings[i].fillAmount = usingItem && i == active ? inventory.UseProgress : 0;
-            cycleHint.enabled = !HudLayout.SecondaryReduced && !usingItem && Time.unscaledTime < detailUntil;
+            cycleHint.enabled = !HudLayout.SecondaryReduced && !usingItem;
             prompt.enabled = usingItem && !HudLayout.SecondaryReduced;
         }
 
@@ -141,14 +150,15 @@ namespace FPS
             for (int i = 0; i < 4; i++)
             {
                 int count = inventory.Count((PickupType)((int)PickupType.FragGrenade + i));
-                counts[i].SetText("{0}", count);
-                icons[i].color = count > 0 ? Color.white : TacticalUiTheme.Muted;
+                counts[i].SetText("x{0}", count);
+                icons[i].color = count > 0 ? Theme.Text : Theme.Muted;
                 empty[i].gameObject.SetActive(count == 0);
                 bool selected = i < 2 ? throwable == i : usingItem && active == i;
                 selection[i].gameObject.SetActive(selected);
                 keys[i].text = i < 2 ? (selected ? Key("Grenade", "G") : "") : Key(i == 2 ? "Medkit" : "Antidote", i == 2 ? "4" : "5");
             }
-            cycleHint.text = Names[Mathf.Clamp(throwable, 0, 1)] + "  [" + Key("CycleGrenade", "3") + "] CYCLE";
+            cycleHint.text = "[" + Key("CycleGrenade", "3") + "] CYCLE";
+            cycleHint.rectTransform.sizeDelta = new Vector2(126, 34);
             prompt.text = usingItem ? (inventory.IsSelfUse ? "SELF: " : "ASSIST: ") + Names[active] : "";
         }
         public static string Key(string action, string fallback) => InputManager.Instance != null ? InputManager.Instance.GetPromptDisplayName(action) : fallback;

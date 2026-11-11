@@ -138,11 +138,17 @@ namespace FPS.Tests
             int oldDefault = SettingsManager.DefaultGraphicsQuality;
             bool hadQuality = PlayerPrefs.HasKey("GraphicsQuality");
             int oldPreference = PlayerPrefs.GetInt("GraphicsQuality");
-            string[] floatKeys = { "MouseSensitivity", "master", "music", "sfx" };
+            string[] floatKeys = { "MouseSensitivity", "master", "music", "sfx", HudSkin.PanelOpacityKey };
             bool[] hadFloat = Array.ConvertAll(floatKeys, PlayerPrefs.HasKey);
             float[] floatValues = Array.ConvertAll(floatKeys, key => PlayerPrefs.GetFloat(key));
             var previousSettings = SingletonField<SettingsManager>().GetValue(null);
             var previousAudio = SingletonField<AudioManager>().GetValue(null);
+            // PlayMode may have set these generic static flags before this EditMode
+            // fixture runs. A reflected instance alone cannot override the quit guard.
+            var settingsQuit = typeof(Singleton<SettingsManager>).GetField("applicationIsQuitting", StaticPrivate);
+            var audioQuit = typeof(Singleton<AudioManager>).GetField("applicationIsQuitting", StaticPrivate);
+            bool oldSettingsQuit = (bool)settingsQuit.GetValue(null);
+            bool oldAudioQuit = (bool)audioQuit.GetValue(null);
             var previousInput = InputManager.Instance;
             var cameras = Object.FindObjectsByType<Camera>(FindObjectsInactive.Include);
             var cameraFlags = Array.ConvertAll(cameras, c => (c.allowHDR, c.allowMSAA, c.allowDynamicResolution));
@@ -150,6 +156,8 @@ namespace FPS.Tests
             root.SetActive(false);
             try
             {
+                settingsQuit.SetValue(null, false);
+                audioQuit.SetValue(null, false);
                 QualitySettings.SetQualityLevel(defaultQuality, true);
                 typeof(SettingsManager).GetMethod("CaptureDefaultGraphicsQuality", StaticPrivate).Invoke(null, null);
                 var settings = root.AddComponent<SettingsManager>();
@@ -181,6 +189,8 @@ namespace FPS.Tests
                 Object.DestroyImmediate(root);
                 SingletonField<SettingsManager>().SetValue(null, previousSettings);
                 SingletonField<AudioManager>().SetValue(null, previousAudio);
+                settingsQuit.SetValue(null, oldSettingsQuit);
+                audioQuit.SetValue(null, oldAudioQuit);
                 typeof(InputManager).GetProperty("Instance").SetValue(null, previousInput);
                 typeof(SettingsManager).GetProperty("DefaultGraphicsQuality").SetValue(null, oldDefault);
                 QualitySettings.SetQualityLevel(oldQuality, true);

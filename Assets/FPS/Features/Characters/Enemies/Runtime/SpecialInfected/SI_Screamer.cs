@@ -51,6 +51,11 @@ namespace FPS
         public bool IsScreaming => isScreaming;
         public bool IsAbilityReady => abilityReady;
         public ScreamerState CurrentScreamerState => screamerState;
+        public override bool TryGetPressureThreat(out Transform target)
+        {
+            target = null;
+            return false; // Screams affect pacing through crescendo and summoned enemies.
+        }
 
         protected override bool UsesGenericServerBrain => false;
         protected override bool AutoTriggerPrimaryAbility => false;

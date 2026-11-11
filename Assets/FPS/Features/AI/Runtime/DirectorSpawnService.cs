@@ -250,6 +250,14 @@ namespace FPS
         {
             if (!HasCompletePath(position, target)) return false;
             float radius = tank ? .9f : .5f, height = tank ? 2.8f : 2f;
+            // The path runs on a NavMesh baked for a narrower agent, so it legitimately hugs walls at that agent's
+            // radius. Sweeping the full Tank width along it rejects every route with a corner or gateway; the Tank
+            // itself follows these paths. Keep its full height for headroom, and its full body at the spawn spot.
+            var navigation = NavMesh.GetSettingsByIndex(0);
+            float corridor = tank ? Mathf.Min(radius, navigation.agentRadius - .05f) : radius;
+            // Stairs: corners sit at the foot and head of a flight, so a straight line between them cuts through
+            // the treads. Follow the walkable surface and ignore anything the agent is allowed to step over.
+            float clearance = tank ? navigation.agentClimb : .08f;
             var corners = reusablePath.corners;
             for (int segment = 1; segment < corners.Length; segment++)
             {
@@ -260,7 +268,9 @@ namespace FPS
                     Vector3 point = Vector3.Lerp(a, b, (float)step / steps);
                     // Stop outside the target's own body; the attack closes this gap.
                     if (Vector3.Distance(point, target) < radius + 1.5f) continue;
-                    if (!CapsuleClear(point, radius, height)) return false;
+                    if (tank && NavMesh.SamplePosition(point, out var surface, 1f, NavMesh.AllAreas)) point = surface.position;
+                    if (Physics.CheckCapsule(point + Vector3.up * (corridor + clearance), point + Vector3.up * (height - corridor + .08f),
+                            corridor, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) return false;
                 }
             }
             return true;
@@ -284,18 +294,95 @@ namespace FPS
             return true;
         }
 
-        public bool TryGetCampaignTankPosition(out Vector3 position)
+        private readonly List<(DirectorSpawnAnchor anchor, float distance)> tankAnchorOrder = new(72);
+        private const float RelaxedTankMinimumDistance = 10f;
+        private static readonly float[] RelaxedTankRings = { 30f, 22f, 15f, RelaxedTankMinimumDistance };
+
+        /// <summary>Physical validity only: room for the Tank body and a walkable route to a living operator.</summary>
+        public bool IsRelaxedTankPositionValid(Vector3 position)
+        {
+            var campaign = CampaignMissionController.Instance;
+            if (campaign == null || !CapsuleClear(position, .9f, 2.8f)) return false;
+            bool route = false;
+            foreach (var player in campaign.Players)
+            {
+                if (player.LifeState != PlayerLifeState.Alive || !player.IsInputReady) continue;
+                if (Vector3.Distance(position, player.transform.position) < RelaxedTankMinimumDistance - .5f) return false;
+                route |= HasCampaignSpecialRoute(position, player.transform.position, true);
+            }
+            return route;
+        }
+
+        // Used only after the strict search has failed for a full timeout. Tries authored anchors first, then
+        // rings around each living operator, preferring a spot nobody can see.
+        private bool TryGetRelaxedTankPosition(out Vector3 position)
         {
             position = default;
-            // This is also allowed during Asylum preparation, where the ordinary Director is suppressed.
+            var campaign = CampaignMissionController.Instance;
+            if (campaign == null) return false;
+            bool found = false;
             foreach (var anchor in anchors)
+                if (anchor != null && anchor.isActiveAndEnabled && campaign.AllowsAnchor(anchor)
+                    && ConsiderRelaxedTankPosition(campaign, anchor.SpawnPosition, ref position, ref found)) return true;
+            foreach (var player in campaign.Players)
             {
-                if (anchor == null || !anchor.isActiveAndEnabled || !IsAnchorValid(anchor)) continue;
-                if (!NavMesh.SamplePosition(anchor.SpawnPosition, out var hit, .5f, NavMesh.AllAreas)
-                    || !HasTankArenaClearance(hit.position) || !ValidateCampaignSpecialPosition(hit.position, true)) continue;
-                position = hit.position;
-                return true;
+                if (player.LifeState != PlayerLifeState.Alive || !player.IsInputReady) continue;
+                foreach (float ring in RelaxedTankRings)
+                    for (int step = 0; step < 12; step++)
+                    {
+                        Vector3 offset = Quaternion.Euler(0, step * 30f, 0) * Vector3.forward * ring;
+                        if (ConsiderRelaxedTankPosition(campaign, player.transform.position + offset, ref position, ref found)) return true;
+                    }
             }
+            return found;
+        }
+
+        // Returns true for an unseen valid spot (search ends); the first seen valid spot is kept as the fallback result.
+        private bool ConsiderRelaxedTankPosition(CampaignMissionController campaign, Vector3 candidate, ref Vector3 result, ref bool found)
+        {
+            if (!NavMesh.SamplePosition(candidate, out var hit, navMeshSampleRadius, NavMesh.AllAreas)
+                || Mathf.Abs(hit.position.y - candidate.y) > 1.5f || !IsRelaxedTankPositionValid(hit.position)) return false;
+            foreach (var player in campaign.Players)
+                if (player.LifeState == PlayerLifeState.Alive && HasPhysicalLineOfSight(player.transform.position, hit.position))
+                {
+                    if (!found) { result = hit.position; found = true; }
+                    return false;
+                }
+            result = hit.position; found = true;
+            return true;
+        }
+
+        public bool TryGetCampaignTankPosition(out Vector3 position, bool fallback = false, bool relaxed = false)
+        {
+            position = default;
+            if (relaxed) return TryGetRelaxedTankPosition(out position);
+            // This is also allowed during Asylum preparation, where the ordinary Director is suppressed.
+            // Anchors authored for specials are the intended staging spots, so they are tried before the general ones.
+            // Within each group the nearest valid anchor wins; the fallback order tries the farthest first instead.
+            var campaign = CampaignMissionController.Instance;
+            tankAnchorOrder.Clear();
+            foreach (var candidate in anchors)
+            {
+                if (candidate == null) continue;
+                float nearest = float.MaxValue;
+                if (campaign != null)
+                    foreach (var player in campaign.Players)
+                        if (player.LifeState == PlayerLifeState.Alive)
+                            nearest = Mathf.Min(nearest, (player.transform.position - candidate.SpawnPosition).sqrMagnitude);
+                tankAnchorOrder.Add((candidate, nearest));
+            }
+            tankAnchorOrder.Sort((left, right) => left.distance.CompareTo(right.distance));
+            for (int pass = 0; pass < 2; pass++)
+                for (int i = 0; i < tankAnchorOrder.Count; i++)
+                {
+                    var anchor = tankAnchorOrder[fallback ? tankAnchorOrder.Count - 1 - i : i].anchor;
+                    if (!anchor.isActiveAndEnabled
+                        || ((anchor.AnchorTypes & DirectorSpawnAnchorType.Special) != 0) != (pass == 0) || !IsAnchorValid(anchor)) continue;
+                    if (!NavMesh.SamplePosition(anchor.SpawnPosition, out var hit, .5f, NavMesh.AllAreas)
+                        || !HasTankArenaClearance(hit.position) || !ValidateCampaignSpecialPosition(hit.position, true)) continue;
+                    position = hit.position;
+                    return true;
+                }
             return false;
         }
 

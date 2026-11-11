@@ -148,10 +148,15 @@ namespace FPS
             if (at >= 0) { secondary = SplitChoices(tail.Substring(at + 12)); tail = tail.Substring(0, at); }
             at = tail.IndexOf(" Choices: ", StringComparison.Ordinal);
             if (at >= 0) { choices = SplitChoices(tail.Substring(at + 10)); tail = tail.Substring(0, at); }
+            string hint2 = "", hint3 = "";
+            at = tail.IndexOf(" Hint3: ", StringComparison.Ordinal);
+            if (at >= 0) { hint3 = tail.Substring(at + 8); tail = tail.Substring(0, at); }
+            at = tail.IndexOf(" Hint2: ", StringComparison.Ordinal);
+            if (at >= 0) { hint2 = tail.Substring(at + 8); tail = tail.Substring(0, at); }
             return new CampaignObjectiveDefinition
             {
                 id = (CampaignObjectiveId)byte.Parse(match.Groups[1].Value), title = match.Groups[2].Value,
-                instructions = match.Groups[3].Value, hint = tail, choices = choices, secondaryChoices = secondary
+                instructions = match.Groups[3].Value, hint = tail, hint2 = hint2, hint3 = hint3, choices = choices, secondaryChoices = secondary
             };
         }
 
@@ -186,6 +191,7 @@ namespace FPS
             {
                 var target = catalog.FindObjective(objective.id);
                 target.title = objective.title; target.instructions = objective.instructions; target.hint = objective.hint;
+                target.hint2 = objective.hint2; target.hint3 = objective.hint3;
                 target.choices = objective.choices; target.secondaryChoices = objective.secondaryChoices;
             }
             foreach (var line in parsed.dialogue)

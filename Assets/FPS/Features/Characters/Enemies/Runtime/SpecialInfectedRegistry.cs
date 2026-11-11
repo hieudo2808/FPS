@@ -158,6 +158,7 @@ namespace FPS
 
         public bool CanSpawnSpecial(GamePhase phase = GamePhase.PEAK)
         {
+            if (AdaptiveGateClosed()) return false;
             if (phase != GamePhase.PEAK)
                 return false;
             if (Time.time - lastSpecialSpawnTime < minTimeBetweenSpecials)
@@ -245,6 +246,7 @@ namespace FPS
 
         public GameObject SpawnSpecial(Vector3 position, GamePhase phase = GamePhase.PEAK)
         {
+            if (AdaptiveGateClosed() || !CanSpawnSpecial(phase)) return null;
             if (phase != GamePhase.PEAK)
                 return null;
 
@@ -264,6 +266,13 @@ namespace FPS
             return SpawnRegisteredSpecial(data, position);
         }
 
+        private static bool AdaptiveGateClosed()
+        {
+            var director = AIDirector.Instance;
+            return director != null && director.AdaptiveDirectorEnabled && !director.AdaptiveObserveOnly
+                && !director.AdaptiveSpecialGateOpen;
+        }
+
         public bool HasLivingSpecial
         {
             get
@@ -275,14 +284,18 @@ namespace FPS
             }
         }
 
-        public GameObject TrySpawnCampaignTank(Vector3 position)
+        public GameObject TrySpawnCampaignTank(Vector3 position, bool relaxed = false)
         {
+            // Authored story beats bypass optional budgets and first respect protection and other specials.
+            // Once the caller escalates to relaxed, only physical validity remains: the beat is mandatory.
+            if (!relaxed && AIDirector.Instance != null && AIDirector.Instance.AdaptiveSpawningBlocked) return null;
             var campaign = CampaignMissionController.Instance;
             if (campaign == null || !campaign.IsSpawned || !campaign.IsServer || campaign.ActivePlayerCount == 0
                 || campaign.State.phase is CampaignPhase.Insertion or CampaignPhase.Transitioning or CampaignPhase.Completed or CampaignPhase.Failed
-                || campaign.State.tankStage != CampaignTankStage.Pending || HasLivingSpecial
-                || DirectorSpawnService.Instance == null || !DirectorSpawnService.HasTankArenaClearance(position)
-                || !DirectorSpawnService.Instance.ValidateCampaignSpecialPosition(position, true)) return null;
+                || campaign.State.tankStage != CampaignTankStage.Pending || DirectorSpawnService.Instance == null) return null;
+            if (relaxed ? !DirectorSpawnService.Instance.IsRelaxedTankPositionValid(position)
+                : HasLivingSpecial || !DirectorSpawnService.HasTankArenaClearance(position)
+                    || !DirectorSpawnService.Instance.ValidateCampaignSpecialPosition(position, true)) return null;
             var data = specialTypes.Find(entry => entry != null && entry.type == SpecialType.Tank && IsPlayableSpecial(entry));
             if (data == null || data.prefab.GetComponent<NetworkObject>() == null || data.prefab.GetComponent<EnemyHealth>() == null) return null;
             // Story encounters intentionally bypass random weight, peak budget and optional-health cooldown rules.

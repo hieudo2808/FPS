@@ -222,6 +222,58 @@ namespace FPS.Tests
             Assert.That(((AnimationClip)inspect.motion).length / inspect.speed, Is.EqualTo(7f).Within(.0001f));
         }
 
+        [TestCase("Clove")]
+        [TestCase("Brimstone")]
+        [TestCase("Gekko")]
+        [TestCase("Sage")]
+        public void GrenadeThrowMovesRightHandOverEquippedWarden(string character)
+        {
+            var root = PrefabUtility.LoadPrefabContents(
+                $"Assets/FPS/Features/Characters/Content/Players/{character}/{character}Player.prefab");
+            try
+            {
+                root.GetComponent<PlayerVisibilityController>().SetupVisibility(true);
+                var animator = root.GetComponent<WeaponManager>().FirstPersonArmsAnimator;
+                var hand = animator.transform.Find("Skeleton/Root/R_Clavicle/R_Shoulder/R_Elbow/R_Hand");
+                animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                animator.Rebind();
+                int warden = animator.GetLayerIndex("Warden");
+                int grenade = animator.GetLayerIndex(GrenadeThrowDefinition.LayerName);
+                Assert.That(warden, Is.GreaterThan(0));
+                Assert.That(grenade, Is.GreaterThan(0));
+                for (int i = 1; i < animator.layerCount; i++) animator.SetLayerWeight(i, 0);
+                animator.SetInteger("ActiveWeaponLayer", warden);
+                animator.SetLayerWeight(warden, 1);
+                animator.SetLayerWeight(grenade, 1);
+                animator.Play("Warden.Idle", warden, 0);
+                animator.Play("Grenade Throw.Throw", grenade, .1f);
+                animator.Update(0);
+                Quaternion windup = hand.localRotation;
+                animator.Play("Grenade Throw.Throw", grenade, .45f);
+                animator.Update(0);
+                Assert.That(Quaternion.Angle(windup, hand.localRotation), Is.GreaterThan(10),
+                    "equipped Warden must not overwrite the throwing hand");
+                var camera = root.GetComponent<MouseMovement>().WeaponCam;
+                Vector3 viewport = camera.WorldToViewportPoint(hand.position);
+                Assert.That(viewport.z, Is.GreaterThan(camera.nearClipPlane));
+                Assert.That(viewport.x, Is.InRange(0f, 1f));
+                Assert.That(viewport.y, Is.InRange(0f, 1f));
+                animator.SetLayerWeight(grenade, 0);
+                foreach (string action in new[] { "Fire", "Reload", "Inspect" })
+                {
+                    animator.Play("Warden.Idle", warden, 0);
+                    animator.Update(0);
+                    animator.SetTrigger(action);
+                    animator.Update(0);
+                    animator.Update(.1f);
+                    Assert.That(animator.GetCurrentAnimatorStateInfo(warden).IsName("Warden." + action)
+                        || animator.GetNextAnimatorStateInfo(warden).IsName("Warden." + action), Is.True, action);
+                    animator.ResetTrigger(action);
+                }
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+        }
+
         private static WeaponData NewData()
         {
             var data = ScriptableObject.CreateInstance<WeaponData>();

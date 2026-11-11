@@ -8,6 +8,7 @@ namespace FPS
     public class PlayerHealth : NetworkBehaviour, IAttributedDamageable
     {
         public static event System.Action<PlayerHealth, ulong> PlayerDiedServer;
+        public static PlayerHealth LocalInstance { get; private set; }
         public static event System.Action<PlayerHealth> PlayerSpawnedServer;
         public static event System.Action<PlayerHealth> PlayerDespawnedServer;
 
@@ -118,6 +119,7 @@ namespace FPS
         public void RestoreCampaignSnapshot(PlayerRuntimeSnapshot snapshot)
         {
             if (!IsServer) return;
+            snapshot.ValidateSchema();
             campaignTransferPending = false;
             preparedSnapshot = snapshot;
             preparedAsReconnect = true;
@@ -163,6 +165,9 @@ namespace FPS
             networkInputReady.OnValueChanged += OnInputReadyChanged;
             RefreshCombatAvailability(raiseInitialEvent: false);
 
+            if (IsOwner) LocalInstance = this;
+            HudSignals.NotifySourcesChanged();
+
             // Initial UI update
             HealthChangedEvent?.Invoke(networkHealth.Value, maxHealth);
 
@@ -172,6 +177,12 @@ namespace FPS
 
         public override void OnNetworkDespawn()
         {
+            if (LocalInstance == this)
+            {
+                LocalInstance = null;
+                UiStateStack.Clear();
+                HudSignals.NotifySourcesChanged();
+            }
             CombatFeedbackReset?.Invoke();
             networkHealth.OnValueChanged -= OnHealthValueChanged;
             networkIsDead.OnValueChanged -= OnDeadValueChanged;
@@ -208,6 +219,7 @@ namespace FPS
                 return;
 
             CampaignMissionController.Instance?.RegisterTeamDowned(this);
+            NetworkGameManager.Instance?.NotifyDirectorDown(this);
 
             NetworkGameManager.Instance?.Telemetry?.RecordDowned(
                 StablePlayerId,
@@ -262,13 +274,16 @@ namespace FPS
                 return;
             }
 
-            networkHealth.Value = Mathf.Max(0, networkHealth.Value - Mathf.Max(0f, damage));
+            float previousHealth = networkHealth.Value;
+            networkHealth.Value = Mathf.Max(0, previousHealth - damage);
+            float actualDamage = previousHealth - networkHealth.Value;
+            NetworkGameManager.Instance?.NotifyDirectorDamage(this, actualDamage);
 
             NetworkGameManager.Instance?.Telemetry?.RecordHealth(
                 StablePlayerId,
                 NetworkManager != null && NetworkManager.IsListening ? NetworkManager.ServerTime.Tick : 0,
                 networkHealth.Value,
-                damage);
+                actualDamage);
 
             GameLog.Info(() => $"Player took {damage} damage. HP: {networkHealth.Value}/{maxHealth}");
 
@@ -348,6 +363,7 @@ namespace FPS
 
         public void PrepareReconnect(PlayerRuntimeSnapshot snapshot)
         {
+            snapshot.ValidateSchema();
             preparedSnapshot = snapshot;
             hasPreparedSnapshot = true;
             preparedAsReconnect = true;
@@ -404,6 +420,7 @@ namespace FPS
 
         private void ApplyPreparedSnapshotServer()
         {
+            preparedSnapshot.ValidateSchema();
             GetComponent<SurvivalInventory>()?.RestoreServer(preparedSnapshot);
             networkSessionPlayerId.Value = preparedSnapshot.sessionPlayerId;
             networkHealth.Value = Mathf.Clamp(preparedSnapshot.health, 0f, maxHealth);
@@ -444,6 +461,7 @@ namespace FPS
         [ClientRpc]
         private void BeginReconnectRestoreClientRpc(PlayerRuntimeSnapshot snapshot, ClientRpcParams rpcParams = default)
         {
+            snapshot.ValidateSchema();
             CombatFeedbackReset?.Invoke();
             ApplyRespawnPose(snapshot.position, snapshot.rotation);
             WeaponRuntimeSnapshot weaponSnapshot = snapshot.equippedWeaponSlot == 1
@@ -462,7 +480,10 @@ namespace FPS
                 equipCompleteTime = weaponSnapshot.equipCompleteTime,
                 acknowledgedFireSequence = weaponSnapshot.lastAcceptedFireSequence,
                 lastFireResult = FireRejectReason.None,
-                authoritativeShotTick = snapshot.serverTick
+                authoritativeShotTick = snapshot.serverTick,
+                stability = weaponSnapshot.stability,
+                resolvedFireSequence = weaponSnapshot.resolvedFireSequence,
+                hasResolvedFireSequence = weaponSnapshot.hasResolvedFireSequence
             });
             if (IsSpawned && NetworkManager != null && NetworkManager.IsListening)
             {

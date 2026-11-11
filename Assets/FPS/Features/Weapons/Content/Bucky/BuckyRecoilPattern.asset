@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3215e8370a783e469d986faabf04bf0, type: 3}
+  m_Name: BuckyRecoilPattern
+  m_EditorClassIdentifier: FPS::FPS.RecoilPattern
+  useStabilityCurves: 1
+  pitchEnvelope:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  yawEnvelope:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  firingError:
+  - time: 0
+    value: 3
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  recoveryTime:
+  - time: 0
+    value: 0.01
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  walkingError:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 0
+  - time: 0.275
+    value: 1
+    inTangent: 0
+    outTangent: 0
+    mode: 0
+  - time: 0.61
+    value: 2
+    inTangent: 3.6288788
+    outTangent: 0
+    mode: 0
+  runningError:
+  - time: 0.67
+    value: 2
+    inTangent: 3.6288788
+    outTangent: 0
+    mode: 0
+  jumpingError:
+  - time: 0
+    value: 4
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  sprintRecoilMultiplier: {x: 1, y: 1}
+  adsRecoilMultiplier: {x: 1, y: 1}
+  aimedFiringError: []
+  cameraPopPitchCurve:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 0.01
+    value: 2.75
+    inTangent: -0.0013172637
+    outTangent: -0.0013172657
+    mode: 2
+  - time: 0.25
+    value: 0
+    inTangent: -22.122484
+    outTangent: -22.122763
+    mode: 2
+  cameraPopYawCurve:
+  - time: 0
+    value: 0
+    inTangent: 0
+    outTangent: 0
+    mode: 1
+  - time: 0.01
+    value: 0.4
+    inTangent: -0.0013172637
+    outTangent: -0.0013172657
+    mode: 2
+  - time: 0.25
+    value: 0
+    inTangent: -2.949155
+    outTangent: -2.9492536
+    mode: 2
+  cameraPopScale: {x: 1, y: 1}
+  cameraRecoilFollow: {x: 0, y: 0}
+  adsCameraRecoilFollow: {x: 1, y: 1}
+  hipPitchCameraFollow: []
+  protectedShots: 0
+  yawSwitchDuration: 0.6
+  yawSwitchChance: 0
+  tapEfficiency: 1
+  adsErrorMultiplier: 1
+  adsErrorAddend: 0
+  cameraPop: 0.15
+  shots: []
+  snappiness: 20
+  returnSpeed: 5
+  resetCooldown: 0.25
+  pitchJitter: 0.12
+  yawJitter: 0.25
+  sustainedPitch: 0.6
+  sustainedYaw: 1.5
+  sustainedDirectionHoldShots: 3
+  variationSeed: 1337

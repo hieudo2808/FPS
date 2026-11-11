@@ -145,6 +145,7 @@ namespace FPS
 
         public bool Reserve(ulong clientId, PlayerRuntimeSnapshot snapshot, double expiresAt)
         {
+            if (snapshot.schemaVersion != NetworkProtocol.SnapshotSchemaVersion) return false;
             if (!byClientId.TryGetValue(clientId, out PlayerSessionRecord record))
                 return false;
 
@@ -160,6 +161,7 @@ namespace FPS
             PlayerRuntimeSnapshot snapshot,
             double expiresAt)
         {
+            if (snapshot.schemaVersion != NetworkProtocol.SnapshotSchemaVersion) return false;
             if (!stableId.IsValid
                 || !byStableId.TryGetValue(stableId.Value, out PlayerSessionRecord record)
                 || record.IsConnected)
@@ -223,7 +225,7 @@ namespace FPS
 
         private void StoreSnapshot(PlayerSessionRecord record, PlayerRuntimeSnapshot snapshot)
         {
-            snapshot.schemaVersion = NetworkProtocol.SnapshotSchemaVersion;
+            snapshot.ValidateSchema();
             snapshot.revision = ++snapshotRevision;
             snapshot.sessionPlayerId = record.PlayerId;
             record.Snapshot = snapshot;

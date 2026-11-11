@@ -58,10 +58,16 @@ namespace FPS.UI.Editor
             Debug.Log("HUD review local host is ready in GameScene.");
         }
 
+        [MenuItem("Tools/FPS/UI/HUD Review/Resolution/1024x768")]
+        public static void Resolution4By3() => SetResolution(1024, 768);
+        [MenuItem("Tools/FPS/UI/HUD Review/Resolution/2560x1080")]
+        public static void ResolutionWide1080() => SetResolution(2560, 1080);
         [MenuItem("Tools/FPS/UI/HUD Review/Resolution/1280x720")]
         public static void Resolution720() => SetResolution(1280, 720);
         [MenuItem("Tools/FPS/UI/HUD Review/Resolution/1920x1080")]
         public static void Resolution1080() => SetResolution(1920, 1080);
+        [MenuItem("Tools/FPS/UI/HUD Review/Resolution/3840x2160")]
+        public static void Resolution4K() => SetResolution(3840, 2160);
         [MenuItem("Tools/FPS/UI/HUD Review/Resolution/3440x1440")]
         public static void ResolutionUltrawide() => SetResolution(3440, 1440);
 
@@ -108,6 +114,77 @@ namespace FPS.UI.Editor
             if (!TeamInventoryUI.IsOpen) TeamInventoryUI.Instance.Toggle();
             var button = TeamInventoryUI.Instance.GetComponentsInChildren<Button>(true).First(b => b.name == "MissionsTab");
             button.onClick.Invoke();
+        }
+
+        [MenuItem("Tools/FPS/UI/HUD Review/Open Files")]
+        public static void OpenFiles()
+        {
+            if (!TeamInventoryUI.IsOpen) TeamInventoryUI.Instance.Toggle();
+            var button = TeamInventoryUI.Instance.GetComponentsInChildren<Button>(true).First(b => b.name == "FilesTab");
+            button.onClick.Invoke();
+        }
+
+        [MenuItem("Tools/FPS/UI/HUD Review/Open Campaign Record")]
+        public static void OpenCampaignRecord()
+        {
+            if (!EditorApplication.isPlaying || TeamInventoryUI.Instance == null || CampaignMissionController.Instance == null)
+                throw new System.InvalidOperationException("Campaign Record requires a running campaign.");
+            TeamInventoryUI.Instance.OpenCampaignRecord();
+        }
+
+        [MenuItem("Tools/FPS/UI/HUD Review/Preview Device/Isolate")]
+        public static void PreviewIsolate() => PreviewDevice(CampaignObjectiveId.FactoryIsolate);
+
+        [MenuItem("Tools/FPS/UI/HUD Review/Preview Device/Backup")]
+        public static void PreviewBackup() => PreviewDevice(CampaignObjectiveId.FactoryBackup);
+
+        [MenuItem("Tools/FPS/UI/HUD Review/Preview Device/Manifest Without Recording")]
+        public static void PreviewManifestWithoutRecording()
+        {
+            if (!EditorApplication.isPlaying || CampaignHUD.Instance == null)
+                throw new System.InvalidOperationException("Device preview requires a running campaign.");
+            var item = Object.FindObjectsByType<CampaignInteractable>(FindObjectsInactive.Include)
+                .FirstOrDefault(candidate => candidate.objectiveId == CampaignObjectiveId.FactoryManifest);
+            if (item == null) throw new System.InvalidOperationException("Manifest device not found.");
+            var hud = CampaignHUD.Instance;
+            const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+            hud.CloseDocument();
+            typeof(CampaignHUD).GetField("focused", flags).SetValue(hud, item);
+            typeof(CampaignHUD).GetMethod("SetDeviceLayout", flags).Invoke(hud, new object[] { true });
+            typeof(CampaignHUD).GetMethod("ShowDocument", flags).Invoke(hud, null);
+            typeof(CampaignHUD).GetMethod("RenderDocument", flags).Invoke(hud, null);
+        }
+
+        private static void PreviewDevice(CampaignObjectiveId objective)
+        {
+            if (!EditorApplication.isPlaying || CampaignHUD.Instance == null)
+                throw new System.InvalidOperationException("Device preview requires a running campaign.");
+            var item = Object.FindObjectsByType<CampaignInteractable>(FindObjectsInactive.Include)
+                .FirstOrDefault(candidate => candidate.objectiveId == objective);
+            if (item == null) throw new System.InvalidOperationException("Device not found: " + objective);
+            CampaignHUD.Instance.CloseDocument();
+            CampaignHUD.Instance.Open(item);
+        }
+
+        [MenuItem("Tools/FPS/UI/HUD Review/Preview Debrief/Complete")]
+        public static void PreviewDebriefComplete() => PreviewDebrief(false);
+
+        [MenuItem("Tools/FPS/UI/HUD Review/Preview Debrief/Failed")]
+        public static void PreviewDebriefFailed() => PreviewDebrief(true);
+
+        private static void PreviewDebrief(bool failed)
+        {
+            if (!EditorApplication.isPlaying || CampaignStatusUI.Instance == null)
+                throw new System.InvalidOperationException("Debrief preview requires a running campaign.");
+            var status = CampaignStatusUI.Instance;
+            const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+            T Field<T>(string name) => (T)typeof(CampaignStatusUI).GetField(name, flags).GetValue(status);
+            Field<Canvas>("canvas").enabled = true;
+            Field<GameObject>("debriefPanel").SetActive(true);
+            var summary = new CampaignRunSummary { result = failed ? CampaignPhase.Failed : CampaignPhase.Completed,
+                durationSeconds = 36, survivors = 1, rosterSize = 1, optionalFilesTotal = 12 };
+            typeof(CampaignStatusUI).GetMethod("RenderSummary", flags).Invoke(status, new object[] { summary, 12 });
+            Field<Button>("retryButton").gameObject.SetActive(failed);
         }
 
         [MenuItem("Tools/FPS/UI/HUD Review/Capture Layout Matrix")]
@@ -185,6 +262,16 @@ namespace FPS.UI.Editor
                     if (string.CompareOrdinal(a.Key, b.Key) < 0 && a.Value.Overlaps(b.Value)) lines.Add($"OVERLAP: {a.Key} / {b.Key}");
             File.WriteAllLines(path + ".txt", lines);
             Debug.Log("HUD gameplay capture queued: " + path);
+        }
+
+        [MenuItem("Tools/FPS/UI/HUD Review/Capture To Reports")]
+        public static void CaptureToReports()
+        {
+            if (!EditorApplication.isPlaying) throw new System.InvalidOperationException("Gameplay evidence requires Play Mode.");
+            string phase = TeamInventoryUI.IsOpen ? "inventory" : CampaignHUD.IsDocumentOpen ? "document" : CampaignMissionController.Instance?.State.phase.ToString() ?? "unbound";
+            string directory = "Reports/UIUX/MockupImplementation/After";
+            Directory.CreateDirectory(directory);
+            ScreenCapture.CaptureScreenshot($"{directory}/{phase}-{Screen.width}x{Screen.height}-{System.DateTime.UtcNow:yyyyMMdd-HHmmss-fff}.png");
         }
     }
 }
