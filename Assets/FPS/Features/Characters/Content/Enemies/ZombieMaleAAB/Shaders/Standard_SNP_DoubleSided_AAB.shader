@@ -216,6 +216,7 @@ Shader "Standard_SNP_DoubleSided_AAB"
 	{
 		Tags { "RenderType"="Opaque" "PerformanceChecks"="False" }
 		LOD 150
+		Cull Off
 
 		// ------------------------------------------------------------------
 		//  Base forward pass (directional light, emission, lightmaps, ...)

@@ -1,0 +1,21 @@
+{
+  "status": "success",
+  "result": {
+    "count": 2,
+    "logs": [
+      {
+        "type": "Log",
+        "message": "SKY_PROBE Hangar_v2_6 at (-9.08, 1.63, -36.18) cells=68 ambientUp=0.2114\nUnityEngine.Debug:Log (object)\nFPS.FactoryInteriorLighting:Diagnose () (at Assets/FPS/Features/Missions/Editor/FactoryInteriorLighting.cs:450)\nUnityEditor.EditorApplication:ExecuteMenuItem (string)\nUnitySkills.EditorSkills:EditorExecuteMenu (string) (at ./Library/PackageCache/com.besty.unity-skills@64b084805acc/Editor/Skills/EditorSkills.cs:380)\nSystem.Reflection.MethodBase:Invoke (object,object[])\nUnitySkills.SkillRouter:E...",
+        "file": "Assets/FPS/Features/Missions/Editor/FactoryInteriorLighting.cs",
+        "line": 450
+      },
+      {
+        "type": "Log",
+        "message": "SKY_PROBE Hangar_v2_6 at (106.08, 0.57, -7.46) cells=59 ambientUp=0.3969\nUnityEngine.Debug:Log (object)\nFPS.FactoryInteriorLighting:Diagnose () (at Assets/FPS/Features/Missions/Editor/FactoryInteriorLighting.cs:450)\nUnityEditor.EditorApplication:ExecuteMenuItem (string)\nUnitySkills.EditorSkills:EditorExecuteMenu (string) (at ./Library/PackageCache/com.besty.unity-skills@64b084805acc/Editor/Skills/EditorSkills.cs:380)\nSystem.Reflection.MethodBase:Invoke (object,object[])\nUnitySkills.SkillRouter:E...",
+        "file": "Assets/FPS/Features/Missions/Editor/FactoryInteriorLighting.cs",
+        "line": 450
+      }
+    ],
+    "source": "console"
+  }
+}

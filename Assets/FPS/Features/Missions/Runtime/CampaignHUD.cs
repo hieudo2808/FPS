@@ -28,9 +28,9 @@ namespace FPS
         private GameObject deviceSurface, deviceBackdrop;
         private GameObject deviceClose;
         private TMP_Text deviceCloseLabel, deviceCloseKey;
-        private TMP_Text deviceTitle, deviceBody, deviceState, deviceChapter, deviceSubtitle, deviceSource, deviceAction, deviceFooter, deviceHint, deviceBreadcrumb;
-        private TMP_Text deviceSystemCaption, deviceInstructionHeading, deviceControlHeading;
-        private Image deviceLock, deviceProgress, deviceProgressTrack;
+        private TMP_Text deviceTitle, deviceBody, deviceState, deviceChapter, deviceSubtitle, deviceAction, deviceFooter, deviceHint, deviceBreadcrumb;
+        private TMP_Text deviceInstructionHeading, deviceControlHeading, recordSelection;
+        private Image deviceProgress, deviceProgressTrack;
         private RectTransform deviceViewport;
         private GameObject deviceInstructionCard, deviceControlCard, manifestSidebar, manifestPage;
         private GameObject deviceNotice;
@@ -61,6 +61,7 @@ namespace FPS
         private PlayerHealth boundOwner;
         private InputManager boundInput;
         private Vector2 layoutSize;
+        private bool trackerReduced;
         private SelectedUiTypography selectedTypography;
         public float InteractionBandBottom { get; private set; } = HudLayout.InteractionBottom;
         private void Awake() { Instance = this; Build(); HudSignals.NotifySourcesChanged(); }
@@ -226,6 +227,7 @@ namespace FPS
             var safe = HudLayout.PeripheralRoot(canvas);
             BuildNavigation(safe);
             feedback = Label(safe, "Feedback", Vector2.zero, Vector2.one, 24); feedback.alignment = TextAnchor.MiddleCenter;
+            feedback.verticalOverflow = VerticalWrapMode.Overflow; // The device footer slot is shorter than one line box.
             progress = Label(safe, "Interaction", Vector2.zero, Vector2.one, 26); progress.alignment = TextAnchor.MiddleCenter;
             holdRing = Box(safe, "HoldProgress", Vector2.zero, Vector2.one).GetComponent<Image>();
             HudSkin.Apply(holdRing, "FPSSample/GoalProgress", HudSkin.Accent);
@@ -294,7 +296,8 @@ namespace FPS
             var manifestLabel = DeviceText(manifestSidebar.transform, "RecordsLabel", new Vector2(.10f, .86f), new Vector2(.9f, .95f), 18, FontStyles.Normal);
             manifestLabel.text = "RECORDS"; manifestLabel.color = Theme.Muted;
             var manifestSelection = DeviceText(manifestSidebar.transform, "DeliveryRecords", new Vector2(.10f, .70f), new Vector2(.9f, .80f), 23, FontStyles.Bold);
-            manifestSelection.text = "Delivery records";
+            manifestSelection.text = "Delivery records"; recordSelection = manifestSelection;
+            recordSelection.textWrappingMode = TextWrappingModes.NoWrap;
             manifestPage = Box(surface, "ManifestPageGreybox", new Vector2(.26f, .22f), new Vector2(.88f, .69f)).gameObject;
             manifestPage.GetComponent<Image>().color = Theme.Text;
             manifestPageTitle = DeviceText(manifestPage.transform, "ManifestPageTitle", new Vector2(.04f, .85f), new Vector2(.96f, .95f), 23, FontStyles.Bold);
@@ -313,24 +316,10 @@ namespace FPS
             deviceScrollHint = DeviceText(deviceInstructionCard.transform, "DeviceScrollHint", new Vector2(.62f, .84f), new Vector2(.97f, .95f), 18, FontStyles.Normal);
             deviceScrollHint.text = "SCROLL FOR MORE"; deviceScrollHint.color = Theme.Muted; deviceScrollHint.alignment = TextAlignmentOptions.Right;
             deviceControlHeading = DeviceText(deviceControlCard.transform, "DeviceControlsHeading", new Vector2(.05f, .84f), new Vector2(.95f, .95f), 18, FontStyles.Normal);
-            deviceSystemCaption = DeviceText(deviceControlCard.transform, "DeviceSystemCaption", new Vector2(.05f, .66f), new Vector2(.40f, .79f), 23, FontStyles.Normal);
-            var systemValue = DeviceText(deviceControlCard.transform, "DeviceSystemValue", new Vector2(.40f, .66f), new Vector2(.95f, .79f), 18, FontStyles.Normal);
-            systemValue.text = "-"; systemValue.color = Theme.Muted; systemValue.alignment = TextAlignmentOptions.Right;
-            var sourceCaption = DeviceText(deviceControlCard.transform, "DeviceSourceCaption", new Vector2(.05f, .50f), new Vector2(.40f, .61f), 23, FontStyles.Normal);
-            sourceCaption.text = "Source";
-            deviceSource = DeviceText(deviceControlCard.transform, "DeviceSource", new Vector2(.40f, .50f), new Vector2(.95f, .61f), 18, FontStyles.Normal);
-            deviceSource.color = Theme.Muted; deviceSource.alignment = TextAlignmentOptions.Right;
             var actionCaption = DeviceText(deviceControlCard.transform, "DeviceActionCaption", new Vector2(.05f, .34f), new Vector2(.40f, .45f), 23, FontStyles.Normal);
             actionCaption.text = "Action";
             deviceAction = DeviceText(deviceControlCard.transform, "DeviceAction", new Vector2(.40f, .34f), new Vector2(.95f, .45f), 18, FontStyles.Normal);
             deviceAction.color = Theme.Muted; deviceAction.alignment = TextAlignmentOptions.Right;
-            foreach (float height in new[] { .64f, .48f })
-            {
-                var divider = Box(deviceControlCard.transform, "DeviceRowDivider", new Vector2(.05f, height), new Vector2(.95f, height + .002f)).GetComponent<Image>();
-                divider.sprite = HudSkin.Get("Fill"); divider.color = Theme.Border;
-            }
-            deviceLock = Box(panel, "DeviceLock", new Vector2(.665f, .355f), new Vector2(.687f, .389f)).GetComponent<Image>();
-            deviceLock.sprite = HudSkin.Get("Locked"); deviceLock.color = Theme.Text; deviceLock.preserveAspect = true;
             deviceProgressTrack = Box(panel, "DeviceHoldTrack", new Vector2(.647f, .355f), new Vector2(.669f, .389f)).GetComponent<Image>();
             HudSkin.Apply(deviceProgressTrack, "FPSSample/GoalProgress", Theme.Background);
             deviceProgressTrack.preserveAspect = true; deviceProgressTrack.gameObject.SetActive(false);
@@ -395,7 +384,7 @@ namespace FPS
             deviceClose.SetActive(device);
             panel.Find("DeviceBrand").gameObject.SetActive(device);
             panel.Find("DeviceIdentity").gameObject.SetActive(device);
-            if (!device) { deviceLock.gameObject.SetActive(false); deviceProgressTrack.gameObject.SetActive(false); deviceProgress.gameObject.SetActive(false); }
+            if (!device) { deviceProgressTrack.gameObject.SetActive(false); deviceProgress.gameObject.SetActive(false); }
             closeLabel.transform.parent.gameObject.SetActive(!device);
             HudSkin.Apply(panel.GetComponent<Image>(), device ? "Button" : "Panel", device ? Theme.Muted : HudSkin.PanelTint, device ? 1f : 2f);
             panel.anchorMin = device ? new Vector2(.14f, .08f) : new Vector2(.18f, .12f);
@@ -429,11 +418,8 @@ namespace FPS
         public void Open(CampaignInteractable item)
         {
             if (item == null || Campaign == null || Campaign.BlocksInput) return;
-            if (item.objectiveId == CampaignObjectiveId.FactoryShipping && !CampaignRules.CanOpenShipping(Campaign.State))
-            { ShowMessage("Requires: " + CampaignRules.LockReason(Campaign.State, item.objectiveId)); return; }
-            var source = CampaignRules.ComparisonSource(item.objectiveId);
-            if (source != CampaignFileId.None && !Campaign.State.HasFile(source)
-                && !CampaignRules.CanReadComparisonSource(Campaign.State, item.objectiveId))
+            // A locked objective has nothing to operate: say what it needs and keep the player in the world.
+            if (!item.documentOnly && IsLockedForPanel(item.objectiveId))
             { ShowMessage("Requires: " + CampaignRules.LockReason(Campaign.State, item.objectiveId)); return; }
             ClearShippingErrors();
             if (item != null && item.documentOnly)
@@ -445,8 +431,7 @@ namespace FPS
                 Campaign.RequestDiscoverFile(CampaignFileId.FactoryManifest);
             CancelAid();
             focused=item;journal=false;
-            SetDeviceLayout(item.objectiveId is CampaignObjectiveId.FactoryManifest or CampaignObjectiveId.FactoryIsolate
-                or CampaignObjectiveId.FactoryBackup or CampaignObjectiveId.FactoryGenerator);
+            SetDeviceLayout(true);
             deviceViewport.GetComponent<ScrollRect>().StopMovement();
             deviceBody.rectTransform.anchoredPosition = Vector2.zero;
             first = item.Choices?.Length > 0 ? -1 : 0;
@@ -455,9 +440,18 @@ namespace FPS
             RefreshHintTarget();
             ShowDocument();RenderDocument();
         }
+        // Locked means neither usable, already recorded, nor waiting only on its own source document.
+        private bool IsLockedForPanel(CampaignObjectiveId id) => CampaignRules.Availability(Campaign.State, id).IsLocked
+            && !CampaignRules.CanReadComparisonSource(Campaign.State, id);
         private void RenderDocument()
         {
             if(focused==null)return;
+            if (!focused.documentOnly && IsLockedForPanel(focused.objectiveId))
+            {
+                // A checkpoint restore can lock the objective under an open panel.
+                string reason = CampaignRules.LockReason(Campaign.State, focused.objectiveId);
+                Close(); ShowMessage("Requires: " + reason); return;
+            }
             body.text=focused.Title.ToUpperInvariant()+"\n\n"+focused.Instructions;
             string expectedResult = Campaign.ContentCatalog?.FindObjective(focused.objectiveId)?.result;
             if (!string.IsNullOrWhiteSpace(expectedResult)) body.text += "\n\nON COMPLETION\n" + expectedResult;
@@ -480,106 +474,111 @@ namespace FPS
             var reference = Campaign.ContentCatalog?.FindFile(referenceId);
             if (reference != null && Campaign.State.HasFile(referenceId))
                 body.text += "\n\nCROSS-REFERENCE — " + reference.title + "\n" + reference.body;
+            var objective = focused.objectiveId;
+            bool manifest = objective == CampaignObjectiveId.FactoryManifest;
+            bool power = objective == CampaignObjectiveId.LabPower;
+            int groups = power ? 1 : (focused.Choices?.Length > 0 ? 1 : 0) + (focused.SecondaryChoices?.Length > 0 ? 1 : 0);
+            // Anything read or compared is a record screen (sidebar + page); a plain switch is a control screen (two modules).
+            bool record = manifest || groups > 0 || CampaignRules.ComparisonSource(objective) != CampaignFileId.None;
+            bool recorded = file != null && Campaign.State.HasFile(file.id) && !string.IsNullOrWhiteSpace(file.body);
+            CampaignResult result = CampaignRules.CanUse(Campaign.State, objective);
             if (deviceSurface.activeSelf)
             {
                 deviceTitle.text = System.Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase(focused.Title.ToLowerInvariant());
-                deviceChapter.text = CampaignRules.ChapterOf(focused.objectiveId).ToString().ToUpperInvariant();
-                bool manifest = focused.objectiveId == CampaignObjectiveId.FactoryManifest;
-                deviceInstructionCard.SetActive(!manifest); deviceControlCard.SetActive(!manifest);
-                deviceNotice.SetActive(!manifest);
-                manifestSidebar.SetActive(manifest); manifestPage.SetActive(manifest);
-                deviceSubtitle.text = manifest ? "LOGISTICS RECORDS" : "PRODUCTION CONTROL";
-                deviceFooter.text = manifest ? "RECORD VIEWER" : "UTILITIES / CONTROL INTERFACE";
-                deviceHint.text = manifest && file != null && Campaign.State.HasFile(file.id) ? "FILE ADDED TO INVENTORY" : "";
-                string system = focused.objectiveId switch
+                deviceChapter.text = CampaignRules.ChapterName(CampaignRules.ChapterOf(objective));
+                bool factoryPower = CampaignRules.FactoryBranchOf(objective) == CampaignFactoryBranch.Power;
+                deviceInstructionCard.SetActive(!record); deviceControlCard.SetActive(!record);
+                deviceNotice.SetActive(!record);
+                manifestSidebar.SetActive(record); manifestPage.SetActive(record);
+                deviceSubtitle.text = objective switch
                 {
-                    CampaignObjectiveId.FactoryIsolate => "Production",
-                    CampaignObjectiveId.FactoryBackup => "Backup",
-                    CampaignObjectiveId.FactoryGenerator => "Generator",
-                    _ => "System"
+                    CampaignObjectiveId.FactoryManifest or CampaignObjectiveId.FactoryShipping => "LOGISTICS RECORDS",
+                    CampaignObjectiveId.AsylumPatient or CampaignObjectiveId.AsylumTransfer => "PATIENT RECORDS",
+                    CampaignObjectiveId.LabPower => "POWER ALLOCATION",
+                    CampaignObjectiveId.LabArchive => "ARCHIVE RECORDS",
+                    _ => factoryPower ? "PRODUCTION CONTROL" : "ON-SITE CONTROL"
                 };
-                deviceSystemCaption.text = system;
-                deviceInstructionHeading.text = (focused.objectiveId == CampaignObjectiveId.FactoryIsolate ? "PRODUCTION BREAKER" : system.ToUpperInvariant()) + " / INSTRUCTIONS";
-                deviceControlHeading.text = "CONTROL / " + (focused.objectiveId == CampaignObjectiveId.FactoryIsolate ? "ISOLATE" : system.ToUpperInvariant());
-                bool expandedSource = !manifest && file != null && Campaign.State.HasFile(file.id) && !string.IsNullOrWhiteSpace(file.body);
-                deviceInstructionCard.GetComponent<RectTransform>().anchorMin = new Vector2(.031f, expandedSource ? .10f : .237f);
-                var noticeRect = deviceNotice.GetComponent<RectTransform>();
-                noticeRect.anchorMin = new Vector2(.05f, expandedSource ? .13f : .33f);
-                noticeRect.anchorMax = new Vector2(.588f, expandedSource ? .25f : .48f);
-                deviceTitle.rectTransform.anchorMin = manifest ? new Vector2(.26f, .72f) : new Vector2(.031f, .725f);
-                deviceTitle.rectTransform.anchorMax = manifest ? new Vector2(.75f, .85f) : new Vector2(.70f, .79f);
-                deviceBreadcrumb.rectTransform.anchorMin = manifest ? new Vector2(.26f, .69f) : new Vector2(.031f, .80f);
-                deviceBreadcrumb.rectTransform.anchorMax = manifest ? new Vector2(.75f, .72f) : new Vector2(.70f, .84f);
-                deviceBreadcrumb.text = manifest ? "RECORDS / LOGISTICS / MANIFEST" : focused.objectiveId switch
+                deviceFooter.text = record ? "RECORD VIEWER" : factoryPower ? "UTILITIES / CONTROL INTERFACE" : "CONTROL INTERFACE";
+                deviceHint.text = manifest && recorded ? "FILE ADDED TO INVENTORY" : "";
+                string system = objective switch
+                {
+                    CampaignObjectiveId.FactoryIsolate => "PRODUCTION BREAKER",
+                    CampaignObjectiveId.FactoryBackup => "BACKUP",
+                    CampaignObjectiveId.FactoryGenerator => "GENERATOR",
+                    _ => "PROCEDURE"
+                };
+                deviceInstructionHeading.text = system + " / INSTRUCTIONS";
+                deviceControlHeading.text = "CONTROL";
+                bool expandedSource = !record && recorded;
+                deviceBreadcrumb.textWrappingMode = record && !manifest ? TextWrappingModes.Normal : TextWrappingModes.NoWrap;
+                deviceBreadcrumb.overflowMode = TextOverflowModes.Ellipsis;
+                deviceBreadcrumb.text = manifest ? "RECORDS / LOGISTICS / MANIFEST" : record ? focused.Instructions : objective switch
                 {
                     CampaignObjectiveId.FactoryIsolate => "POWER SYSTEM / PRODUCTION",
                     CampaignObjectiveId.FactoryBackup => "POWER SYSTEM / BACKUP",
                     CampaignObjectiveId.FactoryGenerator => "POWER SYSTEM / GENERATOR",
-                    _ => "POWER SYSTEM"
+                    _ => string.Empty // The header already names the place.
                 };
-                deviceViewport.anchorMin = manifest ? new Vector2(.285f, .25f) : new Vector2(.05f, expandedSource ? .27f : .50f);
-                deviceViewport.anchorMax = manifest ? new Vector2(.855f, .60f) : new Vector2(.59f, .59f);
+                recordSelection.text = manifest ? "Delivery records" : file != null ? file.title : "Procedure";
                 manifestPageTitle.text = file != null ? file.title : focused.Title;
-                deviceBody.color = manifest ? Theme.Background : Theme.Text;
-                deviceBody.text = manifest && file != null && Campaign.State.HasFile(file.id) && !string.IsNullOrWhiteSpace(file.body)
-                    ? file.body : !manifest && file != null && !Campaign.State.HasFile(file.id)
-                        ? focused.Instructions : body.text.Substring(body.text.IndexOf("\n\n", StringComparison.Ordinal) + 2);
-                CampaignResult result = CampaignRules.CanUse(Campaign.State, focused.objectiveId);
-                if (!manifest && result != CampaignResult.Accepted && result != CampaignResult.AlreadyDone)
-                    deviceHint.text = "CHECK REQUIREMENTS";
-                deviceState.text = DeviceStateLabel(Campaign.State, focused.objectiveId, result);
-                deviceSource.text = file != null && Campaign.State.HasFile(file.id)
-                    ? "RECORDED" : CampaignRules.ComparisonSource(focused.objectiveId) == CampaignFileId.None ? "NOT REQUIRED" : "READ FIRST";
-                deviceAction.text = result == CampaignResult.Accepted ? "READY" : result == CampaignResult.AlreadyDone ? "RECORDED" : "LOCKED";
-                deviceLock.gameObject.SetActive(!manifest && result != CampaignResult.Accepted && result != CampaignResult.AlreadyDone);
-                if (!manifest) RenderDeviceNotice(result, false);
+                deviceBody.color = record ? Theme.Background : Theme.Text;
+                // Record page: the source once it is on file (plus any cross-reference), otherwise how to obtain it.
+                string page = recorded ? file.body : file != null ? "SOURCE NOT RECORDED\nRecord this document before comparing its fields." : focused.Instructions;
+                if (recorded && reference != null && Campaign.State.HasFile(referenceId))
+                    page += "\n\nCROSS-REFERENCE — " + reference.title + "\n" + reference.body;
+                deviceBody.text = record ? page : body.text.Substring(body.text.IndexOf("\n\n", StringComparison.Ordinal) + 2);
+                deviceState.text = DeviceStateLabel(Campaign.State, objective, result);
+                deviceAction.text = result == CampaignResult.Accepted ? "READY" : result == CampaignResult.AlreadyDone ? "RECORDED" : "READ SOURCE";
+                if (!record) RenderDeviceNotice(result, false);
                 deviceFiles = Campaign.State.discoveredFiles; deviceCompleted = Campaign.State.completed;
                 devicePhase = Campaign.State.phase; deviceCampaignChapter = Campaign.State.chapter;
-                LayoutSelectedDevice(manifest, expandedSource);
+                LayoutSelectedDevice(record, manifest, expandedSource, groups);
                 selectedTypography.Refresh();
             }
             ClearControls();
-            if (focused.objectiveId == CampaignObjectiveId.FactoryManifest) return;
+            if (manifest) return;
             if (readingSource)
             {
-                var sourceId = CampaignRules.ComparisonSource(focused.objectiveId);
-                Button(controls, "RECORD SOURCE TO COMPARE", new Vector2(.10f, .25f), new Vector2(.90f, .80f),
-                    () => Campaign.RequestDiscoverFile(sourceId));
+                var sourceId = CampaignRules.ComparisonSource(objective);
+                var read = Button(controls, "RECORD SOURCE TO COMPARE", new Vector2(0, 0), new Vector2(.5f, 1), () => Campaign.RequestDiscoverFile(sourceId));
+                StyleDeviceChoice(read, false, "[" + SurvivalHotbar.Key("Interact", "F") + "]  RECORD SOURCE TO COMPARE");
+                var readArea = controls.rect; // one row high in every record layout
+                read.GetComponent<RectTransform>().anchorMin = new Vector2(0, 1 - Mathf.Min(1, 64 / Mathf.Max(1, readArea.height)));
+                read.GetComponent<RectTransform>().anchorMax = new Vector2(.5f, 1);
                 UiStateStack.RefreshFocus(UiScreen.Document);
                 return;
             }
-            if (CampaignRules.ComparisonSource(focused.objectiveId) != CampaignFileId.None
-                && CampaignRules.CanUse(Campaign.State, focused.objectiveId) != CampaignResult.Accepted) return;
-            if(focused.objectiveId==CampaignObjectiveId.LabPower)
+            if (CampaignRules.ComparisonSource(objective) != CampaignFileId.None && result != CampaignResult.Accepted
+                && result != CampaignResult.AlreadyDone) return;
+            if (power)
             {
                 string[] loads={"SAFETY · 2","TEST RIG · 4","DATA · 2","FREIGHT LIFT · 2"};
-                var row = ChoiceRow("PowerChoices", .46f, .98f);
-                for(int i=0;i<4;i++){int bit=i;Button(row,((first&(1<<i))!=0?"[ON] ":"[OFF] ")+loads[i],Vector2.zero,Vector2.one,()=>{int mask=first^(1<<bit);if(CampaignRules.CanSelectPower(mask)){first=mask;Campaign.RequestPowerSelection(mask);RenderDocument();}else ShowMessage("Keep SAFETY online; total load cannot exceed 6.");});}
+                ChoiceHeading("EMERGENCY LOADS — KEEP SAFETY ONLINE, TOTAL 6 OR LESS", false, groups, false);
+                var row = ChoiceRow("PowerChoices", groups, false);
+                for(int i=0;i<4;i++)
+                {
+                    int bit=i; bool on = (first & (1 << i)) != 0;
+                    var toggle = Button(row,loads[i],Vector2.zero,Vector2.one,()=>{int mask=first^(1<<bit);if(CampaignRules.CanSelectPower(mask)){first=mask;Campaign.RequestPowerSelection(mask);RenderDocument();}else ShowMessage("Keep SAFETY online; total load cannot exceed 6.");});
+                    StyleDeviceChoice(toggle, on, (on ? "ON  " : "OFF  ") + loads[i]);
+                }
             }
             else
             {
-                AddChoices(focused.Choices,false,.48f,.99f);
-                AddChoices(focused.SecondaryChoices,true,.03f,.46f);
+                AddChoices(focused.Choices, false, groups);
+                AddChoices(focused.SecondaryChoices, true, groups);
             }
-            bool device = deviceSurface.activeSelf;
-            bool deviceLocked = CampaignRules.CanUse(Campaign.State, focused.objectiveId) != CampaignResult.Accepted;
-            string confirmLabel = Campaign.State.Has(focused.objectiveId) ? "RECORDED BY SQUAD"
-                : deviceLocked ? "LOCKED" : first < 0 || second < 0 ? "SELECT REQUIRED OPTIONS"
-                : $"HOLD {SurvivalHotbar.Key("Interact", "F")} TO CONFIRM";
-            var confirm=Button(panel,confirmLabel,device ? new Vector2(.63f,.33f) : new Vector2(.04f,.01f),device ? new Vector2(.91f,.42f) : new Vector2(.76f,.065f),()=>{});
-            if (device)
-            {
-                var legacy = confirm.GetComponentInChildren<Text>();
-                var text = DeviceText(confirm.transform, "DeviceConfirmLabel", Vector2.zero, Vector2.one, 23, FontStyles.Normal);
-                text.text = legacy.text; text.alignment = TextAlignmentOptions.Center; legacy.gameObject.SetActive(false);
-                if (!deviceLocked && !Campaign.State.Has(focused.objectiveId))
-                    text.text = first < 0 || second < 0 ? "SELECT REQUIRED OPTIONS" : "[" + SurvivalHotbar.Key("Interact", "F") + "]  HOLD TO CONFIRM";
-                StyleSelectedDeviceButton(confirm);
-                deviceLock.transform.SetAsLastSibling(); deviceProgressTrack.transform.SetAsLastSibling(); deviceProgress.transform.SetAsLastSibling();
-            }
+            bool done = Campaign.State.Has(objective);
+            bool ready = !done && result == CampaignResult.Accepted && first >= 0 && second >= 0;
+            string confirmLabel = done ? "RECORDED BY SQUAD" : first < 0 || second < 0 ? "SELECT REQUIRED OPTIONS"
+                : "[" + SurvivalHotbar.Key("Interact", "F") + "]  HOLD TO CONFIRM";
+            var confirm = Button(panel, confirmLabel, new Vector2(.63f,.33f), new Vector2(.91f,.42f), () => { });
+            var legacy = confirm.GetComponentInChildren<Text>();
+            var text = DeviceText(confirm.transform, "DeviceConfirmLabel", Vector2.zero, Vector2.one, 23, FontStyles.Normal);
+            text.text = legacy.text; text.alignment = TextAlignmentOptions.Center; legacy.gameObject.SetActive(false);
             confirmation = confirm.gameObject;
-            confirm.interactable = !Campaign.State.Has(focused.objectiveId) && first >= 0 && second >= 0
-                && !deviceLocked;
+            StyleSelectedDeviceButton(confirm);
+            deviceProgressTrack.transform.SetAsLastSibling(); deviceProgress.transform.SetAsLastSibling();
+            confirm.interactable = ready;
             var trigger=confirm.gameObject.AddComponent<EventTrigger>();
             var down=new EventTrigger.Entry{eventID=EventTriggerType.PointerDown};down.callback.AddListener(_=>mouseHeld=true);trigger.triggers.Add(down);
             var up=new EventTrigger.Entry{eventID=EventTriggerType.PointerUp};up.callback.AddListener(_=>mouseHeld=false);trigger.triggers.Add(up);
@@ -592,42 +591,90 @@ namespace FPS
         {
             CampaignResult.Accepted => "ACTION READY",
             CampaignResult.AlreadyDone => "RECORDED",
-            CampaignResult.WrongChapter => "Requires: correct chapter",
-            CampaignResult.WrongPhase => "Requires: exploration phase",
             _ => "Requires: " + CampaignRules.LockReason(state, objective)
         };
         private void RenderDeviceNotice(CampaignResult result, bool activeHold)
         {
-            bool locked = result != CampaignResult.Accepted && result != CampaignResult.AlreadyDone;
+            // Locked objectives never reach this panel; the only wait left is the objective's own source document.
             bool choicesReady = first >= 0 && second >= 0;
             var source = CampaignRules.ComparisonSource(focused.objectiveId);
             bool sourceUnrecorded = source != CampaignFileId.None && !Campaign.State.HasFile(source);
-            deviceNoticeHeading.text = locked ? "LOCKED" : result == CampaignResult.AlreadyDone ? "RECORDED" : "COMMAND";
-            deviceNoticeValue.text = locked ? DeviceStateLabel(Campaign.State, focused.objectiveId, result)
-                : result == CampaignResult.AlreadyDone ? "Recorded by squad" : choicesReady ? "Hold to confirm" : "Select required options";
-            deviceNoticeHint.text = activeHold ? "RELEASE EARLY TO CANCEL." : result == CampaignResult.AlreadyDone ? "" : sourceUnrecorded ? "READ LINKED DOCUMENT FOR DETAILS." : locked ? "CHECK THE REQUIREMENTS." : choicesReady ? "HOLD THE INTERACTION KEY." : "SELECT AN OPTION TO CONTINUE.";
+            deviceNoticeHeading.text = result == CampaignResult.AlreadyDone ? "RECORDED" : sourceUnrecorded ? "SOURCE" : "COMMAND";
+            deviceNoticeValue.text = result == CampaignResult.AlreadyDone ? "Recorded by squad" : sourceUnrecorded ? "Record the source document"
+                : choicesReady ? "Hold to confirm" : "Select required options";
+            deviceNoticeHint.text = activeHold ? "RELEASE EARLY TO CANCEL." : result == CampaignResult.AlreadyDone ? "" : sourceUnrecorded ? "READ LINKED DOCUMENT FOR DETAILS." : choicesReady ? "HOLD THE INTERACTION KEY." : "SELECT AN OPTION TO CONTINUE.";
         }
-        private void AddChoices(string[] choices,bool secondary,float min,float max)
+        // Vertical bands inside the choice area, top to bottom: [heading, row] per group. Fractions of the area height.
+        private static (float min, float max) ChoiceBand(int groups, bool secondary, bool heading)
+        {
+            if (groups <= 1) return heading ? (.70f, 1f) : (0f, .66f);
+            if (!secondary) return heading ? (.85f, 1f) : (.53f, .83f);
+            return heading ? (.32f, .47f) : (0f, .30f);
+        }
+        private void ChoiceHeading(string label, bool secondary, int groups, bool error)
+        {
+            var (min, max) = ChoiceBand(groups, secondary, true);
+            var heading = DeviceText(controls, secondary ? "SecondaryChoiceHeading" : "ChoiceHeading", new Vector2(0, min), new Vector2(1, max), 18, FontStyles.Normal);
+            // One heading per group; a rejected group is named once, in the danger colour.
+            heading.text = error ? label + "   —   CHECK THIS GROUP" : label;
+            heading.color = error ? Theme.Danger : Theme.Muted; heading.alignment = TextAlignmentOptions.BottomLeft;
+            heading.characterSpacing = 5;
+        }
+        private void AddChoices(string[] choices, bool secondary, int groups)
         {
             if(choices==null||choices.Length==0)return;
-            string group = focused?.objectiveId == CampaignObjectiveId.FactoryShipping
-                ? (secondary ? "DESTINATION / RECEIVING TIME" : "SHIPMENT / SEAL")
-                    + ((shippingErrors & (secondary ? CampaignShippingGroup.DestinationReceivingTime : CampaignShippingGroup.ShipmentSeal)) != 0 ? " — CHECK THIS GROUP\n" : "\n") : string.Empty;
-            var row = ChoiceRow(secondary ? "SecondaryChoices" : "Choices", min, max);
-            for(int i=0;i<choices.Length;i++){int index=i;var button=Button(row,group+((secondary?second:first)==i?"● ":"○ ")+choices[i],Vector2.zero,Vector2.one,()=>{if(secondary)second=index;else first=index;ClearShippingErrors();CancelHold();RenderDocument();});if(focused?.objectiveId==CampaignObjectiveId.FactoryShipping){var label=button.GetComponentInChildren<Text>();label.fontSize=(int)Theme.Size(15);label.verticalOverflow=VerticalWrapMode.Overflow;}}
+            var id = focused.objectiveId;
+            bool shipping = id == CampaignObjectiveId.FactoryShipping;
+            string label = shipping ? (secondary ? "DESTINATION / RECEIVING TIME" : "SHIPMENT / SEAL") : id switch
+            {
+                CampaignObjectiveId.AsylumPatient => "WHICH PATIENT ENTRY MATCHES?",
+                CampaignObjectiveId.AsylumTransfer => "WHAT DO THE RECORDS SHOW?",
+                CampaignObjectiveId.LabArchive => "WHICH ARCHIVE ENTRY MATCHES?",
+                _ => "SELECT ONE"
+            };
+            bool error = shipping && (shippingErrors & (secondary ? CampaignShippingGroup.DestinationReceivingTime : CampaignShippingGroup.ShipmentSeal)) != 0;
+            ChoiceHeading(label, secondary, groups, error);
+            var row = ChoiceRow(secondary ? "SecondaryChoices" : "Choices", groups, secondary);
+            for(int i=0;i<choices.Length;i++)
+            {
+                int index=i;
+                var button=Button(row,choices[i],Vector2.zero,Vector2.one,()=>{if(secondary)second=index;else first=index;ClearShippingErrors();CancelHold();RenderDocument();});
+                StyleDeviceChoice(button, (secondary ? second : first) == i, choices[i]);
+            }
         }
-        private RectTransform ChoiceRow(string name, float min, float max)
+        private RectTransform ChoiceRow(string name, int groups, bool secondary)
         {
+            var (min, max) = ChoiceBand(groups, secondary, false);
             var row = Box(controls, name, new Vector2(0, min), new Vector2(1, max));
             row.GetComponent<Image>().color = Color.clear;
             var layout = row.gameObject.AddComponent<HorizontalLayoutGroup>();
-            layout.spacing = 8; layout.childControlWidth = layout.childControlHeight = true;
+            layout.spacing = 12; layout.childControlWidth = layout.childControlHeight = true;
             layout.childForceExpandWidth = layout.childForceExpandHeight = true;
             return row;
         }
+        // Options read as device keys: dark when idle, paper when selected. Same sprites as the rest of the device.
+        private void StyleDeviceChoice(UnityEngine.UI.Button button, bool selected, string label)
+        {
+            var legacy = button.GetComponentInChildren<Text>(); legacy.gameObject.SetActive(false);
+            var text = DeviceText(button.transform, "ChoiceLabel", new Vector2(.03f, 0), new Vector2(.97f, 1), 18, FontStyles.Normal);
+            text.text = label; text.alignment = TextAlignmentOptions.Center;
+            // Theme sizes only: body when the label fits one line of its key, otherwise small and wrapped.
+            text.textWrappingMode = TextWrappingModes.Normal;
+            int keys = Mathf.Max(1, button.transform.parent.childCount);
+            float keyWidth = button.transform.parent == controls ? 450 : (900 - 12 * (keys - 1)) / (float)keys;
+            text.fontSize = Theme.Body;
+            if (text.GetPreferredValues(label, 10000, 100).x > keyWidth * .94f) text.fontSize = Theme.Small;
+            text.color = selected ? Theme.Background : Theme.Text;
+            button.transition = Selectable.Transition.ColorTint;
+            SelectedUiTheme.Surface(button.GetComponent<Image>(), selected ? Theme.PaperSurface : Theme.LockedSurface);
+            button.GetComponent<Image>().raycastTarget = true;
+            var colors = ColorBlock.defaultColorBlock;
+            colors.highlightedColor = colors.selectedColor = selected ? Color.white : Theme.Paper;
+            colors.disabledColor = Color.white; button.colors = colors;
+        }
         public void OpenSupply(CampaignSupply supply)
         {
-            Close();journal=true;ShowDocument();body.text=$"FIELD SUPPLY\n\nThe squad can claim one package from this cache.\n{supply.AmmoLabel} +{supply.ammo}.\n"+(supply.ammoWeapon!=null?"Carry the matching weapon and make room for the whole pack. Otherwise the cache stays available.\n":"")+"Or take one medkit if you have space.";ClearControls();
+            Close();journal=true;ShowDocument();body.text=$"FIELD SUPPLY\n\nThe squad can claim one package from this cache.\nAmmo for the weapon you are holding.\nMake room for the whole pack. Otherwise the cache stays available.\nOr take one medkit if you have space.";ClearControls();
             Button(controls,"TAKE " + supply.AmmoLabel,new Vector2(0,.2f),new Vector2(.48f,.8f),()=>{Campaign.RequestSupply(supply.supplyId,false);Close();});
             Button(controls,"TAKE MEDKIT",new Vector2(.52f,.2f),new Vector2(1,.8f),()=>{Campaign.RequestSupply(supply.supplyId,true);Close();});
         }
@@ -670,7 +717,7 @@ namespace FPS
                 if (deviceSurface.activeSelf && Campaign != null)
                 {
                     var result = CampaignRules.CanUse(Campaign.State, focused.objectiveId);
-                    deviceAction.text = result == CampaignResult.Accepted ? "READY" : result == CampaignResult.AlreadyDone ? "RECORDED" : "LOCKED";
+                    deviceAction.text = result == CampaignResult.Accepted ? "READY" : result == CampaignResult.AlreadyDone ? "RECORDED" : "READ SOURCE";
                 }
             }
             holding=false;mouseHeld=false;if(holdRing!=null){holdRing.fillAmount=0;holdRing.gameObject.SetActive(false);}
@@ -717,7 +764,8 @@ namespace FPS
             ShowMessage(result switch{CampaignResult.WrongAnswer=>wrong,CampaignResult.Prerequisite=>"Prerequisites are incomplete. Check the team objective.",CampaignResult.Busy=>"Another operator is using this.",CampaignResult.OutOfRange=>"Move closer and keep the interaction point visible.",CampaignResult.AlreadyDone=>"The squad already completed this step.",_=>"Interaction interrupted; completed steps are preserved."});
         }
         public void ShowMessage(string text){message=text;feedback.text=text;RefreshPresentation();messageUntil=Time.unscaledTime+4;CancelInvoke(nameof(ClearMessage));Invoke(nameof(ClearMessage),4f);}
-        private void ClearMessage() { message=""; feedback.text=""; }
+        // An open device screen lends its footer line to the toast; hand it back when the toast expires.
+        private void ClearMessage() { message=""; feedback.text=""; if (canvas != null && IsDocumentOpen) RefreshPresentation(); }
 
         public void EnqueueDialogue(CampaignDialogueId id)
         {
@@ -752,6 +800,8 @@ namespace FPS
             var owner = Owner;
             var size = ((RectTransform)canvas.transform).rect.size;
             if (layoutSize != size) { layoutSize = size; RefreshPresentation(); }
+            // Aiming or firing reduces the tracker; nothing else redraws it while exploring.
+            if (trackerReduced != HudLayout.SecondaryReduced) { trackerReduced = HudLayout.SecondaryReduced; RefreshTracker(); }
             if (owner != null) UpdateNavigation(owner);
             var input = InputManager.Instance; var actions = input?.ActionsAsset;
             bool open = panel.gameObject.activeSelf;
@@ -815,6 +865,9 @@ namespace FPS
             bool aid=!releaseBeforeHold&&owner.GetComponent<SurvivalInventory>()?.IsUsingItem!=true&&revive&&actions?.FindAction("Interact")?.IsPressed()==true&&!fire;
             if(revive)interactionText=$"HOLD {input?.GetPromptDisplayName("Interact")} TO REVIVE ({Campaign.settings.reviveSeconds:0}s)";
             if((aid&&heartbeat)||aidHeld!=aid){Campaign.RequestAid(downed!=null?downed.NetworkObjectId:0,false,aid);aidHeld=aid;nextAidHeartbeat=Time.unscaledTime+.2f;}
+            if (!revive)
+                interactionText = UpdateReadyPrompt(owner, !releaseBeforeHold && !fire && actions?.FindAction("Interact")?.IsPressed() == true,
+                    input?.GetPromptDisplayName("Interact")) ?? interactionText;
             PresentHint(interactionText);
         }
         private void UpdateHints(PlayerHealth owner,bool fired)
@@ -859,6 +912,29 @@ namespace FPS
             subtitleUntil = Time.unscaledTime + Mathf.Max(6, subtitle.text.Length * .06f,
                 definition.audio != null ? definition.audio.length : 0);
         }
+        private bool readySent;
+        private float readyHoldStart = -1;
+        private const float ReadyHoldSeconds = 1f;
+
+        // Squad only; a solo operator starts the countdown by standing in the zone. Returns the prompt line, or null.
+        private string UpdateReadyPrompt(PlayerHealth owner, bool interactHeld, string key)
+        {
+            var s = Campaign.State;
+            bool offered = s.phase == CampaignPhase.Preparing && !readySent && s.partyGate.eligibleCount > 1
+                && s.tankStage is not (CampaignTankStage.Pending or CampaignTankStage.Active)
+                && Campaign.Current != null && Campaign.Current.Contains(Campaign.Current.preparationArea, owner.transform.position)
+                && !(HUDManager.HasInstance && HUDManager.Instance.HasInteractionPrompt);
+            if (!offered) { readyHoldStart = -1; return null; }
+            if (!interactHeld) { readyHoldStart = -1; return $"HOLD {key} TO READY UP"; }
+            if (readyHoldStart < 0) readyHoldStart = Time.unscaledTime;
+            float held = Mathf.Clamp01((Time.unscaledTime - readyHoldStart) / ReadyHoldSeconds);
+            if (holdRing != null) { holdRing.fillAmount = held; holdRing.gameObject.SetActive(true); }
+            if (held < 1) return $"HOLD {key} TO READY UP";
+            Campaign.RequestReady(true);
+            readySent = true; readyHoldStart = -1; releaseBeforeHold = true;
+            ShowMessage("READY");
+            return null;
+        }
         private CampaignPhase renderedPhase=(CampaignPhase)255;
         private CampaignTankStage renderedTankStage;
         private void RenderPhaseControls()
@@ -869,11 +945,10 @@ namespace FPS
             if(phase==CampaignPhase.Completed&&Campaign.Now-Campaign.PhaseStarted<Campaign.settings.endingSeconds){if(panel.gameObject.activeSelf)Close();return;}
             if(renderedPhase==phase && renderedTankStage==Campaign.State.tankStage)return;
             if (journal && focused == null && panel.gameObject.activeSelf) Close();
+            if (renderedPhase != phase) { readySent = false; readyHoldStart = -1; }
             renderedPhase=phase;renderedTankStage=Campaign.State.tankStage;
+            // Preparation has no screen of its own: the tracker carries the gate and readying up is a hold prompt in the zone.
             if(phase is CampaignPhase.Preparing or CampaignPhase.Failed or CampaignPhase.Completed) Close();
-            if (phase == CampaignPhase.Preparing && Campaign.State.tankStage is CampaignTankStage.Pending or CampaignTankStage.Active) return;
-            if(phase==CampaignPhase.Preparing)
-            {journal=true;ShowDocument();ClearControls();body.text="PREPARATION\n\nTake supplies, revive teammates and enter the preparation area.\nSolo: remain in the area to start the countdown. In a group, confirm READY when requested.\nLeaving the area can cancel the countdown.\nThe checkpoint includes supplies claimed before countdown.";Button(controls,"READY",new Vector2(0,.2f),new Vector2(.48f,.8f),()=>{Campaign.RequestReady(true);Close();});Button(controls,"NOT READY",new Vector2(.52f,.2f),new Vector2(1,.8f),()=>{Campaign.RequestReady(false);Close();});}
             if(phase==CampaignPhase.Failed)
             {journal=true;ShowDocument();ClearControls();body.text="MISSION FAILED\n\nRestore the nearest checkpoint. HP, ammo, medicine and objectives return to the saved state.";if(Campaign.IsServer)Button(controls,"RETRY CHECKPOINT",new Vector2(.2f,.2f),new Vector2(.8f,.8f),()=>{Campaign.RequestRetry();Close();});}
             if(phase==CampaignPhase.Completed)

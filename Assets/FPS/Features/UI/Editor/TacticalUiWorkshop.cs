@@ -99,12 +99,12 @@ namespace FPS.UI.Editor
             Text(t.rectTransform, label ?? t.text, fontSize, false, TacticalUiTheme.Text);
             Fill(t.rectTransform, 20, 6, 20, 6); t.alignment = TextAlignmentOptions.Center;
         }
-        static void MenuButton(RectTransform r, string value, bool primary = false)
+        static void MenuButton(RectTransform r, string value, bool primary = false, bool quietFocus = false)
         {
             Button(r, value, false, 28);
             var button = r.GetComponent<Button>(); button.transition = Selectable.Transition.None;
             var background = r.GetComponent<Image>(); background.color = Color.clear;
-            SurvivalUiArt.Assign(background, "Controls/MenuFocus", new Color(.6f,.5f,.45f, primary ? .2f : 0), true);
+            SurvivalUiArt.Assign(background, "Controls/MenuFocus", quietFocus ? Color.clear : new Color(.6f,.5f,.45f, primary ? .2f : 0), true);
             var label = r.GetComponentInChildren<TMP_Text>(true);
             Fill(label.rectTransform, 28, 6, 28, 6); label.alignment = TextAlignmentOptions.MidlineLeft;
             label.characterSpacing = 2; label.color = primary ? TacticalUiTheme.Accent : TacticalUiTheme.Text;
@@ -113,7 +113,8 @@ namespace FPS.UI.Editor
             markerImage.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(UiPath + "Sprites/Survival/WornRule.png");
             var view = Ensure<SurvivalMenuItem>(r.gameObject);
             Bind(view, "label", label); Bind(view, "marker", markerImage); Bind(view, "background", background);
-            var so = new SerializedObject(view); so.FindProperty("primary").boolValue = primary; so.ApplyModifiedPropertiesWithoutUndo();
+            var so = new SerializedObject(view); so.FindProperty("primary").boolValue = primary;
+            so.FindProperty("quietFocus").boolValue = quietFocus; so.ApplyModifiedPropertiesWithoutUndo();
         }
 
         static void ButtonIcon(RectTransform button, string key)
@@ -227,9 +228,9 @@ namespace FPS.UI.Editor
             var secondLine = Label(main, "GameTitleSecondLine", "PROTOCOL", 120, 361, 720, 98, 66, true);
             secondLine.font = Narrow; secondLine.fontSharedMaterial = Narrow.material; secondLine.characterSpacing = 13;
             var tagline = Find(main, "Tagline"); if (tagline != null) tagline.gameObject.SetActive(false);
-            var play = Find(main, "PlayBtn"); At(play, TL, 120, -546, 430, 64); MenuButton(play, "PLAY ONLINE", true);
-            var settings = Find(main, "SettingsBtn"); At(settings, TL, 120, -622, 430, 64); MenuButton(settings, "SETTINGS");
-            var quit = Find(main, "QuitBtn"); At(quit, TL, 120, -698, 430, 64); MenuButton(quit, "QUIT TO DESKTOP");
+            var play = Find(main, "PlayBtn"); At(play, TL, 120, -546, 430, 64); MenuButton(play, "PLAY ONLINE", true, true);
+            var settings = Find(main, "SettingsBtn"); At(settings, TL, 120, -622, 430, 64); MenuButton(settings, "SETTINGS", quietFocus: true);
+            var quit = Find(main, "QuitBtn"); At(quit, TL, 120, -698, 430, 64); MenuButton(quit, "QUIT TO DESKTOP", quietFocus: true);
             var footer = Find(main, "MenuFooter"); if (footer != null) footer.gameObject.SetActive(false);
             var card = Find(main, "OperationCard"); if (card != null) card.gameObject.SetActive(false);
 

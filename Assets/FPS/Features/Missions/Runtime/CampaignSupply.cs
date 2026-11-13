@@ -10,17 +10,20 @@ namespace FPS
         public bool medicineOnly;
         public bool chooseReward;
         [Range(1,4)] public int minimumPartySize = 1;
+        [Tooltip("Authored pack size. Kept for the crate's art and audits; the amount granted follows the held weapon.")]
         public int ammo = 30;
-        [Tooltip("Set for a weapon-specific ammo box. Existing mixed equipment caches leave this empty.")]
+        [Tooltip("Selects the crate model only. Every ammo crate refills the weapon its taker is holding.")]
         public WeaponData ammoWeapon;
-        public string AmmoLabel => ammoWeapon != null ? ammoWeapon.weaponName + " AMMO" : "EQUIPPED WEAPON AMMO";
-        public bool TryGiveAmmoServer(WeaponFireHandler handler) => handler != null && (ammoWeapon != null
-            ? handler.AddReserveAmmoServer(ammoWeapon, ammo) : handler.AddReserveAmmoServer(ammo));
+        public string AmmoLabel => "HELD WEAPON AMMO";
+        public bool TryGiveAmmoServer(WeaponFireHandler handler) => handler != null && handler.AddHeldWeaponAmmoServer(out _);
         public PickupType survivalReward = PickupType.Ammo;
         private Renderer[] visuals;
         private Collider[] colliders;
         private bool hidden;
-        public bool IsAvailable => CampaignMissionController.Instance != null && CampaignMissionController.Instance.State.supplyPartySize >= minimumPartySize;
+        /// <summary>The second set of consumables at a station. The Director opens it when the squad is struggling.</summary>
+        public bool IsDirectorReserve => !medicineOnly && !chooseReward && minimumPartySize >= 3 && SurvivalRules.Capacity(survivalReward) > 0;
+        // The server decides, and only flips this while nobody can see the supply.
+        public bool IsAvailable => CampaignMissionController.Instance != null && CampaignMissionController.Instance.IsSupplyRevealed(this);
         public bool CanInteract => IsAvailable && CampaignMissionController.Instance.State.chapter == chapter
             && !CampaignMissionController.Instance.IsSupplyClaimed(supplyId);
         public bool HasCapacity(SurvivalInventory inventory) => chooseReward
@@ -34,7 +37,7 @@ namespace FPS
                 PickupType.IncendiaryGrenade => "INCENDIARY +1",
                 PickupType.Medkit => "MEDKIT +1",
                 PickupType.Antidote => "ANTIDOTE +1",
-                _ => $"{AmmoLabel} +{ammo}"
+                _ => AmmoLabel
             };
             return $"[{SurvivalHotbar.Key("Interact", "F")}] {item}";
         }

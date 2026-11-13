@@ -316,6 +316,7 @@ namespace FPS
                 openDoorMask.Value=mask;
             }
             if (!IsServer || !NetworkMatchStateManager.IsGameplayActive) return;
+            UpdateSupplies();
             if (dialogueSpecialRegistry == null && SpecialInfectedRegistry.Instance != null)
             {
                 dialogueSpecialRegistry = SpecialInfectedRegistry.Instance;

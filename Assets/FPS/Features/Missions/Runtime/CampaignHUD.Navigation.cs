@@ -14,7 +14,8 @@ namespace FPS
         public event Action TrackingChanged;
         public bool HasMissionTracker => tracker != null && tracker.gameObject.activeInHierarchy;
         private Text navigation, branchArrow;
-        private TMP_Text locationLabel, actionLabel, branchCounts, outcomeLabel;
+        private TMP_Text locationLabel, actionLabel, branchCounts;
+        private const float TrackerHeight = 172, TrackerReducedHeight = 88;
         private RectTransform tracker, marker;
         private Image destinationIcon;
         private RectTransform routeIcon;
@@ -90,7 +91,7 @@ namespace FPS
         {
             tracker = Box(safe, "MissionTracker", Vector2.zero, Vector2.one);
             SelectedUiTheme.Surface(tracker.GetComponent<Image>(), Theme.Tracker);
-            HudLayout.Corner(tracker, new Vector2(0, 1), Vector2.zero, new Vector2(421, 194));
+            HudLayout.Corner(tracker, new Vector2(0, 1), Vector2.zero, new Vector2(421, TrackerHeight));
             locationLabel = DeviceText(tracker, "Location", Vector2.up, Vector2.one, 24, FontStyles.Normal);
             locationLabel.rectTransform.offsetMin = new Vector2(24, -36);
             locationLabel.rectTransform.offsetMax = new Vector2(-24, -12);
@@ -104,15 +105,13 @@ namespace FPS
             branchCounts = DeviceText(tracker, "BranchProgress", Vector2.zero, Vector2.one, 24, FontStyles.Normal);
             branchCounts.fontSize = Theme.Small;
             branchCounts.alignment = TextAlignmentOptions.TopRight;
-            branchCounts.rectTransform.offsetMin = new Vector2(24, 34);
+            branchCounts.rectTransform.offsetMin = new Vector2(24, 12);
             branchCounts.rectTransform.offsetMax = new Vector2(-68, -76);
             branchArrow = Label(tracker, "BranchArrow", Vector2.up, Vector2.up, 24);
             branchArrow.rectTransform.pivot = Vector2.up;
             branchArrow.rectTransform.sizeDelta = new Vector2(24, 40);
             branchArrow.verticalOverflow = VerticalWrapMode.Overflow;
             branchArrow.text = "▶";
-            outcomeLabel = DeviceText(tracker, "ExpectedResult", Vector2.zero, Vector2.one, 18, FontStyles.Normal);
-            outcomeLabel.color = Theme.Muted;
             marker = Box(safe, "NavigationMarker", Vector2.zero, Vector2.one);
             marker.GetComponent<Image>().color = Color.clear;
             marker.anchorMin = marker.anchorMax = marker.pivot = new Vector2(.5f, .5f);
@@ -143,7 +142,9 @@ namespace FPS
             tracker.gameObject.SetActive(visible);
             if (!visible) return;
             var s = Campaign.State;
-            locationLabel.text = s.chapter switch { CampaignChapter.Factory => "FACTORY", CampaignChapter.Asylum => "NORTHBRIDGE", _ => "B2 / LABORATORY" };
+            // The chapter goal stays on screen for the whole chapter; the step below it changes.
+            string goal = "<color=#" + ColorUtility.ToHtmlStringRGB(Theme.Text) + ">" + CampaignRules.ChapterGoal(s.chapter) + "</color>";
+            locationLabel.text = CampaignRules.ChapterName(s.chapter) + " — " + goal;
             var item = s.phase == CampaignPhase.Exploring ? Campaign.Objective(TrackedObjectiveId) : null;
             status.text = s.phase switch
             {
@@ -161,6 +162,10 @@ namespace FPS
                 : "Tank incoming";
             float captionSize = Theme.Small * canvas.scaleFactor >= TacticalUiTheme.MinimumReadableTextPixels ? Theme.Small : Theme.Body;
             actionLabel.fontSize = branchCounts.fontSize = locationLabel.fontSize = captionSize;
+            // Small screens use the larger caption size; the goal matters more than the place name when both cannot fit.
+            // Below the reference resolution the typography pass enlarges captions, so only the goal is sure to fit.
+            if (canvas.scaleFactor < .99f || captionSize != Theme.Small
+                || locationLabel.GetPreferredValues(locationLabel.text, 10000, 1000).x > 373) locationLabel.text = goal;
             actionLabel.lineSpacing = branchCounts.lineSpacing = captionSize == Theme.Small ? 5 : 3;
             actionLabel.text = s.phase switch
             {
@@ -175,45 +180,38 @@ namespace FPS
             if (factoryBranches)
             {
                 string branches = FactoryBranchProgress();
-                if (!factoryTank) actionLabel.text = branches.Replace("▶", "  ") + "\n"
-                    + (CampaignRules.CanSwitchFactoryBranch(s) ? $"{SurvivalHotbar.Key("Track", "T")}  SWITCH" : "");
+                if (!factoryTank)
+                {
+                    // The switch key sits on the branch being followed instead of taking a row of its own.
+                    string[] lines = branches.Replace("▶", "  ").Split('\n');
+                    int active = branches.StartsWith("▶") ? 0 : branches.Contains("\n▶") ? 1 : -1;
+                    if (active >= 0 && CampaignRules.CanSwitchFactoryBranch(s))
+                        lines[active] += "   <color=#" + ColorUtility.ToHtmlStringRGB(Theme.Muted) + ">[" + SurvivalHotbar.Key("Track", "T") + "] SWITCH</color>";
+                    actionLabel.text = string.Join("\n", lines);
+                }
             }
             bool reduced = HudLayout.SecondaryReduced;
             if (reduced && s.phase == CampaignPhase.Encounter)
                 status.text = $"EXTRACTION / {Mathf.CeilToInt(Campaign.Remaining)}s";
             else if (reduced && s.phase == CampaignPhase.Preparing)
                 status.text = s.tankStage == CampaignTankStage.Active ? "EVADE TANK / GATHER" : $"READY {Campaign.ReadyCount}/{Campaign.ActivePlayerCount}";
-            tracker.sizeDelta = new Vector2(421, reduced ? 88 : 194);
+            tracker.sizeDelta = new Vector2(421, reduced ? TrackerReducedHeight : TrackerHeight);
             tracker.anchoredPosition = Vector2.zero;
             locationLabel.gameObject.SetActive(!reduced); actionLabel.gameObject.SetActive(!reduced);
             branchCounts.gameObject.SetActive(!reduced && factoryBranches);
             branchArrow.gameObject.SetActive(!reduced && factoryBranches && branchArrow.text.Length > 0);
-            status.rectTransform.offsetMin = new Vector2(24, reduced ? 24 : 122);
+            status.rectTransform.offsetMin = new Vector2(24, reduced ? 24 : 100);
             status.rectTransform.offsetMax = new Vector2(-24, reduced ? -24 : -40);
             status.fontSize = Theme.Body;
             bool longTitle = status.GetPreferredValues(status.text, 10000, 1000).x > 373;
             float extra = !reduced && longTitle && captionSize == Theme.Body ? 30 : 0;
             if (longTitle && captionSize == Theme.Small) status.fontSize = Theme.Small;
-            tracker.sizeDelta = new Vector2(421, (reduced ? 88 : 194) + extra);
+            tracker.sizeDelta = new Vector2(421, (reduced ? TrackerReducedHeight : TrackerHeight) + extra);
             status.alignment = reduced ? TextAlignmentOptions.MidlineLeft : TextAlignmentOptions.TopLeft;
-            actionLabel.rectTransform.offsetMin = new Vector2(24, 34);
+            actionLabel.rectTransform.offsetMin = new Vector2(24, 12);
             actionLabel.rectTransform.offsetMax = new Vector2(-68, -76 - extra);
             branchCounts.rectTransform.offsetMax = new Vector2(-68, -76 - extra);
             if (extra > 0) branchArrow.rectTransform.anchoredPosition += new Vector2(0, -extra);
-            string expected = item != null ? Campaign.ContentCatalog?.FindObjective(item.objectiveId)?.result : "";
-            bool showOutcome = !reduced && !string.IsNullOrWhiteSpace(expected);
-            outcomeLabel.gameObject.SetActive(showOutcome);
-            if (showOutcome)
-            {
-                outcomeLabel.text = "Then: " + expected;
-                outcomeLabel.fontSize = captionSize;
-                outcomeLabel.rectTransform.anchorMin = new Vector2(0, 1);
-                outcomeLabel.rectTransform.anchorMax = Vector2.one;
-                outcomeLabel.rectTransform.pivot = new Vector2(.5f, 1);
-                outcomeLabel.rectTransform.offsetMin = new Vector2(24, -tracker.sizeDelta.y - 54);
-                outcomeLabel.rectTransform.offsetMax = new Vector2(-24, -tracker.sizeDelta.y + 12);
-                tracker.sizeDelta += new Vector2(0, 66);
-            }
         }
 
         // The catalog is the only source of objective names.

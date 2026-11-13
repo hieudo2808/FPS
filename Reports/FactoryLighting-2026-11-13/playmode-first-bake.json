@@ -1,0 +1,30 @@
+{
+  "status": "success",
+  "result": {
+    "success": true,
+    "jobId": "b658f95b",
+    "status": "completed",
+    "totalTests": 1,
+    "passedTests": 0,
+    "failedTests": 1,
+    "skippedTests": 0,
+    "inconclusiveTests": 0,
+    "otherTests": 0,
+    "failedTestNames": [
+      "FPS.Tests.FactoryDaylightPlaytest.OperatorCanSeeInsideEveryPlayableHangar"
+    ],
+    "failedTestDetails": [
+      {
+        "name": "FPS.Tests.FactoryDaylightPlaytest.OperatorCanSeeInsideEveryPlayableHangar",
+        "resultState": "Failed",
+        "message": "  Shaded east container: 32 % near black; expected below 30%\r\n  Expected: <empty>\r\n  But was:  < \"Shaded east container: 32 % near black; expected below 30%\" >\r\n",
+        "stackTrace": "at FPS.Tests.FactoryDaylightPlaytest+<OperatorCanSeeInsideEveryPlayableHangar>d__10.MoveNext () [0x00775] in E:\\Unity\\Project\\FPS\\Assets\\Tests\\PlayMode\\FactoryDaylightPlaytest.cs:136\r\nat UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\\Library\\PackageCache\\com.unity.test-framework@1405238725ab\\UnityEngine.TestRunner\\NUnitExtensions\\Attributes\\TestEnumerator.cs:44\r\n",
+        "durationSeconds": 107.7615955,
+        "output": "[UnitySkills] [Self-Test] Starting (ProcessJobQueue ticks=10, listener=True)\r\n[DifficultyManager] Difficulty set to Medium. HP: x1, Damage: x1, Speed: x1, RubberBanding: True\r\n[AIDirector] Phase -> RELAX\r\n[Singleton] Created new instance of SettingsManager\r\n[PlayerVisual] root=BrimstonePlayer(Clone) firstPersonArms=Hand slots=True\r\nHUD review local host is ready in GameScene.\r\n\nIgnoreFailingMessages:true\r\nHUD fixture resolution requested: 1920x1080\r\nHUD fixture resolution requested: 3840x2160\r\nHUD fixture resolution requested: 1920x1080\r\nHUD fixture resolution requested: 3840x2160\r\nHUD fixture resolution requested: 1920x1080\r\nHUD fixture resolution requested: 1920x1080\r\n[Singleton] Destroying duplicate instance of AudioManager\r\n"
+      }
+    ],
+    "elapsedSeconds": 336,
+    "resultSummary": "Test run completed: 0/1 passed, 1 failed.",
+    "error": null
+  }
+}

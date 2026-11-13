@@ -48,7 +48,8 @@ namespace FPS
         {
             var root = PeripheralRoot(canvas);
             float width = root.rect.width;
-            float left = VitalsWidth + 24f;
+            // The squad panel sits 28 in from the edge, so the band starts 24 clear of its right side.
+            float left = 28f + VitalsWidth + 24f;
             float right = width - CombatWidth - 24f;
             float bandWidth = Mathf.Max(160f, Mathf.Min(820f, right - left));
             float center = Mathf.Clamp(width * .5f, left + bandWidth * .5f, right - bandWidth * .5f);

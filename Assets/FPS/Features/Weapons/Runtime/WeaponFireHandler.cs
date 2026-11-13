@@ -639,6 +639,41 @@ namespace FPS
             return true;
         }
 
+        /// <summary>Reserve carried across every held weapon, 0..1. A squad low on this is running dry.</summary>
+        public float ServerCarriedReserveFraction
+        {
+            get
+            {
+                if (weaponManager == null) weaponManager = GetComponent<WeaponManager>();
+                if (weaponManager == null) return 1f;
+                int carried = 0, capacity = 0;
+                for (int slot = 0; slot < weaponManager.WeaponCount; slot++)
+                {
+                    WeaponData data = weaponManager.GetWeapon(slot)?.Data;
+                    if (data == null || data.ReserveCapacity <= 0) continue;
+                    // A slot the server has not touched yet still holds its full starting reserve.
+                    carried += Mathf.Min(GetServerState(slot, false)?.ReserveAmmo ?? data.ReserveCapacity, data.ReserveCapacity);
+                    capacity += data.ReserveCapacity;
+                }
+                return capacity > 0 ? (float)carried / capacity : 1f;
+            }
+        }
+
+        /// <summary>A supply crate refills whatever the operator is holding. Whole packs only, like every other ammo source.</summary>
+        public bool AddHeldWeaponAmmoServer(out int granted)
+        {
+            granted = 0;
+            if (!IsServer || !CanUseCombat()) return false;
+            Weapon weapon = GetCurrentWeaponAndEnsureServerState();
+            if (weapon == null || weapon.Data == null) return false;
+            int amount = CampaignRules.SupplyAmmo(weapon.Data.magazineSize, weapon.Data.ReserveCapacity);
+            if (!GetCurrentServerState(true).AddReserveAmmo(amount, weapon.Data.ReserveCapacity)) return false;
+            granted = amount;
+            PublishOwnerState(FireRejectReason.None, 0, GetServerTick());
+            UpdateServerTelemetry();
+            return true;
+        }
+
         public bool AddReserveAmmoServer(WeaponData ammoWeapon, int amount)
         {
             if (!IsServer || amount <= 0 || !CanUseCombat()) return false;

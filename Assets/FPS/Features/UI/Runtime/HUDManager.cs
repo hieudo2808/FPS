@@ -351,6 +351,15 @@ namespace FPS
             caption.text = "HEALTH"; caption.fontSize = Theme.Small; caption.color = Theme.Text; caption.raycastTarget = false;
             Put(health, "InfectionStageText", 24, 70, 284, 30, 340, 138);
             infectionStageText.fontSize = Theme.Small;
+            // The vitals panel has one status line: at sepsis the warning takes it over from the stage readout.
+            if (sepsisWarning != null && sepsisWarning.TryGetComponent<TMP_Text>(out var sepsisText))
+            {
+                sepsisText.transform.SetParent(health, false);
+                SelectedUiTheme.Place(sepsisText.rectTransform, 24, 70, 284, 30, 340, 138);
+                sepsisText.font = Theme.BodyFont; sepsisText.fontSharedMaterial = sepsisText.font.material;
+                sepsisText.fontSize = Theme.Small; sepsisText.color = Theme.Danger;
+                sepsisText.alignment = infectionStageText.alignment;
+            }
             Put(health, "HealthTrack", 24, 100, 260, 6, 340, 138);
             Put(health, "HealthBar", 24, 100, 260, 6, 340, 138);
             SelectedUiTheme.Place(infectionFill.rectTransform, 24, 100, 260, 6, 340, 138);
@@ -834,7 +843,10 @@ namespace FPS
                     : $"{stage.ToString().ToUpperInvariant()} {Mathf.CeilToInt(current)}%";
             }
             if (sepsisWarning != null)
+            {
                 sepsisWarning.SetActive(stage == InfectionStage.Sepsis);
+                if (infectionStageText != null) infectionStageText.enabled = stage != InfectionStage.Sepsis;
+            }
         }
 
         private void UpdateCombatInfo()

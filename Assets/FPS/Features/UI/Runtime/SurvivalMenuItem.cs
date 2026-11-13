@@ -14,6 +14,7 @@ namespace FPS
         [SerializeField] private Image marker;
         [SerializeField] private Image background;
         [SerializeField] private bool primary;
+        [SerializeField] private bool quietFocus;
         private Button button;
         private bool hovered, selected;
         private float focus;
@@ -41,12 +42,17 @@ namespace FPS
             label.color = enabled ? Color.Lerp(primary ? TacticalUiTheme.Accent : TacticalUiTheme.Text,
                 Color.white, focus) : TacticalUiTheme.Muted;
             var position = label.rectTransform.anchoredPosition;
-            position.x = restingX + 8 * focus;
+            position.x = restingX + (quietFocus ? 0 : 8 * focus);
             label.rectTransform.anchoredPosition = position;
             var color = TacticalUiTheme.Accent;
             color.a = enabled ? Mathf.Lerp(primary ? .65f : 0, 1, focus) : 0;
             marker.color = color;
-            background.color = new Color(.55f, .32f, .28f,
+            if (quietFocus)
+            {
+                color.a = enabled ? .12f * focus : 0;
+                background.color = color;
+            }
+            else background.color = new Color(.55f, .32f, .28f,
                 enabled ? Mathf.Lerp(primary ? .2f : 0, .72f, focus) : 0);
         }
 

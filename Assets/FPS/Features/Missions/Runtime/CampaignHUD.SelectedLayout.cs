@@ -47,9 +47,15 @@ namespace FPS
             noticeLine.sprite = HudSkin.Get("Fill"); noticeLine.color = Theme.Muted;
         }
 
-        private void LayoutSelectedDevice(bool manifest, bool expandedSource)
+        private float confirmX, confirmY, confirmWidth, confirmHeight, devicePanelWidth, devicePanelHeight;
+
+        // record: sidebar + page (anything read or compared). manifest: the read-only record with no choices.
+        private void LayoutSelectedDevice(bool record, bool manifest, bool expandedSource, int groups)
         {
+            bool documentOnly = manifest;
+            manifest = record; // The record family shares the manifest shell; only the page contents differ below.
             float pw = manifest ? 1448 : 1386, ph = manifest ? 880 : 930;
+            devicePanelWidth = pw; devicePanelHeight = ph;
             SelectedUiTheme.Place(panel, manifest ? 236 : 267, manifest ? 76 : 63, pw, ph, 1920, 1080);
             float parentWidth = ((RectTransform)panel.parent).rect.width;
             float fittedWidth = Mathf.Min(pw, parentWidth - 48);
@@ -68,7 +74,7 @@ namespace FPS
             Put(surface.Find("DeviceAccess"), sw - 400, 20, 362, 60);
             deviceSubtitle.characterSpacing = surface.Find("DeviceAccess").GetComponent<TMP_Text>().characterSpacing = 5;
             Put(deviceFooter, 28, sh - 43, sw * .5f, 26); Put(deviceHint, sw * .48f, sh - 43, sw * .50f - 28, 26);
-            int dividerIndex = 0, rowIndex = 0;
+            int dividerIndex = 0;
             foreach (var line in surface.GetComponentsInChildren<Image>(true))
             {
                 if (line.name == "DeviceDivider")
@@ -76,17 +82,12 @@ namespace FPS
                     line.sprite = Theme.Divider; line.color = Color.white;
                     Put(line, 0, dividerIndex++ == 0 ? (manifest ? 94 : 92) : (manifest ? 700 : 709), sw, 1);
                 }
-                else if (line.name == "DeviceRowDivider")
-                {
-                    line.sprite = Theme.Divider; line.color = Color.white;
-                    SelectedUiTheme.Place(line.rectTransform, 22, 138 + rowIndex++ * 59, 384, 1, 430, 362);
-                }
             }
             Put(manifestArea.transform, 260, 94, sw - 260, sh - 142); manifestArea.SetActive(manifest);
             var brand = panel.Find("DeviceBrand").GetComponent<TMP_Text>();
             var id = panel.Find("DeviceIdentity").GetComponent<TMP_Text>();
             brand.text = manifest ? "INDUSTRIAL DISPLAY" : "INDUSTRIAL CONTROL PANEL";
-            id.text = manifest ? "LOCAL TERMINAL" : "POWER SYSTEM";
+            id.text = manifest ? "LOCAL TERMINAL" : deviceSubtitle.text == "PRODUCTION CONTROL" ? "POWER SYSTEM" : "LOCAL CONTROL";
             SelectedUiTheme.Place(brand.rectTransform, 50, ph - 42, pw * .6f, 24, pw, ph);
             SelectedUiTheme.Place(id.rectTransform, pw * .62f, ph - 42, pw * .34f, 24, pw, ph);
             deviceBody.lineSpacing = 8;
@@ -100,16 +101,40 @@ namespace FPS
                 Child(manifestSidebar, "DeliveryRecords", 26, 142, 230, 32, 260, 607);
                 var selected = manifestSidebar.transform.Find("DeliveryRecords").GetComponent<TMP_Text>();
                 selected.color = Theme.Background; selected.fontStyle = FontStyles.Normal;
+                // Record titles vary in length; step down to the theme's small size rather than spill over the page.
+                selected.fontSize = Theme.Body;
+                if (selected.GetPreferredValues(selected.text, 10000, 100).x > 226) selected.fontSize = Theme.Small;
                 Child(manifestSidebar, "RecordsArchive", 26, 205, 220, 32, 260, 607);
-                Put(deviceTitle, 303, 125, 790, 48); Put(deviceBreadcrumb, 303, 178, 850, 28);
-                Put(deviceState, 1110, 125, 168, 30); deviceState.text = "EVIDENCE";
-                Put(manifestPage.transform, 303, 220, 900, 435);
                 SelectedUiTheme.Surface(manifestPage.GetComponent<Image>(), Theme.PaperSurface);
-                Child(manifestPage, "ManifestPageTitle", 38, 28, 700, 34, 900, 435);
-                Child(manifestPage, "ManifestCopy", 38, 64, 700, 24, 900, 435);
-                Child(manifestPage, "ManifestRecord", 720, 28, 142, 30, 900, 435);
-                Child(manifestPage, "PaperDivider", 38, 101, 824, 1, 900, 435);
-                Put(deviceViewport, 341, 347, 824, 280);
+                manifestPage.transform.Find("ManifestCopy").gameObject.SetActive(documentOnly);
+                manifestPage.transform.Find("ManifestRecord").gameObject.SetActive(documentOnly);
+                deviceState.alignment = TextAlignmentOptions.TopRight;
+                if (documentOnly)
+                {
+                    Put(deviceTitle, 303, 125, 790, 48); Put(deviceBreadcrumb, 303, 178, 850, 28);
+                    Put(deviceState, 1110, 125, 168, 30); deviceState.text = "EVIDENCE";
+                    Put(manifestPage.transform, 303, 220, 900, 435);
+                    Child(manifestPage, "ManifestPageTitle", 38, 28, 700, 34, 900, 435);
+                    Child(manifestPage, "ManifestCopy", 38, 64, 700, 24, 900, 435);
+                    Child(manifestPage, "ManifestRecord", 720, 28, 142, 30, 900, 435);
+                    Child(manifestPage, "PaperDivider", 38, 101, 824, 1, 900, 435);
+                    Put(deviceViewport, 341, 347, 824, 280);
+                }
+                else
+                {
+                    // Title, two lines of instruction, the source page, then one or two choice groups and the confirm key.
+                    Put(deviceTitle, 303, 106, 640, 44); Put(deviceBreadcrumb, 303, 152, 900, 54);
+                    Put(deviceState, 953, 112, 250, 30);
+                    float pageHeight = groups >= 2 ? 230 : 288, choicesTop = 212 + pageHeight + 10;
+                    float choicesHeight = groups >= 2 ? 156 : 78, confirmTop = choicesTop + choicesHeight + (groups >= 2 ? 12 : 16);
+                    Put(manifestPage.transform, 303, 212, 900, pageHeight);
+                    Child(manifestPage, "ManifestPageTitle", 38, 14, 824, 34, 900, pageHeight);
+                    Child(manifestPage, "PaperDivider", 38, 54, 824, 1, 900, pageHeight);
+                    Put(deviceViewport, 341, 212 + 64, 824, pageHeight - 78);
+                    // Choice area and confirm key live on the bezel panel, in the same screen coordinates.
+                    SelectedUiTheme.Place(controls, 64 + 303, 54 + choicesTop, 900, choicesHeight, pw, ph);
+                    confirmX = 64 + 303; confirmY = 54 + confirmTop; confirmWidth = 384; confirmHeight = 64;
+                }
             }
             else
             {
@@ -123,14 +148,10 @@ namespace FPS
                 Child(deviceInstructionCard, "DeviceScrollHint", 390, 17, 308, 26, 718, leftHeight);
                 Child(deviceControlCard, "ModuleHeaderPlate", 0, 0, 430, 57, 430, 362);
                 Child(deviceControlCard, "DeviceControlsHeading", 20, 17, 390, 28, 430, 362);
-                string[] names = { "DeviceSystemCaption", "DeviceSourceCaption", "DeviceActionCaption" };
-                string[] values = { "DeviceSystemValue", "DeviceSource", "DeviceAction" };
-                for (int i = 0; i < 3; i++)
-                {
-                    Child(deviceControlCard, names[i], 22, 96 + i * 59, 180, 32, 430, 362);
-                    Child(deviceControlCard, values[i], 202, 96 + i * 59, 206, 32, 430, 362);
-                    deviceControlCard.transform.Find(values[i]).GetComponent<TMP_Text>().fontSize = Theme.Body;
-                }
+                Child(deviceControlCard, "DeviceActionCaption", 22, 96, 180, 32, 430, 362);
+                Child(deviceControlCard, "DeviceAction", 202, 96, 206, 32, 430, 362);
+                deviceAction.fontSize = Theme.Body;
+                confirmX = 873; confirmY = 550; confirmWidth = 384; confirmHeight = 81;
                 Put(deviceViewport, 60, 311, 672, expandedSource ? 190 : 76);
                 Put(deviceNotice.transform, 60, expandedSource ? 515 : 405, 672, 114);
                 Child(deviceNotice, "DeviceNoticeHeading", 24, 12, 624, 24, 672, 114);
@@ -145,14 +166,15 @@ namespace FPS
             SelectedUiTheme.Surface(button.GetComponent<Image>(), Theme.LockedSurface);
             button.GetComponent<Image>().raycastTarget = true;
             var label = button.GetComponentInChildren<TMP_Text>();
-            if (label != null) SelectedUiTheme.Place(label.rectTransform, 74, 19, 298, 43, 384, 81);
+            if (label != null) SelectedUiTheme.Place(label.rectTransform, 74, 0, 298, confirmHeight, confirmWidth, confirmHeight);
             var colors = ColorBlock.defaultColorBlock;
             colors.highlightedColor = colors.selectedColor = Theme.Paper;
             colors.disabledColor = Color.white; button.colors = colors;
-            SelectedUiTheme.Place(button.GetComponent<RectTransform>(), 873, 550, 384, 81, 1386, 930);
-            SelectedUiTheme.Place(deviceLock.rectTransform, 902, 576, 26, 26, 1386, 930);
-            SelectedUiTheme.Place(deviceProgressTrack.rectTransform, 902, 570, 42, 42, 1386, 930);
-            SelectedUiTheme.Place(deviceProgress.rectTransform, 902, 570, 42, 42, 1386, 930);
+            // The confirm key sits where the active layout put it; the hold ring rides on its left edge.
+            SelectedUiTheme.Place(button.GetComponent<RectTransform>(), confirmX, confirmY, confirmWidth, confirmHeight, devicePanelWidth, devicePanelHeight);
+            float ringY = confirmY + (confirmHeight - 42) / 2;
+            SelectedUiTheme.Place(deviceProgressTrack.rectTransform, confirmX + 29, ringY, 42, 42, devicePanelWidth, devicePanelHeight);
+            SelectedUiTheme.Place(deviceProgress.rectTransform, confirmX + 29, ringY, 42, 42, devicePanelWidth, devicePanelHeight);
         }
     }
 }

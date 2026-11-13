@@ -211,7 +211,7 @@ namespace FPS
                 .FirstOrDefault(button => button.interactable && button.name == focusName);
             EventSystem.current?.SetSelectedGameObject(restoredFocus != null ? restoredFocus.gameObject
                 : selectedRow != null ? selectedRow.gameObject
-                : rows.FirstOrDefault(row => row.GetComponent<Button>().interactable) ?? closeButton.gameObject);
+                : rows.FirstOrDefault(row => row.TryGetComponent<Button>(out var button) && button.interactable) ?? closeButton.gameObject);
             focusOnRefresh = false;
         }
 
@@ -275,28 +275,59 @@ namespace FPS
         {
             var definitions = campaign.ContentCatalog?.objectives;
             if (definitions == null) return;
+            var chapter = campaign.State.chapter;
+            var steps = definitions.Where(objective => objective != null && objective.id != CampaignObjectiveId.None
+                && CampaignRules.ChapterOf(objective.id) == chapter).ToArray();
             CampaignObjectiveDefinition selection = null;
-            foreach (var objective in definitions)
-            {
-                if (objective == null || objective.id == CampaignObjectiveId.None
-                    || CampaignRules.ChapterOf(objective.id) != campaign.State.chapter) continue;
-                bool done = CampaignRules.IsObjectiveComplete(campaign.State, objective.id);
-                bool available = CampaignObjectiveSelection.CanTrack(campaign.State, objective.id)
-                    && campaign.Objective(objective.id) != null;
-                bool tracked = trackingHud != null && trackingHud.TrackedObjectiveId == objective.id;
-                string state = done ? "COMPLETE" : tracked ? "TRACKING" : available ? "AVAILABLE" : "LOCKED";
-                var row = AddRow(System.Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase(objective.title.ToLowerInvariant()), state, MissionIcon(done, available), () =>
+            // The chapter goal leads; Factory then lists its two parallel branches. Group rows carry the progress count.
+            var groups = chapter == CampaignChapter.Factory
+                ? new[]
                 {
-                    selectedObjective = objective.id;
-                    if (available) trackingHud?.TryTrackObjective(objective.id);
-                    ShowMission(objective);
-                });
-                StyleRow(row, false);
-                if (tracked) row.transform.Find("Content/Status").GetComponent<TMP_Text>().color = Theme.Text;
-                if (selection == null || objective.id == selectedObjective
-                    || selectedObjective == CampaignObjectiveId.None && tracked) { selection = objective; selectedRow = row; }
+                    ("EXTRACTION", CampaignFactoryBranch.None),
+                    ("POWER", CampaignFactoryBranch.Power), ("LOGISTICS", CampaignFactoryBranch.Logistics)
+                }
+                : new[] { (CampaignRules.ChapterGoal(chapter).ToUpperInvariant(), CampaignFactoryBranch.None) };
+            foreach (var (label, branch) in groups)
+            {
+                var members = steps.Where(step => CampaignRules.FactoryBranchOf(step.id) == branch).ToArray();
+                if (members.Length == 0) continue;
+                AddGroup(label, members.Count(step => CampaignRules.IsObjectiveComplete(campaign.State, step.id)) + "/" + members.Length);
+                foreach (var objective in members)
+                {
+                    bool done = CampaignRules.IsObjectiveComplete(campaign.State, objective.id);
+                    bool available = CampaignObjectiveSelection.CanTrack(campaign.State, objective.id)
+                        && campaign.Objective(objective.id) != null;
+                    bool tracked = trackingHud != null && trackingHud.TrackedObjectiveId == objective.id;
+                    string state = done ? "COMPLETE" : tracked ? "TRACKING" : available ? "AVAILABLE" : "LOCKED";
+                    var row = AddRow(System.Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase(objective.title.ToLowerInvariant()), state, MissionIcon(done, available), () =>
+                    {
+                        selectedObjective = objective.id;
+                        if (available) trackingHud?.TryTrackObjective(objective.id);
+                        ShowMission(objective);
+                    });
+                    StyleRow(row, false);
+                    if (tracked) row.transform.Find("Content/Status").GetComponent<TMP_Text>().color = Theme.Text;
+                    if (selection == null || objective.id == selectedObjective
+                        || selectedObjective == CampaignObjectiveId.None && tracked) { selection = objective; selectedRow = row; }
+                }
             }
             if (selection != null) { StyleRow(selectedRow, true); ShowMission(selection); }
+        }
+
+        // A non-interactive list row: group title on the left, completed/total on the right.
+        private void AddGroup(string label, string count)
+        {
+            RectTransform row = Panel(listContent, "Group " + label, Vector2.zero, Vector2.one, Color.clear);
+            row.gameObject.AddComponent<LayoutElement>().minHeight = 46;
+            TMP_Text name = Text(row, "GroupName", Vector2.zero, new Vector2(.84f, 1), 16); name.text = label; name.color = Theme.Muted;
+            // Group titles are single short words; they must fit the column at the theme's small size.
+            name.alignment = TextAlignmentOptions.BottomLeft; name.textWrappingMode = TextWrappingModes.NoWrap;
+            name.rectTransform.offsetMin = new Vector2(16, 8); name.rectTransform.offsetMax = new Vector2(0, 0);
+            TMP_Text value = Text(row, "GroupCount", new Vector2(.84f, 0), Vector2.one, 16); value.text = count;
+            value.alignment = TextAlignmentOptions.BottomRight;
+            value.rectTransform.offsetMin = new Vector2(0, 8); value.rectTransform.offsetMax = new Vector2(-16, 0);
+            Divider(row, "Separator", new Vector2(0, 0), new Vector2(1, .03f));
+            rows.Add(row.gameObject);
         }
 
         private void ShowMission(CampaignObjectiveDefinition objective)
@@ -304,20 +335,13 @@ namespace FPS
             bool done = CampaignRules.IsObjectiveComplete(campaign.State, objective.id);
             bool available = CampaignObjectiveSelection.CanTrack(campaign.State, objective.id);
             bool tracked = trackingHud != null && trackingHud.TrackedObjectiveId == objective.id;
-            string body = objective.instructions + "\n\n" + (done ? "Recorded for the squad."
-                : available ? "Select this objective to follow it on your HUD."
-                : "Requires: " + CampaignRules.Availability(campaign.State, objective.id).Reason.Replace(" / ", " — "));
+            // Progress counts live on the group rows; the detail says what the step is and what it still needs.
+            string body = objective.instructions + (done ? "\n\nRecorded for the squad."
+                : available ? "" : "\n\nRequires: " + CampaignRules.Availability(campaign.State, objective.id).Reason.Replace(" / ", " — "));
             var branch = CampaignRules.FactoryBranchOf(objective.id);
-            var steps = campaign.ContentCatalog.objectives.Where(step => step != null && step.id != CampaignObjectiveId.None
-                && CampaignRules.ChapterOf(step.id) == campaign.State.chapter
-                && (branch == CampaignFactoryBranch.None || CampaignRules.FactoryBranchOf(step.id) == branch)).ToArray();
-            int complete = steps.Count(step => CampaignRules.IsObjectiveComplete(campaign.State, step.id));
-            // The list on the left already shows each step's state; the detail keeps only the count.
-            body += "\n\n" + (branch == CampaignFactoryBranch.None ? "CHAPTER PROGRESS" : branch.ToString().ToUpperInvariant())
-                + $"  {complete} OF {steps.Length} COMPLETE";
             ShowDetail(MissionIcon(done, available), System.Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase(objective.title.ToLowerInvariant()), done ? "COMPLETE" : tracked ? "TRACKING" : available ? "AVAILABLE" : "LOCKED",
                 body);
-            detailCategory.text = (campaign.State.chapter == CampaignChapter.Asylum ? "NORTHBRIDGE" : campaign.State.chapter.ToString().ToUpperInvariant())
+            detailCategory.text = CampaignRules.ChapterName(campaign.State.chapter)
                 + (branch == CampaignFactoryBranch.None ? "" : " — " + branch.ToString().ToUpperInvariant());
         }
 

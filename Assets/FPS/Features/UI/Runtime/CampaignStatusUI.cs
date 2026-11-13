@@ -116,7 +116,7 @@ namespace FPS
             finished &= campaign.RunSummary != null;
             if (finished) UiStateStack.Push(UiScreen.Debrief, debriefPanel, () => {});
             else UiStateStack.Remove(UiScreen.Debrief);
-            retryButton.gameObject.SetActive(finished && (campaign.State.phase == CampaignPhase.Completed || campaign.IsServer));
+            retryButton.gameObject.SetActive(finished);
             if (finished) UiStateStack.RefreshFocus(UiScreen.Debrief);
             if (finished)
             {
@@ -146,16 +146,21 @@ namespace FPS
             debriefDiscoveryValues.text = $"{summary.optionalFilesFound} / {optionalTotal}\n"
                 + $"{(summary.factoryCaseSecured ? "Secured" : "Not secured")}\n"
                 + $"{(summary.labCaseSecured ? "Secured" : "Not secured")}";
-            debriefFooter.text = failed ? "Return to the last checkpoint." : "Return to menu.";
-            retryLabel.text = failed ? "RETRY CHECKPOINT" : campaign != null && campaign.IsServer ? "END SESSION" : "RETURN TO MENU";
+            // Only the host can retry; a client may wait for that or leave on its own.
+            bool host = campaign != null && campaign.IsServer;
+            debriefFooter.text = !failed ? "Return to menu." : host ? "Return to the last checkpoint." : "Wait for the host to retry, or return to menu.";
+            retryLabel.text = !host ? "RETURN TO MENU" : failed ? "RETRY CHECKPOINT" : "END SESSION";
+            // The key icon sits against the label, whose width changes with the text.
+            retryKey.anchoredPosition = new Vector2(-retryLabel.GetPreferredValues(retryLabel.text).x - 12, 0);
             debriefEnd.gameObject.SetActive(false);
-            retryButton.gameObject.SetActive(!failed || campaign != null && campaign.IsServer);
+            retryButton.gameObject.SetActive(true);
         }
 
         private void OnDebriefAction()
         {
-            if (campaign?.State.phase == CampaignPhase.Failed) campaign.RequestRetry();
-            else if (campaign?.State.phase == CampaignPhase.Completed) NetworkGameManager.Instance?.Disconnect();
+            if (campaign == null) return;
+            if (campaign.State.phase == CampaignPhase.Failed && campaign.IsServer) campaign.RequestRetry();
+            else if (campaign.State.phase is CampaignPhase.Failed or CampaignPhase.Completed) NetworkGameManager.Instance?.Disconnect();
         }
 
         private static string FormatTime(float seconds)

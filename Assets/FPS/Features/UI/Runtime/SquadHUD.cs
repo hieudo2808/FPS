@@ -179,13 +179,13 @@ namespace FPS
         {
             GameObject root = new($"SquadMember_{index + 1}", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
             root.transform.SetParent(parent, false); HudSkin.Apply(root.GetComponent<Image>(), "Button"); root.GetComponent<LayoutElement>().preferredHeight = 96;
-            TMP_Text portrait = Text(root.transform, "Portrait", new Vector2(16f / 350, 56f / 96), new Vector2(.14f, 84f / 96), 24, FontStyles.Bold); portrait.alignment = TextAlignmentOptions.Center;
+            TMP_Text portrait = Text(root.transform, "Portrait", new Vector2(16f / HudLayout.VitalsWidth, 56f / 96), new Vector2(.14f, 84f / 96), 24, FontStyles.Bold); portrait.alignment = TextAlignmentOptions.Center;
             TMP_Text name = Text(root.transform, "Name", new Vector2(.17f, 56f / 96), new Vector2(.49f, 84f / 96), 21, FontStyles.Bold);
-            TMP_Text character = Text(root.transform, "Character", new Vector2(.50f, 56f / 96), new Vector2(334f / 350, 84f / 96), 15); character.alignment = TextAlignmentOptions.Right;
-            TMP_Text status = Text(root.transform, "Status", new Vector2(16f / 350, .25f), new Vector2(334f / 350, 56f / 96), 24, FontStyles.Bold);
-            Image healthTrack = Image(root.transform, "HealthTrack", new Vector2(.17f, .18f), new Vector2(334f / 350, .23f)); healthTrack.sprite = barSprite; healthTrack.color = TacticalUiTheme.Control;
-            Image health = Image(root.transform, "Health", new Vector2(.17f, .18f), new Vector2(334f / 350, .23f)); health.type = UnityEngine.UI.Image.Type.Filled; health.fillMethod = UnityEngine.UI.Image.FillMethod.Horizontal; health.color = TacticalUiTheme.Success;
-            Image infection = Image(root.transform, "Infection", new Vector2(.17f, .125f), new Vector2(334f / 350, .155f)); infection.type = UnityEngine.UI.Image.Type.Filled; infection.fillMethod = UnityEngine.UI.Image.FillMethod.Horizontal; infection.color = TacticalUiTheme.Accent;
+            TMP_Text character = Text(root.transform, "Character", new Vector2(.50f, 56f / 96), new Vector2((HudLayout.VitalsWidth - 16f) / HudLayout.VitalsWidth, 84f / 96), 15); character.alignment = TextAlignmentOptions.Right;
+            TMP_Text status = Text(root.transform, "Status", new Vector2(16f / HudLayout.VitalsWidth, .25f), new Vector2((HudLayout.VitalsWidth - 16f) / HudLayout.VitalsWidth, 56f / 96), 24, FontStyles.Bold);
+            Image healthTrack = Image(root.transform, "HealthTrack", new Vector2(.17f, .18f), new Vector2((HudLayout.VitalsWidth - 16f) / HudLayout.VitalsWidth, .23f)); healthTrack.sprite = barSprite; healthTrack.color = TacticalUiTheme.Control;
+            Image health = Image(root.transform, "Health", new Vector2(.17f, .18f), new Vector2((HudLayout.VitalsWidth - 16f) / HudLayout.VitalsWidth, .23f)); health.type = UnityEngine.UI.Image.Type.Filled; health.fillMethod = UnityEngine.UI.Image.FillMethod.Horizontal; health.color = TacticalUiTheme.Success;
+            Image infection = Image(root.transform, "Infection", new Vector2(.17f, .125f), new Vector2((HudLayout.VitalsWidth - 16f) / HudLayout.VitalsWidth, .155f)); infection.type = UnityEngine.UI.Image.Type.Filled; infection.fillMethod = UnityEngine.UI.Image.FillMethod.Horizontal; infection.color = TacticalUiTheme.Accent;
             health.sprite = infection.sprite = barSprite;
             root.SetActive(false);
             return new Row { root = root, portrait = portrait, name = name, character = character, status = status, health = health, infection = infection };

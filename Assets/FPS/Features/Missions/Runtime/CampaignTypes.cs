@@ -223,6 +223,26 @@ namespace FPS
     /// <summary>Deterministic chapter and puzzle rules. No scene, timer or networking dependencies.</summary>
     public static class CampaignRules
     {
+        /// <summary>One ammo crate refills half the held weapon's reserve, never less than a magazine or more than it can carry.</summary>
+        public static int SupplyAmmo(int magazineSize, int reserveCapacity) => reserveCapacity <= 0 ? 0
+            : Math.Min(reserveCapacity, Math.Max(Math.Min(magazineSize, reserveCapacity), (reserveCapacity + 1) / 2));
+
+        /// <summary>Station index encoded in a supply id: "Factory_1_2" and "survival-Factory_1_3-0" are both station 1.</summary>
+        public static int SupplyStation(string supplyId)
+        {
+            if (string.IsNullOrEmpty(supplyId)) return -1;
+            string[] parts = (supplyId.StartsWith("survival-", StringComparison.Ordinal) ? supplyId.Substring(9) : supplyId).Split('_');
+            return parts.Length >= 2 && int.TryParse(parts[1], out int station) && station >= 0 && station < 8 ? station : -1;
+        }
+
+        /// <summary>The squad is struggling enough for the Director to open a station's reserve.</summary>
+        public static bool SquadNeedsReserve(float averageHealth01, int downed, float secondsSinceLastDown, float averageReserveAmmo01) =>
+            downed > 0 || secondsSinceLastDown >= 0f && secondsSinceLastDown <= 30f || averageHealth01 < .5f || averageReserveAmmo01 < .25f;
+
+        /// <summary>Base supplies scale with party size; reserve supplies appear only where the Director released their station.</summary>
+        public static bool SupplyWanted(bool reserve, int minimumPartySize, int partySize, bool stationReleased) =>
+            reserve ? stationReleased : partySize >= minimumPartySize;
+
         public static int HintTier(float seconds) => seconds >= 135 ? 3 : seconds >= 90 ? 2 : seconds >= 45 ? 1 : 0;
         public static string HintText(CampaignState state, CampaignObjectiveDefinition definition, float seconds)
         {
@@ -245,6 +265,11 @@ namespace FPS
             return state.HasFile(file.id) ? CampaignResult.AlreadyDone : CampaignResult.Accepted;
         }
 
+        // The one thing each chapter is for; shown on the tracker and as the Missions group title.
+        public static string ChapterName(CampaignChapter chapter) => chapter switch
+        { CampaignChapter.Factory => "FACTORY", CampaignChapter.Asylum => "NORTHBRIDGE", _ => "B2 / LABORATORY" };
+        public static string ChapterGoal(CampaignChapter chapter) => chapter switch
+        { CampaignChapter.Factory => "Recover the evidence case", CampaignChapter.Asylum => "Call the B2 lift", _ => "Transmit the evidence" };
         public static bool IsEncounter(CampaignObjectiveId id) => id is CampaignObjectiveId.FactoryRoute or CampaignObjectiveId.AsylumLift or CampaignObjectiveId.LabTransmit;
         public static CampaignChapter ChapterOf(CampaignObjectiveId id) => id <= CampaignObjectiveId.FactoryRoute ? CampaignChapter.Factory
             : id <= CampaignObjectiveId.AsylumLift ? CampaignChapter.Asylum : CampaignChapter.Laboratory;
@@ -314,14 +339,13 @@ namespace FPS
                 CampaignGateWaitReason.DisconnectGrace => "Waiting for disconnected operators to reconnect",
                 CampaignGateWaitReason.Revive => "Revive downed operators before departure",
                 CampaignGateWaitReason.EnterVolume => "Enter the " + volume,
-                CampaignGateWaitReason.Ready => "Confirm READY in the preparation area",
+                CampaignGateWaitReason.Ready => "Ready up in the preparation area",
                 CampaignGateWaitReason.Countdown => $"Remain in the {volume} / {gate.countdownRemaining:0}s countdown",
                 _ => "Waiting for server gate status"
             };
-            return reason + $" / In zone {gate.insideCount}/{gate.eligibleCount}"
-                + (preparation ? $" / READY {gate.readyCount}/{gate.eligibleCount}" : "")
-                + (gate.overrideActive ? " / Timeout override active; one eligible operator must stay in zone"
-                    : $" / Timeout override in {gate.timeoutRemaining:0}s");
+            // One action line and one count line; a solo operator has nobody to ready up for.
+            return reason + $"\n{gate.insideCount}/{gate.eligibleCount} in zone"
+                + (preparation && gate.eligibleCount > 1 ? $" · READY {gate.readyCount}/{gate.eligibleCount}" : "");
         }
         public static bool CanOpenShipping(CampaignState s) => s != null && s.HasFile(CampaignFileId.FactoryManifest)
             && s.chapter == CampaignChapter.Factory && s.phase == CampaignPhase.Exploring;
