@@ -2678,6 +2678,8 @@ GameObject:
   - component: {fileID: 1901489509013539265}
   - component: {fileID: 415596807852044921}
   - component: {fileID: 6762364357569122503}
+  - component: {fileID: 6937902389462830321}
+  - component: {fileID: 3650413841398475384}
   m_Layer: 0
   m_Name: Infector
   m_TagString: Untagged
@@ -3069,6 +3071,46 @@ MonoBehaviour:
   spatialBlend: 1
   presentationPitch: 1.1
   priority: 128
+--- !u!114 &6937902389462830321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5375857002461590880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b650cad3d14c0e841b21d26faa3ecbb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.EnemyHitReactionPresenter
+  lightAngle: 8
+  heavyAngle: 26
+  riseSeconds: 0.05
+  recoverSeconds: 0.28
+  heavyRecoverSeconds: 0.5
+  parentFalloff: 0.45
+  bloodPrefab: {fileID: 1000012909287652, guid: abb9f519b142e304d9c45b56afa768bc, type: 3}
+  bloodLifetime: 2.5
+  bloodScale: 1
+--- !u!114 &3650413841398475384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5375857002461590880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e67c433a44973044a70d36b26e4cd0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.EnemyVoice
+  idle: {fileID: 0}
+  attack: {fileID: 0}
+  hurt: {fileID: 11400000, guid: 898d95597f6ea3b488bcbeb1d073ffc9, type: 2}
+  death: {fileID: 0}
+  idleInterval: {x: 4, y: 9}
+  idleRange: 22
+  hurtCooldown: 0.7
 --- !u!1 &5437061686112910698
 GameObject:
   m_ObjectHideFlags: 0

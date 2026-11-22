@@ -1,0 +1,148 @@
+{
+  "note": "Weapon foley cues read by Tools/FPS/Audio/Build All. t = seconds into the animation (normal speed) at which the clip STARTS; clips live in Content/Weapons/<gun>/Handling. v = volume multiplier on the gun's foley volume.",
+  "guns": [
+    {
+      "gun": "Classic", "fireVolume": 0.85, "fireVoices": 4, "fireMin": 4, "fireMax": 90, "foleyVolume": 0.6,
+      "equip": [
+        { "t": 0.00, "clip": "Classic_HolsterDraw_FP_001" },
+        { "t": 0.05, "clip": "Classic_Equip_Movement_A_FP_001" },
+        { "t": 0.30, "clip": "Classic_Equip_Slide_Pull_FP_001" },
+        { "t": 0.38, "clip": "Classic_Equip_Slide_Release_FP_001" },
+        { "t": 0.64, "clip": "Classic_Equip_Grab_FP_001" }
+      ],
+      "reload": [
+        { "t": 0.00, "clip": "Classic_Movement_Reload_A_FP_001" },
+        { "t": 0.18, "clip": "Classic_Magazine_Release_Button_FP_001" },
+        { "t": 0.36, "clip": "Classic_Magazine_Out_FP_001" },
+        { "t": 0.45, "clip": "Classic_Reload_Grab_FP_001" },
+        { "t": 0.82, "clip": "Classic_Magazine_In_A_FP_001" },
+        { "t": 0.84, "clip": "Classic_Magazine_In_B_FP_001" },
+        { "t": 1.24, "clip": "Classic_Slide_Grab_FP_001" },
+        { "t": 1.27, "clip": "Classic_Reload_Slide_Pull_FP_001" },
+        { "t": 1.44, "clip": "Classic_Reload_Slide_Release_FP_001" },
+        { "t": 1.55, "clip": "Classic_Movement_Reload_End_FP_001" }
+      ]
+    },
+    {
+      "gun": "Vandal", "fireVolume": 0.75, "fireVoices": 5, "fireMin": 6, "fireMax": 120, "foleyVolume": 0.6,
+      "equip": [
+        { "t": 0.00, "clip": "Vandal_Grab_FP_001" },
+        { "t": 0.44, "clip": "Vandal_ChargingHandle_Grab_FP_001" },
+        { "t": 0.54, "clip": "Vandal_ChargingHandle_Back_FP_001" },
+        { "t": 0.73, "clip": "Vandal_ChargingHandle_Forward_FP_001" }
+      ],
+      "reload": [
+        { "t": 0.00, "clip": "Vandal_Reload_Movement_A_FP_001" },
+        { "t": 0.50, "clip": "Vandal_MagOut_FP_001" },
+        { "t": 1.31, "clip": "Vandal_MagIn_Start_FP_001" },
+        { "t": 1.37, "clip": "Vandal_MagIn_End_FP_001" },
+        { "t": 1.64, "clip": "Vandal_ChargingHandle_Back_FP_001" },
+        { "t": 1.68, "clip": "Vandal_ChargingHandle_Grab_FP_001" },
+        { "t": 1.88, "clip": "Vandal_ChargingHandle_Forward_FP_001" },
+        { "t": 2.48, "clip": "Vandal_Grab_FP_001" }
+      ]
+    },
+    {
+      "gun": "Odin", "fireVolume": 0.75, "fireVoices": 6, "fireMin": 6, "fireMax": 120, "foleyVolume": 0.6,
+      "equip": [
+        { "t": 0.00, "clip": "Odin_Equip_A_FP_001" },
+        { "t": 0.71, "clip": "Odin_Equip_Grab_Handle_FP_001" },
+        { "t": 0.76, "clip": "Odin_Equip_B_FP_001" },
+        { "t": 1.30, "clip": "Odin_Equip_C_FP_001" }
+      ],
+      "reload": [
+        { "t": 0.31, "clip": "Odin_Reload_Top_Open_Start_FP_001" },
+        { "t": 0.40, "clip": "Odin_Reload_Top_Open_End_FP_001" },
+        { "t": 0.90, "clip": "Odin_Reload_Grab_Box_Magazine_TP_001" },
+        { "t": 1.15, "clip": "Odin_Reload_Lift_Movement_FP_001" },
+        { "t": 1.55, "clip": "Odin_Reload_Swing_Box_Magazine_TP_001" },
+        { "t": 1.95, "clip": "Odin_Reload_Box_Magazine_Push_TP_001" },
+        { "t": 2.09, "clip": "Odin_Reload_Box_Magazine_Hit_TP_001" },
+        { "t": 2.15, "clip": "Odin_Reload_Box_Magazine_Lock_TP_001" },
+        { "t": 2.25, "clip": "Odin_Reload_Belt_Movement_C_FP_001" },
+        { "t": 2.57, "clip": "Odin_Reload_Top_Close_FP_001" },
+        { "t": 2.98, "clip": "Odin_Reload_Shift_Movement_FP_001" },
+        { "t": 3.56, "clip": "Odin_Reload_ChargingHandle_Back_FP_001" },
+        { "t": 3.82, "clip": "Odin_Reload_ChargingHandle_Forward_FP_001" },
+        { "t": 4.25, "clip": "Odin_Reload_End_Movement_FP_001" }
+      ]
+    },
+    {
+      "gun": "Warden", "fireVolume": 0.75, "fireVoices": 4, "fireMin": 6, "fireMax": 120, "foleyVolume": 0.6,
+      "equip": [
+        { "t": 0.00, "clip": "Warden_Equip_Movement_A_001" },
+        { "t": 0.20, "clip": "Warden_ChargingHandle_Grab_001" },
+        { "t": 0.26, "clip": "Warden_ChargingHandle_Back_001" },
+        { "t": 0.35, "clip": "Warden_DustCover_001" },
+        { "t": 0.52, "clip": "Warden_ChargingHandle_Forward_001" },
+        { "t": 0.90, "clip": "Warden_Equip_Movement_B_001" }
+      ],
+      "reload": [
+        { "t": 0.00, "clip": "Warden_Reload_Movement_A_001" },
+        { "t": 0.35, "clip": "Warden_Reload_Movement_B_001" },
+        { "t": 0.67, "clip": "Warden_Mags_Hit_001" },
+        { "t": 0.69, "clip": "Warden_Magazine_Out_001" },
+        { "t": 1.38, "clip": "Warden_Magazine_Touch_Magwell_001" },
+        { "t": 1.42, "clip": "Warden_Magazine_In_001" },
+        { "t": 1.78, "clip": "Warden_ChargingHandle_Grab_001" },
+        { "t": 1.86, "clip": "Warden_ChargingHandle_Back_001" },
+        { "t": 2.05, "clip": "Warden_ChargingHandle_Forward_001" },
+        { "t": 2.40, "clip": "Warden_Reload_Movement_C_001" }
+      ]
+    },
+    {
+      "gun": "Operator", "fireVolume": 1.0, "fireVoices": 2, "fireMin": 8, "fireMax": 160, "foleyVolume": 0.6,
+      "equip": [
+        { "t": 0.00, "clip": "Operator_Grab_FP_001" },
+        { "t": 0.10, "clip": "Operator_Equip_Movement_A_FP_001" },
+        { "t": 0.22, "clip": "Operator_ChargingHandle_Up_001" },
+        { "t": 0.59, "clip": "Operator_ChargingHandle_Back_001" },
+        { "t": 0.93, "clip": "Operator_ChargingHandle_Forward_001" },
+        { "t": 1.18, "clip": "Operator_ChargingHandle_Down_001" },
+        { "t": 1.50, "clip": "Operator_Equip_Movement_B_FP_001" }
+      ],
+      "fire": [
+        { "t": 0.36, "clip": "Operator_ChargingHandle_Up_001" },
+        { "t": 0.55, "clip": "Operator_ChargingHandle_Back_001" },
+        { "t": 0.92, "clip": "Operator_ChargingHandle_Forward_001" },
+        { "t": 1.26, "clip": "Operator_ChargingHandle_Down_001" }
+      ],
+      "reload": [
+        { "t": 0.50, "clip": "Operator_Reload_Movement_A_FP_001" },
+        { "t": 0.79, "clip": "Operator_Magazine_Grab_FP_001" },
+        { "t": 0.93, "clip": "Operator_Magazine_Out_001" },
+        { "t": 1.17, "clip": "Operator_Reload_Movement_B_FP_001" },
+        { "t": 1.66, "clip": "Operator_Magazine_Hit_Magwell_FP_001" },
+        { "t": 1.85, "clip": "Operator_Magazine_In_001" },
+        { "t": 2.63, "clip": "Operator_ChargingHandle_Up_001" },
+        { "t": 2.80, "clip": "Operator_ChargingHandle_Back_001" },
+        { "t": 3.12, "clip": "Operator_ChargingHandle_Forward_001" },
+        { "t": 3.35, "clip": "Operator_ChargingHandle_Down_001" },
+        { "t": 3.47, "clip": "Operator_Reload_Movement_C_FP_001" }
+      ]
+    },
+    {
+      "gun": "Bucky", "fireVolume": 0.8, "fireVoices": 2, "fireMin": 6, "fireMax": 110, "foleyVolume": 0.6,
+      "equip": [
+        { "t": 0.00, "clip": "Bucky_Equip_Movement_A_FP_001" },
+        { "t": 0.12, "clip": "Bucky_Equip_Forestock_Back_FP_001" },
+        { "t": 0.42, "clip": "Bucky_Equip_Forestock_Forward_FP_001" },
+        { "t": 0.65, "clip": "Bucky_Equip_Movement_B_FP_001" }
+      ],
+      "fire": [
+        { "t": 0.27, "clip": "Bucky_Equip_Forestock_Back_FP_001" },
+        { "t": 0.51, "clip": "Bucky_Equip_Forestock_Forward_FP_001" }
+      ],
+      "shellStart": [
+        { "t": 0.00, "clip": "Bucky_Reload_Grab_FP_001" }
+      ],
+      "shellInsert": [
+        { "t": 0.00, "clip": "Bucky_Reload_ShellInsrt_FP_001" },
+        { "t": 0.00, "clip": "BuckyInsertShell" }
+      ],
+      "shellEnd": [
+        { "t": 0.00, "clip": "Bucky_Reload_End_Movement_FP_001" }
+      ]
+    }
+  ]
+}

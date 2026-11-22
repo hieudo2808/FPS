@@ -112,7 +112,8 @@ namespace FPS
                 lifeText.text = campaign.State.phase == CampaignPhase.Failed ? "MISSION FAILED" : "SPECTATING\nFIRE / AIM  ·  CHANGE OPERATOR";
 
             bool finished = campaign.State.phase is CampaignPhase.Completed or CampaignPhase.Failed;
-            finished &= campaign.State.phase != CampaignPhase.Completed || campaign.Now - campaign.PhaseStarted >= campaign.settings.endingSeconds;
+            finished &= campaign.State.phase != CampaignPhase.Completed || (CampaignHUD.Instance?.HasEndingDialogue != true
+                && campaign.Now - campaign.PhaseStarted >= campaign.settings.endingSeconds);
             finished &= campaign.RunSummary != null;
             if (finished) UiStateStack.Push(UiScreen.Debrief, debriefPanel, () => {});
             else UiStateStack.Remove(UiScreen.Debrief);

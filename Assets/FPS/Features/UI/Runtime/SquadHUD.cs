@@ -73,8 +73,8 @@ namespace FPS
                 row.root.SetActive(true);
                 row.playerId = entry.playerId;
                 row.name.text = CampaignCodename.For(entry.character);
-                row.character.text = entry.character.ToString().ToUpperInvariant();
-                row.portrait.text = entry.character.ToString()[0].ToString();
+                row.character.text = "VANGUARD";
+                row.portrait.text = CampaignCodename.For(entry.character)[0].ToString();
             }
             for (; rowIndex < rows.Count; rowIndex++)
             {

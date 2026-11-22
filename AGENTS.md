@@ -20,7 +20,7 @@ This is a large Unity project. Do not begin non-trivial work with a repository-w
 ## Art & UI Visual Standards
 - Asset Hierarchy: Inspect `Assets/` first (inspect before inventing). Reuse existing fonts, frames, icons, and prefabs.
 - No Primitives: Never draw UI/props via code, primitives, or flat colors. Use clearly marked greybox placeholders if missing. No image generation without user approval.
-- World Space: No floating 3D text. Use decals, physical signage, or screen-space tags upon aiming. Track source and license for every asset.
+- World Space: No floating 3D text. Use decals, physical signage, or screen-space tags upon aiming. No need to track source and license for every asset because this project for education purpose only and will not public anywhere.
 - UI Theme Standard: Max 4 colors (White main, Orange immediate action, Red danger, Gray secondary), 1 main font + 1 numeric font, 3 text sizes, 9-sliced panels. No hardcoded styles outside the theme.
 - Simplicity: Show only contextual information. Merge health and infection into one bar.
 

@@ -409,6 +409,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e7e392f2abb7814da8debe0d55594a4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5387566693601352694}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e7e392f2abb7814da8debe0d55594a4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3490913178920518003}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e7e392f2abb7814da8debe0d55594a4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6930563475927437577}
   m_SourcePrefab: {fileID: 100100000, guid: 4e7e392f2abb7814da8debe0d55594a4, type: 3}
 --- !u!4 &1300318064932789318 stripped
 Transform:
@@ -651,6 +657,46 @@ MonoBehaviour:
   - {fileID: 2116624072354497080}
   - {fileID: 2585467416641318284}
   autoRefreshSegments: 1
+--- !u!114 &3490913178920518003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008090681619706232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b650cad3d14c0e841b21d26faa3ecbb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.EnemyHitReactionPresenter
+  lightAngle: 8
+  heavyAngle: 26
+  riseSeconds: 0.05
+  recoverSeconds: 0.28
+  heavyRecoverSeconds: 0.5
+  parentFalloff: 0.45
+  bloodPrefab: {fileID: 1000012909287652, guid: abb9f519b142e304d9c45b56afa768bc, type: 3}
+  bloodLifetime: 2.5
+  bloodScale: 1
+--- !u!114 &6930563475927437577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008090681619706232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e67c433a44973044a70d36b26e4cd0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.EnemyVoice
+  idle: {fileID: 11400000, guid: 2601b76649274144984253e15a5b9117, type: 2}
+  attack: {fileID: 11400000, guid: a123a9fc908eaa144a745dfa6abb95a9, type: 2}
+  hurt: {fileID: 11400000, guid: ad4883d07b63d60449f75e4d8c6523f8, type: 2}
+  death: {fileID: 11400000, guid: 59fb7ea0d69b9d74999eea9d23114d0a, type: 2}
+  idleInterval: {x: 4, y: 9}
+  idleRange: 22
+  hurtCooldown: 0.7
 --- !u!4 &5114234912123369793 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -3321919801592875672, guid: 4e7e392f2abb7814da8debe0d55594a4, type: 3}

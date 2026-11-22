@@ -266,6 +266,8 @@ GameObject:
   - component: {fileID: 8676476252167474517}
   - component: {fileID: 4009835965860740433}
   - component: {fileID: 4950751736487797120}
+  - component: {fileID: 3225072670448759885}
+  - component: {fileID: 8403516288065677009}
   m_Layer: 0
   m_Name: GekkoPlayer
   m_TagString: Player
@@ -678,6 +680,48 @@ MonoBehaviour:
   viewCamera: {fileID: 8586101864439689613}
   originalHands:
   - {fileID: 4772666158195006602}
+--- !u!114 &3225072670448759885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8769610198087256571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e84ddea1bfac4ab751ff764115717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.PlayerLifePresenter
+  animationSet: {fileID: 11400000, guid: ed1a420de0a88d048beb9a891b409140, type: 2}
+  sidearmHold: {fileID: 11400000, guid: e31ecab86878c274896aaa8dbbf56cc2, type: 2}
+  humanoidAvatar: {fileID: 9000000, guid: 9cecaa6ca8644b54c9770e614eeedebd, type: 3}
+  blendInSeconds: 0.15
+  blendOutSeconds: 0.45
+  raiseSeconds: 0.5
+  slumpSeconds: 0.9
+  aimArcDegrees: 100
+--- !u!114 &8403516288065677009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8769610198087256571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1218f4f732112c4a94f5edce27f28af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.PlayerAudio
+  voice: {fileID: 11400000, guid: c6931c9acae5f5742ad580613da16760, type: 2}
+  footstep: {fileID: 11400000, guid: 0265eaf30e358624bad97a7643b88cff, type: 2}
+  land: {fileID: 11400000, guid: 9575d1dfaa3e9e14ab653d9cb5547c6e, type: 2}
+  downedBreath: {fileID: 11400000, guid: 7d9f2a0912b410b4abd617da7271df6c, type: 2}
+  hurtCooldown: 0.8
+  minimumHurtDamage: 3
+  ownFootstepVolume: 0.55
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1001 &829244016275899250
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5065,6 +5109,14 @@ PrefabInstance:
     - target: {fileID: -8334922565316764803, guid: 2935c38d209e66f42a1b0dd7c88d1ffc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.00000008004129
+      objectReference: {fileID: 0}
+    - target: {fileID: -7917789247089437691, guid: 2935c38d209e66f42a1b0dd7c88d1ffc, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: fba39adbd63f65f4598fe47d875457d3, type: 2}
+    - target: {fileID: -7917789247089437691, guid: 2935c38d209e66f42a1b0dd7c88d1ffc, type: 3}
+      propertyPath: m_BlendShapeWeights.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -7764554940799804421, guid: 2935c38d209e66f42a1b0dd7c88d1ffc, type: 3}
       propertyPath: m_LocalPosition.x

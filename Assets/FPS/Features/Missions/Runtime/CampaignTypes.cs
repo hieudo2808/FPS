@@ -182,7 +182,7 @@ namespace FPS
         Completed,
         EvidenceTransmitted,
         ClientSuppressionOrder,
-        MiraRejectsOrder,
+        CommandRejectsOrder,
         OperatorDowned,
         TankWarning,
         ScreamerWarning,
@@ -298,8 +298,6 @@ namespace FPS
                 if (CanUse(s, id) == CampaignResult.Accepted) return id;
             return CampaignObjectiveId.None;
         }
-        public static bool CanSwitchFactoryBranch(CampaignState s) => FactoryNext(s, CampaignFactoryBranch.Power) != CampaignObjectiveId.None
-            && FactoryNext(s, CampaignFactoryBranch.Logistics) != CampaignObjectiveId.None;
         public static void RecordFile(CampaignState s, CampaignFileId id)
         {
             s.discoveredFiles |= CampaignState.FileBit(id);

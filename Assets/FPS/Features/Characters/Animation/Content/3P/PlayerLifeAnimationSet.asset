@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c9439a4a8edd214e9c24e0f5a3fd6c4, type: 3}
+  m_Name: PlayerLifeAnimationSet
+  m_EditorClassIdentifier: FPS::FPS.PlayerLifeAnimationSet
+  deaths:
+  - region: 0
+    side: 0
+    heavy: 0
+    clip: {fileID: -7943500008368310853, guid: ae55c4c6d003e894a9421c6dcf337a8b, type: 3}
+  - region: 0
+    side: 0
+    heavy: 0
+    clip: {fileID: 7573036395729389647, guid: 238b665e822f26d4085bd430b6458279, type: 3}
+  - region: 0
+    side: 0
+    heavy: 1
+    clip: {fileID: 4806383607797196110, guid: 3c03bd3c5821a4b4bafad07e08117248, type: 3}
+  - region: 0
+    side: 0
+    heavy: 1
+    clip: {fileID: 1056066081737032108, guid: 1283e326479b76d44baf6c1676e20910, type: 3}
+  - region: 0
+    side: 1
+    heavy: 0
+    clip: {fileID: -4897780751711415528, guid: 104a0767ab50b2a41818778ad6fa42c6, type: 3}
+  - region: 0
+    side: 1
+    heavy: 0
+    clip: {fileID: -581250512333814056, guid: 79ea9fe2f284c524b8ac7f572ee62f7b, type: 3}
+  - region: 0
+    side: 1
+    heavy: 1
+    clip: {fileID: 3073970974464952542, guid: 680974cd825239c4398a0ea270303479, type: 3}
+  - region: 0
+    side: 1
+    heavy: 1
+    clip: {fileID: -432397322121411830, guid: 113b6c28e5ed02c44a7eed16efccffcc, type: 3}
+  - region: 0
+    side: 2
+    heavy: 0
+    clip: {fileID: 5536722926508263600, guid: 68ac1aee4eedf5a44b1c7048841f0276, type: 3}
+  - region: 0
+    side: 2
+    heavy: 1
+    clip: {fileID: -7948371676671944543, guid: db8bdc9cfef5d344abed77dcc2f7eeb3, type: 3}
+  - region: 0
+    side: 3
+    heavy: 0
+    clip: {fileID: 8784108251295792591, guid: a23087d8d5f1e3144956a917d3f2d454, type: 3}
+  - region: 0
+    side: 3
+    heavy: 1
+    clip: {fileID: -7787036738237481632, guid: 3265648d3fc219a48a9252f09958528c, type: 3}
+  - region: 1
+    side: 0
+    heavy: 0
+    clip: {fileID: -5412993344171414003, guid: 3103dbe9ef904f049905e5cab1fa47ed, type: 3}
+  - region: 1
+    side: 0
+    heavy: 1
+    clip: {fileID: 3760756299001396587, guid: f04c3d8fe3e4e3c4f9d30978c1ca2965, type: 3}
+  - region: 1
+    side: 1
+    heavy: 0
+    clip: {fileID: -5433790674908729848, guid: 89cfc8eb7d59cdb4299ec87386bd5771, type: 3}
+  - region: 1
+    side: 1
+    heavy: 1
+    clip: {fileID: -8902879847313105829, guid: 0072c30655831624d84def784f7da42f, type: 3}
+  - region: 1
+    side: 2
+    heavy: 0
+    clip: {fileID: 1038922841398374946, guid: bba884faf9c54a64d887e1e3f8a24f41, type: 3}
+  - region: 1
+    side: 2
+    heavy: 1
+    clip: {fileID: -8965676227777358263, guid: 5283589ea2a276c42a313f2eed7231f2, type: 3}
+  - region: 1
+    side: 3
+    heavy: 0
+    clip: {fileID: -1458983140028784620, guid: d3366648639500f4e83a353fd59e9b10, type: 3}
+  - region: 1
+    side: 3
+    heavy: 1
+    clip: {fileID: 7768391450480571767, guid: 0496ac80fce9423498e33731aa001ef0, type: 3}
+  - region: 2
+    side: 0
+    heavy: 1
+    clip: {fileID: 3926712307201668301, guid: a520d66fcb269ab49b723776d4f54258, type: 3}
+  - region: 2
+    side: 1
+    heavy: 1
+    clip: {fileID: -4121311180634120560, guid: 883e408d0948b164fad0c5ddbd549138, type: 3}
+  - region: 2
+    side: 2
+    heavy: 1
+    clip: {fileID: -3922659944996773726, guid: 6af2c5ea8bc888545a451113d8e5407e, type: 3}
+  - region: 2
+    side: 3
+    heavy: 1
+    clip: {fileID: -3475405231914337813, guid: 7930181f86d48394f81a7b6704066206, type: 3}
+  headshots:
+  - {fileID: -6962879296676408222, guid: 7bd3ac4ee99fc9b4a8d781a70c7d74d5, type: 3}
+  downedFall: {fileID: -4121311180634120560, guid: 883e408d0948b164fad0c5ddbd549138, type: 3}
+  downedEyeHeight: 0.45
+  downedHeadBack: 0.55
+  downedYawHalfArc: 60
+  downedPitchUp: -55
+  downedPitchDown: 20
+  downedRoll: 10

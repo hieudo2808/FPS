@@ -110,8 +110,10 @@ namespace FPS
                 var sessions = NetworkGameManager.Instance;
                 if (network != null && network.IsServer && sessions != null)
                 {
-                    foreach (var client in network.ConnectedClientsList)
+                    var clients = network.ConnectedClientsList;
+                    for (int clientIndex = 0; clientIndex < clients.Count; clientIndex++)
                     {
+                        var client = clients[clientIndex];
                         if (client.PlayerObject == null) continue;
                         if (!pressureActors.TryGetValue(client.ClientId, out PlayerHealth health)
                             || health == null || health.gameObject != client.PlayerObject.gameObject)

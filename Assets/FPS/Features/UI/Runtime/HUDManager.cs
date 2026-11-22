@@ -76,6 +76,8 @@ namespace FPS
         private bool interactionPromptRequested;
         private Image interactionLock;
         public bool HasInteractionPrompt => interactionPromptRequested && interactionPromptText != null;
+        internal RectTransform VisibleInteractionPrompt => interactionPromptText != null && interactionPromptText.isActiveAndEnabled
+            && !string.IsNullOrWhiteSpace(interactionPromptText.text) ? interactionPromptText.rectTransform : null;
         [SerializeField] private GameObject waveAnnouncementPanel;
         [SerializeField] private TextMeshProUGUI waveAnnouncementText;
 

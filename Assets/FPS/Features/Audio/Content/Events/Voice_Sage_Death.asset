@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e64de16f73779c45b8dbc23a2b97963, type: 3}
+  m_Name: Voice_Sage_Death
+  m_EditorClassIdentifier: FPS::FPS.SoundEvent
+  bus: 4
+  clips:
+  - {fileID: 8300000, guid: bcf3604611e499845b974b7bba3ae5e9, type: 3}
+  remoteClips: []
+  distantClips: []
+  distantFrom: 35
+  volume: 1
+  volumeJitterDb: 0
+  pitch: {x: 1, y: 1}
+  spatialBlend: 1
+  minDistance: 2
+  maxDistance: 45
+  maxVoices: 4
+  cooldown: 0
+  priority: 60
+  loop: 0

@@ -158,18 +158,44 @@ namespace FPS
             RefreshDocuments();
         }
 
-        private void EmitDialogue(CampaignDialogueId id)
+        private static CampaignRadioVoice RadioVoice(PlayerCharacterId? character) => character switch
         {
-            if (!IsServer || id == CampaignDialogueId.None) return;
-            CampaignDialogueDefinition definition = Dialogue(id);
-            if (!CampaignDialogue.TryRecord(definition, Now, dialogueHistory)) return;
-            DialogueRpc(id);
+            PlayerCharacterId.Brimstone => CampaignRadioVoice.Mason,
+            PlayerCharacterId.Sage => CampaignRadioVoice.Doc,
+            PlayerCharacterId.Gekko => CampaignRadioVoice.Vega,
+            PlayerCharacterId.Clove => CampaignRadioVoice.Raven,
+            _ => CampaignRadioVoice.None
+        };
+
+        private CampaignRadioVoice RadioVoiceFor(PlayerHealth player)
+        {
+            for (int i = 0; i < InsertionPartySize; i++)
+                if (insertionRoster[i].playerId == player.StablePlayerId.Value)
+                    return RadioVoice(insertionRoster[i].character);
+            // A checkpoint can be loaded before the insertion roster is filled.
+            return RadioVoice(FindSpawnedCharacter(Resources.Load<PlayerPrefabCatalog>("PlayerPrefabCatalog"), player)?.id);
+        }
+
+        private void EmitDialogue(CampaignDialogueId id, PlayerHealth subject = null)
+        {
+            if (!IsServer) return;
+            var definition = Dialogue(id);
+            if (definition == null) return;
+            var available = Players.Where(p => p.CanUseCombat && p != subject
+                    && (id != CampaignDialogueId.OperatorDowned || subject != null && CanReachForRevive(p, subject))
+                    && (id != CampaignDialogueId.AsylumTransition || Current.Contains(Current.boardingArea, p.transform.position)))
+                .OrderBy(p => p.StablePlayerId.Value).Select(RadioVoiceFor)
+                .Where(voice => voice != CampaignRadioVoice.None).Distinct().ToArray();
+            var (first, second) = CampaignDialogue.Cast(definition, available,
+                subject != null ? RadioVoiceFor(subject) : CampaignRadioVoice.None);
+            if (first == CampaignRadioVoice.None || !CampaignDialogue.TryRecord(definition, Now, dialogueHistory)) return;
+            DialogueRpc(id, first, second, subject != null ? subject.NetworkObjectId : 0, state.chapter);
         }
 
         [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
-        private void DialogueRpc(CampaignDialogueId id)
+        private void DialogueRpc(CampaignDialogueId id, CampaignRadioVoice first, CampaignRadioVoice second, ulong subject, CampaignChapter chapter)
         {
-            CampaignHUD.Instance?.EnqueueDialogue(id);
+            CampaignHUD.Instance?.EnqueueDialogue(id, first, second, subject, chapter);
         }
 
         [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
@@ -205,7 +231,6 @@ namespace FPS
                     : state.chapter == CampaignChapter.Asylum ? CampaignDialogueId.AsylumEncounter : CampaignDialogueId.LabEncounter);
             }
             else if (phase == CampaignPhase.AwaitingParty) EmitDialogue(CampaignDialogueId.Boarding);
-            else if (phase == CampaignPhase.Transitioning && state.chapter == CampaignChapter.Asylum) EmitDialogue(CampaignDialogueId.AsylumTransition);
             else if (phase == CampaignPhase.Completed) EmitDialogue(CampaignDialogueId.Completed);
         }
 
@@ -459,7 +484,11 @@ namespace FPS
                 { SetPhase(CampaignPhase.AwaitingParty); return; }
             }
             if (Current.entryDoor != null && !Current.entryDoor.IsClosed) { closingSince = -1; return; }
-            if (closingSince < 0) { closingSince = Now; transferLocked.Value = true; }
+            if (closingSince < 0)
+            {
+                closingSince = Now; transferLocked.Value = true;
+                if (state.chapter == CampaignChapter.Asylum) EmitDialogue(CampaignDialogueId.AsylumTransition);
+            }
             if (Now - closingSince < settings.transferSeconds) return;
             if (state.chapter == CampaignChapter.Laboratory) { ClearEnemies(); SetPhase(CampaignPhase.Completed); return; }
             if (!transferred)
@@ -558,7 +587,7 @@ namespace FPS
             if (!IsServer || player == null || !IsInsertionParticipant(player.StablePlayerId.Value)) return;
             if (state.teamDownedCount < ushort.MaxValue) state.teamDownedCount++;
             Publish();
-            EmitDialogue(CampaignDialogueId.OperatorDowned);
+            EmitDialogue(CampaignDialogueId.OperatorDowned, player);
         }
 
         public void RequestDiscoverFile(CampaignFileId id)
@@ -670,10 +699,7 @@ namespace FPS
                 ObjectiveFeedbackRpc(pair.Key, h.objective, result, state.revision);
                 EmitDialogue(CampaignDialogue.ForObjective(h.objective));
                 if (h.objective == CampaignObjectiveId.LabTransmit)
-                {
                     EmitDialogue(CampaignDialogueId.ClientSuppressionOrder);
-                    EmitDialogue(CampaignDialogueId.MiraRejectsOrder);
-                }
             }
         }
         public void RequestAid(ulong target, bool medicine, bool held) => AidRpc(target, medicine, held);
@@ -688,13 +714,22 @@ namespace FPS
             if (holds.TryGetValue(client, out var old) && old.action == action && old.target == target) { old.lease = Now + .7; return; }
             var h = NewHold(actor); h.action = action; h.target = target; holds[client] = h;
         }
+        private bool CanReachForRevive(PlayerHealth actor, PlayerHealth target) =>
+            Vector3.Distance(actor.transform.position, target.transform.position) <= settings.interactionRange
+            && (!Physics.Linecast(actor.transform.position + Vector3.up * 1.4f, target.transform.position + Vector3.up * .8f,
+                out var hit, ~0, QueryTriggerInteraction.Ignore) || hit.collider.GetComponentInParent<PlayerHealth>() == target);
+
         private void UpdateAid(ulong client, PlayerHealth actor, Hold h)
         {
             var target = Players.FirstOrDefault(p => p.NetworkObjectId == h.target);
-            if (target == null || target.LifeState != PlayerLifeState.Downed || Vector3.Distance(actor.transform.position, target.transform.position) > settings.interactionRange
-                || Physics.Linecast(actor.transform.position + Vector3.up * 1.4f, target.transform.position + Vector3.up * .8f, out var hit, ~0, QueryTriggerInteraction.Ignore) && hit.collider.GetComponentInParent<PlayerHealth>() != target)
+            if (target == null || target.LifeState != PlayerLifeState.Downed || !CanReachForRevive(actor, target))
             { holds.Remove(client); releaseRequired.Add(client); Feedback(client, CampaignResult.Interrupted); return; }
-            if (Now - h.started >= settings.reviveSeconds) { target.ReviveCampaign(settings.reviveHealth); holds.Remove(client); Feedback(client, CampaignResult.Accepted); EmitDialogue(CampaignDialogueId.Revived); }
+            if (Now - h.started >= settings.reviveSeconds)
+            {
+                target.ReviveCampaign(settings.reviveHealth);
+                holds.Remove(client); Feedback(client, CampaignResult.Accepted);
+                EmitDialogue(CampaignDialogueId.Revived, target);
+            }
         }
         public void RequestReady(bool value) => ReadyRpc(value);
         [Rpc(SendTo.Server, RequireOwnership = false)]

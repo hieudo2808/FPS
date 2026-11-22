@@ -6,12 +6,6 @@ namespace FPS
     /// <summary>Local presentation selection; never completes or changes an authoritative objective.</summary>
     public static class CampaignObjectiveSelection
     {
-        public static CampaignObjectiveId CycleFactoryBranch(CampaignState state, CampaignObjectiveId current)
-        {
-            if (!CampaignRules.CanSwitchFactoryBranch(state)) return current;
-            return CampaignRules.FactoryNext(state, CampaignRules.FactoryBranchOf(current) == CampaignFactoryBranch.Power
-                ? CampaignFactoryBranch.Logistics : CampaignFactoryBranch.Power);
-        }
         public static bool CanTrack(CampaignState state, CampaignObjectiveId id) => state != null
             && state.phase == CampaignPhase.Exploring && id != CampaignObjectiveId.None
             && (CampaignRules.CanUse(state, id) == CampaignResult.Accepted || CampaignRules.CanReadComparisonSource(state, id));

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e64de16f73779c45b8dbc23a2b97963, type: 3}
+  m_Name: Zombie_Attack
+  m_EditorClassIdentifier: FPS::FPS.SoundEvent
+  bus: 3
+  clips:
+  - {fileID: 8300000, guid: 78a9f37c6e3b42e41b9f734eb00e60a3, type: 3}
+  - {fileID: 8300000, guid: bce52782192a9d44fad85c23a4e8dff9, type: 3}
+  - {fileID: 8300000, guid: 8291748c4d7d54c4485d26624610b827, type: 3}
+  - {fileID: 8300000, guid: 753013ce69d652e49bdbabf159823d60, type: 3}
+  - {fileID: 8300000, guid: 18088eb3a5c49f34baee6ebd026d2cf3, type: 3}
+  remoteClips: []
+  distantClips: []
+  distantFrom: 35
+  volume: 0.9
+  volumeJitterDb: 2
+  pitch: {x: 0.9, y: 1.1}
+  spatialBlend: 1
+  minDistance: 2
+  maxDistance: 30
+  maxVoices: 4
+  cooldown: 0
+  priority: 128
+  loop: 0

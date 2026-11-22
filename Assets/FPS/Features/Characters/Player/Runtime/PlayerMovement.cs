@@ -205,7 +205,9 @@ namespace FPS
             if (networkTimer == null)
                 return;
 
-            if (playerHealth != null && playerHealth.LifeState != PlayerLifeState.Alive)
+            // Downed players still look and aim their sidearm, so their input keeps flowing (movement zeroed below).
+            bool downedAiming = playerHealth != null && playerHealth.IsDownedConscious;
+            if (playerHealth != null && playerHealth.LifeState != PlayerLifeState.Alive && !downedAiming)
             {
                 cachedMove = Vector2.zero;
                 planarSpeed = 0f;
@@ -228,7 +230,15 @@ namespace FPS
             }
 
             if (IsOwner)
+            {
                 CaptureFrameInput();
+                if (downedAiming)
+                {
+                    cachedMove = Vector2.zero;
+                    sprintHeld = false;
+                    jumpQueued = false;
+                }
+            }
 
             networkTimer.Accumulate(Time.deltaTime);
 
@@ -601,7 +611,9 @@ namespace FPS
                 input.move = Vector2.zero;
                 input.sprint = false;
                 input.jumpPressed = false;
-                input.yaw = transform.eulerAngles.y;
+                // A downed player cannot move but still turns to aim the sidearm.
+                bool canLook = health != null && health.IsDownedConscious && CampaignMissionController.Instance?.BlocksInput != true;
+                if (!canLook) input.yaw = transform.eulerAngles.y;
             }
             transform.rotation = Quaternion.Euler(0f, input.yaw, 0f);
             SimulateTick(input, TICK_DT);

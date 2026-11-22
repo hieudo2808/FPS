@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e64de16f73779c45b8dbc23a2b97963, type: 3}
+  m_Name: Weapon_Warden_Fire
+  m_EditorClassIdentifier: FPS::FPS.SoundEvent
+  bus: 2
+  clips:
+  - {fileID: 8300000, guid: 64f20849febdf7145af783c16ecfe141, type: 3}
+  - {fileID: 8300000, guid: 95e60679ca5891d4c87ec0b14e82b249, type: 3}
+  - {fileID: 8300000, guid: da389fe0ecd8ea84a9d05efc54d35019, type: 3}
+  - {fileID: 8300000, guid: 9d23417e32205a54791e1bdacefdd2cd, type: 3}
+  remoteClips:
+  - {fileID: 8300000, guid: 273d486f8c336f34887dbbc677c9fd77, type: 3}
+  - {fileID: 8300000, guid: 794ffc297b975d446aff5f15afe7228b, type: 3}
+  - {fileID: 8300000, guid: c8feeac823737994b833b90dd0eabc6b, type: 3}
+  - {fileID: 8300000, guid: 7e37a50cb8637b841a56cde271e05ddd, type: 3}
+  - {fileID: 8300000, guid: 27406e2c36b8f324f815e6cc963c9d9c, type: 3}
+  - {fileID: 8300000, guid: 3b0c77eb85b55e84da0954644bd57f5f, type: 3}
+  distantClips:
+  - {fileID: 8300000, guid: 61c81ad06cb5066458a6628c198e052b, type: 3}
+  - {fileID: 8300000, guid: 1bcb25dfddade014d8c12f38228da00c, type: 3}
+  - {fileID: 8300000, guid: 2f3e7da8ccc71de4da47a2072d9010c0, type: 3}
+  - {fileID: 8300000, guid: 93ec0503345ea3f4eba4299a2b783cd8, type: 3}
+  - {fileID: 8300000, guid: 5c744a18f7112f44386c26a181af03ee, type: 3}
+  - {fileID: 8300000, guid: bd0d991014838484fb2b8163052b40df, type: 3}
+  distantFrom: 35
+  volume: 0.75
+  volumeJitterDb: 0.8
+  pitch: {x: 0.97, y: 1.03}
+  spatialBlend: 1
+  minDistance: 6
+  maxDistance: 120
+  maxVoices: 4
+  cooldown: 0
+  priority: 40
+  loop: 0

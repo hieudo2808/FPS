@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e64de16f73779c45b8dbc23a2b97963, type: 3}
+  m_Name: Zombie_Idle
+  m_EditorClassIdentifier: FPS::FPS.SoundEvent
+  bus: 3
+  clips:
+  - {fileID: 8300000, guid: 02df551365636e042938f320f7626149, type: 3}
+  - {fileID: 8300000, guid: e26b39ec8c281a24891f41558ac5bc4c, type: 3}
+  - {fileID: 8300000, guid: 7f5b96f8db6232b4387be13e161ffb30, type: 3}
+  - {fileID: 8300000, guid: 7745468c6fa852e41b7aa65c8deadbfc, type: 3}
+  - {fileID: 8300000, guid: bbea6362a42d9c94f93d58c254e6f95b, type: 3}
+  - {fileID: 8300000, guid: 3e875ad2cbfe6094d87ce81bd00e9658, type: 3}
+  remoteClips: []
+  distantClips: []
+  distantFrom: 35
+  volume: 0.7
+  volumeJitterDb: 2
+  pitch: {x: 0.9, y: 1.1}
+  spatialBlend: 1
+  minDistance: 2
+  maxDistance: 25
+  maxVoices: 4
+  cooldown: 0.35
+  priority: 128
+  loop: 0

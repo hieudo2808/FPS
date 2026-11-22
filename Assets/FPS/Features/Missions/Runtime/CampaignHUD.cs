@@ -39,8 +39,7 @@ namespace FPS
         private ulong deviceFiles, deviceCompleted;
         private CampaignPhase devicePhase;
         private CampaignChapter deviceCampaignChapter;
-        private float subtitleUntil;
-        private readonly System.Collections.Generic.List<CampaignDialogueDefinition> pendingDialogue = new();
+        private readonly CampaignRadioPlayback radio = new();
         private AudioSource dialogueAudio;
         private CampaignInteractable focused;
         private bool journal, aidHeld, holding, mouseHeld;
@@ -64,6 +63,10 @@ namespace FPS
         private bool trackerReduced;
         private SelectedUiTypography selectedTypography;
         public float InteractionBandBottom { get; private set; } = HudLayout.InteractionBottom;
+        public bool HasEndingDialogue => radio.HasEnding;
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+        internal string RadioCaption => subtitle != null ? subtitle.text : string.Empty;
+#endif
         private void Awake() { Instance = this; Build(); HudSignals.NotifySourcesChanged(); }
         private void OnEnable()
         {
@@ -82,6 +85,7 @@ namespace FPS
             InputManager.InputStateChanged -= RefreshPresentation;
             UnbindSources(); CancelInvoke(); ClearMessage(); Close(); InputManager.CampaignInputBlocked = false;
             if (canvas != null) canvas.enabled = false;
+            ResetNavigation();
             SetInteractionText("");
         }
         private void OnDestroy() { if (Instance == this) { Instance = null; InteractionMessageChanged?.Invoke(); } }
@@ -94,6 +98,7 @@ namespace FPS
             if (deviceScrollHint != null)
                 deviceScrollHint.gameObject.SetActive(deviceInstructionCard.activeInHierarchy
                     && deviceBody.preferredHeight > deviceViewport.rect.height + 1);
+            UpdateNavigation(Owner);
         }
         private void UnbindSources()
         {
@@ -767,17 +772,18 @@ namespace FPS
         // An open device screen lends its footer line to the toast; hand it back when the toast expires.
         private void ClearMessage() { message=""; feedback.text=""; if (canvas != null && IsDocumentOpen) RefreshPresentation(); }
 
-        public void EnqueueDialogue(CampaignDialogueId id)
+        public void EnqueueDialogue(CampaignDialogueId id, CampaignRadioVoice first, CampaignRadioVoice second, ulong subject, CampaignChapter chapter)
         {
-            CampaignDialogueDefinition definition = Campaign?.Dialogue(id);
-            if (definition == null || string.IsNullOrWhiteSpace(definition.english)) return;
-            pendingDialogue.Add(definition);
+            var definition = Campaign?.Dialogue(id);
+            if (definition == null) return;
+            var continuation = id == CampaignDialogueId.ClientSuppressionOrder
+                ? Campaign.Dialogue(CampaignDialogueId.CommandRejectsOrder) : null;
+            radio.Enqueue(definition, continuation, first, second, subject, chapter, Time.unscaledTime);
         }
 
         public void ResetDialogue()
         {
-            pendingDialogue.Clear();
-            subtitleUntil = 0;
+            radio.Clear();
             if (subtitle != null) subtitle.text = string.Empty;
             RefreshPresentation();
             if (dialogueAudio != null) dialogueAudio.Stop();
@@ -802,7 +808,6 @@ namespace FPS
             if (layoutSize != size) { layoutSize = size; RefreshPresentation(); }
             // Aiming or firing reduces the tracker; nothing else redraws it while exploring.
             if (trackerReduced != HudLayout.SecondaryReduced) { trackerReduced = HudLayout.SecondaryReduced; RefreshTracker(); }
-            if (owner != null) UpdateNavigation(owner);
             var input = InputManager.Instance; var actions = input?.ActionsAsset;
             bool open = panel.gameObject.activeSelf;
             if(!UiStateStack.BackConsumed && input?.GetPauseInputDown()!=true && actions?.FindAction("Journal")?.WasPressedThisFrame()==true)
@@ -898,19 +903,10 @@ namespace FPS
         }
         private void UpdateSubtitles()
         {
-            if(Time.unscaledTime<subtitleUntil)return;
-            if (pendingDialogue.Count == 0)
-            {
-                if (subtitle.text.Length > 0) { subtitle.text = ""; RefreshPresentation(); }
-                subtitleUntil = Time.unscaledTime + .25f;
-                return;
-            }
-            CampaignDialogueDefinition definition = CampaignDialogue.TakeNext(pendingDialogue);
-            subtitle.text = CampaignDialogue.Format(definition);
+            if (!radio.Advance(Time.unscaledTime, Campaign.State.chapter, Campaign.State.phase, out string text, out var clip)) return;
+            subtitle.text = text;
             RefreshPresentation();
-            if (dialogueAudio != null && definition.audio != null) dialogueAudio.PlayOneShot(definition.audio);
-            subtitleUntil = Time.unscaledTime + Mathf.Max(6, subtitle.text.Length * .06f,
-                definition.audio != null ? definition.audio.length : 0);
+            if (dialogueAudio != null && clip != null) dialogueAudio.PlayOneShot(clip);
         }
         private bool readySent;
         private float readyHoldStart = -1;
@@ -942,7 +938,7 @@ namespace FPS
             var phase=Campaign.State.phase;
             if (CampaignStatusUI.Instance != null && (phase is CampaignPhase.Failed or CampaignPhase.Completed))
             { if (panel.gameObject.activeSelf) Close(); return; }
-            if(phase==CampaignPhase.Completed&&Campaign.Now-Campaign.PhaseStarted<Campaign.settings.endingSeconds){if(panel.gameObject.activeSelf)Close();return;}
+            if(phase==CampaignPhase.Completed&&(HasEndingDialogue || Campaign.Now-Campaign.PhaseStarted<Campaign.settings.endingSeconds)){if(panel.gameObject.activeSelf)Close();return;}
             if(renderedPhase==phase && renderedTankStage==Campaign.State.tankStage)return;
             if (journal && focused == null && panel.gameObject.activeSelf) Close();
             if (renderedPhase != phase) { readySent = false; readyHoldStart = -1; }

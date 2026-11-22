@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e64de16f73779c45b8dbc23a2b97963, type: 3}
+  m_Name: Zombie_Death
+  m_EditorClassIdentifier: FPS::FPS.SoundEvent
+  bus: 3
+  clips:
+  - {fileID: 8300000, guid: 799e07fcd95698d458853118e4d5eaea, type: 3}
+  - {fileID: 8300000, guid: 9c071c694d8ca3444be65f6cc9ecdd21, type: 3}
+  - {fileID: 8300000, guid: a7f63b59d8ed5a044bdb0cccc00db23a, type: 3}
+  - {fileID: 8300000, guid: c32707fce6f5395449599277e18bc95f, type: 3}
+  - {fileID: 8300000, guid: d6ca6db813f2bec4e9f514735cce09ef, type: 3}
+  - {fileID: 8300000, guid: 807c4edd34ef9b0429164d9b90a667c7, type: 3}
+  remoteClips: []
+  distantClips: []
+  distantFrom: 35
+  volume: 0.9
+  volumeJitterDb: 2
+  pitch: {x: 0.9, y: 1.1}
+  spatialBlend: 1
+  minDistance: 2
+  maxDistance: 35
+  maxVoices: 4
+  cooldown: 0
+  priority: 128
+  loop: 0

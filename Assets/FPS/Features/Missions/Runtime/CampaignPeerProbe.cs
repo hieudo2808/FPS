@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
@@ -23,13 +24,25 @@ namespace FPS
             public int sequence;
             public bool started, connected, isServer, hasCampaign, hasPlayer, inputReady, hudPresent;
             public ulong localClientId;
-            public string scene, lastMessage;
+            public string scene, lastMessage, radioCaption, waypointQa;
             public uint revision;
             public int chapter, phase, tankStage, rosterSize, lifeState, commandsDone;
             public ulong completed, discoveredFiles;
             public Vector3 position;
             public string supplyVisible; // ids this client currently shows on the tables, ordinal order
             public int reserveAmmo;
+            // Enemy hit reactions this client presented from replicated state.
+            public int enemyHitsPresented, enemyBloodSpawned;
+            public string lastEnemyHitKind, lastEnemyHitBone;
+            // Player life presentation seen by this client.
+            public string heldWeapon, otherLifeClip;
+            public bool sidearmUsable, primaryUsable;
+            public float eyeDrop, otherRaise;
+            public int otherLifeState;
+            // Audio this client played: per-event counts, music cue and the other player's emitters.
+            public string audioCounts, musicCue, musicWanted;
+            public bool ambience, listener, ownBreathing, otherBreathing;
+            public int ownReloadCues, otherFired, otherVoiceLines;
         }
 
         private string output;
@@ -106,6 +119,7 @@ namespace FPS
             status.scene = SceneManager.GetActiveScene().name;
             status.hasCampaign = campaign != null && campaign.IsSpawned;
             status.hudPresent = CampaignHUD.Instance != null;
+            status.radioCaption = CampaignHUD.Instance?.RadioCaption ?? string.Empty;
             if (status.hasCampaign)
             {
                 var state = campaign.State;
@@ -120,13 +134,43 @@ namespace FPS
             }
             var player = network != null && network.LocalClient != null && network.LocalClient.PlayerObject != null
                 ? network.LocalClient.PlayerObject.GetComponent<PlayerHealth>() : null;
+            status.enemyHitsPresented = EnemyHitReactionPresenter.PlayedCount;
+            status.enemyBloodSpawned = EnemyHitReactionPresenter.BloodSpawnedCount;
+            status.lastEnemyHitKind = EnemyHitReactionPresenter.LastKind.ToString();
+            status.lastEnemyHitBone = EnemyHitReactionPresenter.LastBone;
             status.hasPlayer = player != null;
+            foreach (var other in FindObjectsByType<PlayerLifePresenter>(FindObjectsInactive.Exclude))
+            {
+                var otherHealth = other.GetComponent<PlayerHealth>();
+                if (otherHealth == null || otherHealth == player) continue;
+                status.otherLifeState = (int)otherHealth.LifeState;
+                status.otherLifeClip = other.ActiveClipName;
+                status.otherRaise = other.RaiseWeight;
+                var otherAudio = other.GetComponent<PlayerAudio>();
+                status.otherBreathing = otherAudio != null && otherAudio.Breathing;
+                status.otherVoiceLines = otherAudio != null ? otherAudio.VoiceLinesPlayed : 0;
+                var otherWeapons = other.GetComponent<WeaponAudio>();
+                status.otherFired = otherWeapons != null ? otherWeapons.FiredCount : 0;
+            }
+            status.audioCounts = GameAudio.CountsSummary();
+            status.musicCue = GameAudio.CurrentMusic.ToString();
+            status.musicWanted = GameAudio.WantedMusic.ToString();
+            status.ambience = GameAudio.AmbiencePlaying;
+            status.listener = GameAudio.TryGetListenerPosition(out _);
             if (player != null)
             {
                 status.lifeState = (int)player.LifeState; status.inputReady = player.IsInputReady; status.position = player.transform.position;
                 var weapons = player.GetComponent<WeaponManager>();
                 var weapon = weapons != null ? weapons.GetWeapon(weapons.CurrentWeaponIndex) : null;
                 status.reserveAmmo = weapon != null ? weapon.ReservedAmmo : -1;
+                status.heldWeapon = weapon != null && weapon.Data != null ? weapon.Data.weaponName : string.Empty;
+                status.sidearmUsable = weapons != null && weapons.FindDownedWeaponSlot() >= 0 && player.CanUseWeapon(weapons.GetWeapon(weapons.FindDownedWeaponSlot()).Data);
+                status.primaryUsable = weapons != null && player.CanUseWeapon(weapons.GetWeapon(0)?.Data);
+                status.eyeDrop = player.GetComponent<PlayerLifePresenter>()?.EyeDrop ?? 0f;
+                var ownAudio = player.GetComponent<PlayerAudio>();
+                status.ownBreathing = ownAudio != null && ownAudio.Breathing;
+                var ownWeapons = player.GetComponent<WeaponAudio>();
+                status.ownReloadCues = ownWeapons != null ? ownWeapons.ReloadCuesPlayed : 0;
             }
             try
             {
@@ -159,10 +203,151 @@ namespace FPS
                     case "retry" when campaign != null: campaign.RequestRetry(true); break;
                     case "ready" when campaign != null: campaign.RequestReady(true); break;
                     case "supply" when campaign != null && parts.Length >= 3: campaign.RequestSupply(parts[1], parts[2] == "1"); break;
+                    case "waypoint" when CampaignHUD.Instance != null && MouseMovement.LocalInstance != null:
+                        StartCoroutine(CheckWaypoint(CampaignHUD.Instance, MouseMovement.LocalInstance)); break;
                     case "quit": Application.Quit(); break;
                 }
                 status.commandsDone++;
             }
+        }
+
+        private IEnumerator CheckWaypoint(CampaignHUD hud, MouseMovement mouse)
+        {
+            status.waypointQa = null;
+            var campaign = CampaignMissionController.Instance;
+            var camera = mouse.BodyCam;
+            if (campaign == null || campaign.IsServer || campaign.State.chapter != CampaignChapter.Factory
+                || campaign.State.phase != CampaignPhase.Exploring || camera == null || !camera.isActiveAndEnabled)
+            { status.waypointQa = "Waypoint probe needs a remote client in Factory Exploring with its own BodyCam."; yield break; }
+
+            var rects = hud.GetComponentsInChildren<RectTransform>(true);
+            RectTransform Find(string name) => Array.Find(rects, rect => rect.name == name);
+            var legacy = Find("NavigationMarker");
+            var tracker = Find("MissionTracker");
+            var branches = new[]
+            {
+                (root: Find("FactoryPowerMarker"), name: "POWER", step: "PowerRow/PowerStep", id: CampaignObjectiveId.FactoryIsolate),
+                (root: Find("FactoryLogisticsMarker"), name: "LOGISTICS", step: "LogisticsRow/LogisticsStep", id: CampaignObjectiveId.FactoryManifest)
+            };
+            if (legacy == null || tracker == null || branches[0].root == null || branches[1].root == null)
+            { status.waypointQa = "Missing client Factory destination HUD roots."; yield break; }
+
+            var isolate = campaign.Objective(branches[0].id);
+            var manifest = campaign.Objective(branches[1].id);
+            if (isolate == null || manifest == null)
+            { status.waypointQa = "Missing authored client Power or Logistics target."; yield break; }
+
+            string TrackerError()
+            {
+                if (legacy.gameObject.activeInHierarchy) return "Legacy NavigationMarker appeared during early Factory.";
+                var title = tracker.Find("TrackedObjective")?.GetComponent<TMP_Text>();
+                if (title == null || !title.isActiveAndEnabled || !title.text.Contains(CampaignRules.ChapterGoal(CampaignChapter.Factory)))
+                    return "Factory tracker is missing the chapter goal.";
+                foreach (var branch in branches)
+                {
+                    var label = tracker.Find(branch.step)?.GetComponent<TMP_Text>();
+                    string action = CampaignHUD.ObjectiveAction(branch.id);
+                    if (label == null || !label.isActiveAndEnabled || action.Length == 0 || !label.text.Contains(action))
+                        return $"{branch.step} should show the catalog title for {branch.id}.";
+                }
+                return null;
+            }
+
+            Quaternion previousLook = camera.transform.rotation;
+            bool mouseEnabled = mouse.enabled;
+            string before = JsonUtility.ToJson(campaign.State);
+            var trackedBefore = hud.TrackedObjectiveId;
+            mouse.enabled = false;
+            try
+            {
+                var eye = camera.transform.position;
+                var between = (isolate.TargetPosition - eye).normalized + (manifest.TargetPosition - eye).normalized;
+                camera.transform.rotation = WaypointLook(camera, between, new Vector2(.60f, .63f));
+                yield return new WaitForEndOfFrame();
+                var a = camera.WorldToViewportPoint(isolate.TargetPosition);
+                var b = camera.WorldToViewportPoint(manifest.TargetPosition);
+                bool simultaneous = ClearWaypointViewport(a) && ClearWaypointViewport(b);
+                if (simultaneous)
+                {
+                    var error = TrackerError() ?? WaypointProjectionError(camera, branches[0].root, isolate, "POWER")
+                        ?? WaypointProjectionError(camera, branches[1].root, manifest, "LOGISTICS");
+                    if (error != null) { status.waypointQa = "Shared view: " + error; yield break; }
+                    ScreenCapture.CaptureScreenshot(Path.Combine(output, "client-both-in-view.png"));
+                    yield return new WaitForEndOfFrame();
+                }
+
+                for (int i = 0; i < branches.Length; i++)
+                {
+                    var branch = branches[i];
+                    var item = i == 0 ? isolate : manifest;
+                    var other = branches[1 - i].id;
+                    hud.TryTrackObjective(other, true);
+                    var direction = item.TargetPosition - camera.transform.position;
+                    var look = WaypointLook(camera, direction, new Vector2(.60f, .63f));
+                    camera.transform.rotation = look;
+                    yield return new WaitForEndOfFrame();
+                    var error = TrackerError() ?? WaypointProjectionError(camera, branch.root, item, branch.name);
+                    if (error != null) { status.waypointQa = $"After selecting {other}: {error}"; yield break; }
+                    ScreenCapture.CaptureScreenshot(Path.Combine(output, $"client-{branch.id}-in-view.png"));
+                    yield return new WaitForEndOfFrame();
+
+                    camera.transform.rotation = WaypointLook(camera, direction, new Vector2(1.08f, .63f));
+                    yield return new WaitForEndOfFrame();
+                    var outside = camera.WorldToViewportPoint(item.TargetPosition);
+                    if (outside.z <= 0f || outside.x <= 1f || branch.root.gameObject.activeInHierarchy || legacy.gameObject.activeInHierarchy)
+                    { status.waypointQa = $"{branch.id} should hide offscreen (viewport {outside:F2}), with no edge arrow."; yield break; }
+
+                    camera.transform.rotation = Quaternion.AngleAxis(180f, Vector3.up) * look;
+                    yield return new WaitForEndOfFrame();
+                    if (camera.WorldToScreenPoint(item.TargetPosition).z >= 0f || branch.root.gameObject.activeInHierarchy)
+                    { status.waypointQa = $"{branch.id} should hide behind the camera."; yield break; }
+
+                    camera.transform.rotation = look;
+                    yield return new WaitForEndOfFrame();
+                    error = TrackerError() ?? WaypointProjectionError(camera, branch.root, item, branch.name);
+                    if (error != null) { status.waypointQa = "Return to view: " + error; yield break; }
+                }
+                yield return new WaitForSecondsRealtime(.5f);
+                if (JsonUtility.ToJson(campaign.State) != before)
+                { status.waypointQa = "Looking or tracking changed the client's replicated mission state."; yield break; }
+                status.waypointQa = $"PASS Power and Logistics use real target projections, hide offscreen/behind and return unchanged; "
+                    + (simultaneous ? "both visible together; " : $"separate real views (shared viewport {a:F2}, {b:F2}); ")
+                    + "replicated state unchanged.";
+            }
+            finally
+            {
+                if (trackedBefore != CampaignObjectiveId.None) hud.TryTrackObjective(trackedBefore, true);
+                camera.transform.rotation = previousLook;
+                mouse.enabled = mouseEnabled;
+            }
+        }
+
+        private static Quaternion WaypointLook(Camera camera, Vector3 direction, Vector2 viewport)
+        {
+            camera.transform.rotation = Quaternion.LookRotation(direction);
+            var ray = camera.ViewportPointToRay(viewport);
+            return Quaternion.FromToRotation(ray.direction, direction.normalized) * camera.transform.rotation;
+        }
+
+        // A shared view is optional when the real targets land near the HUD corners.
+        private static bool ClearWaypointViewport(Vector3 point) => point.z > 0f
+            && point.x is > .28f and < .92f && point.y is > .29f and < .84f;
+
+        private static string WaypointProjectionError(Camera camera, RectTransform root, CampaignInteractable item, string branch)
+        {
+            var dot = root.Find("Destination") as RectTransform;
+            var label = root.Find("BranchLabel")?.GetComponent<TMP_Text>();
+            var image = dot != null ? dot.GetComponent<UnityEngine.UI.Image>() : null;
+            if (image == null || !image.isActiveAndEnabled || image.color.a <= 0f || dot.rect.size != new Vector2(28, 28))
+                return $"{item.objectiveId} needs a visible 28×28 destination dot.";
+            Vector3 expected = camera.WorldToScreenPoint(item.TargetPosition);
+            Vector2 actual = RectTransformUtility.WorldToScreenPoint(null, dot.TransformPoint(dot.rect.center));
+            if (expected.z <= 0f || Vector2.Distance(actual, expected) > 1.5f)
+                return $"{item.objectiveId} projects to {(Vector2)expected:F2}, Destination is at {actual:F2}.";
+            string caption = label != null ? label.text.Replace("\r", "") : "";
+            return label != null && label.isActiveAndEnabled
+                && (caption == branch || caption == branch + "\nHIGHER" || caption == branch + "\nLOWER")
+                ? null : $"{item.objectiveId} has no visible {branch} label in clear screen space (text: '{caption}').";
         }
 
         private IEnumerator Hold(CampaignObjectiveId id, int first, int second, float seconds)

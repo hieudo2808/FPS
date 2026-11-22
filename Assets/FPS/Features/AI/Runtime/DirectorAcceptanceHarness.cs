@@ -21,6 +21,7 @@ namespace FPS
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetProfile() => AuthenticationProfile = null;
         private string role, folder, previousName;
+        private static int expectedParty = 2;
         private StreamWriter writer;
         private double nextSample, started;
         private AIDirector subscribed;
@@ -70,7 +71,8 @@ namespace FPS
         {
             string[] args = Environment.GetCommandLineArgs();
             string role = Value(args, "-directorRole");
-            if (role != "host" && role != "client") return;
+            if (role != "host" && role != "client" && role != "client2" && role != "client3") return;
+            expectedParty = int.TryParse(Value(args, "-directorParty"), out int party) ? Math.Clamp(party, 2, 4) : 2;
             var root = new GameObject("Director acceptance harness");
             DontDestroyOnLoad(root);
             var harness = root.AddComponent<DirectorAcceptanceHarness>();
@@ -119,9 +121,9 @@ namespace FPS
                 File.WriteAllText(pendingCode, sessions.CurrentJoinCode);
                 File.Move(pendingCode, Path.Combine(folder, "join-code.txt"));
                 deadline = Time.realtimeSinceStartupAsDouble + 75;
-                while ((!LobbyReady() || !File.Exists(Path.Combine(folder, "client-lobby-ready.txt")))
+                while ((!LobbyReady() || Directory.GetFiles(folder, "client*-lobby-ready.txt").Length < expectedParty - 1)
                     && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
-                if (!LobbyReady() || !File.Exists(Path.Combine(folder, "client-lobby-ready.txt")))
+                if (!LobbyReady() || Directory.GetFiles(folder, "client*-lobby-ready.txt").Length < expectedParty - 1)
                 { Event("blocked", "Both Players did not complete production Lobby synchronization within 75 seconds."); yield break; }
                 Event("lobby-ready", "Both peers have a spawned WaitingRoom with two registered lobby entries.");
                 yield return Await(sessions.StartMatchAsync(), "start-match");
@@ -138,9 +140,9 @@ namespace FPS
                 deadline = Time.realtimeSinceStartupAsDouble + 75;
                 while (!LobbyReady() && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
                 if (!LobbyReady()) { Event("blocked", "Client Lobby synchronization timed out."); yield break; }
-                string pending = Path.Combine(folder, "client-lobby-ready.pending");
+                string pending = Path.Combine(folder, role + "-lobby-ready.pending");
                 File.WriteAllText(pending, "ready");
-                File.Move(pending, Path.Combine(folder, "client-lobby-ready.txt"));
+                File.Move(pending, Path.Combine(folder, role + "-lobby-ready.txt"));
                 Event("lobby-ready", "Client WaitingRoom spawned and contains both players.");
             }
         }
@@ -148,7 +150,7 @@ namespace FPS
         {
             var room = WaitingRoomManager.Instance;
             return SceneManager.GetActiveScene().name == "LobbyScene"
-                && room != null && room.IsSpawned && room.Players != null && room.Players.Count >= 2;
+                && room != null && room.IsSpawned && room.Players != null && room.Players.Count >= expectedParty;
         }
         private void ConnectionFailed(string message) => Event("connection-failed", message);
         private IEnumerator Await(Task<SessionOperationResult> task, string stage)

@@ -67,7 +67,7 @@ namespace FPS
                 characterDropdown.ClearOptions();
                 var options = new System.Collections.Generic.List<string>();
                 for (int i = 0; i < CharacterOptions.Length; i++)
-                    options.Add(CharacterOptions[i].ToString());
+                    options.Add(CampaignCodename.For(CharacterOptions[i]));
                 characterDropdown.AddOptions(options);
             }
 
@@ -254,7 +254,7 @@ namespace FPS
 
             string hostMark = isHost ? " [HOST]" : "";
             string readyMark = ready ? " [READY]" : " [NOT READY]";
-            nameText.text = $"{playerName} [{character}]{hostMark}{readyMark}";
+            nameText.text = $"{playerName} [{CampaignCodename.For(character)}]{hostMark}{readyMark}";
             nameText.color = ready ? new Color(0.54f, 1.0f, 0.72f, 1.0f) : Color.white;
         }
 

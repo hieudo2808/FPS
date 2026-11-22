@@ -76,6 +76,40 @@ namespace FPS
         public bool oncePerRun;
         public string trigger;
         public AudioClip audio;
+        public CampaignRadioVoice firstVoice;
+        public CampaignRadioVoice secondVoice;
+        public CampaignRadioCue[] cues = Array.Empty<CampaignRadioCue>();
+        public CampaignRadioCue[] soloCues = Array.Empty<CampaignRadioCue>();
+
+        public CampaignRadioCue[] CuesFor(CampaignRadioVoice second) =>
+            second == CampaignRadioVoice.None && soloCues is { Length: > 0 } ? soloCues : cues;
+    }
+
+    public enum CampaignRadioVoice : byte { None, Mason, Doc, Vega, Raven, Any }
+    public enum CampaignRadioRole : byte { First, Second, Command, Client }
+
+    [Serializable]
+    public sealed class CampaignRadioCue
+    {
+        public CampaignRadioRole role;
+        [TextArea(2, 2)] public string english;
+        [TextArea(2, 2)] public string vietnamese;
+
+        public string Format(CampaignRadioVoice first, CampaignRadioVoice second, bool useVietnamese = false)
+        {
+            string command = useVietnamese ? "Bộ chỉ huy" : "Command";
+            string firstName = first == CampaignRadioVoice.None ? command : first.ToString();
+            string secondName = second == CampaignRadioVoice.None ? command : second.ToString();
+            string speaker = role switch
+            {
+                CampaignRadioRole.First => firstName,
+                CampaignRadioRole.Second => secondName,
+                CampaignRadioRole.Client => useVietnamese ? "Bên thuê" : "Client",
+                _ => command
+            };
+            string text = useVietnamese ? vietnamese : english;
+            return speaker + ": " + text.Replace("{1}", firstName).Replace("{2}", secondName);
+        }
     }
 
     [Serializable]

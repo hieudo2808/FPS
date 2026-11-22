@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e64de16f73779c45b8dbc23a2b97963, type: 3}
+  m_Name: Weapon_DryFire
+  m_EditorClassIdentifier: FPS::FPS.SoundEvent
+  bus: 2
+  clips:
+  - {fileID: 8300000, guid: 65c00d23880739c4a8dfb3bd88a072cf, type: 3}
+  - {fileID: 8300000, guid: b516553147b715640b6ae2a92be5b964, type: 3}
+  - {fileID: 8300000, guid: 0c65809f2d6887e43a104484b3378b63, type: 3}
+  remoteClips: []
+  distantClips: []
+  distantFrom: 35
+  volume: 0.55
+  volumeJitterDb: 1
+  pitch: {x: 1.4, y: 1.6}
+  spatialBlend: 0
+  minDistance: 1.5
+  maxDistance: 25
+  maxVoices: 3
+  cooldown: 0
+  priority: 80
+  loop: 0

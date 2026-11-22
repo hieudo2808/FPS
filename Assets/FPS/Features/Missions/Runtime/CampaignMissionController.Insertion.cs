@@ -68,8 +68,7 @@ namespace FPS
                 {
                     var player = people[slot];
                     // Resolve the actual spawned prefab, including standalone sessions without lobby state.
-                    var source = catalog.Entries.FirstOrDefault(e => e.prefab != null
-                        && e.prefab.GetComponent<NetworkObject>().PrefabIdHash == player.NetworkObject.PrefabIdHash);
+                    var source = FindSpawnedCharacter(catalog, player);
                     if (source == null) throw new InvalidOperationException("Insertion character is absent from PlayerPrefabCatalog.");
                     entries[slot] = new CampaignInsertionParticipant
                     {
@@ -93,6 +92,10 @@ namespace FPS
             insertionReady.Value = true;
             return true;
         }
+
+        private static PlayerPrefabCatalog.Entry FindSpawnedCharacter(PlayerPrefabCatalog catalog, PlayerHealth player) =>
+            catalog?.Entries.FirstOrDefault(e => e.prefab != null
+                && e.prefab.GetComponent<NetworkObject>().PrefabIdHash == player.NetworkObject.PrefabIdHash);
 
         private bool IsInsertionParticipant(ulong id)
         {

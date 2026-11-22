@@ -47,6 +47,14 @@ namespace FPS
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server);
 
+        // The hit that downed or killed this player (PlayerLifeHit.Pack). Written before the life state so
+        // every peer chooses the same 3P Death clip.
+        private readonly NetworkVariable<byte> networkLifeHit = new(
+            0,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server);
+        private int lifeHitSeed;
+
         private bool hasPreparedSnapshot;
         private bool preparedAsReconnect;
         private PlayerRuntimeSnapshot preparedSnapshot;
@@ -133,6 +141,11 @@ namespace FPS
         public bool IsInputReady => networkInputReady.Value;
         public PlayerLifeState LifeState => networkLifeState.Value;
         public bool CanUseCombat => LifeState == PlayerLifeState.Alive && IsInputReady && !IsDead;
+        /// <summary>Downed and waiting for a revive: cannot move or use items, can look and fire the sidearm.</summary>
+        public bool IsDownedConscious => LifeState == PlayerLifeState.Downed && IsInputReady && !IsDead;
+        /// <summary>Full combat when alive; only weapons marked usable while downed when downed.</summary>
+        public bool CanUseWeapon(WeaponData weapon) => CanUseCombat || IsDownedConscious && weapon != null && weapon.usableWhileDowned;
+        public PlayerLifeHit LifeHit => PlayerLifeHit.Unpack(networkLifeHit.Value);
         public double LifeStateDeadline => networkLifeStateDeadline.Value;
         public SessionPlayerId StablePlayerId => networkSessionPlayerId.Value;
 
@@ -252,12 +265,14 @@ namespace FPS
 
         public void TakeDamage(float damage) => ApplyDamage(damage, interruptTreatment: true);
 
-        public void TakeDamage(DamageInfo damageInfo) => ApplyDamage(damageInfo.amount, true, damageInfo.sourcePosition);
+        public void TakeDamage(DamageInfo damageInfo) =>
+            ApplyDamage(damageInfo.amount, true, damageInfo.sourcePosition, damageInfo.hitZone, damageInfo.damageType);
 
         // Sepsis drains health but must not make the five-second antidote impossible to finish.
         public void TakeInfectionDamage(float damage) => ApplyDamage(damage, interruptTreatment: false);
 
-        private void ApplyDamage(float damage, bool interruptTreatment, Vector3? sourcePosition = null)
+        private void ApplyDamage(float damage, bool interruptTreatment, Vector3? sourcePosition = null,
+            HitboxZone zone = HitboxZone.Body, DamageType damageType = DamageType.Unspecified)
         {
             if (!IsServer) return;
             if (networkIsDead.Value) return;
@@ -289,6 +304,9 @@ namespace FPS
 
             if (networkHealth.Value <= 0)
             {
+                // Record the finishing hit before the state change so peers see both together.
+                networkLifeHit.Value = PlayerLifeHit.From(transform.position, transform.forward, sourcePosition, zone,
+                    damage, damageType, ++lifeHitSeed).Pack();
                 if (campaign != null && campaign.ActivePlayerCount > 1)
                 {
                     networkLifeState.Value = PlayerLifeState.Downed;

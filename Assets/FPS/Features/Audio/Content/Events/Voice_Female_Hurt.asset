@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e64de16f73779c45b8dbc23a2b97963, type: 3}
+  m_Name: Voice_Female_Hurt
+  m_EditorClassIdentifier: FPS::FPS.SoundEvent
+  bus: 4
+  clips:
+  - {fileID: 8300000, guid: 4fac3c36c69e44544a014f3ff315c458, type: 3}
+  - {fileID: 8300000, guid: cf9a12369924b8846a77f3143fc47746, type: 3}
+  - {fileID: 8300000, guid: 2a988d91decccdb4f829ffa4a7bf5050, type: 3}
+  - {fileID: 8300000, guid: 599bd313457c381409c78230f44b86d9, type: 3}
+  - {fileID: 8300000, guid: 80ce8dd9bd2df3145bfc4502fc869429, type: 3}
+  remoteClips: []
+  distantClips: []
+  distantFrom: 35
+  volume: 0.85
+  volumeJitterDb: 1
+  pitch: {x: 0.96, y: 1.04}
+  spatialBlend: 1
+  minDistance: 2
+  maxDistance: 30
+  maxVoices: 4
+  cooldown: 0
+  priority: 60
+  loop: 0

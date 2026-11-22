@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e64de16f73779c45b8dbc23a2b97963, type: 3}
+  m_Name: Player_Land
+  m_EditorClassIdentifier: FPS::FPS.SoundEvent
+  bus: 4
+  clips:
+  - {fileID: 8300000, guid: 918bff4584319754594e094138e9fa1b, type: 3}
+  - {fileID: 8300000, guid: ebdbdae9616669f48924a9c84c352eaf, type: 3}
+  - {fileID: 8300000, guid: cb40287a40946a64a807ddf9e51a2f67, type: 3}
+  remoteClips: []
+  distantClips: []
+  distantFrom: 35
+  volume: 0.8
+  volumeJitterDb: 1
+  pitch: {x: 0.92, y: 1.05}
+  spatialBlend: 1
+  minDistance: 1.5
+  maxDistance: 22
+  maxVoices: 3
+  cooldown: 0
+  priority: 128
+  loop: 0

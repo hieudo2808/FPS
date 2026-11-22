@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f21a00fbbac100543968542a5439be43, type: 3}
+  m_Name: GameAudioSettings
+  m_EditorClassIdentifier: FPS::FPS.GameAudioSettings
+  mixer: {fileID: 24100000, guid: 5876823618ed49e42a64c37d4f029c6e, type: 2}
+  calm:
+    clip: {fileID: 8300000, guid: 90421a4e9624be640a4ce6e4b2cc2f68, type: 3}
+    volume: 0.55
+  build:
+    clip: {fileID: 8300000, guid: f39275538665a6743af820209575fcce, type: 3}
+    volume: 0.22
+  combat:
+    clip: {fileID: 8300000, guid: e40c956b95382794c85a563ee8341e78, type: 3}
+    volume: 0.18
+  tank:
+    clip: {fileID: 8300000, guid: a793adf8af988f441820b65b185552dc, type: 3}
+    volume: 0.33
+  crossfadeSeconds: 2.5
+  stepDownHoldSeconds: 8
+  ambienceBed: {fileID: 8300000, guid: 667b485b26c9aea45adcb014f3896e92, type: 3}
+  ambienceBedVolume: 0.7
+  ambienceWind: {fileID: 8300000, guid: 40e16a8356f1d5343925dd0773deb907, type: 3}
+  ambienceWindVolume: 0.35
+  ambienceFadeSeconds: 4
+  menuScenes:
+  - MainMenu
+  - LobbyScene

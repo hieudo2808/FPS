@@ -266,6 +266,8 @@ GameObject:
   - component: {fileID: 52528216886923247}
   - component: {fileID: 2555836156113533233}
   - component: {fileID: 1024742809955203989}
+  - component: {fileID: 1215940279662128960}
+  - component: {fileID: 4692832160855353099}
   m_Layer: 0
   m_Name: BrimstonePlayer
   m_TagString: Player
@@ -678,6 +680,48 @@ MonoBehaviour:
   viewCamera: {fileID: 8586101864439689613}
   originalHands:
   - {fileID: 4251045332784538884}
+--- !u!114 &1215940279662128960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8769610198087256571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e84ddea1bfac4ab751ff764115717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.PlayerLifePresenter
+  animationSet: {fileID: 11400000, guid: ed1a420de0a88d048beb9a891b409140, type: 2}
+  sidearmHold: {fileID: 11400000, guid: e31ecab86878c274896aaa8dbbf56cc2, type: 2}
+  humanoidAvatar: {fileID: 9000000, guid: ed6c3ef306e90f243968c66c6c86fd57, type: 3}
+  blendInSeconds: 0.15
+  blendOutSeconds: 0.45
+  raiseSeconds: 0.5
+  slumpSeconds: 0.9
+  aimArcDegrees: 100
+--- !u!114 &4692832160855353099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8769610198087256571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1218f4f732112c4a94f5edce27f28af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.PlayerAudio
+  voice: {fileID: 11400000, guid: ed42f3300bfea8141a7a39f9328e5610, type: 2}
+  footstep: {fileID: 11400000, guid: 0265eaf30e358624bad97a7643b88cff, type: 2}
+  land: {fileID: 11400000, guid: 9575d1dfaa3e9e14ab653d9cb5547c6e, type: 2}
+  downedBreath: {fileID: 11400000, guid: 7d9f2a0912b410b4abd617da7271df6c, type: 2}
+  hurtCooldown: 0.8
+  minimumHurtDamage: 3
+  ownFootstepVolume: 0.55
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1001 &1730887040986405190
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5048,6 +5092,14 @@ PrefabInstance:
     - target: {fileID: 9037760441512823268, guid: ed6c3ef306e90f243968c66c6c86fd57, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -22.838266
+      objectReference: {fileID: 0}
+    - target: {fileID: 9184762109525973929, guid: ed6c3ef306e90f243968c66c6c86fd57, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: ed2c7f76dd8130b4a9f6557a54903bad, type: 2}
+    - target: {fileID: 9184762109525973929, guid: ed6c3ef306e90f243968c66c6c86fd57, type: 3}
+      propertyPath: m_BlendShapeWeights.Array.size
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -8413,6 +8413,8 @@ GameObject:
   - component: {fileID: 445945396198060399}
   - component: {fileID: 6977329893423353407}
   - component: {fileID: 7393381413469173852}
+  - component: {fileID: 8224982626605923345}
+  - component: {fileID: 1806189959663030218}
   m_Layer: 0
   m_Name: ClovePlayer
   m_TagString: Player
@@ -8825,6 +8827,48 @@ MonoBehaviour:
   viewCamera: {fileID: 8586101864439689613}
   originalHands:
   - {fileID: 2960346990732931479}
+--- !u!114 &8224982626605923345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8769610198087256571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e84ddea1bfac4ab751ff764115717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.PlayerLifePresenter
+  animationSet: {fileID: 11400000, guid: ed1a420de0a88d048beb9a891b409140, type: 2}
+  sidearmHold: {fileID: 11400000, guid: e31ecab86878c274896aaa8dbbf56cc2, type: 2}
+  humanoidAvatar: {fileID: 9000000, guid: 9cecaa6ca8644b54c9770e614eeedebd, type: 3}
+  blendInSeconds: 0.15
+  blendOutSeconds: 0.45
+  raiseSeconds: 0.5
+  slumpSeconds: 0.9
+  aimArcDegrees: 100
+--- !u!114 &1806189959663030218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8769610198087256571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1218f4f732112c4a94f5edce27f28af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.PlayerAudio
+  voice: {fileID: 11400000, guid: 9c3e95e36d3593e4fbeed651147767be, type: 2}
+  footstep: {fileID: 11400000, guid: 0265eaf30e358624bad97a7643b88cff, type: 2}
+  land: {fileID: 11400000, guid: 9575d1dfaa3e9e14ab653d9cb5547c6e, type: 2}
+  downedBreath: {fileID: 11400000, guid: 7d9f2a0912b410b4abd617da7271df6c, type: 2}
+  hurtCooldown: 0.8
+  minimumHurtDamage: 3
+  ownFootstepVolume: 0.55
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &8919501125681492236
 GameObject:
   m_ObjectHideFlags: 0
@@ -15654,6 +15698,10 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3217675739819681567, guid: 9cecaa6ca8644b54c9770e614eeedebd, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 08efc0737ec0e974da90722a2a10d605, type: 2}
+    - target: {fileID: 3217675739819681567, guid: 9cecaa6ca8644b54c9770e614eeedebd, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 8160df4cf173fd94995dd14a51f96184, type: 2}
@@ -15665,6 +15713,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[2]'
       value: 
       objectReference: {fileID: 2100000, guid: 1a66bbfdb4a9baf4ba4408a37aa1bc92, type: 2}
+    - target: {fileID: 3217675739819681567, guid: 9cecaa6ca8644b54c9770e614eeedebd, type: 3}
+      propertyPath: m_BlendShapeWeights.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3245257395481157616, guid: 9cecaa6ca8644b54c9770e614eeedebd, type: 3}
       propertyPath: m_Layer
       value: 7

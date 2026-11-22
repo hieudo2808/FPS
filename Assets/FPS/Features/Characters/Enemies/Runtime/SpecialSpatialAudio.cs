@@ -22,6 +22,8 @@ namespace FPS
             source.minDistance = Mathf.Max(0.01f, minimumDistance);
             source.maxDistance = Mathf.Max(source.minDistance + 0.01f, maximumDistance);
             source.PlayOneShot(clip, Mathf.Clamp01(volume));
+            GameAudio.ReportExternal(clip, AudioBus.Enemies, transform.position, Mathf.Clamp01(volume), source.pitch,
+                source.minDistance, source.maxDistance);
         }
 
         public void ResetForPool()
@@ -39,6 +41,7 @@ namespace FPS
 
             source.playOnAwake = false;
             source.loop = false;
+            source.outputAudioMixerGroup = GameAudio.Group(AudioBus.Enemies);
             source.spatialBlend = spatialBlend;
             source.rolloffMode = AudioRolloffMode.Logarithmic;
             source.dopplerLevel = 0f;

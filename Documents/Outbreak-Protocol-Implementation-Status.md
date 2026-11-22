@@ -1,5 +1,7 @@
 # Outbreak Protocol — implementation handoff
 
+> **Tài liệu lịch sử, không dùng làm canon hiện hành.** Tên gọi, vai trò và nội dung runtime lấy theo [Master Canon](Outbreak-Protocol-Master-Canon.md). Bản này giữ nguyên để tra cứu quyết định và bằng chứng cũ; không coi các tên An/Lâm/An Lạc hoặc trạng thái kiểm thử cũ là hiện trạng dự án.
+
 Updated 2026-09-27. This is an evidence/status record, not the narrative canon. `Outbreak-Protocol-Master-Canon.md` remains the English content source.
 
 ## Delivered in the Tank / physical Files continuation

@@ -22,6 +22,7 @@ namespace FPS
         private float masterVolume = DEFAULT_VOLUME;
         private float musicVolume = DEFAULT_VOLUME;
         private float sfxVolume = DEFAULT_VOLUME;
+        private bool musicMixed;
 
         private GameObject fallbackListenerObject;
         private AudioListener fallbackAudioListener;
@@ -53,6 +54,15 @@ namespace FPS
             }
             musicSource.loop = true;
             musicSource.spatialBlend = 0f;
+
+            // Menu music and UI one-shots go through the same mixer as gameplay audio.
+            if (audioMixer == null && GameAudioSettings.Load() != null)
+                audioMixer = GameAudioSettings.Load().mixer;
+            if (musicSource.outputAudioMixerGroup == null)
+                musicSource.outputAudioMixerGroup = GameAudio.Group(AudioBus.Music);
+            if (sfxSource.outputAudioMixerGroup == null)
+                sfxSource.outputAudioMixerGroup = GameAudio.Group(AudioBus.UI);
+            GameAudio.EnsureRunning();
 
             SetMasterVolume(PlayerPrefs.GetFloat(MASTER_VOLUME_PARAM, DEFAULT_VOLUME));
             SetMusicVolume(PlayerPrefs.GetFloat(MUSIC_VOLUME_PARAM, DEFAULT_VOLUME));
@@ -105,7 +115,7 @@ namespace FPS
                 if (musicSource.clip != menuMusic || !musicSource.isPlaying)
                 {
                     musicSource.clip = menuMusic;
-                    musicSource.volume = musicVolume;
+                    musicSource.volume = musicMixed ? 1f : musicVolume;
                     musicSource.Play();
                 }
             }
@@ -131,16 +141,18 @@ namespace FPS
             return audioMixer != null;
         }
 
-        private void TrySetMixerParameter(string parameter, float value)
+        private bool TrySetMixerParameter(string parameter, float value)
         {
             if (!ValidateAudioMixer())
-                return;
+                return false;
 
             // AudioMixer.SetFloat logs an error when a parameter is not exposed.
             // Projects may intentionally omit master/music parameters because those
             // channels are controlled by AudioListener/source volume instead.
-            if (audioMixer.GetFloat(parameter, out _))
-                audioMixer.SetFloat(parameter, value);
+            if (!audioMixer.GetFloat(parameter, out _))
+                return false;
+            audioMixer.SetFloat(parameter, value);
+            return true;
         }
 
         public void SetSFXVolume(float volume)
@@ -161,14 +173,12 @@ namespace FPS
         {
             volume = Mathf.Clamp01(volume);
             musicVolume = volume;
-            if (musicSource != null)
-            {
-                musicSource.volume = volume;
-            }
 
-            float dB = ConvertVolumeToDecibels(volume);
-            // The current mixer exposes only the SFX parameter. Music is controlled
-            // directly on musicSource, so do not query/set a non-existent mixer key.
+            // The Music group (menu and gameplay music) follows the slider through the mixer; without the
+            // exposed parameter only the menu source can be turned down.
+            musicMixed = TrySetMixerParameter(MUSIC_VOLUME_PARAM, ConvertVolumeToDecibels(volume));
+            if (musicSource != null)
+                musicSource.volume = musicMixed ? 1f : volume;
             PlayerPrefs.SetFloat(MUSIC_VOLUME_PARAM, volume);
         }
 

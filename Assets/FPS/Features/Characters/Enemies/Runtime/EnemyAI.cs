@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 namespace FPS
 {
-    public class EnemyAI : NetworkBehaviour, IPoolResettable
+    public partial class EnemyAI : NetworkBehaviour, IPoolResettable
     {
         private static readonly HashSet<EnemyAI> pressureRoster = new HashSet<EnemyAI>();
         public static HashSet<EnemyAI> PressureRoster => pressureRoster;
@@ -123,6 +123,11 @@ namespace FPS
         private int specialAbilityDeadlineTick;
         private ushort lastPresentedActionSequence;
         private SpecialSpatialAudio spatialAudio;
+        private EnemyVoice voice;
+
+        /// <summary>Dead on this peer: the server's own state, or the replicated flag on clients.</summary>
+        public bool PresentsDead => currentState == State.Dead
+            || (replicatedState.Value.actionFlags & EnemyActionFlags.Dead) != 0;
         private uint motionLockGeneration;
         private uint activeMotionLockId;
         private float activeMotionLockDeadline;
@@ -159,6 +164,7 @@ namespace FPS
             if (animator == null) animator = GetComponent<Animator>();
             CacheAnimatorParameterSupport();
             spatialAudio = GetComponent<SpecialSpatialAudio>();
+            voice = GetComponent<EnemyVoice>();
             ConfigureMeleeAttack();
 
             if (agent != null)
@@ -172,6 +178,7 @@ namespace FPS
             if (health != null)
             {
                 health.OnDeathServer += OnDeath;
+                health.OnDamageApplied += OnServerDamageApplied;
             }
 
             RegisterWithRubberBandingIfAuthority();
@@ -186,6 +193,7 @@ namespace FPS
             if (health != null)
             {
                 health.OnDeathServer -= OnDeath;
+                health.OnDamageApplied -= OnServerDamageApplied;
             }
 
             if (RubberBandingSystem.HasInstance)
@@ -270,6 +278,8 @@ namespace FPS
             brainTickCount++;
             lastBrainTickTime = Time.time;
             UpdateMotionLock();
+            // Before the brain runs, so a stumble or broken swing holds the body this frame.
+            ResolvePendingHit();
 
             if (!UsesGenericServerBrain)
             {
@@ -436,8 +446,7 @@ namespace FPS
             if (animator != null)
                 animator.SetTrigger(AnimAttack);
 
-            if (attackSound != null)
-                PlayLocalSound(attackSound, attackAudioMinDistance, attackAudioMaxDistance);
+            PlayAttackVoice();
 
             BeginReplicatedAction();
         }
@@ -624,6 +633,7 @@ namespace FPS
             if (currentState == State.Dead) return;
 
             currentState = State.Dead;
+            hasPendingHit = false;
             specialAbilityActive = false;
             specialActionKind = EnemySpecialActionKind.None;
             specialAbilityDeadlineTick = 0;
@@ -642,8 +652,7 @@ namespace FPS
             if (animator != null)
                 animator.SetTrigger(AnimDead);
 
-            if (deathSound != null)
-                PlayLocalSound(deathSound, deathAudioMinDistance, deathAudioMaxDistance);
+            PlayDeathVoice();
 
             BeginReplicatedAction();
             PublishReplicatedState(force: true);
@@ -674,6 +683,7 @@ namespace FPS
             specialActionKind = EnemySpecialActionKind.None;
             specialAbilityDeadlineTick = 0;
             lastPresentedActionSequence = 0;
+            ResetHitReaction();
             lastFramePosition = transform.position;
             hasLastFramePosition = true;
 
@@ -703,6 +713,19 @@ namespace FPS
 
             if (CanRunServerLogic() && RubberBandingSystem.HasInstance)
                 RubberBandingSystem.Instance.UpdateZombieBaseSpeed(this, runSpeed);
+        }
+
+        // The voice set (if any) speaks for the enemy; otherwise the authored clip plays as before.
+        private void PlayAttackVoice()
+        {
+            if (voice == null || !voice.PlayAttack())
+                PlayLocalSound(attackSound, attackAudioMinDistance, attackAudioMaxDistance);
+        }
+
+        private void PlayDeathVoice()
+        {
+            if (voice == null || !voice.PlayDeath())
+                PlayLocalSound(deathSound, deathAudioMinDistance, deathAudioMaxDistance);
         }
 
         protected void PlayLocalSound(
@@ -820,7 +843,15 @@ namespace FPS
                 specialActionKind = specialActionKind,
                 actionSequence = serverActionSequence,
                 actionStartServerTick = serverActionStartTick,
-                specialAbilityDeadlineTick = specialAbilityDeadlineTick
+                specialAbilityDeadlineTick = specialAbilityDeadlineTick,
+                hitSequence = serverHitSequence,
+                hitKind = serverHitKind,
+                hitSegment = serverHitSegment,
+                hitOffsetX = serverHitOffsetX,
+                hitOffsetY = serverHitOffsetY,
+                hitOffsetZ = serverHitOffsetZ,
+                hitYaw = serverHitYaw,
+                hitStrength = serverHitStrength
             };
 
             if (force || !next.Equals(replicatedState.Value))
@@ -866,14 +897,14 @@ namespace FPS
                 && (force || (previous.actionFlags & EnemyActionFlags.Dead) == 0))
             {
                 TrySetAnimatorTrigger(AnimDead);
-                PlayLocalSound(deathSound, deathAudioMinDistance, deathAudioMaxDistance);
+                PlayDeathVoice();
             }
             else if (newAction
                 && (current.actionFlags & EnemyActionFlags.Attack) != 0
                 && elapsedTicks <= attackPresentationTicks)
             {
                 TrySetAnimatorTrigger(AnimAttack);
-                PlayLocalSound(attackSound, attackAudioMinDistance, attackAudioMaxDistance);
+                PlayAttackVoice();
             }
 
             bool specialStarted = (current.actionFlags & EnemyActionFlags.SpecialAbility) != 0
@@ -886,6 +917,7 @@ namespace FPS
                 OnReplicatedSpecialActionEnded(previous.specialActionKind);
 
             lastPresentedActionSequence = current.actionSequence;
+            PresentReplicatedHit(current, force);
         }
 
         protected void TrySetAnimatorTrigger(int triggerHash)

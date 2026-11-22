@@ -1,0 +1,1090 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc61d299552bdde4d91cee612c246dd0, type: 3}
+  m_Name: PlayerSidearmHoldPose
+  m_EditorClassIdentifier: FPS::FPS.PlayerSidearmHoldPose
+  entries:
+  - controller: BrimstoneClassic_GenericPathBound
+    bones:
+    - name: L_Clavicle
+      localPosition: {x: -0.00059451617, y: 0.0007459345, z: -0.000038105078}
+      localRotation: {x: -0.4829366, y: 0.5184123, z: 0.5165489, w: 0.48083085}
+    - name: L_Clavicle_Helper
+      localPosition: {x: 0.00020486205, y: 0.0012110248, z: 0.00072614785}
+      localRotation: {x: -0.21869686, y: -0.22944885, z: 0.058277532, w: 0.94664073}
+    - name: L_Clavicle_Helper_end
+      localPosition: {x: -6.239861e-10, y: 0.0014268293, z: 9.825453e-10}
+      localRotation: {x: 0.000000018044373, y: 0.000000027939675, z: -0.0000000053551044, w: 1}
+    - name: L_Clavicle_Helper_end_end
+      localPosition: {x: -0, y: 0.0014268288, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_ClavicleShoulder_Helper
+      localPosition: {x: 0.00020486205, y: 0.0012110248, z: 0.00072614785}
+      localRotation: {x: -0.21869686, y: -0.22944885, z: 0.058277532, w: 0.94664073}
+    - name: L_ClavicleShoulder_Helper_end
+      localPosition: {x: -6.239861e-10, y: 0.0014268293, z: 9.825453e-10}
+      localRotation: {x: 0.000000018044373, y: 0.000000027939675, z: -0.0000000053551044, w: 1}
+    - name: L_ClavicleShoulder_Helper_end_end
+      localPosition: {x: -0, y: 0.0014268288, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Shoulder
+      localPosition: {x: 0.00058290473, y: 0.0014825517, z: -0.00008593857}
+      localRotation: {x: -0.28229508, y: 0.09143956, z: 0.5495408, w: 0.7809951}
+    - name: L_Elbow
+      localPosition: {x: -0.0000000035716186, y: 0.0035022656, z: -0.0000000052992286}
+      localRotation: {x: 0.083121926, y: 0.24770668, z: 0.53075457, w: 0.80624545}
+    - name: Gauntlet
+      localPosition: {x: -0.00000055860727, y: 0.0015735602, z: 0.0000013332441}
+      localRotation: {x: 0.49796903, y: -0.49796858, z: -0.50202256, w: 0.5020234}
+    - name: GauntletCore
+      localPosition: {x: -0.0006423098, y: 0.0005716359, z: -0.00007649615}
+      localRotation: {x: -0.032150578, y: -0.070584044, z: 0.075778574, w: 0.99410355}
+    - name: GauntletInnerCore
+      localPosition: {x: -0.0000000015646219, y: 0.00015902832, z: 7.8231094e-10}
+      localRotation: {x: 0.00000011920929, y: -0.00000012200327, z: 0.000000026077034, w: 1}
+    - name: GauntletInnerCore_end
+      localPosition: {x: 5.5879353e-11, y: 0.00015902739, z: 3.7252902e-11}
+      localRotation: {x: -0.0000001322478, y: -0.00000003073365, z: -0.000000037252907, w: 1}
+    - name: GauntletInnerCore_end_end
+      localPosition: {x: -0, y: 0.00015902724, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: GauntletDoorLower1
+      localPosition: {x: -0.000101909114, y: 0.0006968816, z: 0.0005756396}
+      localRotation: {x: 0.1720034, y: -0.7465172, z: -0.06459779, w: 0.63949513}
+    - name: GauntletDoorLower1_end
+      localPosition: {x: 1.862645e-10, y: 0.000591651, z: -9.313226e-10}
+      localRotation: {x: 0.000000059604645, y: 0.00000010058284, z: 0.00000013969839, w: 1}
+    - name: GauntletDoorLower1_end_end
+      localPosition: {x: -0, y: 0.00059165224, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: GauntletDoorLower2
+      localPosition: {x: 0.00011916892, y: 0.0005974615, z: -0.0005644637}
+      localRotation: {x: -0.24190672, y: 0.64610666, z: -0.17863028, w: 0.7015116}
+    - name: GauntletDoorLower2_end
+      localPosition: {x: 1.862645e-10, y: 0.000591653, z: 5.494803e-10}
+      localRotation: {x: 0.000000024214389, y: -0.000000051222745, z: -0.00000012572856, w: 1}
+    - name: GauntletDoorLower2_end_end
+      localPosition: {x: -0, y: 0.0005916526, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: GauntletDoorUpper1
+      localPosition: {x: 0.0007104554, y: 0.00071185746, z: 0.00088245113}
+      localRotation: {x: 0.18828851, y: -0.72294635, z: -0.072139665, w: 0.6608267}
+    - name: GauntletDoorUpper1_end
+      localPosition: {x: 3.7252902e-11, y: 0.0005916517, z: 0}
+      localRotation: {x: -0.000000096857555, y: 0.000000001862645, z: 0.00000020023435, w: 1}
+    - name: GauntletDoorUpper1_end_end
+      localPosition: {x: -0, y: 0.00059165154, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: GauntletDoorUpper2
+      localPosition: {x: 0.0010271625, y: 0.00058163976, z: -0.00063901214}
+      localRotation: {x: -0.24769965, y: 0.61688054, z: -0.17451444, w: 0.7263938}
+    - name: GauntletDoorUpper2_end
+      localPosition: {x: -0, y: 0.0005916524, z: 5.401671e-10}
+      localRotation: {x: 0.00000002607703, y: 0.000000013038515, z: 0.000000093597905, w: 1}
+    - name: GauntletDoorUpper2_end_end
+      localPosition: {x: -0, y: 0.0005916523, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: GauntletRingOuter
+      localPosition: {x: -0.00057419686, y: 0.00014054851, z: -0.000024350918}
+      localRotation: {x: 0.00000008195639, y: -0.00000004470348, z: -0.00000008195639, w: 1}
+    - name: GauntletRingOuter_end
+      localPosition: {x: 1.3038516e-10, y: 0.00059165165, z: -3.72529e-10}
+      localRotation: {x: 0.0000001527369, y: -1.774937e-29, z: -0.000000014901161, w: 1}
+    - name: GauntletRingOuter_end_end
+      localPosition: {x: -0, y: 0.00059165154, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: GauntletTopButton
+      localPosition: {x: 0.0017590949, y: 0.0011133719, z: 0.00021911581}
+      localRotation: {x: -0.032280374, y: -0.09032157, z: 0.07531747, w: 0.99253577}
+    - name: GauntletTopButton_end
+      localPosition: {x: 6.519258e-11, y: 0.00059165177, z: -2.8871e-10}
+      localRotation: {x: 0.000000018626451, y: -9.313226e-10, z: 0.0000000949949, w: 1}
+    - name: GauntletTopButton_end_end
+      localPosition: {x: -0, y: 0.0005916519, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Elbow_Ndl
+      localPosition: {x: -0.0000000017881393, y: 0.0000000016018747, z: 1.11758706e-10}
+      localRotation: {x: 0.0000010909747, y: -0.0000001335591, z: -0.27202794, w: 0.9622894}
+    - name: L_Elbow_Ndl_end
+      localPosition: {x: -0, y: 0.00034330136, z: 5.494803e-10}
+      localRotation: {x: 0.00000006600749, y: 0.000000009313225, z: 0.00000012014061, w: 1}
+    - name: L_Elbow_Ndl_end_end
+      localPosition: {x: -0, y: 0.00034330256, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Elbow_Twst1
+      localPosition: {x: -0.0000000026077032, y: 0.00034330174, z: 5.9604643e-10}
+      localRotation: {x: 0.000000055879354, y: -0.00000020489097, z: 0.0000004079193, w: 1}
+    - name: L_Elbow_Twst1_end
+      localPosition: {x: 2.6077032e-10, y: 0.00034330366, z: 2.561137e-10}
+      localRotation: {x: -0.000000020489095, y: -0.000000011175871, z: -0.000000078231096, w: 1}
+    - name: L_Elbow_Twst1_end_end
+      localPosition: {x: -0, y: 0.000343303, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Elbow_Twst2
+      localPosition: {x: -0.0000000028219074, y: 0.0014737026, z: -5.075708e-10}
+      localRotation: {x: 0.00000004656613, y: -0.00000012665987, z: 0.0000003892928, w: 1}
+    - name: L_Elbow_Twst2_end
+      localPosition: {x: -6.519258e-10, y: 0.00034330285, z: 4.749745e-10}
+      localRotation: {x: 1.2325952e-32, y: 0.000000007450581, z: -0.0000000055879354, w: 1}
+    - name: L_Elbow_Twst2_end_end
+      localPosition: {x: -0, y: 0.000343303, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Elbow_Twst3
+      localPosition: {x: -0.0000000054761764, y: 0.0025235983, z: 0.0000000031478702}
+      localRotation: {x: 0.00000005029142, y: -0.00000020861626, z: 0.00000031851232, w: 1}
+    - name: L_Elbow_Twst3_end
+      localPosition: {x: -2.9802322e-10, y: 0.00034330256, z: 4.2840836e-10}
+      localRotation: {x: -0.000000020489093, y: 0.00000000372529, z: 0.000000033527606, w: 1}
+    - name: L_Elbow_Twst3_end_end
+      localPosition: {x: -0, y: 0.000343303, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Hand
+      localPosition: {x: -0.0000000033061902, y: 0.0027427888, z: 0.0000000017229479}
+      localRotation: {x: 0.32799622, y: 0.21020064, z: -0.18903022, w: 0.90138876}
+    - name: L_Index0
+      localPosition: {x: -0.00018059938, y: 0.00017659958, z: 0.00004079938}
+      localRotation: {x: -0.011789951, y: -0.015326327, z: 0.122471265, w: 0.9922837}
+    - name: L_Index0_end
+      localPosition: {x: 2.2351741e-10, y: 0.00024099894, z: -7.4505804e-11}
+      localRotation: {x: 0.000000031664968, y: -0.0000000037252903, z: 0.000000011175872, w: 1}
+    - name: L_Index0_end_end
+      localPosition: {x: -0, y: 0.00024099948, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Index1
+      localPosition: {x: -0.00038612838, y: 0.0010102117, z: 0.000017607636}
+      localRotation: {x: -0.22276585, y: -0.07020605, z: -0.03938246, w: 0.9715429}
+    - name: L_Index2
+      localPosition: {x: -0.0000000026076996, y: 0.00059987034, z: -6.705524e-10}
+      localRotation: {x: -0.49527717, y: 0.03643304, z: 0.17340073, w: 0.85047364}
+    - name: L_Index3
+      localPosition: {x: 7.636831e-10, y: 0.00038353514, z: 8.38191e-10}
+      localRotation: {x: 0.40109387, y: 0.028293656, z: -0.17904826, w: 0.8979226}
+    - name: L_Index3_end
+      localPosition: {x: -4.4703483e-10, y: 0.00038353557, z: 7.45058e-10}
+      localRotation: {x: 0, y: 0.0000000037252903, z: 0.0000000037252903, w: 1}
+    - name: L_Index3_end_end
+      localPosition: {x: -0, y: 0.00038353621, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Middle0
+      localPosition: {x: 0.000013999938, y: 0.00021909997, z: 0.00009939981}
+      localRotation: {x: -0.023961484, y: 0.009860799, z: 0.019188514, w: 0.99948007}
+    - name: L_Middle0_end
+      localPosition: {x: -5.9604643e-10, y: 0.00024099975, z: -7.8231094e-10}
+      localRotation: {x: -0.0000000037252907, y: -0.000000007450581, z: -0.000000026077034, w: 1}
+    - name: L_Middle0_end_end
+      localPosition: {x: -0, y: 0.00024099948, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Middle1
+      localPosition: {x: -0.00002853629, y: 0.0010868117, z: 0.00005826572}
+      localRotation: {x: -0.31076866, y: -0.026207183, z: -0.015928239, w: 0.94999075}
+    - name: L_Middle2
+      localPosition: {x: -5.7741906e-10, y: 0.00067710766, z: 7.078054e-10}
+      localRotation: {x: -0.5214773, y: 0.0149768, z: 0.13246812, w: 0.84278667}
+    - name: L_Middle3
+      localPosition: {x: 2.048906e-10, y: 0.0004044929, z: -9.31323e-10}
+      localRotation: {x: 0.463755, y: 0.01205953, z: -0.13938466, w: 0.8748473}
+    - name: L_Middle3_end
+      localPosition: {x: -1.4901161e-10, y: 0.00040449022, z: 7.45058e-10}
+      localRotation: {x: -0.000000088475645, y: 0.000000011175871, z: -0.000000011175873, w: 1}
+    - name: L_Middle3_end_end
+      localPosition: {x: -0, y: 0.00040449004, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Pinky0
+      localPosition: {x: 0.0003161988, y: 0.00017970068, z: 0.0000576001}
+      localRotation: {x: -0.07860278, y: 0.09873031, z: -0.19985497, w: 0.97166455}
+    - name: L_Pinky0_end
+      localPosition: {x: -7.4505804e-11, y: 0.00024099817, z: 0.0000000010337681}
+      localRotation: {x: 0.000000008381904, y: 0.000000058440495, z: -0.00000006239861, w: 1}
+    - name: L_Pinky0_end_end
+      localPosition: {x: -0, y: 0.00024099884, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Pinky1
+      localPosition: {x: 0.00060088706, y: 0.0008715577, z: -0.000097229335}
+      localRotation: {x: -0.4370246, y: 0.14224823, z: 0.049767435, w: 0.8867346}
+    - name: L_Pinky2
+      localPosition: {x: 0.0000024137269, y: 0.000453946, z: -0.000006469815}
+      localRotation: {x: -0.29685712, y: -0.0063907066, z: 0.012977334, w: 0.9548124}
+    - name: L_Pinky3
+      localPosition: {x: -0.0000017351939, y: 0.00025163495, z: -0.000003580087}
+      localRotation: {x: 0.5273826, y: -0.0005074276, z: -0.027458318, w: 0.849184}
+    - name: L_Pinky3_end
+      localPosition: {x: -1.862645e-10, y: 0.00025576956, z: 1.3969838e-11}
+      localRotation: {x: -0.000000042375177, y: 0.000000008381904, z: -0.0000000018626451, w: 1}
+    - name: L_Pinky3_end_end
+      localPosition: {x: -0, y: 0.00025576956, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Ring0
+      localPosition: {x: 0.00017029895, y: 0.00021150082, z: 0.000092599854}
+      localRotation: {x: -0.04222793, y: 0.04228129, z: -0.09925395, w: 0.9932662}
+    - name: L_Ring0_end
+      localPosition: {x: 2.2351741e-10, y: 0.00024099903, z: 1.2107193e-10}
+      localRotation: {x: -0.00000004377216, y: 0.000000020489097, z: -0.0000000037252903, w: 1}
+    - name: L_Ring0_end_end
+      localPosition: {x: -0, y: 0.00024099865, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Ring1
+      localPosition: {x: 0.00033815132, y: 0.0010627236, z: -0.0000056251743}
+      localRotation: {x: -0.44447702, y: 0.089943685, z: 0.034669463, w: 0.8905888}
+    - name: L_Ring2
+      localPosition: {x: -3.472081e-10, y: 0.00055802165, z: -0.0000000015553101}
+      localRotation: {x: -0.24263395, y: -0.0029215517, z: 0.025007695, w: 0.9697912}
+    - name: L_Ring3
+      localPosition: {x: 9.659545e-10, y: 0.00037354918, z: 5.8673383e-10}
+      localRotation: {x: 0.3038717, y: -0.001540836, z: -0.036934454, w: 0.95199555}
+    - name: L_Ring3_end
+      localPosition: {x: -2.2351741e-10, y: 0.00037355183, z: 5.9604643e-10}
+      localRotation: {x: 0.000000024563636, y: -0.000000026077034, z: -0.000000015599655, w: 1}
+    - name: L_Ring3_end_end
+      localPosition: {x: -0, y: 0.00037355188, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Thumb1
+      localPosition: {x: -0.0003617747, y: 0.000036242393, z: -0.00016120773}
+      localRotation: {x: 0.27263632, y: -0.78597564, z: 0.26455173, w: 0.48777476}
+    - name: L_Thumb2
+      localPosition: {x: 4.4703385e-10, y: 0.00044860324, z: 0.000000002011658}
+      localRotation: {x: -0.19902578, y: 0.18241666, z: 0.10275154, w: 0.95736885}
+    - name: L_Thumb3
+      localPosition: {x: -2.7939604e-11, y: 0.0004280219, z: 0.0000000016111892}
+      localRotation: {x: 0.4244995, y: 0.01998836, z: -0.18158457, w: 0.8868076}
+    - name: L_Thumb3_end
+      localPosition: {x: -2.9802322e-10, y: 0.00042802063, z: -2.9802322e-10}
+      localRotation: {x: 0.000000013038518, y: 3.3087256e-24, z: 0.000000011175873, w: 1}
+    - name: L_Thumb3_end_end
+      localPosition: {x: -0, y: 0.00042802183, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_WeaponPoint
+      localPosition: {x: 0.0034674334, y: 0.008270701, z: -0.008323434}
+      localRotation: {x: 0.55127186, y: -0.048783675, z: -0.27776462, w: 0.78521734}
+    - name: L_WeaponPoint_end
+      localPosition: {x: 5.4190754e-16, y: 0.00024099954, z: 6.826536e-16}
+      localRotation: {x: 0.0000010132796, y: 0.000000020486409, z: -0.0000006632264, w: 1}
+    - name: L_WeaponPoint_end_end
+      localPosition: {x: -0, y: 0.00024099911, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Shoulder_Twst1
+      localPosition: {x: 7.4505804e-11, y: 0.00011389743, z: 2.0489097e-10}
+      localRotation: {x: 0.0000013157259, y: -0.0000000055879346, z: -0.0000003245659, w: 1}
+    - name: L_Shoulder_Helper
+      localPosition: {x: 7.45058e-10, y: 0.0000000010267831, z: 0.0000000016484409}
+      localRotation: {x: -0.00000069127424, y: -0.000000013038518, z: 0.00000025751072, w: 1}
+    - name: L_Shoulder_Helper_end
+      localPosition: {x: -3.7252902e-11, y: 0.00011389556, z: -4.1909515e-10}
+      localRotation: {x: -4.656613e-10, y: 0.0000000018626451, z: 0.00000001071021, w: 1}
+    - name: L_Shoulder_Helper_end_end
+      localPosition: {x: -0, y: 0.00011389618, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Shoulder_Twst2
+      localPosition: {x: -0.0000000012293457, y: 0.0013747979, z: -0.0000000022910536}
+      localRotation: {x: 0.0000020848818, y: -0.00000001862645, z: -0.00000029522923, w: 1}
+    - name: L_Shoulder_Twst2_Helper
+      localPosition: {x: -7.0780515e-10, y: -0.0000000025669578, z: -9.3132255e-12}
+      localRotation: {x: -0.0000014441323, y: -0.000000027939679, z: 0.000000232365, w: 1}
+    - name: L_Shoulder_Twst2_Helper_end
+      localPosition: {x: -0, y: 0.000113895214, z: -1.2107193e-10}
+      localRotation: {x: -0.000000016996637, y: 0.0000000018626451, z: -0.0000000037252903, w: 1}
+    - name: L_Shoulder_Twst2_Helper_end_end
+      localPosition: {x: -0, y: 0.00011389618, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_Shoulder_Twst3
+      localPosition: {x: -0.0000000030174852, y: 0.0028042984, z: -0.0000000027194618}
+      localRotation: {x: 0.00000056729175, y: 0.000000065192566, z: -0.00000036880368, w: 1}
+    - name: L_Shoulder_Twst3_Helper
+      localPosition: {x: -2.9802322e-10, y: -0.0000000015471596, z: -8.381903e-10}
+      localRotation: {x: 0.00000009546057, y: -0.00000012200326, z: 0.00000030361116, w: 1}
+    - name: L_Shoulder_Twst3_Helper_end
+      localPosition: {x: -0, y: 0.0001138969, z: -3.7252902e-11}
+      localRotation: {x: -0.000000009313227, y: 0.000000008381903, z: 0.0000000032596295, w: 1}
+    - name: L_Shoulder_Twst3_Helper_end_end
+      localPosition: {x: -0, y: 0.00011389618, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_ShoulderStrap
+      localPosition: {x: 0.0000000012665987, y: 0.0004961949, z: 0.0000000026542692}
+      localRotation: {x: 0.3669685, y: 0.22603527, z: -0.07066516, w: 0.8995825}
+    - name: L_ShoulderStrap_end
+      localPosition: {x: 3.7252902e-11, y: 0.00011389608, z: 1.4901161e-10}
+      localRotation: {x: 0.00000016251579, y: 0.000000007450581, z: 0.000000001862645, w: 1}
+    - name: L_ShoulderStrap_end_end
+      localPosition: {x: -0, y: 0.00011389623, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: L_ShoulderStrapBuckle
+      localPosition: {x: -0.0012513155, y: 0.0005590703, z: 0.00024951357}
+      localRotation: {x: 0.3669684, y: 0.22603568, z: -0.07066675, w: 0.89958227}
+    - name: L_ShoulderStrapBuckle_end
+      localPosition: {x: -2.2351741e-10, y: 0.00011389717, z: 5.9604643e-10}
+      localRotation: {x: -0.00000005215406, y: 0.000000007450581, z: 0.00000055413693, w: 1}
+    - name: L_ShoulderStrapBuckle_end_end
+      localPosition: {x: -0, y: 0.000113896276, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Clavicle
+      localPosition: {x: 0.0008099501, y: 0.0007458857, z: 0.000022486774}
+      localRotation: {x: 0.5770571, y: 0.40222296, z: -0.33891994, w: 0.624784}
+    - name: R_Clavicle_Helper
+      localPosition: {x: 0.00020486211, y: 0.0012110221, z: -0.0007262015}
+      localRotation: {x: 0.21869804, y: 0.22944929, z: 0.058277924, w: 0.9466403}
+    - name: R_Clavicle_Helper_end
+      localPosition: {x: 2.9802322e-10, y: 0.0014268544, z: -4.749745e-10}
+      localRotation: {x: 0.00000006495975, y: -0.00000006146729, z: 0.000000019092113, w: 1}
+    - name: R_Clavicle_Helper_end_end
+      localPosition: {x: -0, y: 0.0014268538, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_ClavicleShoulder_Helper
+      localPosition: {x: 0.00020486211, y: 0.0012110221, z: -0.0007262015}
+      localRotation: {x: 0.21869804, y: 0.22944929, z: 0.058277924, w: 0.9466403}
+    - name: R_ClavicleShoulder_Helper_end
+      localPosition: {x: 2.9802322e-10, y: 0.0014268544, z: -4.749745e-10}
+      localRotation: {x: 0.00000006495975, y: -0.00000006146729, z: 0.000000019092113, w: 1}
+    - name: R_ClavicleShoulder_Helper_end_end
+      localPosition: {x: -0, y: 0.0014268538, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Shoulder
+      localPosition: {x: 0.0005829035, y: 0.0014825527, z: 0.000085901986}
+      localRotation: {x: 0.19941773, y: -0.14153677, z: 0.6259693, w: 0.74051493}
+    - name: R_Elbow
+      localPosition: {x: -0.0000000052154014, y: 0.0035022348, z: 0.0000000054202993}
+      localRotation: {x: -0.044499066, y: -0.25729468, z: 0.38365206, w: 0.8857936}
+    - name: R_Elbow_Helper
+      localPosition: {x: -8.1956386e-10, y: -0.0000000014528632, z: -0.0000000032223761}
+      localRotation: {x: -0.0000013522804, y: 0.00000015646219, z: 0.0000003054738, w: 1}
+    - name: R_Elbow_Helper_end
+      localPosition: {x: 5.2154064e-10, y: 0.00034329592, z: -5.401671e-10}
+      localRotation: {x: 0.00000005029142, y: -0.000000052154064, z: 0.000000016763806, w: 1}
+    - name: R_Elbow_Helper_end_end
+      localPosition: {x: -0, y: 0.0003432967, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Elbow_Ndl
+      localPosition: {x: -7.45058e-10, y: -0.0000000029616056, z: 1.11758706e-10}
+      localRotation: {x: -0.0000011276309, y: 0.000000697798, z: -0.27202797, w: 0.96228933}
+    - name: R_Elbow_Ndl_end
+      localPosition: {x: 7.4505804e-11, y: 0.00034329674, z: 1.2107193e-10}
+      localRotation: {x: 0.000000039581217, y: -0.0000000018626454, z: -0.000000033527616, w: 1}
+    - name: R_Elbow_Ndl_end_end
+      localPosition: {x: -0, y: 0.0003432967, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Elbow_Twst1
+      localPosition: {x: -0.0000000024214386, y: 0.00034329653, z: -0.0000000017043202}
+      localRotation: {x: 0.00000040233135, y: -0.000000055879354, z: 0.00000030733645, w: 1}
+    - name: R_Elbow_Twst1_end
+      localPosition: {x: 5.401671e-10, y: 0.0003432966, z: -1.862645e-10}
+      localRotation: {x: 2.220446e-16, y: -0.0000000037252899, z: 0.00000007636845, w: 1}
+    - name: R_Elbow_Twst1_end_end
+      localPosition: {x: -0, y: 0.00034329618, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Elbow_Twst2
+      localPosition: {x: -7.0780515e-10, y: 0.0014737998, z: 0.000000002689194}
+      localRotation: {x: 0.000000048428774, y: -0.00000020861626, z: 0.000000027939677, w: 1}
+    - name: R_Elbow_Twst2_end
+      localPosition: {x: -5.5879353e-11, y: 0.00034329668, z: -2.2351741e-10}
+      localRotation: {x: 0.0000000037252903, y: -6.162976e-33, z: 0.000000011175871, w: 1}
+    - name: R_Elbow_Twst2_end_end
+      localPosition: {x: -0, y: 0.00034329618, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Elbow_Twst3
+      localPosition: {x: -0.0000000016763806, y: 0.0025235973, z: 0.000000002766028}
+      localRotation: {x: 0.000000435859, y: -0.00000016763806, z: 0.00000020116569, w: 1}
+    - name: R_Elbow_Twst3_end
+      localPosition: {x: 4.4703483e-10, y: 0.0003432955, z: -3.7252902e-11}
+      localRotation: {x: 0.000000016763806, y: 0.00000000745058, z: 0.000000013038516, w: 1}
+    - name: R_Elbow_Twst3_end_end
+      localPosition: {x: -0, y: 0.00034329612, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Hand
+      localPosition: {x: -0.000000003948805, y: 0.0027427818, z: 0.000000003445896}
+      localRotation: {x: -0.13670035, y: -0.2280322, z: -0.08278809, w: 0.960448}
+    - name: R_Index0
+      localPosition: {x: -0.00018260113, y: 0.00017539794, z: -0.0000359991}
+      localRotation: {x: 0.011789742, y: 0.0153261535, z: 0.122475885, w: 0.9922831}
+    - name: R_Index0_end
+      localPosition: {x: -7.4505804e-11, y: 0.0002377554, z: -6.3329936e-10}
+      localRotation: {x: -0.000000054016702, y: 0.000000011175871, z: -0.000000053085383, w: 1}
+    - name: R_Index0_end_end
+      localPosition: {x: -0, y: 0.0002377561, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Index1
+      localPosition: {x: -0.00040005954, y: 0.0009397094, z: 0.000005538731}
+      localRotation: {x: 0.012075262, y: -0.015876861, z: 0.022150578, w: -0.9995557}
+    - name: R_Index2
+      localPosition: {x: 0.0000000011734652, y: 0.0005998707, z: 0.0000000014156113}
+      localRotation: {x: -0.5315173, y: 0.0392914, z: -0.19728918, w: -0.8228138}
+    - name: R_Index3
+      localPosition: {x: -0.00000002291051, y: 0.0003835106, z: 0.0000000053737375}
+      localRotation: {x: -0.89093506, y: 0.0066403155, z: -0.36045372, w: -0.27615905}
+    - name: R_Index3_end
+      localPosition: {x: 4.4703483e-10, y: 0.00038350973, z: -3.8649886e-10}
+      localRotation: {x: -0.000000009313226, y: 0.000000007450579, z: 0.000000013038514, w: 1}
+    - name: R_Index3_end_end
+      localPosition: {x: -0, y: 0.00038351, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Middle0
+      localPosition: {x: 0.000011899769, y: 0.00021780103, z: -0.000094599105}
+      localRotation: {x: 0.023962002, y: -0.009860894, z: 0.01919158, w: 0.99948}
+    - name: R_Middle0_end
+      localPosition: {x: -1.4901161e-10, y: 0.00023775524, z: 4.0978193e-10}
+      localRotation: {x: -0.000000067055225, y: -0.000000018626451, z: 0.000000055879354, w: 1}
+    - name: R_Middle0_end_end
+      localPosition: {x: -0, y: 0.00023775637, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Middle1
+      localPosition: {x: -0.000029898927, y: 0.0010797618, z: 0.000021590206}
+      localRotation: {x: -0.6377602, y: -0.06957507, z: -0.003850758, w: -0.7670766}
+    - name: R_Middle2
+      localPosition: {x: -0.0000000104121725, y: 0.00067707687, z: 2.7939692e-10}
+      localRotation: {x: -0.6528905, y: 0.013999984, z: -0.17315586, w: -0.73726183}
+    - name: R_Middle3
+      localPosition: {x: -0.0000000040768597, y: 0.00040449115, z: 0.000000006062914}
+      localRotation: {x: -0.82989234, y: -0.0014844049, z: -0.2256637, w: -0.51024747}
+    - name: R_Middle3_end
+      localPosition: {x: 2.9802322e-10, y: 0.00040448984, z: -3.72529e-10}
+      localRotation: {x: 0.000000022351742, y: 0.000000011175871, z: 0.0000000055879354, w: 1}
+    - name: R_Middle3_end_end
+      localPosition: {x: -0, y: 0.00040448928, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Pinky0
+      localPosition: {x: 0.00031420044, y: 0.00017840251, z: -0.000052798194}
+      localRotation: {x: 0.07860364, y: -0.098729774, z: -0.19985297, w: 0.9716649}
+    - name: R_Pinky0_end
+      localPosition: {x: 3.7252902e-11, y: 0.00023775689, z: 2.561137e-10}
+      localRotation: {x: -0.000000009080394, y: 0.000000084284686, z: 0.00000005681067, w: 1}
+    - name: R_Pinky0_end_end
+      localPosition: {x: -0, y: 0.00023775705, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Pinky1
+      localPosition: {x: 0.0005442615, y: 0.00092279224, z: 0.00013502811}
+      localRotation: {x: -0.7007708, y: 0.12400998, z: 0.02341861, w: -0.7021349}
+    - name: R_Pinky2
+      localPosition: {x: 0.0000000028335465, y: 0.0004958918, z: 7.776549e-10}
+      localRotation: {x: -0.4853456, y: -0.010405719, z: -0.022339836, w: -0.87397504}
+    - name: R_Pinky3
+      localPosition: {x: -0.0000000012159572, y: 0.0002557703, z: -4.6566154e-12}
+      localRotation: {x: -0.9314099, y: -0.008794866, z: -0.03922322, w: -0.36174557}
+    - name: R_Pinky3_end
+      localPosition: {x: 1.4901161e-10, y: 0.00025576694, z: -3.0267983e-11}
+      localRotation: {x: -0.000000024680048, y: 0.0000000018626451, z: -2.220446e-16, w: 1}
+    - name: R_Pinky3_end_end
+      localPosition: {x: -0, y: 0.0002557667, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Ring0
+      localPosition: {x: 0.00016820125, y: 0.000210204, z: -0.00008779812}
+      localRotation: {x: 0.042228147, y: -0.042280942, z: -0.09925123, w: 0.9932665}
+    - name: R_Ring0_end
+      localPosition: {x: 7.4505804e-11, y: 0.00023775676, z: -5.587935e-10}
+      localRotation: {x: -0.000000013038514, y: -0.0000000037252899, z: 0.00000012014061, w: 1}
+    - name: R_Ring0_end_end
+      localPosition: {x: -0, y: 0.00023775618, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Ring1
+      localPosition: {x: 0.0003204629, y: 0.0010347626, z: 0.00015989257}
+      localRotation: {x: -0.68739986, y: 0.06621874, z: 0.012885163, w: -0.72313935}
+    - name: R_Ring2
+      localPosition: {x: 0.0000000043702273, y: 0.0005580243, z: -0.0000000014062981}
+      localRotation: {x: -0.58997464, y: -0.006062908, z: -0.06119582, w: -0.80507654}
+    - name: R_Ring3
+      localPosition: {x: -0.000000008125781, y: 0.00037355282, z: 6.891793e-10}
+      localRotation: {x: -0.82349735, y: -0.009938362, z: -0.08479987, w: -0.5608586}
+    - name: R_Ring3_end
+      localPosition: {x: 2.2351741e-10, y: 0.00037355156, z: 5.9604643e-10}
+      localRotation: {x: -0.000000039697625, y: 0.0000000037252907, z: -0.000000018510038, w: 1}
+    - name: R_Ring3_end_end
+      localPosition: {x: -0, y: 0.00037355165, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Thumb1
+      localPosition: {x: -0.00033210145, y: -0.000005203061, z: 0.00010128143}
+      localRotation: {x: 0.08071636, y: -0.8407085, z: -0.42299116, w: -0.32828733}
+    - name: R_Thumb2
+      localPosition: {x: -0.000000043408896, y: 0.00044862734, z: 0.00000003717843}
+      localRotation: {x: -0.2290371, y: 0.19080482, z: -0.12448216, w: -0.94638246}
+    - name: R_Thumb3
+      localPosition: {x: 0.0000000033760392, y: 0.00042801508, z: 0.0000000029802336}
+      localRotation: {x: -0.80489683, y: 0.008137126, z: -0.32839468, w: -0.49419826}
+    - name: R_Thumb3_end
+      localPosition: {x: -1.4901161e-10, y: 0.00042801775, z: -8.9406965e-10}
+      localRotation: {x: -0.000000074505806, y: -0.00000013411045, z: -0.00000016577542, w: 1}
+    - name: R_Thumb3_end_end
+      localPosition: {x: -0, y: 0.00042801703, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_WeaponPoint
+      localPosition: {x: 0.0034653146, y: 0.008269462, z: 0.008328267}
+      localRotation: {x: 0.27776426, y: 0.7852188, z: -0.5512705, w: -0.048779897}
+    - name: R_WeaponPoint_end
+      localPosition: {x: -1.01662926e-16, y: 0.0002377565, z: 1.4215958e-15}
+      localRotation: {x: 0.000001460314, y: -0.000000029798953, z: -0.0000004769625, w: 1}
+    - name: R_WeaponPoint_end_end
+      localPosition: {x: -0, y: 0.00023775654, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Shoulder_Twst1
+      localPosition: {x: -2.2351741e-10, y: 0.00011389843, z: 4.5634804e-10}
+      localRotation: {x: -0.00000017322601, y: -0.00000006332994, z: 0.00000007962809, w: 1}
+    - name: R_Shoulder_Twst1_end
+      localPosition: {x: 3.7252902e-11, y: 0.000113900904, z: -3.8184225e-10}
+      localRotation: {x: 0.00000016542617, y: 0.000000010244548, z: -0.0000000121071935, w: 1}
+    - name: R_Shoulder_Twst1_end_end
+      localPosition: {x: -0, y: 0.0001138989, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Shoulder_Twst2
+      localPosition: {x: -8.1956386e-10, y: 0.0013747977, z: -4.9360094e-10}
+      localRotation: {x: -0.0000003731111, y: -0.00000010058284, z: 0.000000020023435, w: 1}
+    - name: R_Shoulder_Twst2_Helper
+      localPosition: {x: 5.9604643e-10, y: 0.0000000042852477, z: 0.0000000012759119}
+      localRotation: {x: 0.000000999542, y: 0.000000088475645, z: 0.00000017601997, w: 1}
+    - name: R_Shoulder_Twst2_Helper_end
+      localPosition: {x: -3.352761e-10, y: 0.00011389867, z: 2.5145708e-10}
+      localRotation: {x: -0.0000000433065, y: 0.000000013038517, z: -4.656613e-10, w: 1}
+    - name: R_Shoulder_Twst2_Helper_end_end
+      localPosition: {x: -0, y: 0.00011389884, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    - name: R_Shoulder_Twst3
+      localPosition: {x: -0.000000001490116, y: 0.0028043, z: 0.0000000027380882}
+      localRotation: {x: -0.0000002848683, y: -0.00000007357448, z: 0.00000018766151, w: 1}
+    - name: R_Shoulder_Twst3_Helper
+      localPosition: {x: -0, y: -6.961636e-10, z: 9.49949e-10}
+      localRotation: {x: 0.0000008590286, y: 0.00000005122274, z: 0.000000014435499, w: 1}
+    - name: R_Shoulder_Twst3_Helper_end
+      localPosition: {x: -3.352761e-10, y: 0.00011389979, z: 3.7252902e-11}
+      localRotation: {x: 0.0000000044237822, y: -0.0000000055879354, z: -9.313225e-10, w: 1}
+    - name: R_Shoulder_Twst3_Helper_end_end
+      localPosition: {x: -0, y: 0.00011389884, z: 0}
+      localRotation: {x: 0, y: -0, z: -0, w: 1}
+    barrelInRightHand: {x: 0.11917648, y: 0.98738474, z: -0.10425308}
+    weaponPositionInRightHand: {x: -0.036787856, y: 0.07850141, z: 0.043602813}
+    weaponRotationInRightHand: {x: -0.50026464, y: 0.5502065, z: 0.43806133, w: 0.50508446}
+  - controller: CloveClassic_GenericPathBound
+    bones:
+    - name: L_Clavicle
+      localPosition: {x: -0.0005945159, y: 0.0007459385, z: -0.000038102942}
+      localRotation: {x: -0.17229868, y: 0.13104865, z: -0.07310587, w: 0.97354764}
+    - name: L_Armpit
+      localPosition: {x: -0.0008926993, y: -0.0010447024, z: -0.0006063994}
+      localRotation: {x: 0.0997124, y: 0.003534022, z: 0.51846105, w: 0.84926033}
+    - name: L_Armpit_end
+      localPosition: {x: 0.0000000012828968, y: 0.0009881632, z: 9.313225e-11}
+      localRotation: {x: 0.0000000949949, y: 0.000000061467276, z: 0.0000002658926, w: 1}
+    - name: L_Armpit_end_end
+      localPosition: {x: -1.11758706e-10, y: 0.0009881635, z: 1.4901161e-10}
+      localRotation: {x: 0.000000026077032, y: -0.000000010244548, z: 0.000000017695129, w: 1}
+    - name: L_Backpack_Strap_Front
+      localPosition: {x: -0.0008996797, y: -0.0001560031, z: 0.00037776638}
+      localRotation: {x: 0.4871586, y: -0.19327277, z: 0.2098146, w: 0.82540905}
+    - name: L_Backpack_Strap_Front_end
+      localPosition: {x: 1.4901161e-10, y: 0.000988166, z: -0.0000000018067657}
+      localRotation: {x: -0.0000011306256, y: -0.00000044889754, z: -0.00000059977185, w: 1}
+    - name: L_Backpack_Strap_Front_end_end
+      localPosition: {x: -3.72529e-10, y: 0.0009881635, z: 4.842877e-10}
+      localRotation: {x: 0.0000013913959, y: 0.0000007022172, z: 0.000000404194, w: 1}
+    - name: L_Backpack_Strap_Top
+      localPosition: {x: -0.00077282166, y: 0.0006014444, z: -0.00060199}
+      localRotation: {x: -0.0024364092, y: -0.11628891, z: 0.1904802, w: 0.97477597}
+    - name: L_Backpack_Strap_Top_end
+      localPosition: {x: 4.2840836e-10, y: 0.0009881675, z: 0}
+      localRotation: {x: -0.000000023283068, y: -0.00000021979216, z: 0.0000010544901, w: 1}
+    - name: L_Backpack_Strap_Top_end_end
+      localPosition: {x: -0.0000000012945384, y: 0.0009881627, z: -3.7252902e-11}
+      localRotation: {x: 0.00000004470349, y: 0.00000020815061, z: -0.0000008810312, w: 1}
+    - name: L_Hood
+      localPosition: {x: -0.00040694795, y: 0.0007456005, z: -0.00057269767}
+      localRotation: {x: 0.006988518, y: -0.031235445, z: 0.17839977, w: 0.9834374}
+    - name: L_Hood_end
+      localPosition: {x: 2.7706845e-10, y: 0.0009881649, z: 9.3132255e-12}
+      localRotation: {x: -0.000000090280075, y: -0.000000056810677, z: 0.00000017477942, w: 1}
+    - name: L_Hood_end_end
+      localPosition: {x: 1.3737007e-10, y: 0.0009881656, z: -1.2107193e-10}
+      localRotation: {x: 0.000000062573235, y: 0.000000054249536, z: -0.00000015135811, w: 1}
+    - name: L_Shoulder
+      localPosition: {x: -0.0014825511, y: -0.00008594347, z: -0.0005829047}
+      localRotation: {x: -0.19102216, y: 0.34151703, z: 0.5026025, w: 0.7708874}
+    - name: L_Elbow
+      localPosition: {x: -0.003502258, y: 0.000000010299677, z: -3.8146952e-10}
+      localRotation: {x: -0.00000005381066, y: 0.58163756, z: 0.000000059535186, w: 0.81344813}
+    - name: L_Elbow_Ndl
+      localPosition: {x: -2.8610214e-10, y: 6.675717e-10, z: -9.417529e-10}
+      localRotation: {x: 0.00000004808612, y: -0.5816367, z: 0.00000020150352, w: 0.81344867}
+    - name: L_Elbow_Ndl_end
+      localPosition: {x: 0.000000001930166, y: 0.00034329764, z: -3.7252902e-11}
+      localRotation: {x: 0.000000054948032, y: -0.00000012293457, z: -0.00000017357524, w: 1}
+    - name: L_Elbow_Ndl_end_end
+      localPosition: {x: 0.0000000012206146, y: 0.0003432976, z: 1.11758706e-10}
+      localRotation: {x: 0.0000000037252907, y: 0.0000000046566138, z: 0.0000000033760443, w: 1}
+    - name: L_Elbow_Twst1
+      localPosition: {x: -0.00034329496, y: 9.49949e-10, z: 0.0000000013783574}
+      localRotation: {x: 0.0000010691585, y: -0.000000078231096, z: -0.0000022258614, w: 1}
+    - name: L_Elbow_Twst1_end
+      localPosition: {x: 5.5879353e-11, y: 0.00034329764, z: -7.264316e-10}
+      localRotation: {x: -0.0000002197921, y: 0.000000035390258, z: 0.00000072643155, w: 1}
+    - name: L_Elbow_Twst1_end_end
+      localPosition: {x: 2.7939676e-10, y: 0.0003432976, z: -1.4901161e-10}
+      localRotation: {x: -0.00000005960464, y: -0.00000004842877, z: -0.000000044703476, w: 1}
+    - name: L_Elbow_Twst2
+      localPosition: {x: -0.0014737393, y: 0.000000004959104, z: -0.0000000013053412}
+      localRotation: {x: -0.00000022165477, y: -0.000000004656613, z: 0.00000020489097, w: 1}
+    - name: L_Elbow_Twst2_end
+      localPosition: {x: -5.587935e-10, y: 0.00034329804, z: 2.0489097e-10}
+      localRotation: {x: 0.000000081956365, y: 0.00000006332993, z: -0.00000049546355, w: 1}
+    - name: L_Elbow_Twst2_end_end
+      localPosition: {x: -5.7742e-10, y: 0.00034329813, z: 3.7252902e-11}
+      localRotation: {x: 0.000000018626451, y: 0.000000013038516, z: 0.000000044703484, w: 1}
+    - name: L_Elbow_Twst3
+      localPosition: {x: -0.0025235733, y: 0.000000007271763, z: -0.0000000034026784}
+      localRotation: {x: 0.00000017043206, y: -0.00000004097819, z: -0.0000003054738, w: 1}
+    - name: L_Elbow_Twst3_end
+      localPosition: {x: -2.6077032e-10, y: 0.0003432972, z: -2.9802322e-10}
+      localRotation: {x: -0.0000021196897, y: 0.00000010244547, z: 0.0000010933726, w: 1}
+    - name: L_Elbow_Twst3_end_end
+      localPosition: {x: 8.1956386e-10, y: 0.0003432975, z: 3.72529e-10}
+      localRotation: {x: 0.000001654029, y: 0.000000033527613, z: -0.0000010672957, w: 1}
+    - name: L_Hand
+      localPosition: {x: -0.0027427808, y: 0.0000000070966744, z: -0.0000000037977452}
+      localRotation: {x: -0.23472431, y: -0.24683988, z: -0.32041273, w: 0.88391757}
+    - name: L_Index0
+      localPosition: {x: -0.00017666031, y: 0.000040812567, z: 0.00018059119}
+      localRotation: {x: 0.015327583, y: 0.122471586, z: 0.011787357, w: 0.99228364}
+    - name: L_Index0_end
+      localPosition: {x: -2.2351741e-10, y: 0.0002410355, z: 6.705522e-10}
+      localRotation: {x: 0.0000019297008, y: -0.00000039860612, z: -0.0000024102633, w: 1}
+    - name: L_Index0_end_end
+      localPosition: {x: -7.45058e-10, y: 0.00024103446, z: 0}
+      localRotation: {x: -0.0000018440187, y: 0.00000032689422, z: 0.0000020600855, w: 1}
+    - name: L_Index1
+      localPosition: {x: -0.0010095, y: 0.000017527607, z: 0.00038900145}
+      localRotation: {x: -0.058565244, y: -0.057231814, z: 0.22780643, w: 0.9702571}
+    - name: L_Index2
+      localPosition: {x: -0.0005998281, y: 0.00000710096, z: 0.0000000023663032}
+      localRotation: {x: -0.00000007489404, y: -0.000000086351726, z: 0.55303437, w: 0.83315843}
+    - name: L_Index3
+      localPosition: {x: -0.00038353406, y: 5.125997e-10, z: 3.218649e-10}
+      localRotation: {x: -0.00000007751391, y: 0.00000009273136, z: 0.2028241, w: 0.9792152}
+    - name: L_Index3_end
+      localPosition: {x: 3.259629e-11, y: 0.00038352414, z: 5.9604643e-10}
+      localRotation: {x: 0.001525455, y: -0.070113994, z: -0.24962117, w: 0.9658007}
+    - name: L_Index3_end_end
+      localPosition: {x: 0.000000001490116, y: 0.00040857404, z: 0}
+      localRotation: {x: 0.004043652, y: 0.03289257, z: 0.12169964, w: 0.9920136}
+    - name: L_Middle0
+      localPosition: {x: -0.00021914467, y: 0.00009939773, z: -0.000013920068}
+      localRotation: {x: -0.009860095, y: 0.019188177, z: 0.023959598, w: 0.9994801}
+    - name: L_Middle0_end
+      localPosition: {x: -7.4505804e-11, y: 0.00024103453, z: 1.4901161e-10}
+      localRotation: {x: 0.00000017881396, y: -0.00000010617079, z: -0.000000204891, w: 1}
+    - name: L_Middle0_end_end
+      localPosition: {x: 5.587935e-10, y: 0.00024103507, z: -7.4505804e-11}
+      localRotation: {x: -0.000000011175873, y: 0.0000000055879363, z: 0.0000000037252907, w: 1}
+    - name: L_Middle1
+      localPosition: {x: -0.0010708123, y: 0.000077868266, z: 0.000021221913}
+      localRotation: {x: -0.110975645, y: -0.04257255, z: 0.30926225, w: 0.9435194}
+    - name: L_Middle2
+      localPosition: {x: -0.000677106, y: -6.675717e-10, z: -9.29832e-10}
+      localRotation: {x: -0.0000001920006, y: 0.00000031458987, z: 0.55495256, w: 0.831882}
+    - name: L_Middle3
+      localPosition: {x: -0.00040449164, y: 4.768369e-10, z: -3.09944e-10}
+      localRotation: {x: -0.0000005245632, y: 0.000000012309251, z: 0.18044281, w: 0.9835855}
+    - name: L_Middle3_end
+      localPosition: {x: 3.8184225e-10, y: 0.0004045374, z: 1.4901161e-10}
+      localRotation: {x: 0.0040871855, y: -0.078086644, z: -0.35395882, w: 0.9319866}
+    - name: L_Middle3_end_end
+      localPosition: {x: -9.685754e-10, y: 0.0004602924, z: -1.4901161e-10}
+      localRotation: {x: 0.006067868, y: 0.03537977, z: 0.16780657, w: 0.9851662}
+    - name: L_Pinky0
+      localPosition: {x: -0.00017975441, y: 0.00005758765, z: -0.00031620092}
+      localRotation: {x: -0.0987302, y: -0.19985619, z: 0.07860155, w: 0.97166437}
+    - name: L_Pinky0_end
+      localPosition: {x: 2.2351741e-10, y: 0.0002410347, z: 7.4505804e-11}
+      localRotation: {x: -0.0000013052488, y: -0.00000011874364, z: -0.00000043096955, w: 1}
+    - name: L_Pinky0_end_end
+      localPosition: {x: -0.0000000013178214, y: 0.00024103395, z: 3.7252902e-11}
+      localRotation: {x: 0.0000012933742, y: 0.00000011827797, z: -0.0000000055879354, w: 1}
+    - name: L_Pinky1
+      localPosition: {x: -0.00086537335, y: -0.00008759001, z: -0.0005978938}
+      localRotation: {x: -0.30189142, y: -0.007996684, z: 0.44159275, w: 0.84486306}
+    - name: L_Pinky2
+      localPosition: {x: -0.00049592543, y: -3.6954861e-10, z: -8.344646e-10}
+      localRotation: {x: -0.000000015626679, y: 0.00000017873012, z: 0.3011652, w: 0.953572}
+    - name: L_Pinky3
+      localPosition: {x: -0.0002557664, y: 5.006788e-10, z: -7.6293905e-10}
+      localRotation: {x: 0.028124819, y: -0.02197167, z: 0.13997312, w: 0.9895119}
+    - name: L_Pinky3_end
+      localPosition: {x: -2.3283064e-10, y: 0.00025585413, z: 1.4901161e-10}
+      localRotation: {x: 0.00009667646, y: -0.02122694, z: -0.14054526, w: 0.9898467}
+    - name: L_Pinky3_end_end
+      localPosition: {x: -8.9406965e-10, y: 0.00026098365, z: -1.4901161e-10}
+      localRotation: {x: 0.0007286198, y: 0.010280456, z: 0.06974073, w: 0.9975119}
+    - name: L_Ring0
+      localPosition: {x: -0.00021150422, y: 0.000092586335, z: -0.00017028517}
+      localRotation: {x: -0.04228095, y: -0.09925455, z: 0.04222633, w: 0.9932662}
+    - name: L_Ring0_end
+      localPosition: {x: -3.352761e-10, y: 0.00024103429, z: -2.9802322e-10}
+      localRotation: {x: -0.0000012107196, y: -0.00000022724277, z: -0.00000013504179, w: 1}
+    - name: L_Ring0_end_end
+      localPosition: {x: -5.2154064e-10, y: 0.00024103453, z: -3.72529e-10}
+      localRotation: {x: 0.0000011492523, y: 0.00000019092114, z: 0.00000019557777, w: 1}
+    - name: L_Ring1
+      localPosition: {x: -0.001042851, y: 0.000014088778, z: -0.000335065}
+      localRotation: {x: -0.17565912, y: 0.020020591, z: 0.44396332, w: 0.8784302}
+    - name: L_Ring2
+      localPosition: {x: -0.0005823987, y: 2.3841845e-11, z: -8.106228e-10}
+      localRotation: {x: -0.00000049749315, y: 0.00000019689432, z: 0.24793755, w: 0.96877605}
+    - name: L_Ring3
+      localPosition: {x: -0.00037354877, y: 7.7486e-11, z: -0.0000000010967248}
+      localRotation: {x: -0.00000018666148, y: 0.00000011469782, z: 0.39647877, w: 0.9180439}
+    - name: L_Ring3_end
+      localPosition: {x: 4.1909515e-10, y: 0.00037345235, z: -1.4901161e-10}
+      localRotation: {x: 0.002879716, y: -0.053622525, z: -0.35176638, w: 0.9345463}
+    - name: L_Ring3_end_end
+      localPosition: {x: -5.3551047e-10, y: 0.0004242248, z: 1.4901161e-10}
+      localRotation: {x: 0.0041084075, y: 0.024178404, z: 0.16694126, w: 0.9856618}
+    - name: L_Sleeve_Bot
+      localPosition: {x: -0.00040313436, y: -0.0004533926, z: 0.00034828193}
+      localRotation: {x: -0.00000007823108, y: 0.000000074505785, z: 0.000000540167, w: 1}
+    - name: L_Sleeve_Bot_end
+      localPosition: {x: -1.862645e-10, y: 0.00024103433, z: -1.4901161e-10}
+      localRotation: {x: 0.00000024586922, y: 0.00000001676381, z: 0.0000003054738, w: 1}
+    - name: L_Sleeve_Bot_end_end
+      localPosition: {x: -4.0978193e-10, y: 0.00024103488, z: 1.4901161e-10}
+      localRotation: {x: -0.0000002644956, y: -0.00000013411045, z: -0.00000046007335, w: 1}
+    - name: L_Sleeve_Top
+      localPosition: {x: -0.00039230823, y: -0.000060844195, z: 0.00063541706}
+      localRotation: {x: 0.38490993, y: 0.2623361, z: 0.02614439, w: 0.88450027}
+    - name: L_Sleeve_Top_end
+      localPosition: {x: -2.2351741e-10, y: 0.00024103626, z: 1.862645e-10}
+      localRotation: {x: 0.00000039208678, y: -0.0000022053719, z: -0.0000029392538, w: 1}
+    - name: L_Sleeve_Top_end_end
+      localPosition: {x: 7.4505804e-11, y: 0.00024103567, z: 1.5832484e-10}
+      localRotation: {x: -0.00000017601997, y: 0.0000019669533, z: 0.0000028898937, w: 1}
+    - name: L_Thumb1
+      localPosition: {x: 0.000071439776, y: -0.0002174708, z: 0.00029887998}
+      localRotation: {x: 0.7045607, y: 0.30348235, z: -0.26726246, w: 0.5831496}
+    - name: L_Thumb2
+      localPosition: {x: -0.0004351078, y: -0.000032203192, z: -6.675717e-10}
+      localRotation: {x: 0.005934272, y: -0.072710946, z: 0.30375004, w: 0.9499547}
+    - name: L_Thumb3
+      localPosition: {x: -0.00042802197, y: -0.000000005667281, z: 3.3378586e-10}
+      localRotation: {x: 0.0000006722185, y: 0.0000034958218, z: 0.21204792, w: 0.9772593}
+    - name: L_Thumb3_end
+      localPosition: {x: 0.0000000013038516, y: 0.000428048, z: 2.9802322e-10}
+      localRotation: {x: 0.00000018998982, y: 0.0000012051314, z: 0.00000043585902, w: 1}
+    - name: L_Thumb3_end_end
+      localPosition: {x: -1.4901161e-10, y: 0.00042804732, z: -2.9802322e-10}
+      localRotation: {x: -0.00000010430814, y: 0.00000022538008, z: 0.00000011920929, w: 1}
+    - name: L_WeaponPoint
+      localPosition: {x: -0.00077777513, y: -0.00040992396, z: 0.00023807153}
+      localRotation: {x: -0.50724494, y: 0.5003087, z: 0.5617256, w: -0.42054504}
+    - name: L_WeaponPoint_end
+      localPosition: {x: 1.9413761e-16, y: 0.00024103503, z: -1.6371534e-16}
+      localRotation: {x: 0.0000006143748, y: -0.000000009588607, z: -0.000000089556366, w: 1}
+    - name: L_WeaponPoint_end_end
+      localPosition: {x: -3.4196462e-16, y: 0.0002410344, z: -2.9837447e-17}
+      localRotation: {x: 5.6497396e-14, y: -4.76752e-15, z: -1.393155e-13, w: 1}
+    - name: L_Shoulder_Twst1
+      localPosition: {x: -0.000113849936, y: 5.543229e-10, z: -2.1904695e-10}
+      localRotation: {x: -0.000000011175871, y: 0.000000016763806, z: -0.000000011175871, w: 1}
+    - name: L_Shoulder_Helper
+      localPosition: {x: 0.00017840462, y: 0.0008733889, z: -0.00018369134}
+      localRotation: {x: 0.00000004842877, y: 0.00000006705523, z: 0.0000003427267, w: 1}
+    - name: L_Shoulder_Helper_end
+      localPosition: {x: 0.0000000045791966, y: 0.000908894, z: 0}
+      localRotation: {x: 0.000000013969837, y: 0.000000022817403, z: 0.00000012130475, w: 1}
+    - name: L_Shoulder_Helper_end_end
+      localPosition: {x: 0.0000000029652436, y: 0.0009088924, z: 9.778887e-11}
+      localRotation: {x: -0.00000005587936, y: 0.000000022351744, z: 0.00000013737008, w: 1}
+    - name: L_Shoulder_Twst2
+      localPosition: {x: -0.0013748122, y: -0.0000000073760744, z: 8.1956386e-10}
+      localRotation: {x: -0.00000015832484, y: -0.00000021373852, z: -0.0000019633442, w: 1}
+    - name: L_Shoulder_Twst2_end
+      localPosition: {x: 7.9046003e-10, y: 0.00011388989, z: -1.4901161e-10}
+      localRotation: {x: 0.0000026095663, y: 0.0000019413421, z: 0.0000126072, w: 1}
+    - name: L_Shoulder_Twst2_end_end
+      localPosition: {x: 4.3073667e-10, y: 0.00011389008, z: 1.11758706e-10}
+      localRotation: {x: -0.000002558343, y: -0.0000016922131, z: -0.000010629301, w: 1}
+    - name: L_Shoulder_Twst3
+      localPosition: {x: -0.0022913036, y: 0.000000007915493, z: 0}
+      localRotation: {x: 0.00000009685755, y: 0.000000063329935, z: 0.00000028312203, w: 1}
+    - name: L_Shoulder_Twst3_end
+      localPosition: {x: -5.762558e-10, y: 0.00011389181, z: 7.4505804e-11}
+      localRotation: {x: -0.000001726672, y: -0.000000404194, z: -0.0000011199154, w: 1}
+    - name: L_Shoulder_Twst3_end_end
+      localPosition: {x: 7.660128e-10, y: 0.0001138907, z: -7.4505804e-11}
+      localRotation: {x: 0.0000012405216, y: 0.00000018905845, z: -0.00000054854894, w: 1}
+    - name: R_Clavicle
+      localPosition: {x: 0.0005711847, y: 0.0007681118, z: 0.000026730919}
+      localRotation: {x: 0.9565215, y: 0.09230802, z: 0.23191842, w: 0.15086341}
+    - name: R_Armpit
+      localPosition: {x: 0.0008928995, y: 0.0010448004, z: 0.0006060001}
+      localRotation: {x: 0.11010614, y: 0.10680734, z: 0.5147992, w: 0.84347534}
+    - name: R_Armpit_end
+      localPosition: {x: 1.3969838e-10, y: 0.0009881441, z: -3.9115547e-10}
+      localRotation: {x: 0.000000036321588, y: 0.000000001862646, z: 0.00000013411046, w: 1}
+    - name: R_Armpit_end_end
+      localPosition: {x: 6.193295e-10, y: 0.0009881443, z: -2.7008354e-10}
+      localRotation: {x: -3.081488e-33, y: -0.0000000037252903, z: -0.000000008381903, w: 1}
+    - name: R_Backpack_Strap_Front
+      localPosition: {x: 0.0008996596, y: 0.00015599991, z: -0.0003777653}
+      localRotation: {x: 0.4871587, y: -0.19327345, z: 0.20981461, w: 0.82540876}
+    - name: R_Backpack_Strap_Front_end
+      localPosition: {x: -1.2107193e-10, y: 0.0009881444, z: -0.0000000014808028}
+      localRotation: {x: 0.00000018253921, y: 0.00000012852252, z: -0.000000089406974, w: 1}
+    - name: R_Backpack_Strap_Front_end_end
+      localPosition: {x: 1.4901161e-10, y: 0.0009881434, z: -5.122274e-11}
+      localRotation: {x: -0.000000007450581, y: -0.0000000037252903, z: 0.000000016763806, w: 1}
+    - name: R_Backpack_Strap_Top
+      localPosition: {x: 0.0007728009, y: -0.00060140126, z: 0.00060199}
+      localRotation: {x: -0.0024364206, y: -0.11628919, z: 0.19048057, w: 0.9747759}
+    - name: R_Backpack_Strap_Top_end
+      localPosition: {x: -2.2351741e-10, y: 0.000988146, z: 9.313225e-11}
+      localRotation: {x: 0.000000015832484, y: 0.000000012340024, z: -0.000000063329935, w: 1}
+    - name: R_Backpack_Strap_Top_end_end
+      localPosition: {x: -8.381903e-11, y: 0.0009881443, z: 1.6763806e-10}
+      localRotation: {x: 0.000000006519258, y: 0.000000019790605, z: 0.000000022817405, w: 1}
+    - name: R_Hood
+      localPosition: {x: 0.00040693133, y: -0.00074560073, z: 0.000572698}
+      localRotation: {x: -0.000000037699976, y: -0.000000008495091, z: 0.0000003958497, w: 1}
+    - name: R_Hood_end
+      localPosition: {x: -1.4977094e-11, y: 0.0009881414, z: -1.8351525e-11}
+      localRotation: {x: -0.0000000044409707, y: -0.000000040754557, z: 0.000000001790909, w: 1}
+    - name: R_Hood_end_end
+      localPosition: {x: 3.8290402e-11, y: 0.0009881437, z: 1.0833565e-11}
+      localRotation: {x: 1.2705494e-21, y: -8.4703295e-22, z: -2.1175824e-22, w: 1}
+    - name: R_Shoulder
+      localPosition: {x: 0.0014825512, y: 0.0000858991, z: 0.0005829042}
+      localRotation: {x: -0.22305019, y: 0.4201186, z: 0.44391552, w: 0.7593998}
+    - name: R_Elbow
+      localPosition: {x: 0.0035022332, y: -0.000000008034702, z: 0.0000000020980824}
+      localRotation: {x: 0.0000000130330635, y: 0.51448077, z: 0.00000006082094, w: 0.8575019}
+    - name: R_Elbow_Ndl
+      localPosition: {x: -2.8610214e-10, y: -6.9141354e-10, z: 0.000000001239776}
+      localRotation: {x: 0.00000004778787, y: -0.5144802, z: 0.0000004865672, w: 0.8575023}
+    - name: R_Elbow_Ndl_end
+      localPosition: {x: -5.844049e-10, y: 0.000343272, z: -2.6077032e-10}
+      localRotation: {x: 0.00000047590578, y: -0.00000010384245, z: -0.0000016206175, w: 1}
+    - name: R_Elbow_Ndl_end_end
+      localPosition: {x: 8.0908646e-10, y: 0.00034327334, z: 2.2351741e-10}
+      localRotation: {x: -0.00000040978196, y: 0.00000010058285, z: 0.0000019558938, w: 1}
+    - name: R_Elbow_Twst1
+      localPosition: {x: 0.00034327526, y: 6.426126e-10, z: 1.862645e-10}
+      localRotation: {x: -0.00000015646216, y: 0.00000013038516, z: 0.00000003539025, w: 1}
+    - name: R_Elbow_Twst1_end
+      localPosition: {x: 1.6763806e-10, y: 0.00034327223, z: -2.9802322e-10}
+      localRotation: {x: -0.000001601875, y: 0.0000004190952, z: 0.0000035427513, w: 1}
+    - name: R_Elbow_Twst1_end_end
+      localPosition: {x: 3.352761e-10, y: 0.00034327232, z: 2.9802322e-10}
+      localRotation: {x: 0.0000013075769, y: -0.00000046193597, z: -0.000003106892, w: 1}
+    - name: R_Elbow_Twst2
+      localPosition: {x: 0.0014737935, y: 0.000000022935856, z: 0.000000026702867}
+      localRotation: {x: -0.000000059604645, y: 0.00000008568168, z: -0.0000000037252903, w: 1}
+    - name: R_Elbow_Twst2_end
+      localPosition: {x: -7.916242e-11, y: 0.00034327395, z: -3.632158e-10}
+      localRotation: {x: -0.00000014156106, y: 0.00000018067661, z: 0.00000053457927, w: 1}
+    - name: R_Elbow_Twst2_end_end
+      localPosition: {x: 1.2791133e-10, y: 0.0003432733, z: 6.268965e-10}
+      localRotation: {x: -0.000000007450581, y: 0.0000000055879354, z: -0.000000024214389, w: 1}
+    - name: R_Elbow_Twst3
+      localPosition: {x: 0.002523603, y: 0.0000000066280332, z: 0.000000017118445}
+      localRotation: {x: 0.00000006146729, y: 0.000000044703484, z: -0.000000007450581, w: 1}
+    - name: R_Bracelet_Chain
+      localPosition: {x: -0.00039747584, y: 0.0000017008279, z: -0.000000059455633}
+      localRotation: {x: 0.00000038743025, y: -0.000000014901161, z: -0.0000002458692, w: 1}
+    - name: R_Bracelet_Chain_end
+      localPosition: {x: -2.6077032e-10, y: 0.0003974791, z: -9.685754e-10}
+      localRotation: {x: -0.00000005215406, y: 0.000000035390258, z: 0.0000001490116, w: 1}
+    - name: R_Bracelet_Chain_end_end
+      localPosition: {x: -7.264316e-10, y: 0.00039747928, z: 5.9604643e-10}
+      localRotation: {x: 0.00000001490116, y: 0.000000007450581, z: 0.00000002980232, w: 1}
+    - name: R_Hand
+      localPosition: {x: 0.0027427804, y: -0.000000006532666, z: 0.000000002479552}
+      localRotation: {x: -0.2514744, y: -0.17231312, z: -0.13903198, w: 0.942199}
+    - name: R_Hand_L_Hand_IK
+      localPosition: {x: -0.001790188, y: 0.0067181806, z: -0.0028775772}
+      localRotation: {x: 0.7852236, y: -0.55126435, z: 0.27776167, w: -0.048784535}
+    - name: R_Hand_L_Hand_IK_end
+      localPosition: {x: 3.4424238e-10, y: 0.00023779826, z: -3.2543426e-11}
+      localRotation: {x: -0.0000009277297, y: -0.0000014214553, z: -0.00000084265184, w: 1}
+    - name: R_Hand_L_Hand_IK_end_end
+      localPosition: {x: 3.391355e-10, y: 0.00023779646, z: 3.5452103e-11}
+      localRotation: {x: 0.0000012532721, y: 0.000001253272, z: 0.0000006266332, w: 1}
+    - name: R_Index0
+      localPosition: {x: 0.00017537676, y: -0.00003598815, z: -0.0001826562}
+      localRotation: {x: 0.015327348, y: 0.12247137, z: 0.011795214, w: 0.9922836}
+    - name: R_Index0_end
+      localPosition: {x: -2.9802322e-10, y: 0.0002377966, z: 7.4505804e-11}
+      localRotation: {x: 0.000001076609, y: 0.0000002263114, z: 0.00000081770133, w: 1}
+    - name: R_Index0_end_end
+      localPosition: {x: 1.4901161e-10, y: 0.00023779673, z: 8.1956386e-10}
+      localRotation: {x: -0.0000011846424, y: -0.0000002821908, z: -0.000001145527, w: 1}
+    - name: R_Index1
+      localPosition: {x: 0.0010082354, y: -0.000012713616, z: -0.00039105368}
+      localRotation: {x: -0.0047440287, y: -0.036036048, z: -0.03467984, w: 0.99873734}
+    - name: R_Index2
+      localPosition: {x: 0.0005998479, y: -0.0000070911133, z: 0.0000000094532915}
+      localRotation: {x: -0.00000018185266, y: -0.00000006192116, z: 0.5950014, w: 0.80372465}
+    - name: R_Index3
+      localPosition: {x: 0.00038351488, y: 0.000000003278254, z: -0.00000001458823}
+      localRotation: {x: -0.0000000120892585, y: -0.00000014296873, z: 0.46382436, w: 0.8859272}
+    - name: R_Index3_end
+      localPosition: {x: -0.0000000012665987, y: 0.00038348846, z: -2.9802322e-10}
+      localRotation: {x: -0.00035609864, y: 0.092953354, z: 0.33957353, w: 0.93597513}
+    - name: R_Index3_end_end
+      localPosition: {x: 1.268927e-10, y: 0.000431756, z: -1.4901161e-10}
+      localRotation: {x: 0.008099555, y: -0.049285285, z: -0.16162767, w: 0.98558706}
+    - name: R_Middle0
+      localPosition: {x: 0.00021785985, y: -0.00009457421, z: 0.000011854619}
+      localRotation: {x: -0.009858445, y: 0.01918803, z: 0.023964839, w: 0.99948}
+    - name: R_Middle0_end
+      localPosition: {x: 2.2351741e-10, y: 0.00023779592, z: 2.9802322e-10}
+      localRotation: {x: 0.00000079721224, y: 0.00000035204, z: 0.0000011641536, w: 1}
+    - name: R_Middle0_end_end
+      localPosition: {x: 1.4901161e-10, y: 0.00023779685, z: 5.2154064e-10}
+      localRotation: {x: -0.00000092759734, y: -0.00000025704506, z: -0.00000054575503, w: 1}
+    - name: R_Middle1
+      localPosition: {x: 0.0010817393, y: -0.00006875259, z: -0.000022030248}
+      localRotation: {x: -0.13155077, y: -0.10917185, z: 0.6008255, w: 0.7808871}
+    - name: R_Middle2
+      localPosition: {x: 0.0006771292, y: -0.0000000020086754, z: 0.0000000020727504}
+      localRotation: {x: 0.00000015716869, y: 0.00000007649517, z: 0.6893718, w: 0.7244077}
+    - name: R_Middle3
+      localPosition: {x: 0.0004044875, y: 0.000000004959104, z: 0.000000004350392}
+      localRotation: {x: -0.00000086925456, y: 0.00000042041444, z: 0.2234747, w: 0.97470975}
+    - name: R_Middle3_end
+      localPosition: {x: 3.352761e-10, y: 0.0004044734, z: 7.4505804e-11}
+      localRotation: {x: -0.000096578275, y: 0.03275549, z: 0.14622723, w: 0.9887086}
+    - name: R_Middle3_end_end
+      localPosition: {x: 7.916242e-11, y: 0.00041326135, z: -7.4505804e-11}
+      localRotation: {x: 0.0012267708, y: -0.016817497, z: -0.072509035, w: 0.9972252}
+    - name: R_Pinky0
+      localPosition: {x: 0.00017847368, y: -0.000052764088, z: 0.00031413743}
+      localRotation: {x: -0.09872595, y: -0.19986469, z: 0.07861045, w: 0.9716624}
+    - name: R_Pinky0_end
+      localPosition: {x: -0.0000000019883737, y: 0.00023779715, z: 1.4901161e-10}
+      localRotation: {x: -0.00000005587937, y: -0.0000000013969842, z: -0.00000014528635, w: 1}
+    - name: R_Pinky0_end_end
+      localPosition: {x: -2.0954757e-10, y: 0.00023779695, z: -7.4505804e-11}
+      localRotation: {x: 6.9849193e-10, y: 9.313226e-10, z: -0.000000007916242, w: 1}
+    - name: R_Pinky1
+      localPosition: {x: 0.00086411205, y: 0.00009240904, z: 0.00059583853}
+      localRotation: {x: -0.2641801, y: -0.109075725, z: 0.6658467, w: 0.6891731}
+    - name: R_Pinky2
+      localPosition: {x: 0.0004959366, y: 4.768369e-11, z: -2.3543822e-10}
+      localRotation: {x: -0.00000003928068, y: 0.00000026881875, z: 0.4907123, w: 0.8713217}
+    - name: R_Pinky3
+      localPosition: {x: 0.00025576827, y: 0.0000000030308946, z: 1.4901154e-10}
+      localRotation: {x: -0.00000037252912, y: -0.00000025190738, z: 0.18626286, w: 0.98249996}
+    - name: R_Pinky3_end
+      localPosition: {x: -0.0000973501, y: 0.00023656386, z: 0.0000053933263}
+      localRotation: {x: 0.0053483965, y: 0.027271504, z: 0.19415177, w: 0.98057777}
+    - name: R_Pinky3_end_end
+      localPosition: {x: -1.862645e-10, y: 0.0002558694, z: -3.7252902e-11}
+      localRotation: {x: -0.0000004405156, y: -0.00000024680048, z: -0.0000027636997, w: 1}
+    - name: R_Ring0
+      localPosition: {x: 0.00021022055, y: -0.00008776396, z: 0.00016821965}
+      localRotation: {x: -0.042276885, y: -0.09926325, z: 0.042235103, w: 0.99326515}
+    - name: R_Ring0_end
+      localPosition: {x: -0.000000001527369, y: 0.00023779682, z: 2.9802322e-10}
+      localRotation: {x: -0.00000008195639, y: 0.000000038184226, z: -0.00000007729979, w: 1}
+    - name: R_Ring0_end_end
+      localPosition: {x: -0.0000000012107193, y: 0.00023779586, z: -7.4505804e-11}
+      localRotation: {x: -0.000000022351742, y: -0.00000002142042, z: 0.000000013038516, w: 1}
+    - name: R_Ring1
+      localPosition: {x: 0.0010415728, y: -0.000009276815, z: 0.00033300085}
+      localRotation: {x: -0.19524139, y: -0.0786393, z: 0.6572481, w: 0.7236862}
+    - name: R_Ring2
+      localPosition: {x: 0.00058242405, y: -0.0000000034089882, z: 0.00000000555068}
+      localRotation: {x: -0.000000034090068, y: 0.00000017143782, z: 0.5982864, w: 0.80128235}
+    - name: R_Ring3
+      localPosition: {x: 0.00037355605, y: 0.000000004315374, z: -2.026557e-10}
+      localRotation: {x: 0.020811977, y: -0.0045665447, z: 0.15813543, w: 0.98718756}
+    - name: R_Ring3_end
+      localPosition: {x: -2.9394867e-10, y: 0.0003735898, z: 1.4901161e-10}
+      localRotation: {x: -0.000021955004, y: 0.016761493, z: 0.10831288, w: 0.9939756}
+    - name: R_Ring3_end_end
+      localPosition: {x: -1.6763806e-10, y: 0.00037801338, z: -7.4505804e-11}
+      localRotation: {x: 0.0004578168, y: -0.008561231, z: -0.05391323, w: 0.9985089}
+    - name: R_Ring_Charm_Pivot
+      localPosition: {x: 0.00034544672, y: -0.0001354699, z: -0.0000063847006}
+      localRotation: {x: 0.04490568, y: 0.9972594, z: -0.0443413, w: 0.0386147}
+    - name: R_Ring_Charm
+      localPosition: {x: -0.000038567297, y: 4.4703483e-10, z: -8.1956386e-10}
+      localRotation: {x: 0.00000040815215, y: -0.00000023562463, z: 0.0000005532056, w: 1}
+    - name: R_Ring_Charm_end
+      localPosition: {x: 3.0733643e-10, y: 0.00037111572, z: -2.2351741e-10}
+      localRotation: {x: -0.00000040978182, y: 0.000000021304002, z: -0.000000094994874, w: 1}
+    - name: R_Ring_Charm_end_end
+      localPosition: {x: 3.0733643e-10, y: 0.0003711152, z: 3.7252902e-11}
+      localRotation: {x: 0.00000038882717, y: -0.000000014784746, z: 0.00000006565824, w: 1}
+    - name: R_Sleeve_Bot
+      localPosition: {x: 0.00040313022, y: 0.0004533999, z: -0.00034827992}
+      localRotation: {x: 0.0000011920927, y: 0.00000043399623, z: 0.0000065900376, w: 1}
+    - name: R_Sleeve_Bot_end
+      localPosition: {x: 4.0978193e-10, y: 0.00023779646, z: 1.4901161e-10}
+      localRotation: {x: 0.00000043958434, y: 0.00000012107196, z: 0.0000005364419, w: 1}
+    - name: R_Sleeve_Bot_end_end
+      localPosition: {x: 8.1956386e-10, y: 0.00023779662, z: -2.2351741e-10}
+      localRotation: {x: -0.0000005587936, y: -0.00000018998983, z: -0.0000006128103, w: 1}
+    - name: R_Sleeve_Top
+      localPosition: {x: 0.00039230808, y: 0.000060851984, z: -0.0006354156}
+      localRotation: {x: 0.38490933, y: 0.26233792, z: 0.026151141, w: 0.8844997}
+    - name: R_Sleeve_Top_end
+      localPosition: {x: 2.9802322e-10, y: 0.00023779622, z: -1.5832484e-10}
+      localRotation: {x: -0.0000012787059, y: 0.0000026207415, z: 0.0000030929223, w: 1}
+    - name: R_Sleeve_Top_end_end
+      localPosition: {x: 3.72529e-10, y: 0.00023779593, z: -6.61239e-10}
+      localRotation: {x: 0.00000079069287, y: -0.000001873821, z: -0.0000025993213, w: 1}
+    - name: R_Thumb1
+      localPosition: {x: 0.00010739103, y: 0.00026024348, z: -0.0003343676}
+      localRotation: {x: 0.8233706, y: 0.43329975, z: -0.12343973, w: 0.34507227}
+    - name: R_Thumb2
+      localPosition: {x: 0.00043509708, y: 0.000032174918, z: 0.000000009274478}
+      localRotation: {x: 0.00000091222904, y: -0.000001532663, z: 0.31846657, w: 0.9479341}
+    - name: R_Thumb3
+      localPosition: {x: 0.00042802677, y: 0.0000000059366196, z: 0.0000000061631176}
+      localRotation: {x: 0.0000009435971, y: 0.0000034617035, z: 0.2566224, w: 0.9665117}
+    - name: R_Thumb3_end
+      localPosition: {x: -2.2351741e-10, y: 0.00042798198, z: 2.9802322e-10}
+      localRotation: {x: -0.0000007189811, y: -0.0000030193478, z: -0.0000013448296, w: 1}
+    - name: R_Thumb3_end_end
+      localPosition: {x: -2.2351741e-10, y: 0.00042798126, z: -7.45058e-10}
+      localRotation: {x: 0.00000078976166, y: 0.0000022016466, z: 0.0000010803342, w: 1}
+    - name: R_WeaponPoint
+      localPosition: {x: 0.0007802472, y: 0.00040758034, z: -0.00040840416}
+      localRotation: {x: 0.46949998, y: -0.4699589, z: 0.57537425, w: -0.47712988}
+    - name: R_WeaponPoint_end
+      localPosition: {x: -9.8372e-16, y: 0.00023779612, z: -1.3115295e-16}
+      localRotation: {x: -0.00000010788436, y: -0.0000000043723847, z: 0.0000005370382, w: 1}
+    - name: R_WeaponPoint_end_end
+      localPosition: {x: -1.9971552e-16, y: 0.0002377965, z: -3.9036183e-16}
+      localRotation: {x: -7.8333885e-14, y: 8.877447e-15, z: -4.7079602e-14, w: 1}
+    - name: R_Shoulder_Twst1
+      localPosition: {x: 0.00011387867, y: 0.0000000111103, z: -0.000000004148481}
+      localRotation: {x: 0.0000000074505815, y: 0.00000024214387, z: -0.0000002644956, w: 1}
+    - name: R_Shoulder_Helper
+      localPosition: {x: -0.0001784483, y: -0.00087340974, z: 0.00018369789}
+      localRotation: {x: 0.00000006891787, y: 0.00000006519259, z: 0.00000085681677, w: 1}
+    - name: R_Shoulder_Helper_end
+      localPosition: {x: -0.0000000012607779, y: 0.0009101896, z: 0}
+      localRotation: {x: -0.000000006519258, y: 0.000000119209275, z: 0.00000043865293, w: 1}
+    - name: R_Shoulder_Helper_end_end
+      localPosition: {x: -0.0000000010593794, y: 0.00091019104, z: 2.2351741e-10}
+      localRotation: {x: -0.00000005029142, y: -0.00000009639189, z: -0.0000007074559, w: 1}
+    - name: R_Shoulder_Twst2
+      localPosition: {x: 0.0013748093, y: -0.0000000023283064, z: 6.3329936e-10}
+      localRotation: {x: 0.00000067893416, y: 0.0000000949949, z: -0.0000000019790605, w: 1}
+    - name: R_Shoulder_Twst2_end
+      localPosition: {x: 8.8359225e-10, y: 0.00011389076, z: 2.6077032e-10}
+      localRotation: {x: 0.00000016577539, y: -0.0000005764886, z: -0.0000052232053, w: 1}
+    - name: R_Shoulder_Twst2_end_end
+      localPosition: {x: 0.0000000011851079, y: 0.00011389179, z: -1.4901161e-10}
+      localRotation: {x: -0.0000006472692, y: 0.00000040559098, z: 0.0000050907256, w: 1}
+    - name: R_Shoulder_Twst3
+      localPosition: {x: 0.0022913485, y: 0.000000008940693, z: -0.0000000031471235}
+      localRotation: {x: 0.000000085681684, y: 0.0000003296882, z: 0.00000061094767, w: 1}
+    - name: R_Shoulder_Twst3_end
+      localPosition: {x: 4.9127263e-10, y: 0.00011389265, z: 0}
+      localRotation: {x: 0.000001374632, y: 0.0000012065284, z: 0.000010302754, w: 1}
+    - name: R_Shoulder_Twst3_end_end
+      localPosition: {x: -7.112976e-10, y: 0.00011389072, z: 3.7252902e-11}
+      localRotation: {x: -0.0000010197982, y: -0.0000014016405, z: -0.000011116733, w: 1}
+    barrelInRightHand: {x: 0.9887306, y: -0.09091619, z: 0.118937425}
+    weaponPositionInRightHand: {x: 0.078023754, y: 0.040759757, z: -0.0408405}
+    weaponRotationInRightHand: {x: -0.46950123, y: 0.46995893, z: -0.5753727, w: 0.4771306}

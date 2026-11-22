@@ -594,7 +594,12 @@ namespace FPS
             if (weaponData == null) return;
             if (combatInputBlocked || !HasCombatPermission()) return;
             if (IsEquipping() || isReloading) return;
-            if (currentAmmo - pendingServerShots <= 0) return;
+            if (currentAmmo - pendingServerShots <= 0)
+            {
+                if (currentAmmo <= 0 && pendingServerShots <= 0)
+                    ResolveAudio()?.DryFire(weaponData);
+                return;
+            }
 
             PlayerMovement movement = cachedFireHandler != null
                 ? cachedFireHandler.GetComponent<PlayerMovement>()
@@ -640,8 +645,7 @@ namespace FPS
             }
             if (!weaponData.restartFireAnimationPerShot)
                 cachedWeaponManager?.TriggerAnimation("Fire");
-            if (weaponData.shootSound != null && AudioManager.Instance != null)
-                AudioManager.Instance.PlaySFXSound(weaponData.shootSound);
+            ResolveAudio()?.Fire(weaponData);
 
             Ray centerRay = new Ray(cam.transform.position, shotDirection);
             ushort sequence = unchecked(++fireSequence);
@@ -981,6 +985,13 @@ namespace FPS
             return false;
         }
 
+        private WeaponAudio ResolveAudio()
+        {
+            if (cachedWeaponManager == null)
+                cachedWeaponManager = GetComponentInParent<WeaponManager>();
+            return cachedWeaponManager != null ? cachedWeaponManager.Audio : null;
+        }
+
         public void PlayShootSound()
         {
             if (weaponData == null) return;
@@ -997,8 +1008,7 @@ namespace FPS
             }
             if (!weaponData.restartFireAnimationPerShot)
                 cachedWeaponManager?.TriggerAnimation("Fire");
-            if (weaponData.shootSound != null && AudioManager.Instance != null)
-                AudioManager.Instance.PlaySFXSound(weaponData.shootSound);
+            ResolveAudio()?.Fire(weaponData);
         }
 
         private void ReloadWeapon()
@@ -1033,9 +1043,6 @@ namespace FPS
             if (weaponData == null)
                 yield break;
 
-            if (weaponData.reloadSound != null && AudioManager.Instance != null)
-                AudioManager.Instance.PlaySFXSound(weaponData.reloadSound);
-
             float reloadMultiplier = cachedInfection != null
                 ? cachedInfection.ReloadSpeedMultiplier
                 : 1f;
@@ -1043,6 +1050,7 @@ namespace FPS
             reloadPresentationTimeline = WeaponReloadTimeline.Begin(GetPresentationTime(), reloadMultiplier,
                 weaponData.GetPerShellRoundsToLoad(currentAmmo, reservedAmmo));
             cachedWeaponManager?.SetReloadPresentationTimeline(reloadPresentationTimeline);
+            ResolveAudio()?.SyncReload(weaponData, true, reloadPresentationTimeline, GetPresentationTime());
             UpdateReloadClockPresentation();
 
             if (weaponData.reloadMode == ReloadMode.PerShell)
@@ -1220,6 +1228,7 @@ namespace FPS
             double startedAt = equipCompleteTime - (weaponData != null ? weaponData.EquipDuration : 0f);
             float normalized = Mathf.Clamp01((float)((GetPresentationTime() - startedAt) / duration));
             PrepareFirstPersonPresentation(true, normalized);
+            ResolveAudio()?.Equip(weaponData, (float)(GetPresentationTime() - startedAt));
         }
 
         public bool TryPlayInspect()
@@ -1313,7 +1322,7 @@ namespace FPS
                 cachedPlayerHealth = GetComponentInParent<PlayerHealth>();
             if (cachedSurvivalInventory == null)
                 cachedSurvivalInventory = GetComponentInParent<SurvivalInventory>();
-            return cachedPlayerHealth != null && cachedPlayerHealth.CanUseCombat
+            return cachedPlayerHealth != null && cachedPlayerHealth.CanUseWeapon(weaponData)
                 && (cachedSurvivalInventory == null || !cachedSurvivalInventory.IsBusy);
         }
 

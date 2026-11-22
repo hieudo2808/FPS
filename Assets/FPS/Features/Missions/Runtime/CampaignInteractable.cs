@@ -67,7 +67,7 @@ namespace FPS
             : $"[{SurvivalHotbar.Key("Interact", "F")}] {Title}";
         public string GetLockedText() => $"🔒 Cần: {CampaignRules.LockReason(CampaignMissionController.Instance?.State, objectiveId)}"
             + (CampaignMissionController.Instance?.State.chapter == CampaignChapter.Factory
-                ? CampaignRules.CanSwitchFactoryBranch(CampaignMissionController.Instance.State) ? $"\n[{SurvivalHotbar.Key("Track", "T")}] đổi nhánh" : ""
+                ? ""
                 : $"\n[{SurvivalHotbar.Key("Track", "T")}] theo dõi");
         public void TrackLockedObjective() => CampaignHUD.Instance?.TryTrackObjective(objectiveId, true);
         public void Interact(NetworkObject interactorObject) => RequestNetworkInteraction(interactorObject);

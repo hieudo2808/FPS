@@ -19,6 +19,15 @@ namespace FPS
         Stagger
     }
 
+    /// <summary>What the server decided a burst of hits does. Flinch is presentation only.</summary>
+    public enum EnemyHitReactionKind : byte
+    {
+        None,
+        Flinch,
+        Stumble,
+        Interrupt
+    }
+
     [Flags]
     public enum EnemyActionFlags : byte
     {
@@ -39,6 +48,14 @@ namespace FPS
         public int actionStartServerTick;
         public int specialAbilityDeadlineTick;
 
+        // Latest server-confirmed hit. Clients present a hit once per hitSequence change.
+        public byte hitSequence;
+        public EnemyHitReactionKind hitKind;
+        public byte hitSegment;   // index into the prefab's HitboxSegment list, 255 = none
+        public sbyte hitOffsetX, hitOffsetY, hitOffsetZ; // centimetres in the segment's local space
+        public byte hitYaw;       // bullet travel direction around the enemy's up axis, 256 steps
+        public byte hitStrength;  // 0..255
+
         public bool Equals(EnemyReplicatedState other)
         {
             return locomotion == other.locomotion
@@ -47,7 +64,15 @@ namespace FPS
                 && specialActionKind == other.specialActionKind
                 && actionSequence == other.actionSequence
                 && actionStartServerTick == other.actionStartServerTick
-                && specialAbilityDeadlineTick == other.specialAbilityDeadlineTick;
+                && specialAbilityDeadlineTick == other.specialAbilityDeadlineTick
+                && hitSequence == other.hitSequence
+                && hitKind == other.hitKind
+                && hitSegment == other.hitSegment
+                && hitOffsetX == other.hitOffsetX
+                && hitOffsetY == other.hitOffsetY
+                && hitOffsetZ == other.hitOffsetZ
+                && hitYaw == other.hitYaw
+                && hitStrength == other.hitStrength;
         }
 
         public override bool Equals(object obj) => obj is EnemyReplicatedState other && Equals(other);
@@ -63,6 +88,7 @@ namespace FPS
                 hash = (hash * 397) ^ actionSequence;
                 hash = (hash * 397) ^ actionStartServerTick;
                 hash = (hash * 397) ^ specialAbilityDeadlineTick;
+                hash = (hash * 397) ^ hitSequence;
                 return hash;
             }
         }
@@ -76,6 +102,14 @@ namespace FPS
             serializer.SerializeValue(ref actionSequence);
             serializer.SerializeValue(ref actionStartServerTick);
             serializer.SerializeValue(ref specialAbilityDeadlineTick);
+            serializer.SerializeValue(ref hitSequence);
+            serializer.SerializeValue(ref hitKind);
+            serializer.SerializeValue(ref hitSegment);
+            serializer.SerializeValue(ref hitOffsetX);
+            serializer.SerializeValue(ref hitOffsetY);
+            serializer.SerializeValue(ref hitOffsetZ);
+            serializer.SerializeValue(ref hitYaw);
+            serializer.SerializeValue(ref hitStrength);
         }
     }
 }

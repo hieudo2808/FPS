@@ -1,0 +1,545 @@
+{
+  "manifestType": "schema",
+  "schemaVersion": 2,
+  "wire": "v2",
+  "version": "2.7.0",
+  "unityVersion": "6000.5.6f1",
+  "totalSkills": 16,
+  "filtered": true,
+  "filters": {
+    "category": "Editor"
+  },
+  "summary": false,
+  "metaUrl": "/skills/meta",
+  "defaults": {
+    "riskLevel": "low",
+    "supportsDryRun": true
+  },
+  "skills": [
+    {
+      "name": "editor_execute_menu",
+      "description": "Execute a Unity menu item",
+      "category": "Editor",
+      "operation": [
+        "Execute"
+      ],
+      "tags": [
+        "menu",
+        "command",
+        "action"
+      ],
+      "outputs": [
+        "executed"
+      ],
+      "flags": [
+        "mutatesScene",
+        "mayTriggerReload"
+      ],
+      "mode": "full",
+      "approvalBehavior": "forbid",
+      "parameters": [
+        {
+          "name": "menuPath",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "editor_get_changes",
+      "description": "Read the persistent editor-change journal instead of parsing .unity YAML. Use after the user edited the project while the AI was away, after external file changes, or after asking the user to make manual Editor changes. Returns scene structure/property summaries and imported/deleted/moved asset paths newer than 'since'. Omit since (or pass 0) for retained history, then pass the returned cursor on the next call. types: all/scene/file/undo/lifecycle (comma-separated). source: all/editor/manual/rest.",
+      "category": "Editor",
+      "operation": [
+        "Query"
+      ],
+      "tags": [
+        "changes",
+        "observe",
+        "journal",
+        "scene",
+        "files",
+        "cursor"
+      ],
+      "outputs": [
+        "hasChanges",
+        "cursor",
+        "oldestSeq",
+        "dropped",
+        "truncated",
+        "changes"
+      ],
+      "flags": [
+        "readOnly"
+      ],
+      "mode": "semi",
+      "approvalBehavior": "allow",
+      "parameters": [
+        {
+          "name": "since",
+          "type": "integer",
+          "required": false,
+          "defaultValue": "0"
+        },
+        {
+          "name": "types",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "required": false,
+          "defaultValue": "all"
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "required": false,
+          "defaultValue": "100"
+        }
+      ]
+    },
+    {
+      "name": "editor_get_context",
+      "description": "Get full editor context - selected GameObjects, selected assets, active scene, focused window. Use this to get current selection without searching.",
+      "category": "Editor",
+      "operation": [
+        "Query"
+      ],
+      "tags": [
+        "context",
+        "selection",
+        "workspace",
+        "overview"
+      ],
+      "outputs": [
+        "selectedGameObjects",
+        "selectedAssets",
+        "activeScene",
+        "focusedWindow"
+      ],
+      "flags": [
+        "readOnly"
+      ],
+      "mode": "semi",
+      "approvalBehavior": "allow",
+      "parameters": [
+        {
+          "name": "includeComponents",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "False"
+        },
+        {
+          "name": "includeChildren",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "False"
+        }
+      ]
+    },
+    {
+      "name": "editor_get_layers",
+      "description": "Get all available layers",
+      "category": "Editor",
+      "operation": [
+        "Query"
+      ],
+      "tags": [
+        "layers",
+        "list",
+        "config"
+      ],
+      "outputs": [
+        "layers"
+      ],
+      "flags": [
+        "readOnly"
+      ],
+      "mode": "semi",
+      "approvalBehavior": "allow",
+      "parameters": []
+    },
+    {
+      "name": "editor_get_selection",
+      "description": "Get currently selected objects",
+      "category": "Editor",
+      "operation": [
+        "Query"
+      ],
+      "tags": [
+        "selection",
+        "current",
+        "active"
+      ],
+      "outputs": [
+        "count",
+        "objects",
+        "instanceId",
+        "entityId"
+      ],
+      "flags": [
+        "readOnly"
+      ],
+      "mode": "semi",
+      "approvalBehavior": "allow",
+      "parameters": []
+    },
+    {
+      "name": "editor_get_state",
+      "description": "Get current editor state",
+      "category": "Editor",
+      "operation": [
+        "Query"
+      ],
+      "tags": [
+        "state",
+        "status",
+        "info"
+      ],
+      "outputs": [
+        "isPlaying",
+        "isPaused",
+        "isCompiling",
+        "unityVersion"
+      ],
+      "flags": [
+        "readOnly"
+      ],
+      "mode": "semi",
+      "approvalBehavior": "allow",
+      "parameters": []
+    },
+    {
+      "name": "editor_get_tags",
+      "description": "Get all available tags",
+      "category": "Editor",
+      "operation": [
+        "Query"
+      ],
+      "tags": [
+        "tags",
+        "list",
+        "config"
+      ],
+      "outputs": [
+        "tags"
+      ],
+      "flags": [
+        "readOnly"
+      ],
+      "mode": "semi",
+      "approvalBehavior": "allow",
+      "parameters": []
+    },
+    {
+      "name": "editor_pause",
+      "description": "Pause/unpause play mode",
+      "category": "Editor",
+      "operation": [
+        "Execute"
+      ],
+      "tags": [
+        "pause",
+        "resume",
+        "toggle"
+      ],
+      "outputs": [
+        "paused"
+      ],
+      "flags": [
+        "mayEnterPlayMode"
+      ],
+      "supportsDryRun": false,
+      "mode": "full",
+      "approvalBehavior": "forbid",
+      "parameters": []
+    },
+    {
+      "name": "editor_play",
+      "description": "Enter play mode. Warning: any unsaved scene changes made during Play mode will be lost when exiting.",
+      "category": "Editor",
+      "operation": [
+        "Execute"
+      ],
+      "tags": [
+        "play",
+        "runtime",
+        "test"
+      ],
+      "outputs": [
+        "mode",
+        "jobId"
+      ],
+      "flags": [
+        "mayEnterPlayMode"
+      ],
+      "riskLevel": "medium",
+      "supportsDryRun": false,
+      "mode": "full",
+      "approvalBehavior": "forbid",
+      "parameters": []
+    },
+    {
+      "name": "editor_playmode_inspect",
+      "description": "Inspect a GameObject's live runtime state: transform (position/rotation/scale), activeSelf/activeInHierarchy, and optionally one component's public fields and properties. Works during Play Mode (including while paused) and also in Edit Mode, where it returns editor-time values - check the isPlaying/isPaused flags in the response to know which. Combine with editor_playmode_step to assert state changes frame by frame.",
+      "category": "Editor",
+      "operation": [
+        "Query"
+      ],
+      "tags": [
+        "play",
+        "runtime",
+        "inspect",
+        "state",
+        "component",
+        "debug"
+      ],
+      "outputs": [
+        "gameObject",
+        "transform",
+        "activeSelf",
+        "isPlaying",
+        "isPaused",
+        "component"
+      ],
+      "requiresInput": [
+        "gameObject"
+      ],
+      "flags": [
+        "readOnly"
+      ],
+      "mode": "semi",
+      "approvalBehavior": "allow",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "instanceId",
+          "type": "integer",
+          "required": false,
+          "defaultValue": "0"
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "componentType",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "entityId",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "editor_playmode_step",
+      "description": "Advance Play Mode forward by N frames (1-100, default 1) using EditorApplication.Step; Unity automatically enters paused state as part of stepping. Requires Play Mode to already be active (call editor_play or editor_play_capture first). Runs as an async job because each Step() call is only confirmed on a later Editor tick (verified via Time.frameCount before issuing the next one) rather than synchronously - poll job_status/job_wait with the returned jobId. The completed job's result contains framesCompleted, frameCount and isPaused.",
+      "category": "Editor",
+      "operation": [
+        "Execute"
+      ],
+      "tags": [
+        "play",
+        "step",
+        "frame",
+        "runtime",
+        "debug",
+        "job"
+      ],
+      "outputs": [
+        "jobId",
+        "framesRequested",
+        "framesCompleted",
+        "frameCount",
+        "isPaused"
+      ],
+      "supportsDryRun": false,
+      "mode": "full",
+      "approvalBehavior": "grant",
+      "parameters": [
+        {
+          "name": "frames",
+          "type": "integer",
+          "required": false,
+          "defaultValue": "1"
+        }
+      ]
+    },
+    {
+      "name": "editor_play_capture",
+      "description": "Enter Play Mode, observe runtime errors for a fixed duration, optionally capture the Game View, then exit and return a job report.",
+      "category": "Editor",
+      "operation": [
+        "Execute",
+        "Analyze"
+      ],
+      "tags": [
+        "play",
+        "runtime",
+        "observe",
+        "errors",
+        "screenshot",
+        "test",
+        "job"
+      ],
+      "outputs": [
+        "jobId",
+        "kind",
+        "durationSeconds",
+        "captureScreenshot"
+      ],
+      "flags": [
+        "mayEnterPlayMode"
+      ],
+      "riskLevel": "medium",
+      "supportsDryRun": false,
+      "mode": "full",
+      "approvalBehavior": "forbid",
+      "parameters": [
+        {
+          "name": "durationSeconds",
+          "type": "integer",
+          "required": false,
+          "defaultValue": "10"
+        },
+        {
+          "name": "captureScreenshot",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "False"
+        },
+        {
+          "name": "screenshotFilename",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "maxErrors",
+          "type": "integer",
+          "required": false,
+          "defaultValue": "50"
+        }
+      ]
+    },
+    {
+      "name": "editor_redo",
+      "description": "Redo the last undone action (single step). For multiple redo steps use history_redo(steps=N).",
+      "category": "Editor",
+      "operation": [
+        "Execute"
+      ],
+      "tags": [
+        "redo",
+        "restore",
+        "history"
+      ],
+      "outputs": [
+        "message"
+      ],
+      "flags": [
+        "mutatesScene"
+      ],
+      "mode": "full",
+      "approvalBehavior": "grant",
+      "parameters": []
+    },
+    {
+      "name": "editor_select",
+      "description": "Select a GameObject",
+      "category": "Editor",
+      "operation": [
+        "Execute"
+      ],
+      "tags": [
+        "select",
+        "focus",
+        "highlight"
+      ],
+      "outputs": [
+        "selected"
+      ],
+      "requiresInput": [
+        "gameObject"
+      ],
+      "mode": "full",
+      "approvalBehavior": "grant",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "instanceId",
+          "type": "integer",
+          "required": false,
+          "defaultValue": "0"
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "entityId",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "editor_stop",
+      "description": "Exit play mode. Warning: any scene changes made during Play mode will be lost.",
+      "category": "Editor",
+      "operation": [
+        "Execute"
+      ],
+      "tags": [
+        "stop",
+        "runtime",
+        "exit"
+      ],
+      "outputs": [
+        "mode"
+      ],
+      "flags": [
+        "mayEnterPlayMode"
+      ],
+      "supportsDryRun": false,
+      "mode": "full",
+      "approvalBehavior": "forbid",
+      "parameters": []
+    },
+    {
+      "name": "editor_undo",
+      "description": "Undo the last action (single step). For multiple undo steps use history_undo(steps=N). For workflow-level undo use workflow_undo_task.",
+      "category": "Editor",
+      "operation": [
+        "Execute"
+      ],
+      "tags": [
+        "undo",
+        "revert",
+        "history"
+      ],
+      "outputs": [
+        "message"
+      ],
+      "flags": [
+        "mutatesScene"
+      ],
+      "mode": "full",
+      "approvalBehavior": "grant",
+      "parameters": []
+    }
+  ]
+}

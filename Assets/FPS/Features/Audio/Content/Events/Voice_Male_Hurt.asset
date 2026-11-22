@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e64de16f73779c45b8dbc23a2b97963, type: 3}
+  m_Name: Voice_Male_Hurt
+  m_EditorClassIdentifier: FPS::FPS.SoundEvent
+  bus: 4
+  clips:
+  - {fileID: 8300000, guid: 11b0f8163237ca84eb97c7fb770a2907, type: 3}
+  - {fileID: 8300000, guid: c5b7751312f442f4abb3be1f0818075d, type: 3}
+  - {fileID: 8300000, guid: a6a636b694f2e544691905d41dcb4611, type: 3}
+  - {fileID: 8300000, guid: f75e069cd42cc19458dbe039307681b7, type: 3}
+  - {fileID: 8300000, guid: 2dc45dc3f8fc01b4284d220c84856c5d, type: 3}
+  - {fileID: 8300000, guid: 0f8af659c2b5c9248b4f74e24af9217d, type: 3}
+  - {fileID: 8300000, guid: 5a048d99fcf312e49be359fc5abe78b2, type: 3}
+  - {fileID: 8300000, guid: 44376b2d03f0a69478fa6bf3ee5e7169, type: 3}
+  - {fileID: 8300000, guid: 79eca0750269d324c85829ad91f57785, type: 3}
+  - {fileID: 8300000, guid: 08e341a0be48b954e8fb63c230cc938f, type: 3}
+  - {fileID: 8300000, guid: 257458d7f68088141a5767d611603e0c, type: 3}
+  - {fileID: 8300000, guid: 6c64eb1ced2585446835068c75e85378, type: 3}
+  - {fileID: 8300000, guid: f485a16107cd6ec4a93a3845262bc434, type: 3}
+  - {fileID: 8300000, guid: dbf0e3813c78467418e4ed095badf1be, type: 3}
+  remoteClips: []
+  distantClips: []
+  distantFrom: 35
+  volume: 0.85
+  volumeJitterDb: 1
+  pitch: {x: 0.96, y: 1.04}
+  spatialBlend: 1
+  minDistance: 2
+  maxDistance: 30
+  maxVoices: 4
+  cooldown: 0
+  priority: 60
+  loop: 0

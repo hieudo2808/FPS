@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7439b2aeb22fe8a4a99d44972bf8730c, type: 3}
+  m_Name: Voice_Gekko
+  m_EditorClassIdentifier: FPS::FPS.PlayerVoiceSet
+  hurt: {fileID: 11400000, guid: 999e2bb0921fcdb408d373cc89604aa2, type: 2}
+  downed: {fileID: 11400000, guid: e51a8d847c71d5047888455f6df2d3e3, type: 2}
+  death: {fileID: 11400000, guid: a463551947f4b4c40bbe0180a43fa68f, type: 2}

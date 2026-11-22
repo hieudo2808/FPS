@@ -7529,6 +7529,8 @@ GameObject:
   - component: {fileID: 6227587108968805825}
   - component: {fileID: 3425932861328602833}
   - component: {fileID: 6699964552110220340}
+  - component: {fileID: 5910376574759630367}
+  - component: {fileID: 9135806681236775788}
   m_Layer: 0
   m_Name: SagePlayer
   m_TagString: Player
@@ -7941,6 +7943,48 @@ MonoBehaviour:
   viewCamera: {fileID: 8586101864439689613}
   originalHands:
   - {fileID: 1868959007742818053}
+--- !u!114 &5910376574759630367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8769610198087256571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 687e84ddea1bfac4ab751ff764115717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.PlayerLifePresenter
+  animationSet: {fileID: 11400000, guid: ed1a420de0a88d048beb9a891b409140, type: 2}
+  sidearmHold: {fileID: 11400000, guid: e31ecab86878c274896aaa8dbbf56cc2, type: 2}
+  humanoidAvatar: {fileID: 9000000, guid: 9cecaa6ca8644b54c9770e614eeedebd, type: 3}
+  blendInSeconds: 0.15
+  blendOutSeconds: 0.45
+  raiseSeconds: 0.5
+  slumpSeconds: 0.9
+  aimArcDegrees: 100
+--- !u!114 &9135806681236775788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8769610198087256571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1218f4f732112c4a94f5edce27f28af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FPS::FPS.PlayerAudio
+  voice: {fileID: 11400000, guid: facc363593337cd41b47d782edf08308, type: 2}
+  footstep: {fileID: 11400000, guid: 0265eaf30e358624bad97a7643b88cff, type: 2}
+  land: {fileID: 11400000, guid: 9575d1dfaa3e9e14ab653d9cb5547c6e, type: 2}
+  downedBreath: {fileID: 11400000, guid: 7d9f2a0912b410b4abd617da7271df6c, type: 2}
+  hurtCooldown: 0.8
+  minimumHurtDamage: 3
+  ownFootstepVolume: 0.55
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &8788456878952650864
 GameObject:
   m_ObjectHideFlags: 0
@@ -10989,6 +11033,14 @@ PrefabInstance:
     - target: {fileID: -7025412241584067443, guid: c3a9a22df93b7c84697131f91b94fbd1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 1.2762277
+      objectReference: {fileID: 0}
+    - target: {fileID: -6952881097740910870, guid: c3a9a22df93b7c84697131f91b94fbd1, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 9ee1ac0faa63c034ab4e1cdd8587bbc0, type: 2}
+    - target: {fileID: -6952881097740910870, guid: c3a9a22df93b7c84697131f91b94fbd1, type: 3}
+      propertyPath: m_BlendShapeWeights.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -6856961273723789643, guid: c3a9a22df93b7c84697131f91b94fbd1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

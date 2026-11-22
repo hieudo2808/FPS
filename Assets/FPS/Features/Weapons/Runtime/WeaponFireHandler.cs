@@ -590,7 +590,7 @@ namespace FPS
 
         private void HandleCombatAvailabilityChanged(bool canUseCombat)
         {
-            if (!IsServer || canUseCombat)
+            if (!IsServer || canUseCombat || CanUseCombat())
                 return;
 
             CancelTransientActionsServer();
@@ -608,7 +608,9 @@ namespace FPS
         {
             if (playerHealth == null)
                 playerHealth = GetComponent<PlayerHealth>();
-            return playerHealth != null && playerHealth.CanUseCombat && GetComponent<SurvivalInventory>()?.IsBusy != true;
+            // Downed players keep their sidearm; everything else needs a standing player.
+            WeaponData current = weaponManager != null ? weaponManager.GetWeapon(weaponManager.CurrentWeaponIndex)?.Data : null;
+            return playerHealth != null && playerHealth.CanUseWeapon(current) && GetComponent<SurvivalInventory>()?.IsBusy != true;
         }
 
         private int FindOwnedAmmoSlot(WeaponData ammoWeapon)

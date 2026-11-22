@@ -10,14 +10,14 @@ namespace FPS
         private double nextTankAttempt;
         private readonly CampaignTankAttempt tankAttempt = new();
         private readonly NetworkVariable<NetworkObjectReference> tankTarget = new();
-        public bool TryGetTankTarget(out Vector3 position)
+        internal bool TryGetTankTarget(out NetworkObject instance)
         {
-            position = default;
+            instance = null;
             if (state.tankStage != CampaignTankStage.Active || !tankTarget.Value.TryGet(out var target)
                 || target == null || !target.IsSpawned || !target.gameObject.activeInHierarchy) return false;
             var health = target.GetComponent<EnemyHealth>();
             if (health == null || health.IsDead) return false;
-            position = target.transform.position;
+            instance = target;
             return true;
         }
 

@@ -781,9 +781,9 @@ MonoBehaviour:
   keyItems:
   - id: 1
     chapter: 0
-    title: FACTORY EVIDENCE CASE
-    description: Sealed factory evidence with its original custody records. Retained
-      by the squad through extraction; never dropped when an operator dies.
+    title: T9-17 FACTORY EVIDENCE CASE
+    description: Sealed T9-17 case and its original custody records, recovered from
+      factory cold storage. Stays with the squad through extraction.
     icon: {fileID: 21300000, guid: 20477921fd0efc146aa9752d76a2acc7, type: 3}
     acquiredAfter: 6
     consumedAfter: 0
@@ -792,9 +792,8 @@ MonoBehaviour:
   - id: 2
     chapter: 1
     title: SERVICE FUSE
-    description: Replacement fuse for Northbridge's lower service panel. Any living
-      squad member may install it at the panel. Consumed only after a successful
-      installation.
+    description: Replacement fuse for Northbridge's lower service panel. Install
+      it at the panel to restore service power.
     icon: {fileID: 21300000, guid: afb7d6c1e0ece31498ae94abe1ad230d, type: 3}
     acquiredAfter: 9
     consumedAfter: 10
@@ -803,8 +802,8 @@ MonoBehaviour:
   - id: 3
     chapter: 1
     title: B2 ACCESS CARD
-    description: Security card retained with the transfer records. Use it at the
-      freight-lift reader; it is removed only after lift authorization is committed.
+    description: Security access card recovered with the mortuary transfer report.
+      Scan it at the B2 freight-lift reader.
     icon: {fileID: 21300000, guid: 63641263d1b2ca64eaf1c0865d0cfcff, type: 3}
     acquiredAfter: 13
     consumedAfter: 14
@@ -812,9 +811,9 @@ MonoBehaviour:
     order: 3
   - id: 4
     chapter: 2
-    title: LABORATORY EVIDENCE CASE
-    description: Sealed original archive and identity records. The transmitted copy
-      supplements this original; it does not consume the case.
+    title: E-02 LABORATORY EVIDENCE CASE
+    description: The original E-02 archive and patient identity records. Keep this
+      case after transmitting the copy.
     icon: {fileID: 21300000, guid: 20477921fd0efc146aa9752d76a2acc7, type: 3}
     acquiredAfter: 19
     consumedAfter: 0
@@ -822,328 +821,1049 @@ MonoBehaviour:
     order: 4
   dialogue:
   - id: 1
-    speaker: Mira Shaw
-    english: Recover the evidence case and its records. Restore power and verify
-      logistics; choose either branch first.
-    vietnamese: "Thu h\u1ED3i ki\u1EC7n b\u1EB1ng ch\u1EE9ng v\xE0 h\u1ED3 s\u01A1
-      g\u1ED1c. Kh\xF4i ph\u1EE5c \u0111i\u1EC7n v\xE0 x\xE1c minh v\u1EADn chuy\u1EC3n;
-      \u0111\u1ED9i c\xF3 th\u1EC3 ch\u1ECDn nh\xE1nh n\xE0o tr\u01B0\u1EDBc."
+    speaker: Command
+    english: 'Vanguard, get the sealed case
+
+      and its records.'
+    vietnamese: "Vanguard, l\u1EA5y ki\u1EC7n ni\xEAm phong\nv\xE0 h\u1ED3 s\u01A1
+      \u0111i k\xE8m."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: Insertion
     audio: {fileID: 0}
+    firstVoice: 1
+    secondVoice: 0
+    cues:
+    - role: 0
+      english: Command, this is Vanguard. We're inside the factory.
+      vietnamese: "B\u1ED9 ch\u1EC9 huy, Vanguard \u0111\xE2y. \u0110\u1ED9i t\xF4i
+        v\xE0o nh\xE0 m\xE1y r\u1ED3i."
+    - role: 2
+      english: Copy, Vanguard. Pull the case from cold storage.
+      vietnamese: "Vanguard, \u0111\xE3 nh\u1EADn. L\u1EA5y ki\u1EC7n h\xE0ng trong
+        kho l\u1EA1nh."
+    - role: 2
+      english: Leave the seal intact.
+      vietnamese: "Nh\u1EDB gi\u1EEF nguy\xEAn ni\xEAm phong."
+    - role: 0
+      english: What about the manifest? Bring it back or read the number?
+      vietnamese: "C\xF2n t\u1EDD v\u1EADn \u0111\u01A1n th\xEC sao? \u0110em v\u1EC1
+        lu\xF4n hay ch\u1EC9 \u0111\u1ECDc s\u1ED1?"
+    - role: 2
+      english: Bring it with the case. I need to match the seal number.
+      vietnamese: "\u0110em v\u1EC1 k\xE8m ki\u1EC7n h\xE0ng. T\xF4i c\u1EA7n \u0111\u1ED1i
+        chi\u1EBFu m\xE3 ni\xEAm phong."
+    - role: 0
+      english: Roger that. We'll bring both.
+      vietnamese: "\u0110\xE3 r\xF5. \u0110\u1ED9i t\xF4i mang c\u1EA3 hai v\u1EC1."
+    - role: 0
+      english: Seal stays unbroken. Vanguard out.
+      vietnamese: "Ki\u1EC7n v\u1EABn gi\u1EEF nguy\xEAn ni\xEAm phong. Vanguard,
+        h\u1EBFt."
+    soloCues: []
   - id: 2
-    speaker: Mira Shaw
-    english: Cold Ledger. Restore cold-store power and reconcile the logistics release.
-      Both branches are required; take them in either order.
-    vietnamese: "Cold Ledger. Kh\xF4i ph\u1EE5c \u0111i\u1EC7n kho l\u1EA1nh v\xE0
-      \u0111\u1ED1i chi\u1EBFu v\u1EADn chuy\u1EC3n. C\u1EA7n c\u1EA3 hai nh\xE1nh,
-      th\u1EE9 t\u1EF1 t\xF9y \u0111\u1ED9i."
+    speaker: Command
+    english: 'Cold store needs power.
+
+      Check that shipping manifest.'
+    vietnamese: "Kho l\u1EA1nh c\u1EA7n \u0111i\u1EC7n.\nKi\u1EC3m tra v\u1EADn \u0111\u01A1n
+      \u0111\xF3."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: Factory/Exploring
     audio: {fileID: 0}
+    firstVoice: 3
+    secondVoice: 0
+    cues:
+    - role: 0
+      english: Cold storage is dead. Grab the case or wait for power?
+      vietnamese: "Kho l\u1EA1nh m\u1EA5t \u0111i\u1EC7n r\u1ED3i. L\u1EA5y ki\u1EC7n
+        lu\xF4n hay ch\u1EDD c\xF3 \u0111i\u1EC7n?"
+    - role: 2
+      english: Hold off. Keep the case cold while you check the manifest.
+      vietnamese: "Ch\u1EDD \u0111\xE3. Ki\u1EC7n ph\u1EA3i gi\u1EEF l\u1EA1nh trong
+        l\xFAc \u0111\u1ED9i ki\u1EC3m tra v\u1EADn \u0111\u01A1n."
+    - role: 2
+      english: Cold storage runs on its own backup.
+      vietnamese: "Kho \u0111\xF3 c\xF3 ngu\u1ED3n d\u1EF1 ph\xF2ng ri\xEAng."
+    - role: 0
+      english: Copy. I'll check the manual before throwing the switch.
+      vietnamese: "R\xF5. \u0110\u1EC3 t\xF4i xem l\u1EA1i quy tr\xECnh r\u1ED3i
+        \u0111\xF3ng \u0111i\u1EC7n."
+    soloCues: []
   - id: 3
-    speaker: Mira Shaw
-    english: Northbridge Care Institute. Those Who Never Left. The factory case stays
-      with Vanguard. Start with the security desk; find who received that shipment.
-    vietnamese: "Northbridge Care Institute. Those Who Never Left. Gi\u1EEF ki\u1EC7n
-      nh\xE0 m\xE1y c\xF9ng Vanguard. B\u1EAFt \u0111\u1EA7u t\u1EA1i b\xE0n an ninh,
-      t\xECm ng\u01B0\u1EDDi nh\u1EADn chuy\u1EBFn \u0111\xF3."
+    speaker: Command
+    english: 'Northbridge received it.
+
+      Check their security desk.'
+    vietnamese: "Northbridge nh\u1EADn l\xF4 \u0111\xF3.\nKi\u1EC3m tra b\xE0n an
+      ninh b\xEAn \u1EA5y."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: Asylum/Exploring
     audio: {fileID: 0}
+    firstVoice: 4
+    secondVoice: 0
+    cues:
+    - role: 2
+      english: Vanguard, that shipment reached Northbridge.
+      vietnamese: "Vanguard, l\xF4 h\xE0ng \u0111\xE3 t\u1EDBi Northbridge."
+    - role: 2
+      english: I need to know who it was for.
+      vietnamese: "T\xF4i c\u1EA7n bi\u1EBFt h\u1ECD nh\u1EADn cho ai."
+    - role: 0
+      english: Manifest only lists a group. Where do I dig up a name?
+      vietnamese: "V\u1EADn \u0111\u01A1n ch\u1EC9 ghi m\xE3 nh\xF3m nh\u1EADn. T\xECm
+        t\xEAn ng\u01B0\u1EDDi \u1EDF \u0111\xE2u b\xE2y gi\u1EDD?"
+    - role: 2
+      english: Start at security. Match the drop time to their log.
+      vietnamese: "B\u1EAFt \u0111\u1EA7u t\u1EEB b\xE0n b\u1EA3o v\u1EC7. So gi\u1EDD
+        giao v\u1EDBi s\u1ED5 tr\u1EF1c c\u1EE7a h\u1ECD."
+    - role: 0
+      english: Copy. I'll check their log for a service entrance drop.
+      vietnamese: "R\xF5. V\u1EADn \u0111\u01A1n ghi c\u1EEDa k\u1EF9 thu\u1EADt.
+        \u0110\u1EC3 t\xF4i l\u1EA7n theo m\u1EE5c \u0111\xF3."
+    soloCues: []
   - id: 4
-    speaker: Mira Shaw
-    english: The Unmapped Floor. B2 is below the institute, absent from its public
-      plans. Follow the recorded transfer trail and find the original archive.
-    vietnamese: "The Unmapped Floor. B2 n\u1EB1m d\u01B0\u1EDBi vi\u1EC7n v\xE0 kh\xF4ng
-      c\xF3 tr\xEAn s\u01A1 \u0111\u1ED3 c\xF4ng khai. Theo d\u1EA5u h\u1ED3 s\u01A1
-      chuy\u1EC3n giao \u0111\xE3 ghi v\xE0 t\xECm kho l\u01B0u tr\u1EEF g\u1ED1c."
+    speaker: Command
+    english: 'An unlisted floor.
+
+      The original records should be here.'
+    vietnamese: "T\u1EA7ng n\xE0y kh\xF4ng c\xF3 tr\xEAn s\u01A1 \u0111\u1ED3.\nH\u1ED3
+      s\u01A1 g\u1ED1c ch\u1EAFc \u1EDF \u0111\xE2y."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: Laboratory/Exploring
     audio: {fileID: 0}
+    firstVoice: 3
+    secondVoice: 0
+    cues:
+    - role: 0
+      english: Command, Vanguard's on B2.
+      vietnamese: "B\u1ED9 ch\u1EC9 huy, Vanguard xu\u1ED1ng t\u1EDBi B2 r\u1ED3i."
+    - role: 0
+      english: You got a records room marked on your map?
+      vietnamese: "Tr\xEAn b\u1EA3n v\u1EBD c\u1EE7a B\u1ED9 ch\u1EC9 huy c\xF3 ph\xF2ng
+        l\u01B0u h\u1ED3 s\u01A1 kh\xF4ng?"
+    - role: 2
+      english: Mine stops one floor up. B2 isn't even drawn in.
+      vietnamese: "B\u1EA3n v\u1EBD c\u1EE7a t\xF4i d\u1EEBng \u1EDF t\u1EA7ng tr\xEAn.
+        T\u1EA7ng B2 ch\u1EB3ng c\xF3 l\u1EA5y m\u1ED9t n\xE9t."
+    - role: 0
+      english: Then I'll trace the code from the transfer slip.
+      vietnamese: "Th\u1EBF t\xF4i l\u1EA7n theo m\xE3 tr\xEAn phi\u1EBFu chuy\u1EC3n."
+    - role: 0
+      english: If they kept a receiving log, that code has to be in it.
+      vietnamese: "D\u01B0\u1EDBi n\xE0y m\xE0 c\xF3 s\u1ED5 nh\u1EADn th\xEC m\xE3
+        \u0111\xF3 ki\u1EC3u g\xEC c\u0169ng n\u1EB1m trong \u1EA5y."
+    soloCues: []
   - id: 5
-    speaker: Mira Shaw
-    english: Cold-store power is restored. Keep the evidence case sealed.
-    vietnamese: "\u0110\xE3 kh\xF4i ph\u1EE5c \u0111i\u1EC7n kho l\u1EA1nh. Gi\u1EEF
-      nguy\xEAn ni\xEAm phong ki\u1EC7n b\u1EB1ng ch\u1EE9ng."
+    speaker: Command
+    english: 'Power''s back.
+
+      Keep that case sealed.'
+    vietnamese: "C\xF3 \u0111i\u1EC7n r\u1ED3i.\nGi\u1EEF nguy\xEAn ni\xEAm phong
+      ki\u1EC7n."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: FactoryGenerator
     audio: {fileID: 0}
+    firstVoice: 3
+    secondVoice: 4
+    cues:
+    - role: 0
+      english: Generator's up. Cold storage has power.
+      vietnamese: "M\xE1y ph\xE1t ch\u1EA1y r\u1ED3i. Kho l\u1EA1nh c\xF3 \u0111i\u1EC7n
+        tr\u1EDF l\u1EA1i."
+    - role: 1
+      english: That light's been green a while. It wasn't powered then?
+      vietnamese: "\u0110\xE8n xanh s\xE1ng t\u1EEB n\xE3y r\u1ED3i m\xE0. L\xFAc
+        \u0111\xF3 kho ch\u01B0a c\xF3 \u0111i\u1EC7n \xE0?"
+    - role: 0
+      english: Shares the alarm circuit. Lit up before I touched the switch.
+      vietnamese: "N\xF3 \u0103n chung m\u1EA1ch b\xE1o \u0111\u1ED9ng. Ch\u01B0a
+        \u0111\xF3ng c\u1EA7u dao \u0111\xE8n \u0111\xE3 s\xE1ng s\u1EB5n."
+    - role: 1
+      english: Then I'll log when the generator kicked in.
+      vietnamese: "V\u1EADy t\xF4i ghi gi\u1EDD m\xE1y b\u1EAFt \u0111\u1EA7u ch\u1EA1y."
+    soloCues:
+    - role: 0
+      english: Command, cold storage has power.
+      vietnamese: "B\u1ED9 ch\u1EC9 huy, kho l\u1EA1nh c\xF3 \u0111i\u1EC7n r\u1ED3i."
+    - role: 2
+      english: Is the generator running, or is it just the light?
+      vietnamese: "Ki\u1EC3m l\u1EA1i cho ch\u1EAFc, m\xE1y \u0111\xE3 ch\u1EA1y
+        hay m\u1EDBi s\xE1ng \u0111\xE8n b\xE1o?"
+    - role: 0
+      english: It's running. Light came on before I even threw the switch.
+      vietnamese: "M\xE1y ch\u1EA1y r\u1ED3i. Ch\u01B0a g\u1EA1t c\u1EA7u dao \u0111\xE8n
+        \u0111\xE3 s\xE1ng s\u1EB5n."
   - id: 6
-    speaker: Mira Shaw
-    english: Shipping release recorded. Keep the original manifest in Files and continue
-      the remaining branch.
-    vietnamese: "\u0110\xE3 ghi nh\u1EADn x\xE1c minh v\u1EADn chuy\u1EC3n. Gi\u1EEF
-      v\u1EADn \u0111\u01A1n g\u1ED1c trong Files v\xE0 ti\u1EBFp t\u1EE5c nh\xE1nh
-      c\xF2n l\u1EA1i."
+    speaker: Command
+    english: 'Northbridge took it.
+
+      Keep that manifest.'
+    vietnamese: "Northbridge \u0111\xE3 nh\u1EADn l\xF4 \u0111\xF3.\nGi\u1EEF l\u1EA1i
+      v\u1EADn \u0111\u01A1n."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: FactoryShipping
     audio: {fileID: 0}
+    firstVoice: 4
+    secondVoice: 0
+    cues:
+    - role: 0
+      english: Command, manifest checks out. Destination's Northbridge.
+      vietnamese: "B\xE1o c\xE1o, v\u1EADn \u0111\u01A1n kh\u1EDBp r\u1ED3i. N\u01A1i
+        giao l\xE0 Vi\u1EC7n Northbridge."
+    - role: 2
+      english: Did anyone at the institute sign for it?
+      vietnamese: "B\xEAn vi\u1EC7n c\xF3 ai k\xFD nh\u1EADn ch\u01B0a?"
+    - role: 0
+      english: No. Just the scheduled time. Zero two forty.
+      vietnamese: "Ch\u01B0a. Ch\u1EC9 ghi gi\u1EDD h\u1EB9n: 02:40."
+    - role: 0
+      english: That's just the dispatch sign-off.
+      vietnamese: "Ch\u1EEF k\xFD n\xE0y l\xE0 c\u1EE7a b\xEAn xu\u1EA5t kho."
+    - role: 2
+      english: Copy. Hang on to it. We'll check it against their log.
+      vietnamese: "R\xF5. C\u1EE9 gi\u1EEF t\u1EDD \u0111\xF3 l\u1EA1i. Sang vi\u1EC7n
+        c\xF2n so v\u1EDBi s\u1ED5 nh\u1EADn."
+    - role: 0
+      english: Roger. Keeping the signed copy.
+      vietnamese: "\u0110\xE3 r\xF5. T\xF4i gi\u1EEF b\u1EA3n c\xF3 ch\u1EEF k\xFD."
+    soloCues: []
   - id: 7
-    speaker: Mira Shaw
-    english: The factory case is secured. Keep it sealed and use the service route
-      to continue the investigation.
-    vietnamese: "\u0110\xE3 gi\u1EEF ki\u1EC7n b\u1EB1ng ch\u1EE9ng nh\xE0 m\xE1y.
-      Gi\u1EEF nguy\xEAn ni\xEAm phong v\xE0 \u0111i tuy\u1EBFn d\u1ECBch v\u1EE5
-      \u0111\u1EC3 ti\u1EBFp t\u1EE5c \u0111i\u1EC1u tra."
+    speaker: Command
+    english: 'You''ve got the case.
+
+      Open the service route.'
+    vietnamese: "L\u1EA5y \u0111\u01B0\u1EE3c ki\u1EC7n r\u1ED3i.\nM\u1EDF l\u1ED1i
+      k\u1EF9 thu\u1EADt."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: FactoryCase
     audio: {fileID: 0}
+    firstVoice: 1
+    secondVoice: 0
+    cues:
+    - role: 0
+      english: Command, Vanguard's got T9-17.
+      vietnamese: "B\u1ED9 ch\u1EC9 huy, Vanguard thu h\u1ED3i \u0111\u01B0\u1EE3c
+        T9-17 r\u1ED3i."
+    - role: 0
+      english: Seal's still intact.
+      vietnamese: "Ni\xEAm phong c\xF2n nguy\xEAn."
+    - role: 2
+      english: Roger. Does it say why it came back?
+      vietnamese: "\u0110\xE3 nh\u1EADn. C\xF3 ghi sao ki\u1EC7n b\u1ECB tr\u1EA3
+        v\u1EC1 kh\xF4ng?"
+    - role: 0
+      english: Says so in the addendum. Sent it back when the shutters dropped.
+      vietnamese: "C\xF3 t\u1EDD ph\u1EE5 l\u1EE5c k\u1EB9p theo. C\u1EEDa phong
+        t\u1ECFa s\u1EADp n\xEAn h\u1ECD tr\u1EA3 v\u1EC1."
+    - role: 0
+      english: They kept the patient files at the institute.
+      vietnamese: "C\xF2n h\u1ED3 s\u01A1 b\u1EC7nh nh\xE2n v\u1EABn n\u1EB1m \u1EDF
+        vi\u1EC7n."
+    - role: 2
+      english: Keep the addendum with the case.
+      vietnamese: "Gi\u1EEF ph\u1EE5 l\u1EE5c \u0111i c\xF9ng ki\u1EC7n."
+    - role: 2
+      english: We'll pull the files at Northbridge.
+      vietnamese: "Sang Northbridge l\u1EA5y h\u1ED3 s\u01A1 sau."
+    - role: 0
+      english: Roger that. Moving Vanguard to the service exit controls.
+      vietnamese: "\u0110\xE3 r\xF5. T\xF4i d\u1EABn \u0111\u1ED9i ra ch\u1ED7 m\u1EDF
+        l\u1ED1i k\u1EF9 thu\u1EADt."
+    soloCues: []
   - id: 8
-    speaker: Mira Shaw
-    english: Security desk log recorded. Restore service power, then inspect the
-      upper patient records.
-    vietnamese: "\u0110\xE3 ghi nh\u1EADt k\xFD b\xE0n an ninh. Kh\xF4i ph\u1EE5c
-      ngu\u1ED3n d\u1ECBch v\u1EE5 r\u1ED3i \u0111\u1ECDc h\u1ED3 s\u01A1 b\u1EC7nh
-      nh\xE2n t\u1EA7ng tr\xEAn."
+    speaker: Command
+    english: 'Another intake log, upstairs.
+
+      Get the power back on.'
+    vietnamese: "C\xF2n s\u1ED5 ti\u1EBFp nh\u1EADn tr\xEAn t\u1EA7ng.\nC\u1EA5p
+      \u0111i\u1EC7n tr\u1EDF l\u1EA1i \u0111i."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: AsylumAccess
     audio: {fileID: 0}
+    firstVoice: 4
+    secondVoice: 3
+    cues:
+    - role: 0
+      english: Log says admissions stopped. There's a new entry right under it.
+      vietnamese: "S\u1ED5 ghi \u0111\xE3 ng\u1EEBng ti\u1EBFp nh\u1EADn. Th\u1EBF
+        m\xE0 ngay d\u01B0\u1EDBi v\u1EABn ghi th\xEAm ca m\u1EDBi."
+    - role: 1
+      english: They reopened the main entrance?
+      vietnamese: "H\u1ECD m\u1EDF l\u1EA1i c\u1EEDa ch\xEDnh \xE0?"
+    - role: 0
+      english: No. Brought this one in through the service entrance.
+      vietnamese: "Kh\xF4ng. Ca n\xE0y \u0111\u01B0a v\xE0o qua c\u1EEDa k\u1EF9
+        thu\u1EADt."
+    - role: 0
+      english: Intake sheets are upstairs.
+      vietnamese: "Phi\u1EBFu ti\u1EBFp nh\u1EADn h\u1ECD c\u1EA5t tr\xEAn l\u1EA7u."
+    - role: 1
+      english: Records needs power. Any note on where the fuse went?
+      vietnamese: "Ph\xF2ng tr\xEAn ph\u1EA3i c\xF3 \u0111i\u1EC7n m\u1EDBi v\xE0o
+        \u0111\u01B0\u1EE3c. S\u1ED5 c\xF3 ghi c\u1EA7u ch\xEC \u0111\u1EC3 \u0111\xE2u
+        kh\xF4ng?"
+    - role: 0
+      english: Yeah. Maintenance store, same floor.
+      vietnamese: "C\xF3. Kho b\u1EA3o tr\xEC, ngay c\xF9ng t\u1EA7ng n\xE0y."
+    - role: 1
+      english: I'll grab the fuse. Hold the log so we can match times.
+      vietnamese: "\u0110\u1EC3 t\xF4i \u0111i l\u1EA5y c\u1EA7u ch\xEC. {1} gi\u1EEF
+        s\u1ED5 l\u1EA1i, l\xE1t c\xF2n so gi\u1EDD."
+    soloCues:
+    - role: 0
+      english: Main admissions closed. Service intake stayed open.
+      vietnamese: "S\u1ED5 ghi c\u1EEDa ch\xEDnh ng\u1EEBng ti\u1EBFp nh\u1EADn.
+        C\u1EEDa k\u1EF9 thu\u1EADt v\u1EABn nh\u1EADn ca m\u1EDBi."
+    - role: 2
+      english: Does it say where they stashed that intake sheet?
+      vietnamese: "C\xF3 ghi h\u1ECD c\u1EA5t phi\u1EBFu ti\u1EBFp nh\u1EADn \u1EDF
+        \u0111\xE2u kh\xF4ng?"
+    - role: 0
+      english: Upstairs. Need power to get into records.
+      vietnamese: "Tr\xEAn l\u1EA7u. Ph\u1EA3i c\xF3 \u0111i\u1EC7n m\u1EDBi v\xE0o
+        ph\xF2ng h\u1ED3 s\u01A1 \u0111\u01B0\u1EE3c."
+    - role: 2
+      english: Any mention in the log of a spare fuse?
+      vietnamese: "Trong s\u1ED5 c\xF3 nh\u1EAFc ch\u1ED7 \u0111\u1EC3 c\u1EA7u ch\xEC
+        d\u1EF1 ph\xF2ng kh\xF4ng?"
+    - role: 0
+      english: Yeah. Maintenance store, same floor. Going to grab it.
+      vietnamese: "C\xF3. Kho b\u1EA3o tr\xEC ngay t\u1EA7ng n\xE0y. T\xF4i \u0111i
+        l\u1EA5y lu\xF4n \u0111\xE2y."
   - id: 9
-    speaker: Mira Shaw
-    english: Service power is restored. The records room is accessible. The freight
-      lift still needs security's B2 card.
-    vietnamese: "Ngu\u1ED3n d\u1ECBch v\u1EE5 \u0111\xE3 c\xF3. C\xF3 th\u1EC3 v\xE0o
-      ph\xF2ng h\u1ED3 s\u01A1. Thang h\xE0ng v\u1EABn c\u1EA7n th\u1EBB B2 c\u1EE7a
-      an ninh."
+    speaker: Command
+    english: 'Power''s back.
+
+      Match upstairs intake to the desk log.'
+    vietnamese: "C\xF3 \u0111i\u1EC7n r\u1ED3i.\nSo phi\u1EBFu tr\xEAn t\u1EA7ng
+      v\u1EDBi s\u1ED5 an ninh."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: AsylumPower
     audio: {fileID: 0}
+    firstVoice: 3
+    secondVoice: 4
+    cues:
+    - role: 0
+      english: Records has power. I'll check under C12 upstairs.
+      vietnamese: "Ph\xF2ng h\u1ED3 s\u01A1 c\xF3 \u0111i\u1EC7n r\u1ED3i. T\xF4i
+        l\xEAn t\xECm theo nh\xF3m C12 \u0111\xE2y."
+    - role: 1
+      english: Check the intake time too. Might be more than one sheet.
+      vietnamese: "Nh\u1EDB xem c\u1EA3 gi\u1EDD ti\u1EBFp nh\u1EADn. C\xF9ng nh\xF3m
+        kh\xE9o c\xF3 m\u1EA5y phi\u1EBFu li\u1EC1n."
+    - role: 0
+      english: Zero two forty. That's what security logged, right?
+      vietnamese: "S\u1ED5 b\xE0n b\u1EA3o v\u1EC7 ghi 02:40, \u0111\xFAng kh\xF4ng?"
+    - role: 1
+      english: Right. That's the intake time. The sheet has to match C12 too.
+      vietnamese: "\u0110\xFAng. \u0110\xF3 l\xE0 gi\u1EDD nh\u1EADn. Phi\u1EBFu
+        ph\u1EA3i kh\u1EDBp c\u1EA3 gi\u1EDD l\u1EABn nh\xF3m."
+    soloCues: []
   - id: 10
-    speaker: Mira Shaw
-    english: Intake comparison recorded. Keep its original source in Files and inspect
-      the mortuary transfer record.
-    vietnamese: "\u0110\xE3 ghi k\u1EBFt qu\u1EA3 \u0111\u1ED1i chi\u1EBFu ti\u1EBFp
-      nh\u1EADn. Gi\u1EEF ngu\u1ED3n g\u1ED1c trong Files v\xE0 \u0111\u1ECDc h\u1ED3
-      s\u01A1 chuy\u1EC3n giao nh\xE0 x\xE1c."
+    speaker: Command
+    english: 'P046.
+
+      Check that patient''s mortuary transfer.'
+    vietnamese: "P046.\nXem gi\u1EA5y chuy\u1EC3n nh\xE0 x\xE1c c\u1EE7a ng\u01B0\u1EDDi
+      n\xE0y."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: AsylumPatient
     audio: {fileID: 0}
+    firstVoice: 2
+    secondVoice: 4
+    cues:
+    - role: 0
+      english: "It's P046. Public log says \u201Crecovery transfer.\u201D"
+      vietnamese: "\u0110\xFAng l\xE0 P046 r\u1ED3i. B\u1EA3n c\xF4ng khai ghi \u201Cchuy\u1EC3n
+        \u0111i h\u1ED3i ph\u1EE5c\u201D."
+    - role: 1
+      english: Sent them where?
+      vietnamese: "H\u1ED3i ph\u1EE5c \u1EDF \u0111\xE2u?"
+    - role: 0
+      english: Internal note says B2. Technical observation.
+      vietnamese: "M\u1EE5c n\u1ED9i b\u1ED9 l\u1EA1i ghi th\u1EB3ng xu\u1ED1ng B2.
+        H\u1ECD g\u1ECDi l\xE0 theo d\xF5i k\u1EF9 thu\u1EADt."
+    - role: 1
+      english: Did the transfer go through?
+      vietnamese: "\u0110\xE3 b\xE0n giao ng\u01B0\u1EDDi ch\u01B0a?"
+    - role: 0
+      english: This is just the intake sheet. I'll hunt down the transfer slip.
+      vietnamese: "T\u1EDD n\xE0y m\u1EDBi ch\u1EC9 l\xE0 phi\u1EBFu ti\u1EBFp nh\u1EADn.
+        \u0110\u1EC3 t\xF4i t\xECm xem phi\u1EBFu chuy\u1EC3n \u0111\xE2u."
+    soloCues: []
   - id: 11
-    speaker: Mira Shaw
-    english: Transfer comparison recorded. Preserve both original documents and use
-      the retained access card at the freight lift.
-    vietnamese: "\u0110\xE3 ghi k\u1EBFt qu\u1EA3 \u0111\u1ED1i chi\u1EBFu chuy\u1EC3n
-      giao. Gi\u1EEF c\u1EA3 hai t\xE0i li\u1EC7u g\u1ED1c v\xE0 d\xF9ng th\u1EBB
-      ra v\xE0o t\u1EA1i thang h\xE0ng."
+    speaker: Command
+    english: 'Logged dead at 03:05.
+
+      Transferred alive at 03:50.'
+    vietnamese: "Ghi t\u1EED vong l\xFAc 03:05.\nChuy\u1EC3n \u0111i c\xF2n s\u1ED1ng
+      l\xFAc 03:50."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: AsylumTransfer
     audio: {fileID: 0}
+    firstVoice: 2
+    secondVoice: 0
+    cues:
+    - role: 0
+      english: Command, mortuary logged P046 dead at zero three oh five.
+      vietnamese: "B\u1ED9 ch\u1EC9 huy, s\u1ED5 nh\xE0 x\xE1c ghi P046 t\u1EED vong
+        l\xFAc 03:05."
+    - role: 2
+      english: Then who went down to B2?
+      vietnamese: "V\u1EADy ng\u01B0\u1EDDi \u0111\u01B0a xu\u1ED1ng B2 l\xE0 ai?"
+    - role: 0
+      english: P046. Zero three fifty.
+      vietnamese: "V\u1EABn l\xE0 P046. L\xFAc 03:50."
+    - role: 0
+      english: At handover, they signed the patient off as alive.
+      vietnamese: "\xD4 t\xECnh tr\u1EA1ng l\xFAc b\xE0n giao... h\u1ECD v\u1EABn
+        ghi c\xF2n s\u1ED1ng."
+    - role: 2
+      english: Could be a clerical error. Check the wristband numbers, {1}.
+      vietnamese: "Bi\u1EBFt \u0111\xE2u h\u1ECD ch\xE9p nh\u1EA7m m\xE3. {1}, xem
+        l\u1EA1i s\u1ED1 v\xF2ng tay."
+    - role: 0
+      english: Already did. Same wristband. Exact one they put on at intake.
+      vietnamese: "T\xF4i so r\u1ED3i. Tr\xF9ng t\u1EEBng s\u1ED1 m\u1ED9t v\u1EDBi
+        v\xF2ng \u0111eo l\xFAc m\u1EDBi nh\u1EADp vi\u1EC7n."
+    - role: 2
+      english: Anything else on P046 after that transfer?
+      vietnamese: "Sau l\u1EA7n chuy\u1EC3n \u0111\xF3, c\xF2n gi\u1EA5y t\u1EDD
+        n\xE0o v\u1EC1 P046 n\u1EEFa kh\xF4ng?"
+    - role: 0
+      english: Nothing. That B2 transfer's the last paper trail I have.
+      vietnamese: "Kh\xF4ng. Phi\u1EBFu chuy\u1EC3n xu\u1ED1ng B2 l\xE0 t\u1EDD cu\u1ED1i
+        c\xF9ng."
+    - role: 2
+      english: Keep both. Investigators need them side by side.
+      vietnamese: "Gi\u1EEF c\u1EA3 hai t\u1EDD l\u1EA1i. T\u1ED5 \u0111i\u1EC1u
+        tra c\u1EA7n xem hai t\u1EDD c\xF9ng l\xFAc."
+    - role: 0
+      english: Roger. Keeping them together.
+      vietnamese: "\u0110\xE3 r\xF5. T\xF4i k\u1EB9p chung hai t\u1EDD l\u1EA1i."
+    soloCues: []
   - id: 12
-    speaker: Mira Shaw
-    english: Emergency power configuration recorded. Keep the procedure in Files
-      and inspect the original archive.
-    vietnamese: "\u0110\xE3 ghi c\u1EA5u h\xECnh \u0111i\u1EC7n kh\u1EA9n c\u1EA5p.
-      Gi\u1EEF quy tr\xECnh trong Files v\xE0 \u0111\u1ECDc h\u1ED3 s\u01A1 g\u1ED1c."
+    speaker: Command
+    english: 'Power''s holding.
+
+      Find the original archive.'
+    vietnamese: "\u0110i\u1EC7n \u1ED5n r\u1ED3i.\nT\xECm h\u1ED3 s\u01A1 g\u1ED1c."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: LabPower
     audio: {fileID: 0}
+    firstVoice: 3
+    secondVoice: 4
+    cues:
+    - role: 0
+      english: Data's got power. {2}, is the terminal up?
+      vietnamese: "Nh\xE1nh d\u1EEF li\u1EC7u c\xF3 \u0111i\u1EC7n r\u1ED3i. {2},
+        m\xE1y ch\u1EA1y ch\u01B0a?"
+    - role: 1
+      english: It's up. Thought we'd have to kill the lift to run it.
+      vietnamese: "L\xEAn r\u1ED3i. T\u01B0\u1EDFng b\u1EADt m\xE1y ph\u1EA3i c\u1EAFt
+        ngu\u1ED3n thang ch\u1EE9."
+    - role: 0
+      english: Lift's still live. I killed the test rig instead.
+      vietnamese: "Thang v\u1EABn c\xF2n \u0111i\u1EC7n. T\xF4i ng\u1EAFt gi\xE0n
+        th\u1EED \u0111\u1EC3 \u0111\u1EE7 t\u1EA3i."
+    - role: 1
+      english: Good. Pulling up P046 now.
+      vietnamese: "\u1ED4n r\u1ED3i. \u0110\u1EC3 t\xF4i tra m\xE3 P046 ngay."
+    soloCues:
+    - role: 0
+      english: Data's powered. Opening the original archive now.
+      vietnamese: "Nh\xE1nh d\u1EEF li\u1EC7u c\xF3 \u0111i\u1EC7n r\u1ED3i. T\xF4i
+        chu\u1EA9n b\u1ECB m\u1EDF b\u1EA3n g\u1ED1c."
+    - role: 2
+      english: And the freight lift still has power?
+      vietnamese: "C\xF2n \u0111i\u1EC7n thang h\xE0ng th\xEC sao?"
+    - role: 0
+      english: Both circuits are live. I cut the test rig.
+      vietnamese: "V\u1EABn gi\u1EEF c\u1EA3 hai nh\xE1nh. T\xF4i c\u1EAFt gi\xE0n
+        th\u1EED r\u1ED3i."
   - id: 13
-    speaker: Mira Shaw
-    english: Original archive verified. Preserve the complete records and recover
-      the sealed laboratory case.
-    vietnamese: "\u0110\xE3 x\xE1c minh h\u1ED3 s\u01A1 g\u1ED1c. Gi\u1EEF \u0111\u1EA7y
-      \u0111\u1EE7 h\u1ED3 s\u01A1 v\xE0 thu h\u1ED3i ki\u1EC7n b\u1EB1ng ch\u1EE9ng
-      ph\xF2ng th\xED nghi\u1EC7m."
+    speaker: Command
+    english: 'E-02.
+
+      Get the original records, names and all.'
+    vietnamese: "E-02.\nL\u1EA5y h\u1ED3 s\u01A1 g\u1ED1c, gi\u1EEF c\u1EA3 t\xEAn
+      b\u1EC7nh nh\xE2n."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: LabArchive
     audio: {fileID: 0}
+    firstVoice: 4
+    secondVoice: 2
+    cues:
+    - role: 0
+      english: I've got the original E-02. Patient names are all here.
+      vietnamese: "T\xF4i m\u1EDF \u0111\u01B0\u1EE3c b\u1EA3n g\u1ED1c E-02 r\u1ED3i.
+        C\xF2n nguy\xEAn c\u1EA3 b\u1EA3ng t\xEAn b\u1EC7nh nh\xE2n."
+    - role: 1
+      english: Can you tie the names to the Northbridge IDs?
+      vietnamese: "T\xEAn tr\xEAn \u0111\xF3 c\xF3 kh\u1EDBp v\u1EDBi m\xE3 \u1EDF
+        vi\u1EC7n kh\xF4ng?"
+    - role: 0
+      english: Easily. Names and IDs sit in the same table.
+      vietnamese: "Kh\u1EDBp h\u1EBFt. T\xEAn v\u1EDBi m\xE3 n\u1EB1m chung b\u1EA3ng."
+    - role: 0
+      english: "Cole's request to halt the trial\u2014 that's still in here too."
+      vietnamese: "\u0110\u01A1n xin d\u1EEBng th\u1EED nghi\u1EC7m c\u1EE7a b\xE1c
+        s\u0129 Cole c\u0169ng c\xF2n nguy\xEAn \u0111\xE2y."
+    - role: 1
+      english: What about the export they cut for the client?
+      vietnamese: "Th\u1EBF c\xF2n b\u1EA3n h\u1ECD xu\u1EA5t cho b\xEAn thu\xEA?"
+    - role: 0
+      english: Scrubbed both right out. Nothing left but sample data.
+      vietnamese: "C\u1EAFt s\u1EA1ch c\u1EA3 hai m\u1EE5c \u0111\xF3 r\u1ED3i. Ch\u1EC9
+        ch\u1EEBa l\u1EA1i m\u1ED7i d\u1EEF li\u1EC7u m\u1EABu."
+    - role: 1
+      english: Keep the names in the archive.
+      vietnamese: "Gi\u1EEF b\u1EA3ng t\xEAn trong kho l\u01B0u tr\u1EEF th\xF4i."
+    - role: 1
+      english: Don't read them over the net.
+      vietnamese: "\u0110\u1EEBng \u0111\u1ECDc t\xEAn ng\u01B0\u1EDDi ta tr\xEAn
+        k\xEAnh."
+    - role: 0
+      english: Copy. IDs only on the air.
+      vietnamese: "R\xF5. Qua b\u1ED9 \u0111\xE0m t\xF4i ch\u1EC9 b\xE1o m\xE3."
+    soloCues: []
   - id: 14
-    speaker: Mira Shaw
-    english: Both cases are secured. Copy the full archive to BRT custody before
-      you leave.
-    vietnamese: "\u0110\xE3 gi\u1EEF c\u1EA3 hai ki\u1EC7n. Sao ch\xE9p to\xE0n b\u1ED9
-      h\u1ED3 s\u01A1 t\u1EDBi BRT tr\u01B0\u1EDBc khi r\u1EDDi \u0111i."
+    speaker: Command
+    english: 'Both cases secured.
+
+      Send the full archive before you leave.'
+    vietnamese: "\u0110\u1EE7 hai ki\u1EC7n r\u1ED3i.\nG\u1EEDi to\xE0n b\u1ED9 h\u1ED3
+      s\u01A1 tr\u01B0\u1EDBc khi r\xFAt."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: LabCase
     audio: {fileID: 0}
+    firstVoice: 1
+    secondVoice: 0
+    cues:
+    - role: 0
+      english: Command, Vanguard has both cases.
+      vietnamese: "B\xE1o c\xE1o B\u1ED9 ch\u1EC9 huy, Vanguard gi\u1EEF \u0111\u1EE7
+        c\u1EA3 hai ki\u1EC7n r\u1ED3i."
+    - role: 0
+      english: Request clearance to pull out of B2.
+      vietnamese: "Xin l\u1EC7nh cho \u0111\u1ED9i r\xFAt kh\u1ECFi B2."
+    - role: 2
+      english: Not yet. I need a full copy outside before you leave B2.
+      vietnamese: "Khoan \u0111\xE3. B\u1EA3n \u0111\u1EA7y \u0111\u1EE7 ph\u1EA3i
+        g\u1EEDi ra ngo\xE0i tr\u01B0\u1EDBc khi \u0111\u1ED9i r\u1EDDi B2."
+    - role: 0
+      english: Confirm who's taking it.
+      vietnamese: "Xin x\xE1c nh\u1EADn \u0111\u1EA7u nh\u1EADn."
+    - role: 2
+      english: BRT's receiving station. I'm waiting on their confirmation.
+      vietnamese: "Tr\u1EA1m ti\u1EBFp nh\u1EADn c\u1EE7a BRT. T\xF4i ch\u1EDD b\xEAn
+        \u0111\xF3 b\xE1o nh\u1EADn \u0111\u1EE7."
+    - role: 0
+      english: Roger. We'll hold until BRT confirms.
+      vietnamese: "\u0110\xE3 r\xF5. \u0110\u1ED9i t\xF4i ch\u1EDD BRT b\xE1o nh\u1EADn."
+    soloCues: []
   - id: 15
-    speaker: Mira Shaw
-    english: Service interlock is cycling. Hold the control room; the route will
-      wait for the living squad.
-    vietnamese: "Kh\xF3a d\u1ECBch v\u1EE5 \u0111ang ch\u1EA1y chu tr\xECnh. Gi\u1EEF
-      ph\xF2ng \u0111i\u1EC1u khi\u1EC3n, tuy\u1EBFn s\u1EBD \u0111\u1EE3i c\xE1c
-      th\xE0nh vi\xEAn c\xF2n s\u1ED1ng."
+    speaker: Command
+    english: 'Interlock''s cycling.
+
+      Hold the control room.'
+    vietnamese: "Kh\xF3a li\xEAn \u0111\u1ED9ng \u0111ang ch\u1EA1y.\nGi\u1EEF ph\xF2ng
+      \u0111i\u1EC1u khi\u1EC3n."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: Factory/Encounter
     audio: {fileID: 0}
+    firstVoice: 1
+    secondVoice: 3
+    cues:
+    - role: 0
+      english: '{2}, I hit the release. Door''s not budging.'
+      vietnamese: "{2}, t\xF4i b\u1EA5m m\u1EDF r\u1ED3i. M\xE0 c\u1EEDa v\u1EABn
+        ch\u01B0a nh\xFAc nh\xEDch g\xEC."
+    - role: 1
+      english: Lock's still cycling. Mashing it won't hurry it along.
+      vietnamese: "Kh\xF3a c\xF2n \u0111ang nh\u1EA3. B\u1EA5m n\u1EEFa n\xF3 c\u0169ng
+        ch\u1EB3ng nhanh h\u01A1n."
+    - role: 0
+      english: I'll hold the case in here. Call me when it clears.
+      vietnamese: "T\xF4i \xF4m ki\u1EC7n ch\u1EDD trong ph\xF2ng. C\u1EEDa m\u1EDF
+        th\xEC g\u1ECDi."
+    - role: 1
+      english: Copy. I'll watch the door.
+      vietnamese: "R\xF5. \u0110\u1EC3 t\xF4i \u0111\u1EE9ng canh c\u1EEDa."
+    soloCues:
+    - role: 0
+      english: I hit the release. Door's not budging.
+      vietnamese: "T\xF4i b\u1EA5m m\u1EDF r\u1ED3i. C\u1EEDa v\u1EABn ch\u01B0a
+        nh\xFAc nh\xEDch g\xEC."
+    - role: 2
+      english: Let the lock finish cycling. Hold inside the control room.
+      vietnamese: "C\u1EE9 ch\u1EDD kh\xF3a nh\u1EA3 h\u1EBFt. \u1EDE y\xEAn trong
+        ph\xF2ng \u0111i\u1EC1u khi\u1EC3n."
+    - role: 0
+      english: Copy. Holding the case till it clears.
+      vietnamese: "R\xF5. T\xF4i \xF4m ki\u1EC7n ch\u1EDD \u0111\xE2y t\u1EDBi khi
+        c\u1EEDa m\u1EDF."
   - id: 16
-    speaker: Mira Shaw
-    english: The B2 lift is cycling. You can evade the Tank. Keep the route to the
-      landing clear and recover anyone downed.
-    vietnamese: "Thang B2 \u0111ang ch\u1EA1y. C\xF3 th\u1EC3 n\xE9 Tank. Gi\u1EEF
-      tuy\u1EBFn t\u1EDBi s\u1EA3nh th\xF4ng v\xE0 c\u1EE9u ng\u01B0\u1EDDi b\u1ECB
-      h\u1EA1."
+    speaker: Command
+    english: 'Lift''s coming.
+
+      Leave the Tank behind.'
+    vietnamese: "Thang \u0111ang t\u1EDBi.\nB\u1ECF qua Tank."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: Asylum/Encounter
     audio: {fileID: 0}
+    firstVoice: 1
+    secondVoice: 0
+    cues:
+    - role: 0
+      english: Command, lift's been called. Vanguard's holding at the doors.
+      vietnamese: "B\u1ED9 ch\u1EC9 huy, t\xF4i b\u1EA5m g\u1ECDi thang r\u1ED3i.
+        C\u1EA3 \u0111\u1ED9i \u0111ang ch\u1EDD ngo\xE0i c\u1EEDa."
+    - role: 2
+      english: Copy, {1}. Your priority is getting to B2.
+      vietnamese: "\u0110\xE3 nh\u1EADn, {1}. L\xFAc n\xE0y \u01B0u ti\xEAn s\u1ED1
+        m\u1ED9t l\xE0 xu\u1ED1ng B2."
+    - role: 0
+      english: What if another Tank shows up like at the factory?
+      vietnamese: "L\u1EE1 l\u1EA1i \u0111\u1EE5ng Tank nh\u01B0 h\u1ED3i \u1EDF
+        nh\xE0 m\xE1y th\xEC sao?"
+    - role: 2
+      english: Don't bog down fighting it. Doors open, get the team aboard.
+      vietnamese: "\u0110\u1EEBng d\xE2y d\u01B0a v\u1EDBi n\xF3. Thang m\u1EDF l\xE0
+        \u0111\u01B0a \u0111\u1ED9i xu\u1ED1ng ngay."
+    - role: 0
+      english: Roger that. We'll wait for the lift.
+      vietnamese: "\u0110\xE3 r\xF5. \u0110\u1ED9i t\xF4i \u0111\u1EE9ng ch\u1EDD
+        thang."
+    soloCues: []
   - id: 17
-    speaker: Mira Shaw
-    english: Transmission is running. Keep moving and cover the data path. You do
-      not need to kill the Tank to leave.
-    vietnamese: "\u0110ang truy\u1EC1n. Ti\u1EBFp t\u1EE5c di chuy\u1EC3n, b\u1EA3o
-      v\u1EC7 \u0111\u01B0\u1EDDng d\u1EEF li\u1EC7u. Kh\xF4ng c\u1EA7n h\u1EA1 Tank
-      \u0111\u1EC3 tho\xE1t."
+    speaker: Command
+    english: 'Keep moving.
+
+      You don''t need to kill the Tank.'
+    vietnamese: "C\u1EE9 di chuy\u1EC3n.\nKh\xF4ng c\u1EA7n h\u1EA1 Tank."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: Laboratory/Encounter
     audio: {fileID: 0}
+    firstVoice: 3
+    secondVoice: 0
+    cues:
+    - role: 0
+      english: Transfer's running. Do I need to babysit the terminal?
+      vietnamese: "M\xE1y \u0111ang truy\u1EC1n r\u1ED3i. T\xF4i c\xF3 ph\u1EA3i
+        \u0111\u1EE9ng canh m\xE1y kh\xF4ng?"
+    - role: 2
+      english: No, it runs on its own. Tank shows up, stay clear of it.
+      vietnamese: "Kh\xF4ng c\u1EA7n, m\xE1y t\u1EF1 ch\u1EA1y. Tank m\xF2 t\u1EDBi
+        th\xEC c\u1EE9 n\xE9 n\xF3 ra."
+    - role: 0
+      english: Copy. Ping me once they have the whole file.
+      vietnamese: "R\xF5. \u0110\u1EA7u kia nh\u1EADn \u0111\u1EE7 th\xEC g\u1ECDi
+        t\xF4i."
+    soloCues: []
   - id: 18
-    speaker: Mira Shaw
-    english: The route is ready. Enter the boarding zone and wait for the departure
-      countdown.
-    vietnamese: "Tuy\u1EBFn \u0111\u01B0\u1EDDng \u0111\xE3 s\u1EB5n s\xE0ng. V\xE0o
-      v\xF9ng l\xEAn \u0111\u01B0\u1EDDng v\xE0 ch\u1EDD \u0111\u1EBFm ng\u01B0\u1EE3c
-      kh\u1EDFi h\xE0nh."
+    speaker: Command
+    english: 'Exit''s open.
+
+      Get your people there.'
+    vietnamese: "L\u1ED1i ra m\u1EDF r\u1ED3i.\nT\u1EADp h\u1EE3p c\u1EA3 \u0111\u1ED9i
+      \u1EDF \u0111\xF3."
     priority: 2
     cooldown: 0
     oncePerRun: 0
     trigger: AwaitingParty
     audio: {fileID: 0}
+    firstVoice: 1
+    secondVoice: 0
+    cues:
+    - role: 2
+      english: Vanguard, exit's open. Are you there yet?
+      vietnamese: "Vanguard, l\u1ED1i ra m\u1EDF r\u1ED3i. \u0110\u1ED9i t\u1EDBi
+        n\u01A1i ch\u01B0a?"
+    - role: 0
+      english: On my way. I'll call when I get there.
+      vietnamese: "\u0110ang ch\u1EA1y t\u1EDBi. T\u1EDBi n\u01A1i t\xF4i b\xE1o
+        ngay."
+    - role: 2
+      english: Copy. Keeping the channel clear for your call.
+      vietnamese: "R\xF5. T\xF4i gi\u1EEF k\xEAnh ch\u1EDD tin."
+    soloCues: []
   - id: 19
-    speaker: Mira Shaw
-    english: Cabin secured. Descending to B2. Wait for the receiving door before
-      moving out.
-    vietnamese: "Khoang \u0111\xE3 kh\xF3a. \u0110ang xu\u1ED1ng B2. \u0110\u1EE3i
-      c\u1EEDa nh\u1EADn r\u1ED3i m\u1EDBi ra."
+    speaker: Command
+    english: 'B2 next.
+
+      Wait till the door''s fully open.'
+    vietnamese: "S\u1EAFp xu\u1ED1ng B2.\n\u0110\u1EE3i c\u1EEDa m\u1EDF h\u1EB3n."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: Asylum/Transitioning
     audio: {fileID: 0}
+    firstVoice: 1
+    secondVoice: 2
+    cues:
+    - role: 0
+      english: '{2}, what are we looking for first once we hit B2?'
+      vietnamese: "{2}, xu\u1ED1ng t\u1EDBi B2 th\xEC t\xECm c\xE1i g\xEC tr\u01B0\u1EDBc
+        \u0111\xE2y?"
+    - role: 1
+      english: The receiving log. Upstairs only shows they sent them.
+      vietnamese: "S\u1ED5 b\xE0n giao. Tr\xEAn vi\u1EC7n m\u1EDBi ch\u1EC9 ghi \u0111\xE3
+        chuy\u1EC3n \u0111i."
+    - role: 1
+      english: I want to know who signed for them down on B2.
+      vietnamese: "T\xF4i mu\u1ED1n bi\u1EBFt d\u01B0\u1EDBi B2 ai l\xE0 ng\u01B0\u1EDDi
+        k\xFD nh\u1EADn."
+    - role: 0
+      english: Fair enough. I'll step out first once the doors clear.
+      vietnamese: "\u0110\u01B0\u1EE3c. Ch\u1EDD c\u1EEDa m\u1EDF h\u1EB3n t\xF4i
+        b\u01B0\u1EDBc ra tr\u01B0\u1EDBc."
+    soloCues:
+    - role: 0
+      english: Heading down to B2. I'll look for the receiving log first.
+      vietnamese: "T\xF4i \u0111ang xu\u1ED1ng B2. T\u1EDBi n\u01A1i t\xF4i t\xECm
+        s\u1ED5 b\xE0n giao tr\u01B0\u1EDBc."
+    - role: 2
+      english: Good. Wait till the doors clear all the way before stepping out.
+      vietnamese: "T\u1ED1t. Ch\u1EDD c\u1EEDa m\u1EDF h\u1EB3n r\u1ED3i h\xE3y b\u01B0\u1EDBc
+        ra."
+    - role: 0
+      english: Copy. I'll call in anything on P046.
+      vietnamese: "R\xF5. C\xF3 g\xEC ghi v\u1EC1 P046 t\xF4i b\xE1o ngay."
   - id: 20
-    speaker: Mira Shaw
-    english: Vanguard is clear with both cases. The complete copy is in BRT custody.
-      The facility remains quarantined. We have the evidence; the investigation starts
-      now.
-    vietnamese: "Vanguard ra ngo\xE0i c\xF9ng hai ki\u1EC7n. BRT gi\u1EEF b\u1EA3n
-      sao \u0111\u1EA7y \u0111\u1EE7. C\u01A1 s\u1EDF v\u1EABn phong t\u1ECFa. \u0110\xE3
-      c\xF3 b\u1EB1ng ch\u1EE9ng; \u0111i\u1EC1u tra b\u1EAFt \u0111\u1EA7u."
+    speaker: Command
+    english: 'Both cases out.
+
+      BRT has the full copy. Quarantine holds.'
+    vietnamese: "\u0110\u1EE7 hai ki\u1EC7n ra ngo\xE0i.\nBRT nh\u1EADn \u0111\u1EE7
+      b\u1EA3n sao. V\u1EABn gi\u1EEF phong t\u1ECFa."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: Completed
     audio: {fileID: 0}
+    firstVoice: 1
+    secondVoice: 0
+    cues:
+    - role: 0
+      english: Command, Vanguard is clear. Both cases accounted for.
+      vietnamese: "B\u1ED9 ch\u1EC9 huy, Vanguard ra ngo\xE0i r\u1ED3i. \u0110\u1EE7
+        c\u1EA3 hai ki\u1EC7n."
+    - role: 2
+      english: Roger, Vanguard. BRT has the full copy on file.
+      vietnamese: "\u0110\xE3 nh\u1EADn, Vanguard. BRT \u0111\xE3 l\u01B0u b\u1EA3n
+        sao \u0111\u1EA7y \u0111\u1EE7."
+    - role: 0
+      english: What do I put down for P046's status?
+      vietnamese: "C\xF2n t\xECnh tr\u1EA1ng c\u1EE7a P046, b\xE1o c\xE1o t\xF4i
+        ghi th\u1EBF n\xE0o?"
+    - role: 2
+      english: Mark it unknown. Investigators will take it from here.
+      vietnamese: "C\u1EE9 ghi ch\u01B0a x\xE1c \u0111\u1ECBnh. T\u1ED5 \u0111i\u1EC1u
+        tra s\u1EBD x\xE1c minh ti\u1EBFp."
+    - role: 2
+      english: Quarantine remains in effect.
+      vietnamese: "L\u1EC7nh phong t\u1ECFa v\u1EABn gi\u1EEF nguy\xEAn."
+    - role: 0
+      english: Roger that. I'll brief the team at handover.
+      vietnamese: "\u0110\xE3 r\xF5. L\xFAc b\xE0n giao t\xF4i b\xE1o l\u1EA1i cho
+        \u0111\u1ED9i."
+    - role: 2
+      english: Command out.
+      vietnamese: "B\u1ED9 ch\u1EC9 huy, h\u1EBFt."
+    soloCues: []
   - id: 21
-    speaker: Mira Shaw
-    english: Complete copy received outside the facility. Patient records included.
-      Keep both cases and board the freight lift.
-    vietnamese: "\u0110\xE3 nh\u1EADn b\u1EA3n sao \u0111\u1EA7y \u0111\u1EE7 b\xEAn
-      ngo\xE0i, g\u1ED3m h\u1ED3 s\u01A1 b\u1EC7nh nh\xE2n. Gi\u1EEF hai ki\u1EC7n
-      v\xE0 l\xEAn thang h\xE0ng."
+    speaker: Command
+    english: 'Full copy received off-site.
+
+      Take both cases to the lift and
+      wait.'
+    vietnamese: "\u0110\xE3 nh\u1EADn \u0111\u1EE7 b\u1EA3n sao ngo\xE0i c\u01A1
+      s\u1EDF.\nMang hai ki\u1EC7n t\u1EDBi thang r\u1ED3i ch\u1EDD."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: EvidenceTransmitted
     audio: {fileID: 0}
+    firstVoice: 4
+    secondVoice: 0
+    cues:
+    - role: 2
+      english: Vanguard, the station confirms it has the full E-02 copy.
+      vietnamese: "Vanguard, tr\u1EA1m ngo\xE0i b\xE1o \u0111\xE3 nh\u1EADn \u0111\u1EE7
+        b\u1EA3n sao E-02."
+    - role: 0
+      english: Copy. Where do you want the two cases?
+      vietnamese: "\u0110\xE3 nh\u1EADn. C\xF2n hai ki\u1EC7n h\xE0ng, gi\u1EDD mang
+        \u0111i \u0111\xE2u?"
+    - role: 2
+      english: Haul both to the freight lift and hold there.
+      vietnamese: "Mang c\u1EA3 hai ra thang h\xE0ng r\u1ED3i ch\u1EDD \u1EDF \u0111\xF3."
+    - role: 0
+      english: Roger. We'll bring both cases to the lift and wait there.
+      vietnamese: "\u0110\xE3 r\xF5. \u0110\u1ED9i t\xF4i s\u1EBD \u0111\u01B0a c\u1EA3
+        hai ki\u1EC7n t\u1EDBi thang h\xE0ng r\u1ED3i ch\u1EDD \u1EDF \u0111\xF3."
+    soloCues: []
   - id: 22
     speaker: Anonymous Client
-    english: Retain the sample. Remove patient identities and internal objections
-      before transmission. Deliver the abbreviated package. That is the contract.
-    vietnamese: "Gi\u1EEF m\u1EABu. X\xF3a danh t\xEDnh b\u1EC7nh nh\xE2n v\xE0 ph\u1EA3n
-      \u0111\u1ED1i n\u1ED9i b\u1ED9 tr\u01B0\u1EDBc khi truy\u1EC1n. Giao g\xF3i
-      r\xFAt g\u1ECDn. H\u1EE3p \u0111\u1ED3ng y\xEAu c\u1EA7u v\u1EADy."
+    english: 'Keep the sample.
+
+      No names or staff objections go out.'
+    vietnamese: "Gi\u1EEF m\u1EABu.\nB\u1EA3n g\u1EEDi b\u1ECF t\xEAn, ph\u1EA3n
+      \u0111\u1ED1i c\u1EE7a nh\xE2n vi\xEAn."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: LabTransmit
     audio: {fileID: 0}
+    firstVoice: 4
+    secondVoice: 0
+    cues:
+    - role: 3
+      english: Vanguard, the export's for sample data only.
+      vietnamese: "Vanguard, l\xFAc xu\u1EA5t h\u1ED3 s\u01A1, b\xEAn t\xF4i ch\u1EC9
+        l\u1EA5y ph\u1EA7n d\u1EEF li\u1EC7u m\u1EABu."
+    - role: 3
+      english: Strip out the patient identifiers.
+      vietnamese: "L\u01B0\u1EE3c h\u1EBFt ph\u1EA7n \u0111\u1ECBnh danh b\u1EC7nh
+        nh\xE2n \u0111i."
+    - role: 0
+      english: Wipe the names, and how do you match samples to patients?
+      vietnamese: "X\xF3a s\u1EA1ch t\xEAn th\xEC sau n\xE0y bi\u1EBFt m\u1EABu n\xE0o
+        g\u1EAFn v\u1EDBi ng\u01B0\u1EDDi n\xE0o?"
+    - role: 3
+      english: We track samples by lot number.
+      vietnamese: "Ch\xFAng t\xF4i qu\u1EA3n l\xFD m\u1EABu theo s\u1ED1 l\xF4."
+    - role: 3
+      english: Cut any staff objections from the export as well.
+      vietnamese: "B\u1ECF lu\xF4n ph\u1EA7n nh\xE2n vi\xEAn ph\u1EA3n \u0111\u1ED1i
+        kh\u1ECFi b\u1EA3n xu\u1EA5t."
+    - role: 0
+      english: Just the export, or the original E-02 too?
+      vietnamese: "Ch\u1EC9 c\u1EAFt tr\xEAn b\u1EA3n xu\u1EA5t, hay s\u1EEDa lu\xF4n
+        b\u1EA3n g\u1ED1c E-02?"
+    - role: 3
+      english: Just the export. Leave the original on site.
+      vietnamese: "Ch\u1EC9 b\u1EA3n xu\u1EA5t th\xF4i. B\u1EA3n g\u1ED1c c\u1EE9
+        \u0111\u1EC3 nguy\xEAn t\u1EA1i ch\u1ED7."
+    soloCues: []
   - id: 23
-    speaker: Mira Shaw
-    english: That is a concealment order, not a BRT directive. Preserve the original
-      and transmit everything, including patient data. I will confirm receipt outside.
-    vietnamese: "\u0110\xF3 l\xE0 l\u1EC7nh che gi\u1EA5u, kh\xF4ng ph\u1EA3i ch\u1EC9
-      th\u1ECB BRT. Gi\u1EEF b\u1EA3n g\u1ED1c, truy\u1EC1n t\u1EA5t c\u1EA3 k\u1EC3
-      c\u1EA3 d\u1EEF li\u1EC7u b\u1EC7nh nh\xE2n. T\xF4i x\xE1c nh\u1EADn nh\u1EADn
-      b\xEAn ngo\xE0i."
+    speaker: Command
+    english: 'Ignore that.
+
+      Send it all. Names and objections too.'
+    vietnamese: "B\u1ECF l\u1EC7nh \u0111\xF3.\nG\u1EEDi h\u1EBFt, c\u1EA3 t\xEAn
+      l\u1EABn \xFD ki\u1EBFn ph\u1EA3n \u0111\u1ED1i."
     priority: 2
     cooldown: 0
     oncePerRun: 1
     trigger: LabTransmit/AfterClientOrder
     audio: {fileID: 0}
+    firstVoice: 4
+    secondVoice: 0
+    cues:
+    - role: 2
+      english: Vanguard, leave E-02 untouched. Send the full copy to BRT.
+      vietnamese: "Vanguard, gi\u1EEF nguy\xEAn b\u1EA3n E-02. G\u1EEDi tr\u1ECDn
+        b\u1ED9 v\u1EC1 BRT."
+    - role: 3
+      english: We won't sign for a copy that identifies patients.
+      vietnamese: "N\u1EBFu c\xF2n \u0111\u1EC3 danh t\xEDnh b\u1EC7nh nh\xE2n, b\xEAn
+        t\xF4i t\u1EEB ch\u1ED1i k\xFD nh\u1EADn."
+    - role: 2
+      english: BRT will take it. I'm authorizing the transfer.
+      vietnamese: "BRT s\u1EBD \u0111\u1EE9ng ra nh\u1EADn. L\u1EC7nh truy\u1EC1n
+        n\xE0y t\xF4i ch\u1ECBu tr\xE1ch nhi\u1EC7m."
+    - role: 0
+      english: Confirming. Patient names and staff objections stay in?
+      vietnamese: "Xin x\xE1c nh\u1EADn l\u1EA1i. Gi\u1EEF t\xEAn b\u1EC7nh nh\xE2n
+        v\u1EDBi ph\u1EA7n ph\u1EA3n \u0111\u1ED1i?"
+    - role: 2
+      english: Confirmed. Send the entire archive.
+      vietnamese: "X\xE1c nh\u1EADn. Truy\u1EC1n tr\u1ECDn b\u1ED9 h\u1ED3 s\u01A1
+        \u0111i."
+    - role: 0
+      english: Roger that. Sending now.
+      vietnamese: "\u0110\xE3 r\xF5. T\xF4i cho truy\u1EC1n ngay \u0111\xE2y."
+    soloCues: []
   - id: 24
-    speaker: Mira Shaw
-    english: Operator down. Cover the approach and get them back on their feet.
-    vietnamese: "C\xF3 \u0111\u1EB7c v\u1EE5 b\u1ECB h\u1EA1. Y\u1EC3m tr\u1EE3 \u0111\u01B0\u1EDDng
-      t\u1EDBi v\xE0 c\u1EE9u h\u1ECD."
+    speaker: Command
+    english: 'One down!
+
+      Cover them and get them up.'
+    vietnamese: "M\u1ED9t ng\u01B0\u1EDDi g\u1EE5c!\nY\u1EC3m tr\u1EE3 v\xE0 c\u1EE9u
+      h\u1ECD d\u1EADy."
     priority: 1
     cooldown: 12
     oncePerRun: 0
     trigger: LifeState/Downed
     audio: {fileID: 0}
+    firstVoice: 5
+    secondVoice: 5
+    cues:
+    - role: 0
+      english: Vanguard, I'm down! Can't get back up!
+      vietnamese: "Vanguard, t\xF4i g\u1EE5c r\u1ED3i! Kh\xF4ng t\u1EF1 \u0111\u1EE9ng
+        d\u1EADy n\u1ED5i!"
+    - role: 1
+      english: Copy! Coming to you now.
+      vietnamese: "R\xF5! T\xF4i qua ngay \u0111\xE2y."
+    soloCues:
+    - role: 0
+      english: Command, I'm down! Do you read me?
+      vietnamese: "B\u1ED9 ch\u1EC9 huy, t\xF4i g\u1EE5c r\u1ED3i! C\xF3 nghe th\u1EA5y
+        t\xF4i kh\xF4ng?"
+    - role: 2
+      english: Loud and clear. Stay on the line with me.
+      vietnamese: "Nghe r\xF5. C\u1ED1 gi\u1EEF li\xEAn l\u1EA1c v\u1EDBi t\xF4i."
   - id: 25
-    speaker: Mira Shaw
-    english: Tank contact. Make room; do not let it pin the squad in a corridor.
-    vietnamese: "G\u1EB7p Tank. Gi\xE3n \u0111\u1ED9i h\xECnh, \u0111\u1EEBng \u0111\u1EC3
-      n\xF3 \xE9p c\u1EA3 \u0111\u1ED9i trong h\xE0nh lang."
+    speaker: Command
+    english: 'Tank!
+
+      Don''t let it corner you.'
+    vietnamese: "Tank!\n\u0110\u1EEBng \u0111\u1EC3 n\xF3 d\u1ED3n v\xE0o g\xF3c."
     priority: 1
     cooldown: 12
     oncePerRun: 0
     trigger: Special/Tank
     audio: {fileID: 0}
+    firstVoice: 3
+    secondVoice: 1
+    cues:
+    - role: 0
+      english: Tank! {2}, give me room to back off!
+      vietnamese: "Tank! {2}, ch\u1EEBa l\u1ED1i cho t\xF4i l\xF9i!"
+    - role: 1
+      english: Copy! Vanguard, clear a lane for {1}!
+      vietnamese: "R\xF5! Vanguard, d\u1EA1t ra m\u1EDF l\u1ED1i cho {1}!"
+    soloCues:
+    - role: 2
+      english: Tank! Vanguard, keep an exit open.
+      vietnamese: "Tank! Vanguard, gi\u1EEF s\u1EB5n \u0111\u01B0\u1EDDng l\xF9i."
+    - role: 0
+      english: Copy! Getting clear now.
+      vietnamese: "R\xF5! T\xF4i l\xF9i kh\u1ECFi ch\u1ED7 n\xE0y tr\u01B0\u1EDBc."
   - id: 26
-    speaker: Mira Shaw
-    english: Screamer nearby. Watch the flanks and listen for the call.
-    vietnamese: "C\xF3 Screamer g\u1EA7n \u0111\xE2y. C\u1EA3nh gi\u1EDBi hai b\xEAn
-      v\xE0 nghe ti\u1EBFng g\u1ECDi."
+    speaker: Command
+    english: Screamer! Watch your flanks.
+    vietnamese: "Screamer! Coi ch\u1EEBng hai b\xEAn."
     priority: 1
     cooldown: 12
     oncePerRun: 0
     trigger: Special/Screamer
     audio: {fileID: 0}
+    firstVoice: 2
+    secondVoice: 4
+    cues:
+    - role: 0
+      english: Screamer! Hold the comms. Let me listen for it.
+      vietnamese: "Screamer! Im k\xEAnh \u0111\xE3. \u0110\u1EC3 t\xF4i nghe xem
+        n\xF3 \u1EDF \u0111\xE2u."
+    - role: 1
+      english: Copy.
+      vietnamese: "R\xF5."
+    soloCues:
+    - role: 0
+      english: Screamer! Command, hold the air for a second.
+      vietnamese: "Screamer! B\u1ED9 ch\u1EC9 huy, im k\xEAnh m\u1ED9t nh\u1ECBp
+        \u0111\xE3."
+    - role: 2
+      english: Staying off the air. Call if you pick anything up.
+      vietnamese: "T\xF4i gi\u1EEF im k\xEAnh. Nghe th\u1EA5y g\xEC th\xEC b\xE1o."
   - id: 27
-    speaker: Mira Shaw
-    english: Infector contact. Avoid exposure and keep a clear retreat.
-    vietnamese: "G\u1EB7p Infector. Tr\xE1nh ph\u01A1i nhi\u1EC5m, gi\u1EEF \u0111\u01B0\u1EDDng
-      r\xFAt."
+    speaker: Command
+    english: Infector! Keep your distance.
+    vietnamese: "Infector! Gi\u1EEF kho\u1EA3ng c\xE1ch."
     priority: 1
     cooldown: 12
     oncePerRun: 0
     trigger: Special/Infector
     audio: {fileID: 0}
+    firstVoice: 4
+    secondVoice: 3
+    cues:
+    - role: 0
+      english: Infector! Backing off! {2}, don't crowd me!
+      vietnamese: "Infector! T\xF4i l\xF9i \u0111\xE2y! {2}, \u0111\u1EEBng \u0111i
+        s\xE1t t\xF4i!"
+    - role: 1
+      english: Copy. Giving you room.
+      vietnamese: "R\xF5. T\xF4i gi\xE3n kho\u1EA3ng c\xE1ch ngay."
+    soloCues:
+    - role: 2
+      english: Vanguard, Infector alert! Keep your distance.
+      vietnamese: "Vanguard, c\xF3 Infector! Gi\xE3n kho\u1EA3ng c\xE1ch ra."
+    - role: 0
+      english: Copy. Backing off.
+      vietnamese: "R\xF5. T\xF4i \u0111ang l\xF9i l\u1EA1i."
   - id: 28
-    speaker: Mira Shaw
-    english: Operator recovered. Regroup before pushing forward.
-    vietnamese: "\u0110\u1EB7c v\u1EE5 \u0111\xE3 \u0111\u01B0\u1EE3c c\u1EE9u. T\u1EADp
-      h\u1EE3p tr\u01B0\u1EDBc khi ti\u1EBFn."
+    speaker: Command
+    english: They're up. Regroup.
+    vietnamese: "H\u1ECD d\u1EADy r\u1ED3i. T\u1EADp h\u1EE3p l\u1EA1i."
     priority: 1
     cooldown: 12
     oncePerRun: 0
     trigger: LifeState/Revived
     audio: {fileID: 0}
+    firstVoice: 5
+    secondVoice: 5
+    cues:
+    - role: 0
+      english: Command, I'm back on my feet.
+      vietnamese: "B\u1ED9 ch\u1EC9 huy, t\xF4i \u0111\u1EE9ng d\u1EADy \u0111\u01B0\u1EE3c
+        r\u1ED3i."
+    - role: 2
+      english: Copy. Can you keep up with the team?
+      vietnamese: "\u0110\xE3 nh\u1EADn. C\xF3 theo k\u1ECBp \u0111\u1ED9i kh\xF4ng?"
+    - role: 0
+      english: Yeah. Rejoining the team now.
+      vietnamese: "\u0110\u01B0\u1EE3c. T\xF4i nh\u1EADp \u0111\u1ED9i ngay \u0111\xE2y."
+    soloCues:
+    - role: 0
+      english: Command, I'm back on my feet.
+      vietnamese: "B\u1ED9 ch\u1EC9 huy, t\xF4i \u0111\u1EE9ng d\u1EADy \u0111\u01B0\u1EE3c
+        r\u1ED3i."
+    - role: 2
+      english: Copy. Can you move on your own?
+      vietnamese: "\u0110\xE3 nh\u1EADn. T\u1EF1 \u0111i ti\u1EBFp \u0111\u01B0\u1EE3c
+        ch\u01B0a?"
+    - role: 0
+      english: Yeah. I can keep moving.
+      vietnamese: "\u0110\u01B0\u1EE3c. T\xF4i \u0111i ti\u1EBFp \u0111\u01B0\u1EE3c."
   objectives:
   - id: 1
     title: ISOLATE PRODUCTION
@@ -1211,11 +1931,12 @@ MonoBehaviour:
     - NORTHBRIDGE / 04:20
     file: 2
   - id: 6
-    title: SECURE FACTORY EVIDENCE CASE
+    title: SECURE T9-17 CASE
     instructions: Recover the sealed evidence case and its records after Power, Logistics
       and the Tank are confirmed.
     result: Case joins team inventory.
-    hint: Check Power and Logistics progress; the server must confirm the Tank defeat.
+    hint: Restore Power, verify Logistics and bring down the Tank before collecting
+      the case.
     hint2: Review the recorded Delivery Manifest and Utilities Procedure for incomplete
       branch steps.
     hint3: Read the B2 Transfer Addendum after collection to continue the evidence
@@ -1355,8 +2076,8 @@ MonoBehaviour:
     file: 8
   - id: 18
     title: VERIFY ORIGINAL ARCHIVE
-    instructions: Select the archive matching all three identifiers and preserve
-      its identity table.
+    instructions: Select the archive matching all identifiers and preserve its identity
+      table.
     result: Laboratory case unlocks.
     hint: Compare the original archive against the B2 Archive Index saved in the
       journal.
@@ -1369,7 +2090,7 @@ MonoBehaviour:
     secondaryChoices: []
     file: 9
   - id: 19
-    title: SECURE LABORATORY EVIDENCE CASE
+    title: SECURE E-02 CASE
     instructions: Secure the original archive in the laboratory evidence case. Retain
       the factory case as well.
     result: Case joins team inventory.

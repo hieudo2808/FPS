@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e64de16f73779c45b8dbc23a2b97963, type: 3}
+  m_Name: Voice_Female_Death
+  m_EditorClassIdentifier: FPS::FPS.SoundEvent
+  bus: 4
+  clips:
+  - {fileID: 8300000, guid: d60ade172bd36df43a28870c17cebbd4, type: 3}
+  - {fileID: 8300000, guid: 514467eb2e64c4b4db1ab2a5770d4681, type: 3}
+  - {fileID: 8300000, guid: 7c9a9df2028b52147882fc843eaf53ca, type: 3}
+  remoteClips: []
+  distantClips: []
+  distantFrom: 35
+  volume: 1
+  volumeJitterDb: 1
+  pitch: {x: 0.96, y: 1.04}
+  spatialBlend: 1
+  minDistance: 2
+  maxDistance: 45
+  maxVoices: 4
+  cooldown: 0
+  priority: 60
+  loop: 0

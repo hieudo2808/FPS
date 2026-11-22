@@ -16,6 +16,7 @@ MonoBehaviour:
   weaponIcon: {fileID: 21300000, guid: edaf1741aa254224a9d053715528b043, type: 3}
   damage: 25
   damageType: 1
+  usableWhileDowned: 0
   hitMask:
     serializedVersion: 2
     m_Bits: 4091
@@ -62,6 +63,50 @@ MonoBehaviour:
   shootSound: {fileID: 0}
   reloadSound: {fileID: 0}
   recoilPattern: {fileID: 11400000, guid: 8f415392a10b42d887a1923485cba79d, type: 2}
+  fireSound: {fileID: 11400000, guid: ca4a318a9483d8346ab9f347c47e8057, type: 2}
+  equipCues:
+  - time: 0
+    clip: {fileID: 8300000, guid: 2819d3403af1fa0469149a895f398d97, type: 3}
+    volume: 0.6
+  - time: 0.44
+    clip: {fileID: 8300000, guid: 75e9c1250de43e84787dfcc3f20bb7bb, type: 3}
+    volume: 0.6
+  - time: 0.54
+    clip: {fileID: 8300000, guid: f910c0d1c792b9d40844470f3947622d, type: 3}
+    volume: 0.6
+  - time: 0.73
+    clip: {fileID: 8300000, guid: 34e6da38ef3d72444a8faa77c6d2d4be, type: 3}
+    volume: 0.6
+  fireCues: []
+  reloadCues:
+  - time: 0
+    clip: {fileID: 8300000, guid: 01851d60d0be5ab48be1a66f93821e4e, type: 3}
+    volume: 0.6
+  - time: 0.5
+    clip: {fileID: 8300000, guid: ae19cfc4da9d89b498073dd4a5363a66, type: 3}
+    volume: 0.6
+  - time: 1.31
+    clip: {fileID: 8300000, guid: 71c05cac058da4c42ad2a220ad254bdd, type: 3}
+    volume: 0.6
+  - time: 1.37
+    clip: {fileID: 8300000, guid: c4500237134174141972eab086b45d51, type: 3}
+    volume: 0.6
+  - time: 1.64
+    clip: {fileID: 8300000, guid: f910c0d1c792b9d40844470f3947622d, type: 3}
+    volume: 0.6
+  - time: 1.68
+    clip: {fileID: 8300000, guid: 75e9c1250de43e84787dfcc3f20bb7bb, type: 3}
+    volume: 0.6
+  - time: 1.88
+    clip: {fileID: 8300000, guid: 34e6da38ef3d72444a8faa77c6d2d4be, type: 3}
+    volume: 0.6
+  - time: 2.48
+    clip: {fileID: 8300000, guid: 2819d3403af1fa0469149a895f398d97, type: 3}
+    volume: 0.6
+  reloadStartSound: {fileID: 0}
+  reloadInsertSound: {fileID: 0}
+  reloadEndSound: {fileID: 0}
+  dryFireSound: {fileID: 11400000, guid: 8d4e4181d66fecf4b8824a88e857af1f, type: 2}
   muzzleFlashPrefab: {fileID: 1000010254994808, guid: 9defeac88977c0d448aa4541073ee9e4, type: 3}
   muzzleFlashLocalEulerAngles: {x: 0, y: 270, z: 0}
   muzzleFlashScale: 0.01

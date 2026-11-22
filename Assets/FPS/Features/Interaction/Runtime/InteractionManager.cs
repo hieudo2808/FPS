@@ -60,14 +60,10 @@ namespace FPS
             }
             ScanForInteractable();
 
-            if (InputManager.Instance?.GetTrackInputDown() == true)
-            {
-                if (CampaignMissionController.Instance?.State.chapter == CampaignChapter.Factory)
-                    CampaignHUD.Instance?.CycleTrackedBranch();
-                else if (currentInteractable is ILockedInteractable locked && !currentInteractable.CanInteract && locked.CanInspect)
-                    locked.TrackLockedObjective();
-                else CampaignHUD.Instance?.CycleTrackedBranch();
-            }
+            if (InputManager.Instance?.GetTrackInputDown() == true
+                && CampaignMissionController.Instance?.State.chapter != CampaignChapter.Factory
+                && currentInteractable is ILockedInteractable locked && !currentInteractable.CanInteract && locked.CanInspect)
+                locked.TrackLockedObjective();
 
             if (currentInteractable != null)
             {

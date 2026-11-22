@@ -1,5 +1,7 @@
 # OUTBREAK PROTOCOL — Cốt truyện, thao tác và giải đố cho chiến dịch ba map
 
+> **Tài liệu lịch sử, không dùng làm canon hiện hành.** Tên gọi, vai trò và nội dung runtime lấy theo [Master Canon](Outbreak-Protocol-Master-Canon.md). Bản này giữ nguyên để tra cứu quyết định và bằng chứng cũ; không coi các tên An/Lâm/An Lạc hoặc trạng thái kiểm thử cũ là hiện trạng dự án.
+
 **Bản thiết kế 1.0 · 06/09/2026 · Trạng thái: đề xuất nội dung để duyệt, chưa triển khai gameplay.**
 
 **Thứ tự đã chốt theo yêu cầu: Nhà máy → Asylum → khu thí nghiệm nằm dưới Asylum.** Tên chương đề xuất: **Hồ sơ lạnh → Những người chưa rời viện → Tầng không có trên bản vẽ**.

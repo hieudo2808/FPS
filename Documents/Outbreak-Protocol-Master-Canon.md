@@ -2,13 +2,13 @@
 
 This Markdown is the single English runtime-content source for the three-chapter campaign. The three Word documents are reference archives only. Unity stores the same stable IDs in `CampaignContentCatalog`; the server replicates IDs and state, never document text.
 
-Authoring: edit the `FILE_XX` paragraphs, numbered objective bullets or `DXX` dialogue bullets, then run **Tools → FPS → Campaign → Import English Canon**. The importer validates the complete ID set and file lengths before editing the catalog. It preserves icons, audio clips, Vietnamese translations and gameplay links, and never saves scenes. Review the VI translation when changing EN; VI is not the runtime language. Do not renumber IDs or change this small heading format.
+Authoring: edit the `FILE_XX` paragraphs, numbered objective bullets or `DXX` dialogue bullets without renumbering IDs or changing these headings. Apply reviewed text fields to `CampaignContentCatalog` through UnitySkills SerializedObject setters; validate against the Markdown and review the VI translation alongside EN. Preserve gameplay links, choices, icons and audio references. The former Import English Canon source is absent from the current Missions/Editor folder; do not assume that old menu is available. VI is maintained in the catalog; EN remains the runtime language.
 
 This document specifies the target behavior, not a claim that every runtime/visual/multiplayer acceptance test has passed. Tank staging, UI prefab polish and multi-peer verification remain separate implementation work.
 
 ## Canon
 
-T-9 is a fictional pathogen. The official Biohazard Response Team (BRT) deploys the four-person Vanguard squad to recover evidence from a quarantined factory. Shipment T9-17 leads to Northbridge Care Institute, where altered records expose a hidden B2 level. Laboratory B2 stores the original E-02 archive. An anonymous client orders a sample-only export and removal of patient fields; Mira Shaw rejects the concealment order. Vanguard transmits a complete copy, secures both evidence cases and leaves. The quarantine remains. There is no cure, purge, NPC escort or “save every patient” ending.
+T-9 is a fictional pathogen. The official Biohazard Response Team (BRT) deploys the four-person Vanguard squad to recover evidence from a quarantined factory. Shipment T9-17 leads to Northbridge Care Institute, where altered records expose a hidden B2 level. Laboratory B2 stores the original E-02 archive. An anonymous client orders a sample-only export and removal of patient fields; Command rejects the concealment order. Vanguard transmits a complete copy, secures both evidence cases and leaves. The quarantine remains. There is no cure, purge, NPC escort or “save every patient” ending.
 
 | Player character | Runtime codename |
 |---|---|
@@ -17,7 +17,17 @@ T-9 is a fictional pathogen. The official Biohazard Response Team (BRT) deploys 
 | Gekko | Vega |
 | Clove | Raven |
 
-Mira Shaw is the living BRT coordinator. Dr. Adrian Cole, Marcus Hale and Maya Reed are confirmed dead in the incident ledger and related records. They are not spawned as NPCs.
+Command (Bộ chỉ huy) is the BRT radio coordination role, with no personal name displayed. Dr. Adrian Cole, Marcus Hale and Maya Reed are confirmed dead in the incident ledger and related records. They are not spawned as NPCs.
+
+## Names and dialogue voice
+
+Mason, Doc, Vega and Raven are operative nicknames, used across character selection, the squad HUD and campaign records. Brimstone, Sage, Gekko and Clove identify the existing character assets and stable enums only. Vanguard is the squad callsign. Command is a role over radio; no personal coordinator name is needed. Cole, Hale and Reed retain their full names in evidence because those records establish who they were and what happened to them.
+
+Weapon display names remain Classic, Vandal, Operator, Odin, Bucky and Warden. These are the project's weapon names; do not infer real firearm models from them or rename stable asset/network identifiers for a copy edit.
+
+Command uses brief spoken phrases. During danger, give the immediate action. For investigation, keep one finding and at most one short next step. Do not join clauses with semicolons or repeat detail already available in objectives and Files. The current copy uses 3–12 English words per cue as an editing target, not a universal reading-speed rule. Chapter titles and HUD terms stay out of spoken lines. The anonymous client is terse and focused on what the export excludes; Command's refusal is an order to preserve the complete record. Files retain their distinct procedure, official record, email and personal-letter registers. Dialogue must respect the evidence available at its trigger; a record of a live transfer does not establish that the patient is still alive.
+
+Radio copy is authored in at most two lines of 40 characters each, counting the speaker prefix on the first line. In the dialogue list below, `<br>` marks the authored newline stored in the catalog. Check actual wrapping at 1080p and 4K after edits. A cue fitting the panel is not evidence that a player under combat pressure can read it comfortably.
 
 ## Technology contract
 
@@ -40,7 +50,7 @@ Netcode for GameObjects 2.13.1 is server authority; Input System 1.20.0 supplies
 | Containment failure | Quarantine shutters close; the unopened T9-17 case returns to factory storage. |
 | After the breach | The E-02 incident ledger confirms Cole, Hale and Reed dead; patient outcomes beyond documented transfers remain unresolved. |
 | Vanguard insertion | BRT recovers the chain of evidence across Factory, Northbridge and B2. |
-| Lab transmission | The anonymous client demands suppression; Mira rejects it; the full copy reaches outside custody. |
+| Lab transmission | The anonymous client demands suppression; Command rejects it; the full copy reaches outside custody. |
 
 No calendar date, cure mechanism or unsupported patient outcome is implied by these records.
 
@@ -150,7 +160,7 @@ Items are team state derived from objective flags. They cannot be used remotely 
 - **3 START GENERATOR** — Start the cold-store generator after Backup. Confirm the physical control to restore power. Hint: Read the generator step in Utilities Procedure. Hint2: Reopen Utilities Procedure in Files and check the physical-control warning. Hint3: Use Utilities Procedure to check the generator control rather than relying on its lamp.
 - **4 READ DELIVERY MANIFEST** — Read the Delivery Manifest to record it in team Files and unlock Verify Shipping Release. Hint: Read the Delivery Manifest at its marked interaction body. Hint2: Open Files in team inventory to reread the Delivery Manifest once recorded. Hint3: Use the Delivery Manifest as the source for the shipping release comparison.
 - **5 VERIFY SHIPPING RELEASE** — Compare the shipping release with the recorded Delivery Manifest. Select both groups to verify Logistics. Hint: Read the recorded Delivery Manifest before comparing the two groups. Hint2: Reopen the Delivery Manifest in Files; compare shipment / seal and destination / receiving time separately. Hint3: Use the Delivery Manifest as the source for each group; no choice is selected for you. Choices: AL-03 / K9 | AL-04 / K6 | AL-07 / K2. Secondary: NORTH DEPOT / 06:10 | NORTHBRIDGE / 02:40 | NORTHBRIDGE / 04:20.
-- **6 SECURE T9-17 CASE** — Recover the sealed evidence case and its records after Power, Logistics and the Tank are confirmed. Hint: Check Power and Logistics progress; the server must confirm the Tank defeat. Hint2: Review the recorded Delivery Manifest and Utilities Procedure for incomplete branch steps. Hint3: Read the B2 Transfer Addendum after collection to continue the evidence trail.
+- **6 SECURE T9-17 CASE** — Recover the sealed evidence case and its records after Power, Logistics and the Tank are confirmed. Hint: Restore Power, verify Logistics and bring down the Tank before collecting the case. Hint2: Review the recorded Delivery Manifest and Utilities Procedure for incomplete branch steps. Hint3: Read the B2 Transfer Addendum after collection to continue the evidence trail.
 - **7 OPEN SERVICE ROUTE** — Activate the service-route control cabinet after recovering the case. Prepare for the interlock cycle. Hint: Review the case record before using the service-route control cabinet. Hint2: Reopen the B2 Transfer Addendum in Files to review the recorded route. Hint3: Read the preparation and boarding status after activating the control cabinet.
 - **8 READ SECURITY DESK LOG** — Record the technical intake hidden behind the public admissions log. Hint: Read the Security Desk Log; it points to the upper records room and the service fuse.
 - **9 RECOVER SERVICE FUSE** — Recover the spare fuse from ground-floor maintenance storage. Hint: The fuse is shared by the squad and can be installed by any living operator.
@@ -162,7 +172,7 @@ Items are team state derived from objective flags. They cannot be used remotely 
 - **15 TRACE B2 TRANSFER** — Trace the institute transfer into the laboratory index. Hint: Follow the institute transfer record to the laboratory index and compare all recorded identifiers.
 - **16 READ ARCHIVE INDEX** — Record the original-archive directory before searching the terminal. Hint: Read the B2 Archive Index and keep the original-archive directory in the journal.
 - **17 ALLOCATE EMERGENCY POWER** — Keep SAFETY online. Disable TEST RIG before enabling DATA and FREIGHT LIFT. Capacity: six units. Hint: Read Emergency Power Allocation before changing the switches; compare its circuit requirements and capacity.
-- **18 VERIFY ORIGINAL ARCHIVE** — Select the archive matching all three identifiers and preserve its identity table. Hint: Compare the original archive against the B2 Archive Index saved in the journal. Choices: E-01 / T9-03 / C08 | E-02 / T9-17 / C12 / P046 | E-03 / EQUIPMENT ONLY.
+- **18 VERIFY ORIGINAL ARCHIVE** — Select the archive matching all identifiers and preserve its identity table. Hint: Compare the original archive against the B2 Archive Index saved in the journal. Choices: E-01 / T9-03 / C08 | E-02 / T9-17 / C12 / P046 | E-03 / EQUIPMENT ONLY.
 - **19 SECURE E-02 CASE** — Secure the original archive in the laboratory evidence case. Retain the factory case as well. Hint: The original must be verified before the sealed case is released.
 - **20 TRANSMIT COMPLETE EVIDENCE** — Prepare the squad, transmit a complete copy to BRT custody and call the freight lift. Do not delete patient fields. Hint: Keep both original cases. Transmission does not require eliminating every infected.
 
@@ -170,36 +180,36 @@ Utilities answer: production branch off → backup cold store on → generator. 
 
 ## Dialogue IDs
 
-The server selects a dialogue ID; clients resolve the local catalog entry. Priority 2 is objective-critical/radio, 1 is life-state/special warning, 0 is ordinary bark. Equal-priority lines keep trigger order (client order before Mira's response). Enemy warning audio is never ducked by campaign radio. Late joiners do not replay old radio; current objective, Files and state remain authoritative.
+The server selects a dialogue ID; clients resolve the local catalog entry. Priority 2 is objective-critical/radio, 1 is life-state/special warning, 0 is ordinary bark. Equal-priority lines keep trigger order (client order before Command's response). Enemy warning audio is never ducked by campaign radio. Late joiners do not replay old radio; current objective, Files and state remain authoritative.
 
-- **D01 · Mira Shaw · Insertion · P2** — Recover the evidence case and its records. Restore power and verify logistics; choose either branch first.
-- **D02 · Mira Shaw · Factory/Exploring · P2** — Cold Ledger. Restore cold-store power and reconcile the logistics release. Both branches are required; take them in either order.
-- **D03 · Mira Shaw · Asylum/Exploring · P2** — Northbridge Care Institute. Those Who Never Left. The factory case stays with Vanguard. Start with the security desk; find who received that shipment.
-- **D04 · Mira Shaw · Laboratory/Exploring · P2** — The Unmapped Floor. B2 is below the institute, absent from its public plans. Follow the recorded transfer trail and find the original archive.
-- **D05 · Mira Shaw · FactoryGenerator · P2** — Cold-store power is restored. Keep the evidence case sealed.
-- **D06 · Mira Shaw · FactoryShipping · P2** — Shipping release recorded. Keep the original manifest in Files and continue the remaining branch.
-- **D07 · Mira Shaw · FactoryCase · P2** — The factory case is secured. Keep it sealed and use the service route to continue the investigation.
-- **D08 · Mira Shaw · AsylumAccess · P2** — Security desk log recorded. Restore service power, then inspect the upper patient records.
-- **D09 · Mira Shaw · AsylumPower · P2** — Service power is restored. The records room is accessible. The freight lift still needs security's B2 card.
-- **D10 · Mira Shaw · AsylumPatient · P2** — Intake comparison recorded. Keep its original source in Files and inspect the mortuary transfer record.
-- **D11 · Mira Shaw · AsylumTransfer · P2** — Transfer comparison recorded. Preserve both original documents and use the retained access card at the freight lift.
-- **D12 · Mira Shaw · LabPower · P2** — Emergency power configuration recorded. Keep the procedure in Files and inspect the original archive.
-- **D13 · Mira Shaw · LabArchive · P2** — Original archive verified. Preserve the complete records and recover the sealed laboratory case.
-- **D14 · Mira Shaw · LabCase · P2** — Both cases are secured. Copy the full archive to BRT custody before you leave.
-- **D15 · Mira Shaw · Factory/Encounter · P2** — Service interlock is cycling. Hold the control room; the route will wait for the living squad.
-- **D16 · Mira Shaw · Asylum/Encounter · P2** — The B2 lift is cycling. You can evade the Tank. Keep the route to the landing clear and recover anyone downed.
-- **D17 · Mira Shaw · Laboratory/Encounter · P2** — Transmission is running. Keep moving and cover the data path. You do not need to kill the Tank to leave.
-- **D18 · Mira Shaw · AwaitingParty · P2** — The route is ready. Enter the boarding zone and wait for the departure countdown.
-- **D19 · Mira Shaw · Asylum/Transitioning · P2** — Cabin secured. Descending to B2. Wait for the receiving door before moving out.
-- **D20 · Mira Shaw · Completed · P2** — Vanguard is clear with both cases. The complete copy is in BRT custody. The facility remains quarantined. We have the evidence; the investigation starts now.
-- **D21 · Mira Shaw · EvidenceTransmitted · P2** — Complete copy received outside the facility. Patient records included. Keep both cases and board the freight lift.
-- **D22 · Anonymous Client · LabTransmit · P2** — Retain the sample. Remove patient identities and internal objections before transmission. Deliver the abbreviated package. That is the contract.
-- **D23 · Mira Shaw · LabTransmit/AfterClientOrder · P2** — That is a concealment order, not a BRT directive. Preserve the original and transmit everything, including patient data. I will confirm receipt outside.
-- **D24 · Mira Shaw · LifeState/Downed · P1** — Operator down. Cover the approach and get them back on their feet.
-- **D25 · Mira Shaw · Special/Tank · P1** — Tank contact. Make room; do not let it pin the squad in a corridor.
-- **D26 · Mira Shaw · Special/Screamer · P1** — Screamer nearby. Watch the flanks and listen for the call.
-- **D27 · Mira Shaw · Special/Infector · P1** — Infector contact. Avoid exposure and keep a clear retreat.
-- **D28 · Mira Shaw · LifeState/Revived · P1** — Operator recovered. Regroup before pushing forward.
+- **D01 · Command · Insertion · P2** — Vanguard, get the sealed case<br>and its records.
+- **D02 · Command · Factory/Exploring · P2** — Cold store needs power.<br>Check that shipping manifest.
+- **D03 · Command · Asylum/Exploring · P2** — Northbridge received it.<br>Check their security desk.
+- **D04 · Command · Laboratory/Exploring · P2** — An unlisted floor.<br>The original records should be here.
+- **D05 · Command · FactoryGenerator · P2** — Power's back.<br>Keep that case sealed.
+- **D06 · Command · FactoryShipping · P2** — Northbridge took it.<br>Keep that manifest.
+- **D07 · Command · FactoryCase · P2** — You've got the case.<br>Open the service route.
+- **D08 · Command · AsylumAccess · P2** — Another intake log, upstairs.<br>Get the power back on.
+- **D09 · Command · AsylumPower · P2** — Power's back.<br>Match upstairs intake to the desk log.
+- **D10 · Command · AsylumPatient · P2** — P046.<br>Check that patient's mortuary transfer.
+- **D11 · Command · AsylumTransfer · P2** — Logged dead at 03:05.<br>Transferred alive at 03:50.
+- **D12 · Command · LabPower · P2** — Power's holding.<br>Find the original archive.
+- **D13 · Command · LabArchive · P2** — E-02.<br>Get the original records, names and all.
+- **D14 · Command · LabCase · P2** — Both cases secured.<br>Send the full archive before you leave.
+- **D15 · Command · Factory/Encounter · P2** — Interlock's cycling.<br>Hold the control room.
+- **D16 · Command · Asylum/Encounter · P2** — Lift's coming.<br>Leave the Tank behind.
+- **D17 · Command · Laboratory/Encounter · P2** — Keep moving.<br>You don't need to kill the Tank.
+- **D18 · Command · AwaitingParty · P2** — Exit's open.<br>Get your people there.
+- **D19 · Command · Asylum/Transitioning · P2** — B2 next.<br>Wait till the door's fully open.
+- **D20 · Command · Completed · P2** — Both cases out.<br>BRT has the full copy. Quarantine holds.
+- **D21 · Command · EvidenceTransmitted · P2** — Full copy received off-site.<br>Take both cases to the lift and wait.
+- **D22 · Anonymous Client · LabTransmit · P2** — Keep the sample.<br>No names or staff objections go out.
+- **D23 · Command · LabTransmit/AfterClientOrder · P2** — Ignore that.<br>Send it all. Names and objections too.
+- **D24 · Command · LifeState/Downed · P1** — One down!<br>Cover them and get them up.
+- **D25 · Command · Special/Tank · P1** — Tank!<br>Don't let it corner you.
+- **D26 · Command · Special/Screamer · P1** — Screamer! Watch your flanks.
+- **D27 · Command · Special/Infector · P1** — Infector! Keep your distance.
+- **D28 · Command · LifeState/Revived · P1** — They're up. Regroup.
 
 ## Event and encounter rules
 
@@ -209,4 +219,4 @@ At extraction, gather connected living players in the boarding zone and revive d
 
 ## Ending
 
-Mira confirms that the complete copy reached BRT custody. Vanguard leaves with both cases. The facility remains quarantined and the investigation begins; the story never claims a cure, a total purge or a rescued patient population.
+Command confirms that the complete copy reached BRT custody. Vanguard leaves with both cases. The facility remains quarantined and the investigation begins; the story never claims a cure, a total purge or a rescued patient population.

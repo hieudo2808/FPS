@@ -99,7 +99,10 @@ namespace FPS
 
             playerHealth = GetComponent<PlayerHealth>();
             if (playerHealth != null)
+            {
                 playerHealth.CombatAvailabilityChanged += HandleCombatAvailabilityChanged;
+                playerHealth.LifeStateChanged += HandleLifeStateChanged;
+            }
 
             networkedWeaponIndex.OnValueChanged += OnWeaponChanged;
             networkedPrimaryWeapon.OnValueChanged += OnPrimaryWeaponChanged;
@@ -124,7 +127,10 @@ namespace FPS
             networkedWeaponIndex.OnValueChanged -= OnWeaponChanged;
             networkedPrimaryWeapon.OnValueChanged -= OnPrimaryWeaponChanged;
             if (playerHealth != null)
+            {
                 playerHealth.CombatAvailabilityChanged -= HandleCombatAvailabilityChanged;
+                playerHealth.LifeStateChanged -= HandleLifeStateChanged;
+            }
             networkCallbacksRegistered = false;
         }
 
@@ -427,6 +433,22 @@ namespace FPS
             return weapons[slotIndex] != null ? weapons[slotIndex].GetComponent<Weapon>() : null;
         }
 
+        private WeaponAudio weaponAudio;
+
+        /// <summary>This player's weapon sound emitter (created on first use).</summary>
+        public WeaponAudio Audio
+        {
+            get
+            {
+                if (weaponAudio == null)
+                {
+                    weaponAudio = GetComponent<WeaponAudio>();
+                    if (weaponAudio == null) weaponAudio = gameObject.AddComponent<WeaponAudio>();
+                }
+                return weaponAudio;
+            }
+        }
+
         public void ApplyAuthoritativeWeaponState(WeaponOwnerState state)
         {
             SetReloadPresentationTimeline(state.reloadTimeline);
@@ -439,6 +461,8 @@ namespace FPS
             weapon?.ReconcileStability(state);
             weapon?.ApplyAuthoritativePresentation(
                 state.equipCompleteTime, state.isReloading, state.reloadCompleteTime, state.reloadTimeline);
+            Audio.SyncReload(weapon != null ? weapon.Data : null, state.isReloading, state.reloadTimeline,
+                GetPresentationTime());
 
             if (IsOwner && HUDManager.HasInstance)
                 HUDManager.Instance.UpdateAmmoInfo();
@@ -457,6 +481,9 @@ namespace FPS
                 current.equipCompleteTime,
                 current.isReloading,
                 current.reloadCompleteTime, current.reloadTimeline);
+            Weapon presented = GetWeapon(current.slotIndex);
+            Audio.SyncReload(presented != null ? presented.Data : null, current.isReloading,
+                current.reloadTimeline, GetPresentationTime());
 
             // A remote client's first-person weapon may be inactive, in which case
             // Weapon.ApplyAuthoritativePresentation intentionally skips its local
@@ -503,8 +530,40 @@ namespace FPS
             if (!canUseCombat)
                 ResetThirdPersonActionState();
 
+            // A downed player keeps the weapons marked usable while downed (the sidearm).
             foreach (GameObject weaponObject in EnumerateConfiguredWeapons())
-                weaponObject?.GetComponent<Weapon>()?.SetCombatAvailability(canUseCombat);
+            {
+                Weapon weapon = weaponObject != null ? weaponObject.GetComponent<Weapon>() : null;
+                weapon?.SetCombatAvailability(canUseCombat || playerHealth != null && playerHealth.CanUseWeapon(weapon.Data));
+            }
+        }
+
+        private int slotBeforeDowned = -1;
+
+        /// <summary>Server: going down draws the sidearm; a revive gives back what was in hand.</summary>
+        private void HandleLifeStateChanged(PlayerLifeState previous, PlayerLifeState current)
+        {
+            HandleCombatAvailabilityChanged(playerHealth != null && playerHealth.CanUseCombat);
+            if (!IsServer) return;
+            if (current == PlayerLifeState.Downed && previous != PlayerLifeState.Downed)
+            {
+                int sidearm = FindDownedWeaponSlot();
+                slotBeforeDowned = CurrentWeaponIndex;
+                if (sidearm >= 0 && sidearm != CurrentWeaponIndex) SetEquippedWeaponServer(sidearm);
+            }
+            else if (previous == PlayerLifeState.Downed && current == PlayerLifeState.Alive)
+            {
+                if (slotBeforeDowned >= 0 && slotBeforeDowned != CurrentWeaponIndex) SetEquippedWeaponServer(slotBeforeDowned);
+                slotBeforeDowned = -1;
+            }
+            else if (current != PlayerLifeState.Downed) slotBeforeDowned = -1;
+        }
+
+        public int FindDownedWeaponSlot()
+        {
+            for (int slot = 0; slot < WeaponCount; slot++)
+                if (GetWeapon(slot)?.Data != null && GetWeapon(slot).Data.usableWhileDowned) return slot;
+            return -1;
         }
 
         /// <summary>

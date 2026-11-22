@@ -28,6 +28,10 @@ namespace FPS
         private bool subscribedToSettings;
         private RecoilController recoilController;
         private Vector2 cosmeticRecoil;
+        // Downed: the eyes are low, the head is propped on the ground, so turning and pitch are limited.
+        private bool lookConstrained;
+        private float constraintYaw, constraintHalfYaw, constraintMinPitch, constraintMaxPitch;
+        private Vector3 lookOffset;
         public Vector3 AimDirection => transform.TransformDirection(Quaternion.Euler(xRotation, 0f, 0f) * Vector3.forward);
 
         public static MouseMovement LocalInstance { get; private set; }
@@ -40,6 +44,29 @@ namespace FPS
         public float LookSensitivityMultiplier => lookSensitivityMultiplier;
 
         public Camera BodyCam => bodyCam;
+        public bool LookConstrained => lookConstrained;
+
+        /// <summary>
+        /// Limit the look while lying down: yaw within <paramref name="halfYaw"/> of <paramref name="centerYaw"/>,
+        /// pitch between <paramref name="minPitch"/> (up) and <paramref name="maxPitch"/> (down).
+        /// </summary>
+        public void SetLookConstraint(float centerYaw, float halfYaw, float minPitch, float maxPitch)
+        {
+            lookConstrained = true;
+            constraintYaw = centerYaw;
+            constraintHalfYaw = halfYaw;
+            constraintMinPitch = minPitch;
+            constraintMaxPitch = maxPitch;
+        }
+
+        public void ClearLookConstraint()
+        {
+            lookConstrained = false;
+            lookOffset = Vector3.zero;
+        }
+
+        /// <summary>Cosmetic camera angles (pitch, yaw, roll) on top of the look, e.g. a downed head tilt and breathing.</summary>
+        public void SetLookOffset(Vector3 euler) => lookOffset = euler;
         public Camera WeaponCam => weaponCam;
 
         private void Awake()
@@ -194,6 +221,7 @@ namespace FPS
             xRotation = Mathf.Clamp(xRotation, minRotationX, maxRotationX);
 
             yRotation += mouseX;
+            ApplyLookConstraint();
             recoilController?.ConsumeLookCompensation(new Vector2(beforePitch - xRotation, mouseX));
 
             RenderRotation();
@@ -219,11 +247,23 @@ namespace FPS
             if (IsOwner) RenderRotation();
         }
 
+        private void ApplyLookConstraint()
+        {
+            if (!lookConstrained) return;
+            // Ease into the limits rather than snapping when the constraint starts.
+            float yawOffset = Mathf.DeltaAngle(constraintYaw, yRotation);
+            float clampedYaw = Mathf.Clamp(yawOffset, -constraintHalfYaw, constraintHalfYaw);
+            yRotation = constraintYaw + Mathf.MoveTowards(yawOffset, clampedYaw, 240f * Time.deltaTime + Mathf.Abs(yawOffset - clampedYaw) * 0.2f);
+            float clampedPitch = Mathf.Clamp(xRotation, constraintMinPitch, constraintMaxPitch);
+            xRotation = Mathf.MoveTowards(xRotation, clampedPitch, 240f * Time.deltaTime + Mathf.Abs(xRotation - clampedPitch) * 0.2f);
+        }
+
         private void RenderRotation()
         {
             if (bodyCam != null)
                 bodyCam.transform.localRotation = Quaternion.Euler(
-                    Mathf.Clamp(xRotation - cosmeticRecoil.x, minRotationX, maxRotationX), cosmeticRecoil.y, 0f);
+                    Mathf.Clamp(xRotation - cosmeticRecoil.x, minRotationX, maxRotationX) + lookOffset.x,
+                    cosmeticRecoil.y + lookOffset.y, lookOffset.z);
             transform.localRotation = Quaternion.Euler(0f, yRotation, 0f);
         }
 

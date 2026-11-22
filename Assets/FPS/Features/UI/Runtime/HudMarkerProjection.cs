@@ -5,22 +5,49 @@ namespace FPS
     /// <summary>Screen-space marker math, including behind-camera projection.</summary>
     public static class HudMarkerProjection
     {
-        public static Vector2 Project(Camera camera, Vector3 worldPoint, Rect bounds, out bool edge)
+        public static Vector2 Project(Camera camera, Vector3 worldPoint, Rect bounds, float reentryPadding,
+            ref bool edge, ref Vector2 lastBearing, out Vector2 bearing)
         {
             var projected = camera.WorldToScreenPoint(worldPoint);
             var point = new Vector2(projected.x, projected.y);
-            edge = projected.z <= camera.nearClipPlane || !bounds.Contains(point);
-            if (!edge) return point;
-            // Clip X/Y retain the bearing without dividing by depth, including at and behind the camera plane.
-            var clip = camera.projectionMatrix * (camera.worldToCameraMatrix * new Vector4(worldPoint.x, worldPoint.y, worldPoint.z, 1));
-            var direction = new Vector2(clip.x * camera.pixelWidth, clip.y * camera.pixelHeight);
             var screenCenter = camera.pixelRect.center;
-            if (direction.sqrMagnitude < .0001f) direction = Vector2.down;
-            float x = direction.x > 0 ? bounds.xMax - screenCenter.x : screenCenter.x - bounds.xMin;
-            float y = direction.y > 0 ? bounds.yMax - screenCenter.y : screenCenter.y - bounds.yMin;
-            float t = Mathf.Min(Mathf.Abs(direction.x) > .0001f ? x / Mathf.Abs(direction.x) : float.PositiveInfinity,
-                Mathf.Abs(direction.y) > .0001f ? y / Mathf.Abs(direction.y) : float.PositiveInfinity);
-            return screenCenter + direction * t;
+            bool inFront = projected.z > camera.nearClipPlane;
+            var direction = point - screenCenter;
+            if (!inFront)
+            {
+                var delta = worldPoint - camera.transform.position;
+                delta.y = 0;
+                var right = camera.transform.right;
+                float rear = -Vector3.Dot(Vector3.Cross(right, Vector3.up), delta);
+                if (rear > 0)
+                {
+                    // A point behind the player needs a turn, even when it is lower than the camera.
+                    float side = Vector3.Dot(right, delta);
+                    if (Mathf.Abs(side) <= rear * .035f) side = lastBearing.x;
+                    direction = side < 0 ? Vector2.left : Vector2.right;
+                }
+                else
+                {
+                    var view = camera.worldToCameraMatrix.MultiplyPoint3x4(worldPoint);
+                    var clip = camera.projectionMatrix * new Vector4(view.x, view.y, view.z, 1);
+                    direction = new Vector2(clip.x * camera.pixelWidth, clip.y * camera.pixelHeight);
+                }
+            }
+            if (direction.sqrMagnitude > .0001f) lastBearing = direction.normalized;
+            bearing = lastBearing.sqrMagnitude > 0 ? lastBearing : Vector2.right;
+
+            float padding = edge ? Mathf.Min(reentryPadding, Mathf.Min(bounds.width, bounds.height) * .25f) : 0;
+            edge = !inFront || point.x < bounds.xMin + padding || point.x > bounds.xMax - padding
+                || point.y < bounds.yMin + padding || point.y > bounds.yMax - padding;
+            if (!edge) return point;
+
+            if (!bounds.Contains(screenCenter)) screenCenter = bounds.center;
+            float x = bearing.x > 0 ? bounds.xMax - screenCenter.x : bounds.xMin - screenCenter.x;
+            float y = bearing.y > 0 ? bounds.yMax - screenCenter.y : bounds.yMin - screenCenter.y;
+            float t = Mathf.Min(Mathf.Abs(bearing.x) > .0001f ? x / bearing.x : float.PositiveInfinity,
+                Mathf.Abs(bearing.y) > .0001f ? y / bearing.y : float.PositiveInfinity);
+            return new Vector2(Mathf.Clamp(screenCenter.x + bearing.x * t, bounds.xMin, bounds.xMax),
+                Mathf.Clamp(screenCenter.y + bearing.y * t, bounds.yMin, bounds.yMax));
         }
 
         public static Vector2 AvoidCornerHud(Vector2 point, Rect bounds, Rect occupied, float clearance)
@@ -37,37 +64,38 @@ namespace FPS
             return point;
         }
 
-        public static Vector2 AvoidHud(Vector2 point, Rect bounds, Rect[] occupied, float clearance)
+        public static bool TryAvoidHud(Vector2 point, Rect bounds, Rect[] occupied, Rect footprint, float maxMove, out Vector2 placement)
         {
-            if (Clear(point)) return point;
+            placement = point;
+            if (Clear(point)) return true;
             Vector2 best = point;
-            float distance = float.PositiveInfinity;
-            Test(new Vector2(bounds.xMin, bounds.yMin)); Test(new Vector2(bounds.xMin, bounds.yMax));
-            Test(new Vector2(bounds.xMax, bounds.yMin)); Test(new Vector2(bounds.xMax, bounds.yMax));
+            float distance = maxMove * maxMove;
+            bool found = false;
             foreach (var area in occupied)
             {
-                for (int i = 0; i < 2; i++)
-                {
-                    float y = Mathf.Clamp(i == 0 ? area.yMin - clearance - 1 : area.yMax + clearance + 1, bounds.yMin, bounds.yMax);
-                    Test(new Vector2(bounds.xMin, y)); Test(new Vector2(bounds.xMax, y));
-                    float x = Mathf.Clamp(i == 0 ? area.xMin - clearance - 1 : area.xMax + clearance + 1, bounds.xMin, bounds.xMax);
-                    Test(new Vector2(x, bounds.yMin)); Test(new Vector2(x, bounds.yMax));
-                }
+                float left = area.xMin - footprint.xMax - 1, right = area.xMax - footprint.xMin + 1;
+                float bottom = area.yMin - footprint.yMax - 1, top = area.yMax - footprint.yMin + 1;
+                Test(point.x, top); Test(point.x, bottom); Test(left, point.y); Test(right, point.y);
+                Test(left, top); Test(right, top); Test(left, bottom); Test(right, bottom);
             }
-            return best;
+            Test(bounds.xMin, bounds.yMin); Test(bounds.xMin, bounds.yMax);
+            Test(bounds.xMax, bounds.yMin); Test(bounds.xMax, bounds.yMax);
+            placement = best;
+            return found;
 
             bool Clear(Vector2 candidate)
             {
                 foreach (var area in occupied)
-                    if (candidate.x >= area.xMin - clearance && candidate.x <= area.xMax + clearance
-                        && candidate.y >= area.yMin - clearance && candidate.y <= area.yMax + clearance) return false;
+                    if (candidate.x + footprint.xMax > area.xMin && candidate.x + footprint.xMin < area.xMax
+                        && candidate.y + footprint.yMax > area.yMin && candidate.y + footprint.yMin < area.yMax) return false;
                 return true;
             }
-            void Test(Vector2 candidate)
+            void Test(float x, float y)
             {
+                var candidate = new Vector2(Mathf.Clamp(x, bounds.xMin, bounds.xMax), Mathf.Clamp(y, bounds.yMin, bounds.yMax));
                 float squared = (candidate - point).sqrMagnitude;
-                if (squared >= distance || !Clear(candidate)) return;
-                best = candidate; distance = squared;
+                if (squared > distance || (found && squared == distance) || !Clear(candidate)) return;
+                best = candidate; distance = squared; found = true;
             }
         }
     }

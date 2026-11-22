@@ -347,10 +347,16 @@ namespace FPS
 
         }
 
+        /// <summary>
+        /// Set while a life clip (Downed/Death) drives the character Animator. The weapon profile is applied
+        /// again when it clears, so a weapon switch during that time cannot swap the Avatar under the clip.
+        /// </summary>
+        public bool SuspendCharacterProfile { get; set; }
+
         private void ApplyCharacterAnimationProfile(
             ThirdPersonWeaponPresentation presentation)
         {
-            if (presentation == null)
+            if (presentation == null || SuspendCharacterProfile)
                 return;
 
             Animator characterAnimator = weaponManager?.CharacterAnimation;

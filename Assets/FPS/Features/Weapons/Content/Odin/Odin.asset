@@ -16,6 +16,7 @@ MonoBehaviour:
   weaponIcon: {fileID: 21300000, guid: e567238936783e1469fe3657cafc1bcd, type: 3}
   damage: 20
   damageType: 1
+  usableWhileDowned: 0
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967291
@@ -62,6 +63,68 @@ MonoBehaviour:
   shootSound: {fileID: 0}
   reloadSound: {fileID: 0}
   recoilPattern: {fileID: 11400000, guid: 0d15a456132a03a48868ae186030cbf6, type: 2}
+  fireSound: {fileID: 11400000, guid: f4d40b8bdea8f784f905c0dfe083a9b0, type: 2}
+  equipCues:
+  - time: 0
+    clip: {fileID: 8300000, guid: 744129a59773cb44fb475d4568072262, type: 3}
+    volume: 0.6
+  - time: 0.71
+    clip: {fileID: 8300000, guid: 75c28a9436a46d74f9ba9a73421898aa, type: 3}
+    volume: 0.6
+  - time: 0.76
+    clip: {fileID: 8300000, guid: 20ea62a2f20868d459f82ff22db6c927, type: 3}
+    volume: 0.6
+  - time: 1.3
+    clip: {fileID: 8300000, guid: d959897b969210442abe79852d26cf31, type: 3}
+    volume: 0.6
+  fireCues: []
+  reloadCues:
+  - time: 0.31
+    clip: {fileID: 8300000, guid: 41af6f8f0ed99d54f952c8f2cb2a2b21, type: 3}
+    volume: 0.6
+  - time: 0.4
+    clip: {fileID: 8300000, guid: 719e06779b000b243a0629214d3abd4b, type: 3}
+    volume: 0.6
+  - time: 0.9
+    clip: {fileID: 8300000, guid: 30b77ca3641f5b14695194e046e5ff35, type: 3}
+    volume: 0.6
+  - time: 1.15
+    clip: {fileID: 8300000, guid: d9738a16dd62a4941a2b5b05c7226e5b, type: 3}
+    volume: 0.6
+  - time: 1.55
+    clip: {fileID: 8300000, guid: 1e1a0e54fcdbc4148836a2b399d0bf48, type: 3}
+    volume: 0.6
+  - time: 1.95
+    clip: {fileID: 8300000, guid: 6ebbfa4ddf39f0249a98e875fd90f516, type: 3}
+    volume: 0.6
+  - time: 2.09
+    clip: {fileID: 8300000, guid: f0b05b5857ea8a14db8d70dd4bf9a71e, type: 3}
+    volume: 0.6
+  - time: 2.15
+    clip: {fileID: 8300000, guid: c127e9cdc08d8b04ba0052c2fe2ba8c6, type: 3}
+    volume: 0.6
+  - time: 2.25
+    clip: {fileID: 8300000, guid: b8df294aed2c23a4799ef4c6277cea2c, type: 3}
+    volume: 0.6
+  - time: 2.57
+    clip: {fileID: 8300000, guid: 765727724437dcf4984175eb364b2c51, type: 3}
+    volume: 0.6
+  - time: 2.98
+    clip: {fileID: 8300000, guid: a7a612e567bcf98499323eb2269e951c, type: 3}
+    volume: 0.6
+  - time: 3.56
+    clip: {fileID: 8300000, guid: 493463de672499f4498f3ec45b033dc5, type: 3}
+    volume: 0.6
+  - time: 3.82
+    clip: {fileID: 8300000, guid: 5f19d65271f4f6c4287f7c9e33edeab5, type: 3}
+    volume: 0.6
+  - time: 4.25
+    clip: {fileID: 8300000, guid: 54b3cb17331fdd54abe0d76fbd5cf6cd, type: 3}
+    volume: 0.6
+  reloadStartSound: {fileID: 0}
+  reloadInsertSound: {fileID: 0}
+  reloadEndSound: {fileID: 0}
+  dryFireSound: {fileID: 11400000, guid: 8d4e4181d66fecf4b8824a88e857af1f, type: 2}
   muzzleFlashPrefab: {fileID: 1000010254994808, guid: 9defeac88977c0d448aa4541073ee9e4, type: 3}
   muzzleFlashLocalEulerAngles: {x: 0, y: 270, z: 0}
   muzzleFlashScale: 0.0112

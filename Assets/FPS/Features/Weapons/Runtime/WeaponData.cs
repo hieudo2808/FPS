@@ -6,6 +6,22 @@ namespace FPS
     public enum FireMode { Single, Burst, Auto }
     public enum ReloadMode { Magazine, PerShell }
 
+    /// <summary>One foley sound placed on a weapon animation: the clip starts this many seconds into it.</summary>
+    [System.Serializable]
+    public struct WeaponSoundCue
+    {
+        [Min(0f)] public float time;
+        public AudioClip clip;
+        [Range(0f, 1f)] public float volume;
+
+        public WeaponSoundCue(float time, AudioClip clip, float volume)
+        {
+            this.time = time;
+            this.clip = clip;
+            this.volume = volume;
+        }
+    }
+
     [CreateAssetMenu(menuName = "FPS/WeaponData")]
     public class WeaponData : ScriptableObject
     {
@@ -15,6 +31,8 @@ namespace FPS
         [Header("Combat")]
         public float damage = 25f;
         public DamageType damageType = DamageType.Bullet;
+        [Tooltip("A downed player can still fire this weapon (the sidearm). The server switches a downed player to it.")]
+        public bool usableWhileDowned;
         public LayerMask hitMask = Physics.DefaultRaycastLayers;
         [Min(0.01f)] public float bulletSpeed = 200f;
         [FormerlySerializedAs("fireRate")]
@@ -200,6 +218,24 @@ namespace FPS
         public AudioClip shootSound;
         public AudioClip reloadSound;
         public RecoilPattern recoilPattern;
+
+        [Header("Audio")]
+        [Tooltip("Gunshot takes; distant takes are used by listeners far from the shooter.")]
+        public SoundEvent fireSound;
+        [Tooltip("Foley placed on the Equip animation (seconds into the clip at normal speed).")]
+        public WeaponSoundCue[] equipCues = System.Array.Empty<WeaponSoundCue>();
+        [Tooltip("Foley after each shot, such as a pump or bolt worked by the Fire animation (Bucky, Operator).")]
+        public WeaponSoundCue[] fireCues = System.Array.Empty<WeaponSoundCue>();
+        [Tooltip("Magazine reloads: foley placed on the Reload animation. Replaces the start/insert/end sounds when set.")]
+        public WeaponSoundCue[] reloadCues = System.Array.Empty<WeaponSoundCue>();
+        [Tooltip("Reload start: magazine out / action opened.")]
+        public SoundEvent reloadStartSound;
+        [Tooltip("Magazine in, or one shell pushed in for per-shell reloads.")]
+        public SoundEvent reloadInsertSound;
+        [Tooltip("Reload end: slide released / action closed.")]
+        public SoundEvent reloadEndSound;
+        [Tooltip("Trigger pulled on an empty magazine (owner only).")]
+        public SoundEvent dryFireSound;
 
         [Header("Shot Feedback")]
         [Tooltip("Reusable muzzle flash instantiated once under the weapon's real MuzzlePoint.")]

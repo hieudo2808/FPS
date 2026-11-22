@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e64de16f73779c45b8dbc23a2b97963, type: 3}
+  m_Name: Voice_Clove_Hurt
+  m_EditorClassIdentifier: FPS::FPS.SoundEvent
+  bus: 4
+  clips:
+  - {fileID: 8300000, guid: fb244fc73ba2f4f46a94f62e45d36653, type: 3}
+  - {fileID: 8300000, guid: 2eda563f26281974691783fd61b0d8ea, type: 3}
+  - {fileID: 8300000, guid: d56f48fb7b9a32e48a31b1e303a3f87d, type: 3}
+  remoteClips: []
+  distantClips: []
+  distantFrom: 35
+  volume: 0.85
+  volumeJitterDb: 0
+  pitch: {x: 1, y: 1}
+  spatialBlend: 1
+  minDistance: 2
+  maxDistance: 30
+  maxVoices: 4
+  cooldown: 0
+  priority: 60
+  loop: 0

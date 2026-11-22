@@ -13,7 +13,7 @@ namespace FPS
         {
             playerName.text = name;
             playerName.color = TacticalUiTheme.Text;
-            detail.text = character + (host ? "  /  SQUAD LEADER" : "  /  OPERATOR");
+            detail.text = CampaignCodename.For(character) + (host ? "  /  SQUAD LEADER" : "  /  OPERATOR");
             readiness.text = ready ? "READY" : "NOT READY";
             readiness.color = ready ? TacticalUiTheme.Success : TacticalUiTheme.Muted;
         }
