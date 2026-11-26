@@ -65,10 +65,10 @@ namespace FPS
             : CampaignRules.CanReadComparisonSource(CampaignMissionController.Instance?.State, objectiveId)
                 ? $"[{SurvivalHotbar.Key("Interact", "F")}] READ {LinkedFile?.title ?? "SOURCE DOCUMENT"}"
             : $"[{SurvivalHotbar.Key("Interact", "F")}] {Title}";
-        public string GetLockedText() => $"🔒 Cần: {CampaignRules.LockReason(CampaignMissionController.Instance?.State, objectiveId)}"
+        public string GetLockedText() => $"LOCKED: Requires {CampaignRules.LockReason(CampaignMissionController.Instance?.State, objectiveId)}"
             + (CampaignMissionController.Instance?.State.chapter == CampaignChapter.Factory
                 ? ""
-                : $"\n[{SurvivalHotbar.Key("Track", "T")}] theo dõi");
+                : $"\n[{SurvivalHotbar.Key("Track", "T")}] Track objective");
         public void TrackLockedObjective() => CampaignHUD.Instance?.TryTrackObjective(objectiveId, true);
         public void Interact(NetworkObject interactorObject) => RequestNetworkInteraction(interactorObject);
         public void RequestNetworkInteraction(NetworkObject interactorObject)
@@ -127,7 +127,8 @@ namespace FPS
         private string PromptTitle()
         {
             if (CampaignMissionController.Instance?.State.HasFile(fileId) == true) return Title;
-            return objectiveId == CampaignObjectiveId.FactoryManifest ? "DELIVERY MANIFEST" : "SOURCE DOCUMENT";
+            string resolved = Title;
+            return !string.IsNullOrWhiteSpace(resolved) ? resolved : "Field Document";
         }
         public void SetRecorded(bool recorded)
         {

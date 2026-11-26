@@ -16,7 +16,7 @@ namespace FPS
         public bool CanInteract => Current != null && Current.CanInteract;
         public bool CanInspect => Current != null && Current.CanInspect;
         public string GetInteractText() => Current != null ? Current.GetInteractText() : "";
-        public string GetLockedText() => Current != null ? Current.GetLockedText() : "🔒 Cần: objective";
+        public string GetLockedText() => Current != null ? Current.GetLockedText() : "LOCKED: Objective unavailable";
         public void TrackLockedObjective() => Current?.TrackLockedObjective();
         public void Interact(NetworkObject actor) => RequestNetworkInteraction(actor);
         public void RequestNetworkInteraction(NetworkObject actor)

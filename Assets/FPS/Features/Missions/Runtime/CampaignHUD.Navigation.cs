@@ -157,8 +157,8 @@ namespace FPS
             var trackedTitle = s.phase == CampaignPhase.Exploring ? ObjectiveAction(TrackedObjectiveId) : "";
             status.text = s.phase switch
             {
-                CampaignPhase.Exploring => trackedTitle.Length != 0 ? trackedTitle : "Recover the evidence case",
-                CampaignPhase.Preparing => s.tankStage == CampaignTankStage.Active ? "Evade the Tank" : "Prepare for extraction",
+                CampaignPhase.Exploring => trackedTitle.Length != 0 ? CampaignTextHighlight.Format(trackedTitle, Theme) : "Recover the T9-17 case",
+                CampaignPhase.Preparing => s.tankStage == CampaignTankStage.Active ? CampaignTextHighlight.Format("Evade the Tank", Theme) : "Prepare for extraction",
                 CampaignPhase.Encounter => "Hold the extraction route",
                 CampaignPhase.AwaitingParty => "Board with the squad",
                 CampaignPhase.Transitioning => "Hold formation",
@@ -167,8 +167,8 @@ namespace FPS
                 _ => "Mission failed"
             };
             bool factoryTank = CampaignRules.TankIsNext(s);
-            if (factoryTank) status.text = s.tankStage == CampaignTankStage.Active ? "Eliminate the Tank"
-                : "Tank incoming";
+            if (factoryTank) status.text = CampaignTextHighlight.Format(s.tankStage == CampaignTankStage.Active ? "Eliminate the Tank"
+                : "Tank incoming", Theme);
             actionLabel.fontSize = branchCounts.fontSize = captionSize;
             // Small screens use the larger caption size; the goal matters more than the place name when both cannot fit.
             // Below the reference resolution the typography pass enlarges captions, so only the goal is sure to fit.
@@ -177,13 +177,13 @@ namespace FPS
             actionLabel.lineSpacing = branchCounts.lineSpacing = captionSize == Theme.Small ? 5 : 3;
             actionLabel.text = s.phase switch
             {
-                CampaignPhase.Preparing => CampaignRules.PartyGateText(s.partyGate, true),
+                CampaignPhase.Preparing => CampaignTextHighlight.Format(CampaignRules.PartyGateText(s.partyGate, true), Theme),
                 CampaignPhase.Encounter => $"{Mathf.CeilToInt(Campaign.Remaining)}s remaining / Defend the approach",
-                CampaignPhase.AwaitingParty => CampaignRules.PartyGateText(s.partyGate, false),
+                CampaignPhase.AwaitingParty => CampaignTextHighlight.Format(CampaignRules.PartyGateText(s.partyGate, false), Theme),
                 CampaignPhase.Transitioning => "Wait for the receiving door",
                 _ => ""
             };
-            if (factoryTank) actionLabel.text = CampaignRules.TankStatus(s);
+            if (factoryTank) actionLabel.text = CampaignTextHighlight.Format(CampaignRules.TankStatus(s), Theme);
             bool factoryBranches = s.phase == CampaignPhase.Exploring && s.chapter == CampaignChapter.Factory;
             if (factoryBranches)
             {

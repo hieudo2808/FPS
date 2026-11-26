@@ -70,7 +70,7 @@ namespace FPS
             hud.name.fontSize = hud.count.fontSize = captionSize;
             hud.count.text = $"{progress}/{total}";
             hud.step.fontSize = Theme.Body;
-            hud.step.text = progress == total ? "COMPLETE" : ObjectiveAction(next);
+            hud.step.text = progress == total ? "COMPLETE" : CampaignTextHighlight.Format(ObjectiveAction(next), Theme);
             float height = 30 + Mathf.Ceil(hud.step.GetPreferredValues(hud.step.text, 373, 0).y);
             hud.row.offsetMin = new Vector2(24, -top - height);
             hud.row.offsetMax = new Vector2(-24, -top);

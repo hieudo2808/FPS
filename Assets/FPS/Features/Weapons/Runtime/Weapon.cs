@@ -117,6 +117,7 @@ namespace FPS
         public Animator WeaponAnimator => weaponAnimator;
         public bool IsAiming => scopePresentationVisible;
         public bool IsAimRequested => aimRequested;
+        public float AimBlend => aimBlend;
         public bool IsReloading => isReloading;
         public bool IsEquipPresentationActive => IsEquipping();
         public Transform AimSight => aimSight;
@@ -303,6 +304,7 @@ namespace FPS
                 return;
 
             UpdateContinuousFirePresentation();
+            ApplyViewmodelAimPose(Mathf.SmoothStep(0f, 1f, aimBlend));
         }
 
         private void UpdateContinuousFirePresentation()
@@ -1548,42 +1550,51 @@ namespace FPS
             if (!viewmodelHipPoseCached)
                 CacheViewmodelHipPose();
 
-            // Always solve from the authored hip pose. This prevents repeated RMB
-            // toggles from accumulating transform error.
-            viewmodelRoot.SetLocalPositionAndRotation(
-                hipViewmodelLocalPosition,
-                hipViewmodelLocalRotation);
-
-            if (alignAuthoredSightAxis)
+            // Always solve from the authored hip pose and unbobbed camera pose.
+            // This prevents repeated RMB toggles or mid-stride head-bob from
+            // baking transient offsets into the aligned ADS sight pose.
+            cachedMouseMovement?.SetHeadBobTemporarilySuppressed(true);
+            try
             {
-                Vector3 sightDirection = aimSightEnd.position - aimSight.position;
-                if (sightDirection.sqrMagnitude < 0.000001f)
-                    return false;
+                viewmodelRoot.SetLocalPositionAndRotation(
+                    hipViewmodelLocalPosition,
+                    hipViewmodelLocalRotation);
 
-                // Move the complete weapon/hands composition together. Only an
-                // explicitly authored two-point sight line may opt into this;
-                // imported skeleton endpoints can point sideways (e.g. Operator).
-                Vector3 sightUp = Vector3.ProjectOnPlane(aimSight.up, sightDirection.normalized);
-                if (sightUp.sqrMagnitude < 0.000001f)
-                    return false;
-                Quaternion sightRotation = Quaternion.LookRotation(sightDirection, sightUp);
-                viewmodelRoot.rotation = cachedCamera.transform.rotation
-                    * Quaternion.Inverse(sightRotation) * viewmodelRoot.rotation;
+                if (alignAuthoredSightAxis)
+                {
+                    Vector3 sightDirection = aimSightEnd.position - aimSight.position;
+                    if (sightDirection.sqrMagnitude < 0.000001f)
+                        return false;
+
+                    // Move the complete weapon/hands composition together. Only an
+                    // explicitly authored two-point sight line may opt into this;
+                    // imported skeleton endpoints can point sideways (e.g. Operator).
+                    Vector3 sightUp = Vector3.ProjectOnPlane(aimSight.up, sightDirection.normalized);
+                    if (sightUp.sqrMagnitude < 0.000001f)
+                        return false;
+                    Quaternion sightRotation = Quaternion.LookRotation(sightDirection, sightUp);
+                    viewmodelRoot.rotation = cachedCamera.transform.rotation
+                        * Quaternion.Inverse(sightRotation) * viewmodelRoot.rotation;
+                }
+
+                Vector3 targetSightPosition = cachedCamera.transform.TransformPoint(
+                    aimedSightCameraLocalPosition);
+                Vector3 targetRootPosition = viewmodelRoot.position
+                    + (targetSightPosition - aimSight.position);
+
+                Transform parent = viewmodelRoot.parent;
+                aimedViewmodelLocalPosition = parent != null
+                    ? parent.InverseTransformPoint(targetRootPosition)
+                    : targetRootPosition;
+                // Legacy sockets retain the authored hip rotation. Opt-in sight lines
+                // retain the solved rotation; neither mode changes the gameplay camera.
+                aimedViewmodelLocalRotation = viewmodelRoot.localRotation;
+                return true;
             }
-
-            Vector3 targetSightPosition = cachedCamera.transform.TransformPoint(
-                aimedSightCameraLocalPosition);
-            Vector3 targetRootPosition = viewmodelRoot.position
-                + (targetSightPosition - aimSight.position);
-
-            Transform parent = viewmodelRoot.parent;
-            aimedViewmodelLocalPosition = parent != null
-                ? parent.InverseTransformPoint(targetRootPosition)
-                : targetRootPosition;
-            // Legacy sockets retain the authored hip rotation. Opt-in sight lines
-            // retain the solved rotation; neither mode changes the gameplay camera.
-            aimedViewmodelLocalRotation = viewmodelRoot.localRotation;
-            return true;
+            finally
+            {
+                cachedMouseMovement?.SetHeadBobTemporarilySuppressed(false);
+            }
         }
 
         private void ApplyViewmodelAimPose(float blend)
@@ -1591,15 +1602,24 @@ namespace FPS
             if (!viewmodelHipPoseCached || viewmodelRoot == null)
                 return;
 
-            viewmodelRoot.SetLocalPositionAndRotation(
-                Vector3.LerpUnclamped(
-                    hipViewmodelLocalPosition,
-                    aimedViewmodelLocalPosition,
-                    blend),
-                Quaternion.SlerpUnclamped(
-                    hipViewmodelLocalRotation,
-                    aimedViewmodelLocalRotation,
-                    blend));
+            Vector3 basePosition = Vector3.LerpUnclamped(
+                hipViewmodelLocalPosition,
+                aimedViewmodelLocalPosition,
+                blend);
+            Quaternion baseRotation = Quaternion.SlerpUnclamped(
+                hipViewmodelLocalRotation,
+                aimedViewmodelLocalRotation,
+                blend);
+
+            if (isOwner && cachedMouseMovement != null)
+            {
+                basePosition += cachedMouseMovement.HeadBobWeaponPositionOffset;
+                Vector3 weaponBobEuler = cachedMouseMovement.HeadBobWeaponEulerOffset;
+                if (weaponBobEuler.sqrMagnitude > 1e-8f)
+                    baseRotation *= Quaternion.Euler(weaponBobEuler);
+            }
+
+            viewmodelRoot.SetLocalPositionAndRotation(basePosition, baseRotation);
         }
 
         private void OnDestroy()

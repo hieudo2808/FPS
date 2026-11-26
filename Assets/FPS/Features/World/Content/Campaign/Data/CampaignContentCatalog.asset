@@ -17,35 +17,27 @@ MonoBehaviour:
     chapter: 0
     required: 1
     title: Factory Utilities Procedure
-    summary: "Night operator \u2014 Maya Reed. Isolate the PRODUCTION branch at the
-      west breaker before touching the backup feed. Then engage BACKUP COLD STORE
-      at the east breaker and start the generator. Do not isolate the cold store
-      itself: its monitor and sealed cargo must remain refrigerated. The green generator
-      lamp shares an alarm return and can light before the contactor closes; check
-      the physical lever. Logistics must reconcile the shipment and seal independently.
-      Keep the T9-17 case sealed until both checks are complete. Report any instruction
-      to bypass this sequence in the shift ledger."
-    body: "Night operator \u2014 Maya Reed. Isolate the PRODUCTION branch at the
-      west breaker before touching the backup feed. Then engage BACKUP COLD STORE
-      at the east breaker and start the generator. Do not isolate the cold store
-      itself: its monitor and sealed cargo must remain refrigerated. The green generator
-      lamp shares an alarm return and can light before the contactor closes; check
-      the physical lever. Logistics must reconcile the shipment and seal independently.
-      Keep the T9-17 case sealed until both checks are complete. Report any instruction
-      to bypass this sequence in the shift ledger."
-    bodyVietnamese: "Nh\xE2n vi\xEAn ca \u0111\xEAm \u2014 Maya Reed. Ng\u1EAFt nh\xE1nh
-      PRODUCTION \u1EDF c\u1EA7u dao ph\xEDa t\xE2y tr\u01B0\u1EDBc khi thao t\xE1c
-      ngu\u1ED3n d\u1EF1 ph\xF2ng. Sau \u0111\xF3 b\u1EADt BACKUP COLD STORE t\u1EA1i
-      c\u1EA7u dao ph\xEDa \u0111\xF4ng v\xE0 kh\u1EDFi \u0111\u1ED9ng m\xE1y ph\xE1t.
-      Kh\xF4ng ng\u1EAFt ch\xEDnh kho l\u1EA1nh: thi\u1EBFt b\u1ECB gi\xE1m s\xE1t
-      v\xE0 h\xE0ng ni\xEAm phong ph\u1EA3i \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1nh.
-      \u0110\xE8n xanh m\xE1y ph\xE1t d\xF9ng chung \u0111\u01B0\u1EDDng h\u1ED3i
-      v\u1EDBi b\xE1o \u0111\u1ED9ng n\xEAn c\xF3 th\u1EC3 s\xE1ng tr\u01B0\u1EDBc
-      khi c\xF4ng t\u1EAFc \u0111\xF3ng; h\xE3y ki\u1EC3m tra c\u1EA7n g\u1EA1t th\u1EF1c
-      t\u1EBF. B\u1ED9 ph\u1EADn v\u1EADn chuy\u1EC3n ph\u1EA3i \u0111\u1ED1i chi\u1EBFu
-      l\xF4 h\xE0ng v\xE0 ni\xEAm phong ri\xEAng. Gi\u1EEF k\xEDn ki\u1EC7n T9-17
-      cho t\u1EDBi khi ho\xE0n t\u1EA5t c\u1EA3 hai b\u01B0\u1EDBc ki\u1EC3m tra.
-      Ghi v\xE0o s\u1ED5 ca m\u1ECDi ch\u1EC9 th\u1ECB b\u1ECF qua quy tr\xECnh."
+    summary: '• 1. West Breaker: **ISOLATE PRODUCTION**
+
+      • 2. East Breaker: **BACKUP COLD STORE ON** (keep case refrigerated)
+
+      • 3. Generator: **CHECK PHYSICAL LEVER** (green alarm lamp lights early)'
+    body: 'Night operator — Maya Reed. Isolate the **PRODUCTION** branch at the west
+      breaker before touching the backup feed. Then engage **BACKUP COLD STORE** at
+      the east breaker and start the generator. Do not isolate the cold store itself:
+      its monitor and sealed cargo must remain refrigerated. The green generator lamp
+      shares an alarm return and can light before the contactor closes; check the
+      physical lever. Logistics must reconcile the shipment and seal independently.
+      Keep the **T9-17** case sealed until both checks are complete. Report any instruction
+      to bypass this sequence in the shift ledger.'
+    bodyVietnamese: 'Nhân viên ca đêm — Maya Reed. Ngắt nhánh PRODUCTION ở cầu dao
+      phía tây trước khi thao tác nguồn dự phòng. Sau đó bật BACKUP COLD STORE tại
+      cầu dao phía đông và khởi động máy phát. Không ngắt chính kho lạnh: thiết bị
+      giám sát và hàng niêm phong phải được giữ lạnh. Đèn xanh máy phát dùng chung
+      đường hồi với báo động nên có thể sáng trước khi công tắc đóng; hãy kiểm tra
+      cần gạt thực tế. Bộ phận vận chuyển phải đối chiếu lô hàng và niêm phong riêng.
+      Giữ kín kiện T9-17 cho tới khi hoàn tất cả hai bước kiểm tra. Ghi vào sổ ca
+      mọi chỉ thị bỏ qua quy trình.'
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -54,35 +46,28 @@ MonoBehaviour:
   - id: 2
     chapter: 0
     required: 1
-    title: Delivery Manifest
-    summary: 'Dispatch copy. Shipment AL-04; security seal K6; lot T9-17. Destination:
-      Northbridge Care Institute, service receiving entrance. Scheduled intake: 02:40,
-      group C12. Security release: Marcus Hale. The public cargo description is temperature-controlled
-      medical stock. Do not replace this page with the contractor''s abbreviated
-      receipt: that copy omits the receiving group and service entrance. A return
-      instruction has been added in blue ink: if receiving refuses the sealed case,
-      retain it in factory cold storage and leave the delivery record attached. Neither
-      the seal number nor the destination may be changed by telephone.'
-    body: 'Dispatch copy. Shipment AL-04; security seal K6; lot T9-17. Destination:
-      Northbridge Care Institute, service receiving entrance. Scheduled intake: 02:40,
-      group C12. Security release: Marcus Hale. The public cargo description is temperature-controlled
-      medical stock. Do not replace this page with the contractor''s abbreviated
-      receipt: that copy omits the receiving group and service entrance. A return
-      instruction has been added in blue ink: if receiving refuses the sealed case,
-      retain it in factory cold storage and leave the delivery record attached. Neither
-      the seal number nor the destination may be changed by telephone.'
-    bodyVietnamese: "B\u1EA3n l\u01B0u xu\u1EA5t h\xE0ng. Chuy\u1EBFn AL-04; ni\xEAm
-      phong K6; l\xF4 T9-17. \u0110i\u1EC3m \u0111\u1EBFn: Northbridge Care Institute,
-      c\u1EEDa nh\u1EADn h\xE0ng d\u1ECBch v\u1EE5. Gi\u1EDD ti\u1EBFp nh\u1EADn:
-      02:40, nh\xF3m C12. Ng\u01B0\u1EDDi duy\u1EC7t an ninh: Marcus Hale. M\xF4
-      t\u1EA3 c\xF4ng khai l\xE0 v\u1EADt t\u01B0 y t\u1EBF b\u1EA3o qu\u1EA3n l\u1EA1nh.
-      Kh\xF4ng thay trang n\xE0y b\u1EB1ng bi\xEAn nh\u1EADn r\xFAt g\u1ECDn c\u1EE7a
-      nh\xE0 th\u1EA7u v\xEC b\u1EA3n \u0111\xF3 b\u1ECF nh\xF3m ti\u1EBFp nh\u1EADn
-      v\xE0 c\u1EEDa d\u1ECBch v\u1EE5. Ch\u1EC9 th\u1ECB vi\u1EBFt th\xEAm b\u1EB1ng
-      m\u1EF1c xanh: n\u1EBFu n\u01A1i nh\u1EADn t\u1EEB ch\u1ED1i ki\u1EC7n ni\xEAm
-      phong, gi\u1EEF n\xF3 trong kho l\u1EA1nh nh\xE0 m\xE1y c\xF9ng h\u1ED3 s\u01A1
-      giao h\xE0ng. Kh\xF4ng \u0111\u01B0\u1EE3c \u0111\u1ED5i s\u1ED1 ni\xEAm phong
-      hay \u0111\u1ECBa ch\u1EC9 qua \u0111i\u1EC7n tho\u1EA1i."
+    title: Delivery Manifest (AL-04)
+    summary: '• Shipment / Seal: **AL-04 / K6** (Lot **T9-17**)
+
+      • Destination / Time: **NORTHBRIDGE / 02:40** (Service Entrance, **Group C12**)
+
+      • Note: Returned unopened to Factory cold storage after quarantine shutters
+      closed'
+    body: 'Dispatch copy. Shipment **AL-04**; security seal **K6**; lot **T9-17**.
+      Destination: **Northbridge Care Institute**, service receiving entrance. Scheduled
+      intake: **02:40**, group **C12**. Security release: Marcus Hale. The public
+      cargo description is temperature-controlled medical stock. Do not replace this
+      page with the contractor''s abbreviated receipt: that copy omits the receiving
+      group and service entrance. Added in blue ink: if receiving refuses the sealed
+      case, retain it in factory cold storage and leave the delivery record attached.
+      Neither the seal number nor the destination may be changed by telephone.'
+    bodyVietnamese: 'Bản lưu xuất hàng. Chuyến AL-04; niêm phong K6; lô T9-17. Điểm
+      đến: Northbridge Care Institute, cửa nhận hàng dịch vụ. Giờ tiếp nhận: 02:40,
+      nhóm C12. Người duyệt an ninh: Marcus Hale. Mô tả công khai là vật tư y tế bảo
+      quản lạnh. Không thay trang này bằng biên nhận rút gọn của nhà thầu vì bản đó
+      bỏ nhóm tiếp nhận và cửa dịch vụ. Chỉ thị viết thêm bằng mực xanh: nếu nơi nhận
+      từ chối kiện niêm phong, giữ nó trong kho lạnh nhà máy cùng hồ sơ giao hàng.
+      Không được đổi số niêm phong hay địa chỉ qua điện thoại.'
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 0d58bdec2258a564facd2e9f32be26ed, type: 3}
     preview: {fileID: 0}
@@ -92,34 +77,27 @@ MonoBehaviour:
     chapter: 0
     required: 1
     title: B2 Transfer Addendum
-    summary: 'Route amendment to AL-04, seal K6. Receiving authority: Dr. Adrian
-      Cole, technical level B2 beneath Northbridge. The sample case was returned
+    summary: '• Authority: **Dr. Adrian Cole**, **Level B2** beneath **Northbridge**
+
+      • Missing Records: Patient-linked records stayed at **Northbridge** under **Group
+      C12**
+
+      • Warning: Contractor asked for sample-only return; retain full addendum'
+    body: 'Route amendment to **AL-04**, seal **K6**. Receiving authority: **Dr. Adrian
+      Cole**, technical level **B2** beneath Northbridge. The sample case was returned
       unopened to factory cold storage after the internal quarantine shutters closed.
       Its movement record remains valid and must travel with it. Patient-linked records
-      stayed at the institute under group C12; they are not included in this case.
+      stayed at the institute under group **C12**; they are not included in this case.
       B2 is absent from the public visitor directory. Any recovery team must retain
       this addendum with the original seal receipt. The contractor requested a sample-only
       return. Security has not authorized removal of the supporting records.'
-    body: 'Route amendment to AL-04, seal K6. Receiving authority: Dr. Adrian Cole,
-      technical level B2 beneath Northbridge. The sample case was returned unopened
-      to factory cold storage after the internal quarantine shutters closed. Its
-      movement record remains valid and must travel with it. Patient-linked records
-      stayed at the institute under group C12; they are not included in this case.
-      B2 is absent from the public visitor directory. Any recovery team must retain
-      this addendum with the original seal receipt. The contractor requested a sample-only
-      return. Security has not authorized removal of the supporting records.'
-    bodyVietnamese: "Ph\u1EE5 l\u1EE5c tuy\u1EBFn AL-04, ni\xEAm phong K6. Ng\u01B0\u1EDDi
-      ph\u1EE5 tr\xE1ch nh\u1EADn: Dr. Adrian Cole, t\u1EA7ng k\u1EF9 thu\u1EADt
-      B2 d\u01B0\u1EDBi Northbridge. Ki\u1EC7n m\u1EABu \u0111\u01B0\u1EE3c tr\u1EA3
-      nguy\xEAn ni\xEAm phong v\u1EC1 kho l\u1EA1nh nh\xE0 m\xE1y sau khi c\u1EEDa
-      phong t\u1ECFa n\u1ED9i b\u1ED9 \u0111\xF3ng. H\u1ED3 s\u01A1 di chuy\u1EC3n
-      v\u1EABn c\xF3 hi\u1EC7u l\u1EF1c v\xE0 ph\u1EA3i \u0111i c\xF9ng ki\u1EC7n.
-      H\u1ED3 s\u01A1 li\xEAn quan b\u1EC7nh nh\xE2n c\xF2n t\u1EA1i vi\u1EC7n, thu\u1ED9c
-      nh\xF3m C12, kh\xF4ng n\u1EB1m trong ki\u1EC7n n\xE0y. B2 kh\xF4ng c\xF3 tr\xEAn
-      danh m\u1EE5c d\xE0nh cho kh\xE1ch. \u0110\u1ED9i thu h\u1ED3i ph\u1EA3i gi\u1EEF
-      ph\u1EE5 l\u1EE5c c\xF9ng bi\xEAn nh\u1EADn g\u1ED1c. Nh\xE0 th\u1EA7u y\xEAu
-      c\u1EA7u ch\u1EC9 tr\u1EA3 m\u1EABu. An ninh ch\u01B0a cho ph\xE9p t\xE1ch
-      h\u1ED3 s\u01A1 ch\u1EE9ng minh."
+    bodyVietnamese: 'Phụ lục tuyến AL-04, niêm phong K6. Người phụ trách nhận: Dr.
+      Adrian Cole, tầng kỹ thuật B2 dưới Northbridge. Kiện mẫu được trả nguyên niêm
+      phong về kho lạnh nhà máy sau khi cửa phong tỏa nội bộ đóng. Hồ sơ di chuyển
+      vẫn có hiệu lực và phải đi cùng kiện. Hồ sơ liên quan bệnh nhân còn tại viện,
+      thuộc nhóm C12, không nằm trong kiện này. B2 không có trên danh mục dành cho
+      khách. Đội thu hồi phải giữ phụ lục cùng biên nhận gốc. Nhà thầu yêu cầu chỉ
+      trả mẫu. An ninh chưa cho phép tách hồ sơ chứng minh.'
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 0d58bdec2258a564facd2e9f32be26ed, type: 3}
     preview: {fileID: 0}
@@ -129,34 +107,27 @@ MonoBehaviour:
     chapter: 1
     required: 1
     title: Northbridge Security Desk Log
-    summary: "02:40 \u2014 Received AL-04 under seal K6 for group C12. Public admissions
-      are suspended; technical intake continues through the service entrance. Record
-      P046 against the receiving time, not the earlier appointment time. The upper
-      records room holds the intake sheet. Access requires lower service power; the
-      replacement fuse is in ground-floor maintenance storage. No patient has been
-      discharged through this desk tonight. Staff asking for the public lift must
-      be redirected to security. Marcus Hale instructed us to keep both the public
-      log and technical supplement. The contractor asked for only the public log."
-    body: "02:40 \u2014 Received AL-04 under seal K6 for group C12. Public admissions
-      are suspended; technical intake continues through the service entrance. Record
-      P046 against the receiving time, not the earlier appointment time. The upper
-      records room holds the intake sheet. Access requires lower service power; the
-      replacement fuse is in ground-floor maintenance storage. No patient has been
-      discharged through this desk tonight. Staff asking for the public lift must
-      be redirected to security. Marcus Hale instructed us to keep both the public
-      log and technical supplement. The contractor asked for only the public log."
-    bodyVietnamese: "02:40 \u2014 Nh\u1EADn AL-04, ni\xEAm phong K6 cho nh\xF3m C12.
-      Ng\u1EEBng ti\u1EBFp nh\u1EADn c\xF4ng khai; ti\u1EBFp nh\u1EADn k\u1EF9 thu\u1EADt
-      v\u1EABn ti\u1EBFp t\u1EE5c qua c\u1EEDa d\u1ECBch v\u1EE5. Ghi P046 theo gi\u1EDD
-      nh\u1EADn th\u1EF1c t\u1EBF, kh\xF4ng theo gi\u1EDD h\u1EB9n tr\u01B0\u1EDBc
-      \u0111\xF3. Phi\u1EBFu ti\u1EBFp nh\u1EADn n\u1EB1m trong ph\xF2ng h\u1ED3
-      s\u01A1 t\u1EA7ng tr\xEAn. C\u1EA7n ngu\u1ED3n d\u1ECBch v\u1EE5 t\u1EA7ng
-      d\u01B0\u1EDBi \u0111\u1EC3 v\xE0o; c\u1EA7u ch\xEC thay th\u1EBF \u1EDF kho
-      b\u1EA3o tr\xEC t\u1EA7ng tr\u1EC7t. \u0110\xEAm nay kh\xF4ng b\u1EC7nh nh\xE2n
-      n\xE0o \u0111\u01B0\u1EE3c xu\u1EA5t vi\u1EC7n qua qu\u1EA7y. Nh\xE2n vi\xEAn
-      h\u1ECFi thang c\xF4ng c\u1ED9ng ph\u1EA3i t\u1EDBi an ninh. Marcus Hale y\xEAu
-      c\u1EA7u gi\u1EEF c\u1EA3 s\u1ED5 c\xF4ng khai v\xE0 ph\u1EE5 l\u1EE5c k\u1EF9
-      thu\u1EADt. Nh\xE0 th\u1EA7u ch\u1EC9 y\xEAu c\u1EA7u s\u1ED5 c\xF4ng khai."
+    summary: '• Intake: **AL-04 / K6** received at **02:40** for **Group C12** (Service
+      Entrance)
+
+      • Next Target: Upper Records Room — requires lower service power
+
+      • Spare Fuse: **Ground-floor Maintenance Storage**'
+    body: '**02:40** — Received **AL-04** under seal **K6** for group **C12**. Public
+      admissions are suspended; technical intake continues through the service entrance.
+      Record the intake against the receiving time (**02:40**), not the earlier appointment
+      time. The upper records room holds the intake sheet. Access requires lower service
+      power; the replacement fuse is in ground-floor maintenance storage. No patient
+      has been discharged through this desk tonight. Staff asking for the public lift
+      must be redirected to security. Marcus Hale instructed us to keep both the public
+      log and technical supplement. The contractor asked for only the public log.'
+    bodyVietnamese: 02:40 — Nhận AL-04, niêm phong K6 cho nhóm C12. Ngừng tiếp nhận
+      công khai; tiếp nhận kỹ thuật vẫn tiếp tục qua cửa dịch vụ. Ghi P046 theo giờ
+      nhận thực tế, không theo giờ hẹn trước đó. Phiếu tiếp nhận nằm trong phòng hồ
+      sơ tầng trên. Cần nguồn dịch vụ tầng dưới để vào; cầu chì thay thế ở kho bảo
+      trì tầng trệt. Đêm nay không bệnh nhân nào được xuất viện qua quầy. Nhân viên
+      hỏi thang công cộng phải tới an ninh. Marcus Hale yêu cầu giữ cả sổ công khai
+      và phụ lục kỹ thuật. Nhà thầu chỉ yêu cầu sổ công khai.
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -166,35 +137,28 @@ MonoBehaviour:
     chapter: 1
     required: 1
     title: P046 Intake Record
-    summary: 'Patient reference P046. Intake group C12. Receiving time 02:40. Linked
-      consignment AL-04, lot T9-17. Observation status: fever and disorientation
-      following the T-9 exposure protocol. Dr. Adrian Cole has requested immediate
+    summary: '• Match Target: **P046 / C12 / 02:40** (Lot **T9-17**, Shipment **AL-04**)
+
+      • Public vs Internal: Public says *Recovery Transfer*; Internal says **B2 Technical
+      Observation**
+
+      • Ignore: P041 / C08 / 01:20'
+    body: 'Patient reference **P046**. Intake group **C12**. Receiving time **02:40**.
+      Linked consignment **AL-04**, lot **T9-17**. Observation status: fever and disorientation
+      following the T-9 exposure protocol. **Dr. Adrian Cole** has requested immediate
       suspension of further exposure; approval remains unsigned. The public status
-      reads RECOVERY TRANSFER. The internal destination reads B2 TECHNICAL OBSERVATION.
+      reads *RECOVERY TRANSFER*. The internal destination reads **B2 TECHNICAL OBSERVATION**.
       Do not substitute P041, whose C08 intake was logged at 01:20. Family contact
       requests are held by administration. This sheet must accompany any movement
-      order so that the receiving team can reconcile the patient reference with the
-      original identity register.'
-    body: 'Patient reference P046. Intake group C12. Receiving time 02:40. Linked
-      consignment AL-04, lot T9-17. Observation status: fever and disorientation
-      following the T-9 exposure protocol. Dr. Adrian Cole has requested immediate
-      suspension of further exposure; approval remains unsigned. The public status
-      reads RECOVERY TRANSFER. The internal destination reads B2 TECHNICAL OBSERVATION.
-      Do not substitute P041, whose C08 intake was logged at 01:20. Family contact
-      requests are held by administration. This sheet must accompany any movement
-      order so that the receiving team can reconcile the patient reference with the
-      original identity register.'
-    bodyVietnamese: "M\xE3 b\u1EC7nh nh\xE2n P046. Nh\xF3m C12. Gi\u1EDD nh\u1EADn
-      02:40. Chuy\u1EBFn li\xEAn quan AL-04, l\xF4 T9-17. Theo d\xF5i: s\u1ED1t v\xE0
-      m\u1EA5t \u0111\u1ECBnh h\u01B0\u1EDBng sau quy tr\xECnh ph\u01A1i nhi\u1EC5m
-      T-9. Dr. Adrian Cole y\xEAu c\u1EA7u d\u1EEBng ngay vi\u1EC7c ph\u01A1i nhi\u1EC5m
-      b\u1ED5 sung; ph\xEA duy\u1EC7t ch\u01B0a \u0111\u01B0\u1EE3c k\xFD. Tr\u1EA1ng
-      th\xE1i c\xF4ng khai ghi CHUY\u1EC2N PH\u1EE4C H\u1ED2I. \u0110\u1ECBa ch\u1EC9
-      n\u1ED9i b\u1ED9 ghi THEO D\xD5I K\u1EF8 THU\u1EACT B2. Kh\xF4ng nh\u1EA7m
-      v\u1EDBi P041 thu\u1ED9c C08, ti\u1EBFp nh\u1EADn l\xFAc 01:20. Y\xEAu c\u1EA7u
-      li\xEAn h\u1EC7 gia \u0111\xECnh do h\xE0nh ch\xEDnh gi\u1EEF. Phi\u1EBFu n\xE0y
-      ph\u1EA3i \u0111i c\xF9ng l\u1EC7nh chuy\u1EC3n \u0111\u1EC3 n\u01A1i nh\u1EADn
-      \u0111\u1ED1i chi\u1EBFu m\xE3 b\u1EC7nh nh\xE2n v\u1EDBi danh t\xEDnh g\u1ED1c."
+      order so the receiving team can reconcile the patient reference with the original
+      identity register.'
+    bodyVietnamese: 'Mã bệnh nhân P046. Nhóm C12. Giờ nhận 02:40. Chuyến liên quan
+      AL-04, lô T9-17. Theo dõi: sốt và mất định hướng sau quy trình phơi nhiễm T-9.
+      Dr. Adrian Cole yêu cầu dừng ngay việc phơi nhiễm bổ sung; phê duyệt chưa được
+      ký. Trạng thái công khai ghi CHUYỂN PHỤC HỒI. Địa chỉ nội bộ ghi THEO DÕI KỸ
+      THUẬT B2. Không nhầm với P041 thuộc C08, tiếp nhận lúc 01:20. Yêu cầu liên hệ
+      gia đình do hành chính giữ. Phiếu này phải đi cùng lệnh chuyển để nơi nhận đối
+      chiếu mã bệnh nhân với danh tính gốc.'
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -204,34 +168,27 @@ MonoBehaviour:
     chapter: 1
     required: 1
     title: Mortuary Transfer Discrepancy
-    summary: "P046 / C12. Mortuary entry: deceased, 03:05. Freight movement entry:
-      living subject for B2 observation, 03:50. Both entries use the same patient
+    summary: '• Mortuary Entry: **P046 / C12** logged **DECEASED at 03:05** (drawer
+      empty)
+
+      • Freight Entry: Same wristband logged **ALIVE TRANSFER to B2 at 03:50**
+
+      • Attachment: **B2 Lift Access Card** retained with this report'
+    body: '**P046 / C12**. Mortuary entry: **deceased, 03:05**. Freight movement entry:
+      **living subject for B2 observation, 03:50**. Both entries use the same patient
       reference and receiving wristband; this is not a second patient. The assigned
-      mortuary drawer is empty. Maya Reed's lift note confirms the later trip carried
-      an occupied observation trolley. The B2 access card is retained with this discrepancy
-      report for an independent check. Do not resolve the conflict by deleting either
-      entry. Whoever examines the records must see that a live transfer was logged
-      after the reported death. \u2014 Security review copy."
-    body: "P046 / C12. Mortuary entry: deceased, 03:05. Freight movement entry: living
-      subject for B2 observation, 03:50. Both entries use the same patient reference
-      and receiving wristband; this is not a second patient. The assigned mortuary
-      drawer is empty. Maya Reed's lift note confirms the later trip carried an occupied
-      observation trolley. The B2 access card is retained with this discrepancy report
-      for an independent check. Do not resolve the conflict by deleting either entry.
-      Whoever examines the records must see that a live transfer was logged after
-      the reported death. \u2014 Security review copy."
-    bodyVietnamese: "P046 / C12. S\u1ED5 nh\xE0 x\xE1c: t\u1EED vong, 03:05. S\u1ED5
-      v\u1EADn chuy\u1EC3n: \u0111\u1ED1i t\u01B0\u1EE3ng c\xF2n s\u1ED1ng \u0111i
-      theo d\xF5i t\u1EA1i B2, 03:50. Hai m\u1EE5c d\xF9ng c\xF9ng m\xE3 b\u1EC7nh
-      nh\xE2n v\xE0 v\xF2ng nh\u1EADn d\u1EA1ng, kh\xF4ng ph\u1EA3i hai ng\u01B0\u1EDDi.
-      Ng\u0103n nh\xE0 x\xE1c \u0111\u01B0\u1EE3c ch\u1EC9 \u0111\u1ECBnh \u0111ang
-      tr\u1ED1ng. Ghi ch\xFA thang c\u1EE7a Maya Reed x\xE1c nh\u1EADn chuy\u1EBFn
-      sau ch\u1EDF xe theo d\xF5i c\xF3 ng\u01B0\u1EDDi. Th\u1EBB B2 \u0111\u01B0\u1EE3c
-      gi\u1EEF c\xF9ng b\xE1o c\xE1o \u0111\u1EC3 ki\u1EC3m tra \u0111\u1ED9c l\u1EADp.
-      Kh\xF4ng gi\u1EA3i quy\u1EBFt m\xE2u thu\u1EABn b\u1EB1ng c\xE1ch x\xF3a m\u1ED9t
-      m\u1EE5c. Ng\u01B0\u1EDDi xem ph\u1EA3i bi\u1EBFt l\u1EA7n chuy\u1EC3n c\xF2n
-      s\u1ED1ng \u0111\u01B0\u1EE3c ghi sau gi\u1EDD t\u1EED vong. \u2014 B\u1EA3n
-      th\u1EA9m tra an ninh."
+      mortuary drawer is empty. Maya Reed''s lift note confirms the later trip carried
+      an occupied observation trolley. The **B2 access card** is retained with this
+      discrepancy report for an independent check. Do not resolve the conflict by
+      deleting either entry. Whoever examines the records must see that a live transfer
+      was logged after the reported death. — Security review copy.'
+    bodyVietnamese: 'P046 / C12. Sổ nhà xác: tử vong, 03:05. Sổ vận chuyển: đối tượng
+      còn sống đi theo dõi tại B2, 03:50. Hai mục dùng cùng mã bệnh nhân và vòng nhận
+      dạng, không phải hai người. Ngăn nhà xác được chỉ định đang trống. Ghi chú thang
+      của Maya Reed xác nhận chuyến sau chở xe theo dõi có người. Thẻ B2 được giữ
+      cùng báo cáo để kiểm tra độc lập. Không giải quyết mâu thuẫn bằng cách xóa một
+      mục. Người xem phải biết lần chuyển còn sống được ghi sau giờ tử vong. — Bản
+      thẩm tra an ninh.'
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 0d58bdec2258a564facd2e9f32be26ed, type: 3}
     preview: {fileID: 0}
@@ -241,36 +198,27 @@ MonoBehaviour:
     chapter: 2
     required: 1
     title: B2 Archive Index
-    summary: Restricted index, revision before contractor export. Trace lot T9-17
-      to intake group C12 and patient P046. The corresponding original archive is
-      E-02. E-01 belongs to an earlier shipment and cannot establish this chain.
+    summary: '• Target Archive: **E-02** (links **T9-17 / C12 / P046**)
+
+      • Ignore: **E-01** (earlier lot) & **E-03** (equipment only)
+
+      • Requirement: Power **DATA** circuit before opening archive terminal'
+    body: Restricted index, revision before contractor export. Trace lot **T9-17**
+      to intake group **C12** and patient **P046**. The corresponding original archive
+      is **E-02**. E-01 belongs to an earlier shipment and cannot establish this chain.
       E-03 is an equipment record without patient identities. The contractor export
-      of E-02 excludes the identity table and Adrian Cole's stop-work request. Preserve
-      the original directory, not just its export. Power the data path before opening
-      the archive terminal. Security has placed the original under hold so that an
-      outside investigator can compare what was recorded with what the client intended
-      to receive.
-    body: Restricted index, revision before contractor export. Trace lot T9-17 to
-      intake group C12 and patient P046. The corresponding original archive is E-02.
-      E-01 belongs to an earlier shipment and cannot establish this chain. E-03 is
-      an equipment record without patient identities. The contractor export of E-02
-      excludes the identity table and Adrian Cole's stop-work request. Preserve the
-      original directory, not just its export. Power the data path before opening
-      the archive terminal. Security has placed the original under hold so that an
-      outside investigator can compare what was recorded with what the client intended
-      to receive.
-    bodyVietnamese: "Ch\u1EC9 m\u1EE5c h\u1EA1n ch\u1EBF, phi\xEAn b\u1EA3n tr\u01B0\u1EDBc
-      khi xu\u1EA5t cho nh\xE0 th\u1EA7u. \u0110\u1ED1i chi\u1EBFu l\xF4 T9-17 v\u1EDBi
-      nh\xF3m C12 v\xE0 b\u1EC7nh nh\xE2n P046. H\u1ED3 s\u01A1 g\u1ED1c t\u01B0\u01A1ng
-      \u1EE9ng l\xE0 E-02. E-01 thu\u1ED9c l\xF4 tr\u01B0\u1EDBc, kh\xF4ng ch\u1EE9ng
-      minh chu\u1ED7i n\xE0y. E-03 l\xE0 h\u1ED3 s\u01A1 thi\u1EBFt b\u1ECB kh\xF4ng
-      c\xF3 danh t\xEDnh b\u1EC7nh nh\xE2n. B\u1EA3n E-02 c\u1EE7a nh\xE0 th\u1EA7u
-      lo\u1EA1i b\u1EA3ng danh t\xEDnh v\xE0 y\xEAu c\u1EA7u d\u1EEBng c\u1EE7a Adrian
-      Cole. Ph\u1EA3i gi\u1EEF th\u01B0 m\u1EE5c g\u1ED1c, kh\xF4ng ch\u1EC9 b\u1EA3n
-      xu\u1EA5t. C\u1EA5p ngu\u1ED3n \u0111\u01B0\u1EDDng d\u1EEF li\u1EC7u tr\u01B0\u1EDBc
-      khi m\u1EDF m\xE1y l\u01B0u tr\u1EEF. An ninh gi\u1EEF b\u1EA3n g\u1ED1c \u0111\u1EC3
-      \u0111i\u1EC1u tra vi\xEAn b\xEAn ngo\xE0i so s\xE1nh d\u1EEF li\u1EC7u th\u1EF1c
-      t\u1EBF v\u1EDBi th\u1EE9 kh\xE1ch h\xE0ng \u0111\u1ECBnh nh\u1EADn."
+      of E-02 excludes the identity table and **Adrian Cole's** stop-work request.
+      Preserve the original directory, not just its export. Power the **DATA** path
+      before opening the archive terminal. Security has placed the original under
+      hold so an outside investigator can compare what was recorded with what the
+      client intended to receive.
+    bodyVietnamese: Chỉ mục hạn chế, phiên bản trước khi xuất cho nhà thầu. Đối chiếu
+      lô T9-17 với nhóm C12 và bệnh nhân P046. Hồ sơ gốc tương ứng là E-02. E-01 thuộc
+      lô trước, không chứng minh chuỗi này. E-03 là hồ sơ thiết bị không có danh tính
+      bệnh nhân. Bản E-02 của nhà thầu loại bảng danh tính và yêu cầu dừng của Adrian
+      Cole. Phải giữ thư mục gốc, không chỉ bản xuất. Cấp nguồn đường dữ liệu trước
+      khi mở máy lưu trữ. An ninh giữ bản gốc để điều tra viên bên ngoài so sánh dữ
+      liệu thực tế với thứ khách hàng định nhận.
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 0d58bdec2258a564facd2e9f32be26ed, type: 3}
     preview: {fileID: 0}
@@ -280,34 +228,27 @@ MonoBehaviour:
     chapter: 2
     required: 1
     title: Emergency Power Allocation
-    summary: "Maya Reed \u2014 B2 maintenance. Available emergency capacity: six
-      units. SAFETY uses two, TEST RIG uses four, DATA uses two, and FREIGHT LIFT
-      uses two. SAFETY must remain online throughout any switch. For records recovery,
-      turn TEST RIG off, then enable DATA and FREIGHT LIFT. The resulting load is
-      six; no reserve remains for experiments. The test indicator is not a safety
-      interlock. An overload refuses the selection without damaging the archive.
-      If interrupted, return to the panel and check its actual switches. Keep the
-      escape lift powered until the last occupied trip is clear."
-    body: "Maya Reed \u2014 B2 maintenance. Available emergency capacity: six units.
-      SAFETY uses two, TEST RIG uses four, DATA uses two, and FREIGHT LIFT uses two.
-      SAFETY must remain online throughout any switch. For records recovery, turn
-      TEST RIG off, then enable DATA and FREIGHT LIFT. The resulting load is six;
-      no reserve remains for experiments. The test indicator is not a safety interlock.
-      An overload refuses the selection without damaging the archive. If interrupted,
-      return to the panel and check its actual switches. Keep the escape lift powered
-      until the last occupied trip is clear."
-    bodyVietnamese: "Maya Reed \u2014 b\u1EA3o tr\xEC B2. C\xF4ng su\u1EA5t kh\u1EA9n
-      c\u1EA5p: s\xE1u \u0111\u01A1n v\u1ECB. SAFETY d\xF9ng hai, TEST RIG b\u1ED1n,
-      DATA hai, FREIGHT LIFT hai. SAFETY ph\u1EA3i lu\xF4n b\u1EADt khi chuy\u1EC3n
-      m\u1EA1ch. \u0110\u1EC3 thu h\u1ED3i h\u1ED3 s\u01A1, t\u1EAFt TEST RIG r\u1ED3i
-      b\u1EADt DATA v\xE0 FREIGHT LIFT. T\u1ED5ng t\u1EA3i l\xE0 s\xE1u, kh\xF4ng
-      c\xF2n c\xF4ng su\u1EA5t cho th\u1EED nghi\u1EC7m. \u0110\xE8n th\u1EED nghi\u1EC7m
-      kh\xF4ng ph\u1EA3i kh\xF3a an to\xE0n. H\u1EC7 th\u1ED1ng t\u1EEB ch\u1ED1i
-      l\u1EF1a ch\u1ECDn qu\xE1 t\u1EA3i m\xE0 kh\xF4ng l\xE0m h\u1ECFng h\u1ED3
-      s\u01A1. N\u1EBFu b\u1ECB gi\xE1n \u0111o\u1EA1n, quay l\u1EA1i b\u1EA3ng v\xE0
-      ki\u1EC3m tra c\xF4ng t\u1EAFc th\u1EF1c t\u1EBF. Gi\u1EEF ngu\u1ED3n thang
-      tho\xE1t cho t\u1EDBi khi chuy\u1EBFn c\xF3 ng\u01B0\u1EDDi cu\u1ED1i c\xF9ng
-      ra ngo\xE0i."
+    summary: '• Max Capacity: **6 Units** (SAFETY 2 · TEST RIG 4 · DATA 2 · FREIGHT
+      LIFT 2)
+
+      • Required ON: **SAFETY (2) + DATA (2) + FREIGHT LIFT (2) = 6**
+
+      • Required OFF: **TEST RIG (4)**'
+    body: 'Maya Reed — B2 maintenance. Available emergency capacity: **six units**.
+      **SAFETY** uses two, **TEST RIG** uses four, **DATA** uses two, and **FREIGHT
+      LIFT** uses two. **SAFETY** must remain online throughout any switch. For records
+      recovery, turn **TEST RIG OFF**, then enable **DATA** and **FREIGHT LIFT**.
+      The resulting load is **six**; no reserve remains for experiments. The test
+      indicator is not a safety interlock. An overload refuses the selection without
+      damaging the archive. If interrupted, return to the panel and check its actual
+      switches. Keep the escape lift powered until the last occupied trip is clear.'
+    bodyVietnamese: 'Maya Reed — bảo trì B2. Công suất khẩn cấp: sáu đơn vị. SAFETY
+      dùng hai, TEST RIG bốn, DATA hai, FREIGHT LIFT hai. SAFETY phải luôn bật khi
+      chuyển mạch. Để thu hồi hồ sơ, tắt TEST RIG rồi bật DATA và FREIGHT LIFT. Tổng
+      tải là sáu, không còn công suất cho thử nghiệm. Đèn thử nghiệm không phải khóa
+      an toàn. Hệ thống từ chối lựa chọn quá tải mà không làm hỏng hồ sơ. Nếu bị gián
+      đoạn, quay lại bảng và kiểm tra công tắc thực tế. Giữ nguồn thang thoát cho
+      tới khi chuyến có người cuối cùng ra ngoài.'
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 0d58bdec2258a564facd2e9f32be26ed, type: 3}
     preview: {fileID: 0}
@@ -317,38 +258,30 @@ MonoBehaviour:
     chapter: 2
     required: 1
     title: E-02 Original Incident Archive
-    summary: 'Original E-02: lot T9-17, group C12, patient P046. The identity table,
-      movement history and stop-work request are retained without redaction. Adrian
-      Cole suspended the trial before containment failed. The later sample-only export
-      was prepared under the client''s instruction, not medical authority. Final
-      incident ledger confirms the deaths of Dr. Adrian Cole, security chief Marcus
-      Hale and technician Maya Reed during the breach; their signed records remain
-      attached. Patient outcomes beyond the documented transfers are unresolved.
-      Copy this complete archive to independent custody. Removing the identity fields
-      would erase the link between the material and the people exposed.'
-    body: 'Original E-02: lot T9-17, group C12, patient P046. The identity table,
-      movement history and stop-work request are retained without redaction. Adrian
-      Cole suspended the trial before containment failed. The later sample-only export
-      was prepared under the client''s instruction, not medical authority. Final
-      incident ledger confirms the deaths of Dr. Adrian Cole, security chief Marcus
-      Hale and technician Maya Reed during the breach; their signed records remain
-      attached. Patient outcomes beyond the documented transfers are unresolved.
-      Copy this complete archive to independent custody. Removing the identity fields
-      would erase the link between the material and the people exposed.'
-    bodyVietnamese: "B\u1EA3n g\u1ED1c E-02: l\xF4 T9-17, nh\xF3m C12, b\u1EC7nh
-      nh\xE2n P046. Gi\u1EEF nguy\xEAn b\u1EA3ng danh t\xEDnh, l\u1ECBch s\u1EED
-      chuy\u1EC3n v\xE0 y\xEAu c\u1EA7u d\u1EEBng. Adrian Cole \u0111\xECnh ch\u1EC9
-      th\u1EED nghi\u1EC7m tr\u01B0\u1EDBc khi phong t\u1ECFa th\u1EA5t b\u1EA1i.
-      B\u1EA3n xu\u1EA5t ch\u1EC9 c\xF3 m\u1EABu sau \u0111\xF3 \u0111\u01B0\u1EE3c
-      l\u1EADp theo kh\xE1ch h\xE0ng, kh\xF4ng ph\u1EA3i ch\u1EC9 th\u1ECB y t\u1EBF.
-      S\u1ED5 s\u1EF1 c\u1ED1 cu\u1ED1i x\xE1c nh\u1EADn Dr. Adrian Cole, tr\u01B0\u1EDFng
-      an ninh Marcus Hale v\xE0 k\u1EF9 thu\u1EADt vi\xEAn Maya Reed t\u1EED vong
-      trong v\u1EE5 m\u1EA5t ki\u1EC3m so\xE1t; h\u1ED3 s\u01A1 h\u1ECD k\xFD \u0111\u01B0\u1EE3c
-      \u0111\xEDnh k\xE8m. S\u1ED1 ph\u1EADn b\u1EC7nh nh\xE2n ngo\xE0i c\xE1c l\u1EA7n
-      chuy\u1EC3n c\xF3 ch\u1EE9ng t\u1EEB ch\u01B0a \u0111\u01B0\u1EE3c x\xE1c \u0111\u1ECBnh.
-      Sao ch\xE9p \u0111\u1EA7y \u0111\u1EE7 cho b\xEAn \u0111\u1ED9c l\u1EADp. X\xF3a
-      danh t\xEDnh s\u1EBD x\xF3a li\xEAn h\u1EC7 gi\u1EEFa v\u1EADt li\u1EC7u v\xE0
-      ng\u01B0\u1EDDi ph\u01A1i nhi\u1EC5m."
+    summary: '• Verified Chain: **E-02 / T9-17 / C12 / P046** (unredacted names +
+      Cole''s halt order)
+
+      • Confirmed Dead: **Dr. Adrian Cole**, **Marcus Hale**, **Maya Reed**
+
+      • Order: Transmit **COMPLETE** archive to BRT; do not strip patient identities'
+    body: 'Original **E-02**: lot **T9-17**, group **C12**, patient **P046**. The
+      identity table, movement history, and stop-work request are retained without
+      redaction. **Adrian Cole** suspended the trial before containment failed. The
+      later sample-only export was prepared under the client''s instruction, not medical
+      authority. Final incident ledger confirms the deaths of **Dr. Adrian Cole**,
+      security chief **Marcus Hale**, and technician **Maya Reed** during the breach;
+      their signed records remain attached. Patient outcomes beyond the documented
+      transfers are unresolved. Copy this complete archive to independent custody.
+      Removing the identity fields would erase the link between the material and the
+      people exposed.'
+    bodyVietnamese: 'Bản gốc E-02: lô T9-17, nhóm C12, bệnh nhân P046. Giữ nguyên
+      bảng danh tính, lịch sử chuyển và yêu cầu dừng. Adrian Cole đình chỉ thử nghiệm
+      trước khi phong tỏa thất bại. Bản xuất chỉ có mẫu sau đó được lập theo khách
+      hàng, không phải chỉ thị y tế. Sổ sự cố cuối xác nhận Dr. Adrian Cole, trưởng
+      an ninh Marcus Hale và kỹ thuật viên Maya Reed tử vong trong vụ mất kiểm soát;
+      hồ sơ họ ký được đính kèm. Số phận bệnh nhân ngoài các lần chuyển có chứng từ
+      chưa được xác định. Sao chép đầy đủ cho bên độc lập. Xóa danh tính sẽ xóa liên
+      hệ giữa vật liệu và người phơi nhiễm.'
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 20477921fd0efc146aa9752d76a2acc7, type: 3}
     preview: {fileID: 0}
@@ -358,13 +291,10 @@ MonoBehaviour:
     chapter: 0
     required: 0
     title: Unsent Factory Letter
-    summary: Ellie, I traded shifts again. Please do not wait at the bus stop tonight.
-      They keep adding a sealed delivery after the ordinary trucks leave, and somebody
-      has to stay with the temperature recorder until security signs. I used to know
-      every driver by name. Now they speak to a caller before they speak to us. There
-      is soup in the blue container, not the one with the cracked lid. Tell Ben I
-      have not forgotten his Saturday match. I will come home when they let the last
-      truck through.
+    summary: '• Author: Night-shift factory worker writing home to Ellie & Ben
+
+      • Detail: After-hours sealed deliveries handled separately by security & an
+      outside caller'
     body: Ellie, I traded shifts again. Please do not wait at the bus stop tonight.
       They keep adding a sealed delivery after the ordinary trucks leave, and somebody
       has to stay with the temperature recorder until security signs. I used to know
@@ -372,16 +302,12 @@ MonoBehaviour:
       is soup in the blue container, not the one with the cracked lid. Tell Ben I
       have not forgotten his Saturday match. I will come home when they let the last
       truck through.
-    bodyVietnamese: "Ellie, anh l\u1EA1i \u0111\u1ED5i ca. \u0110\u1EEBng \u0111\u1EE3i
-      \u1EDF tr\u1EA1m xe bu\xFDt t\u1ED1i nay. H\u1ECD c\u1EE9 th\xEAm chuy\u1EBFn
-      ni\xEAm phong sau khi xe th\u01B0\u1EDDng \u0111i h\u1EBFt, v\xE0 ph\u1EA3i
-      c\xF3 ng\u01B0\u1EDDi tr\xF4ng m\xE1y ghi nhi\u1EC7t t\u1EDBi l\xFAc an ninh
-      k\xFD. Tr\u01B0\u1EDBc \u0111\xE2y anh bi\u1EBFt t\xEAn m\u1ECDi t\xE0i x\u1EBF.
-      Gi\u1EDD h\u1ECD n\xF3i v\u1EDBi m\u1ED9t ng\u01B0\u1EDDi g\u1ECDi \u0111i\u1EC7n
-      tr\u01B0\u1EDBc khi n\xF3i v\u1EDBi b\u1ECDn anh. S\xFAp \u1EDF h\u1ED9p xanh,
-      kh\xF4ng ph\u1EA3i h\u1ED9p n\u1EE9t n\u1EAFp. N\xF3i v\u1EDBi Ben anh ch\u01B0a
-      qu\xEAn tr\u1EADn th\u1EE9 b\u1EA3y. Anh s\u1EBD v\u1EC1 khi h\u1ECD cho chi\u1EBFc
-      xe cu\u1ED1i qua."
+    bodyVietnamese: Ellie, anh lại đổi ca. Đừng đợi ở trạm xe buýt tối nay. Họ cứ
+      thêm chuyến niêm phong sau khi xe thường đi hết, và phải có người trông máy
+      ghi nhiệt tới lúc an ninh ký. Trước đây anh biết tên mọi tài xế. Giờ họ nói
+      với một người gọi điện trước khi nói với bọn anh. Súp ở hộp xanh, không phải
+      hộp nứt nắp. Nói với Ben anh chưa quên trận thứ bảy. Anh sẽ về khi họ cho chiếc
+      xe cuối qua.
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -391,33 +317,23 @@ MonoBehaviour:
     chapter: 0
     required: 0
     title: Night Shift Handover
-    summary: 'To the morning crew: the kettle trips the socket behind the time clock.
-      Use the canteen socket until maintenance replaces it. Do not stack empty pallets
-      against the service door, even if dispatch says the corridor is unused. We
-      had to move all of them during yesterday''s alarm. Maya left a proper electrical
-      procedure beside the generator; read it instead of copying the last operator''s
-      switch positions. The spare locker keys are with security. If nobody relieves
-      you, write your departure time honestly. We are not signing another complete
-      shift that nobody actually worked.'
+    summary: '• Author: Factory shift crew handover note
+
+      • Detail: **Maya Reed** left the proper electrical procedure beside the generator'
     body: 'To the morning crew: the kettle trips the socket behind the time clock.
       Use the canteen socket until maintenance replaces it. Do not stack empty pallets
-      against the service door, even if dispatch says the corridor is unused. We
-      had to move all of them during yesterday''s alarm. Maya left a proper electrical
+      against the service door, even if dispatch says the corridor is unused. We had
+      to move all of them during yesterday''s alarm. **Maya** left a proper electrical
       procedure beside the generator; read it instead of copying the last operator''s
       switch positions. The spare locker keys are with security. If nobody relieves
       you, write your departure time honestly. We are not signing another complete
       shift that nobody actually worked.'
-    bodyVietnamese: "G\u1EEDi ca s\xE1ng: \u1EA5m n\u01B0\u1EDBc l\xE0m nh\u1EA3y
-      \u1ED5 sau \u0111\u1ED3ng h\u1ED3 ch\u1EA5m c\xF4ng. D\xF9ng \u1ED5 c\u0103n
-      tin t\u1EDBi khi b\u1EA3o tr\xEC thay. \u0110\u1EEBng x\u1EBFp pallet ch\u1EAFn
-      c\u1EEDa d\u1ECBch v\u1EE5 d\xF9 \u0111i\u1EC1u ph\u1ED1i b\u1EA3o h\xE0nh
-      lang kh\xF4ng d\xF9ng. H\xF4m qua b\xE1o \u0111\u1ED9ng ph\u1EA3i d\u1ECDn
-      h\u1EBFt. Maya \u0111\u1EC3 quy tr\xECnh \u0111i\u1EC7n c\u1EA1nh m\xE1y ph\xE1t;
-      \u0111\u1ECDc n\xF3 thay v\xEC ch\xE9p v\u1ECB tr\xED c\xF4ng t\u1EAFc c\u1EE7a
-      ca tr\u01B0\u1EDBc. Ch\xECa t\u1EE7 d\u1EF1 ph\xF2ng \u1EDF an ninh. N\u1EBFu
-      kh\xF4ng c\xF3 ng\u01B0\u1EDDi thay, ghi \u0111\xFAng gi\u1EDD r\u1EDDi ca.
-      Ch\xFAng ta kh\xF4ng k\xFD th\xEAm m\u1ED9t ca \u0111\u1EE7 gi\u1EDD m\xE0
-      ch\u1EB3ng ai th\u1EF1c s\u1EF1 l\xE0m."
+    bodyVietnamese: 'Gửi ca sáng: ấm nước làm nhảy ổ sau đồng hồ chấm công. Dùng ổ
+      căn tin tới khi bảo trì thay. Đừng xếp pallet chắn cửa dịch vụ dù điều phối
+      bảo hành lang không dùng. Hôm qua báo động phải dọn hết. Maya để quy trình điện
+      cạnh máy phát; đọc nó thay vì chép vị trí công tắc của ca trước. Chìa tủ dự
+      phòng ở an ninh. Nếu không có người thay, ghi đúng giờ rời ca. Chúng ta không
+      ký thêm một ca đủ giờ mà chẳng ai thực sự làm.'
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -427,33 +343,24 @@ MonoBehaviour:
     chapter: 0
     required: 0
     title: Cold Store Return Memo
-    summary: "Security desk \u2014 Marcus Hale. The returned T9-17 case remains sealed.
-      Photograph the seal before storage and attach the failed delivery receipt;
-      do not classify it as unused stock. A caller asked whether destroying the temperature
+    summary: '• Author: **Marcus Hale** (Security Desk)
+
+      • Detail: An outside caller asked to destroy the temperature strip on returned
+      **T9-17**; Hale refused'
+    body: Security desk — **Marcus Hale**. The returned **T9-17** case remains sealed.
+      Photograph the seal before storage and attach the failed delivery receipt; do
+      not classify it as unused stock. A caller asked whether destroying the temperature
       strip would simplify the return. I declined and recorded the call reference.
       Refrigeration is a custody requirement, not proof that the contents are safe.
       No factory employee is authorized to inspect the sample. If the client sends
       a replacement manifest, keep both versions. A cleaner document is not necessarily
-      a more truthful one."
-    body: "Security desk \u2014 Marcus Hale. The returned T9-17 case remains sealed.
-      Photograph the seal before storage and attach the failed delivery receipt;
-      do not classify it as unused stock. A caller asked whether destroying the temperature
-      strip would simplify the return. I declined and recorded the call reference.
-      Refrigeration is a custody requirement, not proof that the contents are safe.
-      No factory employee is authorized to inspect the sample. If the client sends
-      a replacement manifest, keep both versions. A cleaner document is not necessarily
-      a more truthful one."
-    bodyVietnamese: "B\xE0n an ninh \u2014 Marcus Hale. Ki\u1EC7n T9-17 tr\u1EA3
-      v\u1EC1 v\u1EABn ni\xEAm phong. Ch\u1EE5p ni\xEAm phong tr\u01B0\u1EDBc khi
-      l\u01B0u kho, k\xE8m bi\xEAn nh\u1EADn giao th\u1EA5t b\u1EA1i; kh\xF4ng x\u1EBFp
-      v\xE0o h\xE0ng ch\u01B0a d\xF9ng. C\xF3 ng\u01B0\u1EDDi h\u1ECFi h\u1EE7y d\u1EA3i
-      nhi\u1EC7t c\xF3 \u0111\u01A1n gi\u1EA3n h\xF3a vi\u1EC7c tr\u1EA3 h\xE0ng
-      kh\xF4ng. T\xF4i t\u1EEB ch\u1ED1i v\xE0 ghi m\xE3 cu\u1ED9c g\u1ECDi. Gi\u1EEF
-      l\u1EA1nh l\xE0 y\xEAu c\u1EA7u b\u1EA3o qu\u1EA3n ch\u1EE9ng c\u1EE9, kh\xF4ng
-      ch\u1EE9ng minh n\u1ED9i dung an to\xE0n. Nh\xE2n vi\xEAn nh\xE0 m\xE1y kh\xF4ng
-      \u0111\u01B0\u1EE3c ki\u1EC3m tra m\u1EABu. N\u1EBFu kh\xE1ch g\u1EEDi v\u1EADn
-      \u0111\u01A1n thay th\u1EBF, gi\u1EEF c\u1EA3 hai. H\u1ED3 s\u01A1 s\u1EA1ch
-      h\u01A1n ch\u01B0a ch\u1EAFc th\u1EADt h\u01A1n."
+      a more truthful one.
+    bodyVietnamese: Bàn an ninh — Marcus Hale. Kiện T9-17 trả về vẫn niêm phong. Chụp
+      niêm phong trước khi lưu kho, kèm biên nhận giao thất bại; không xếp vào hàng
+      chưa dùng. Có người hỏi hủy dải nhiệt có đơn giản hóa việc trả hàng không. Tôi
+      từ chối và ghi mã cuộc gọi. Giữ lạnh là yêu cầu bảo quản chứng cứ, không chứng
+      minh nội dung an toàn. Nhân viên nhà máy không được kiểm tra mẫu. Nếu khách
+      gửi vận đơn thay thế, giữ cả hai. Hồ sơ sạch hơn chưa chắc thật hơn.
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -463,33 +370,24 @@ MonoBehaviour:
     chapter: 1
     required: 0
     title: 'Ward Notice: Visiting Hours'
-    summary: Visiting hours are suspended until further notice. Please leave letters
-      with reception; staff will record the recipient and delivery time. Do not tell
-      families that a patient has been discharged unless a named clinician has signed
-      the discharge sheet. Administrative transfer is not discharge. The new technical
-      observation stamps have caused repeated mistakes at this desk. If an outside
-      caller asks for a room that no longer appears on the ward list, retain the
-      request for review. Families should not have to provide the same name every
-      time someone moves a folder.
+    summary: '• Source: Northbridge Ward Administration
+
+      • Detail: Visiting suspended; *Technical Observation* transfers caused reception
+      record errors'
     body: Visiting hours are suspended until further notice. Please leave letters
       with reception; staff will record the recipient and delivery time. Do not tell
       families that a patient has been discharged unless a named clinician has signed
-      the discharge sheet. Administrative transfer is not discharge. The new technical
-      observation stamps have caused repeated mistakes at this desk. If an outside
-      caller asks for a room that no longer appears on the ward list, retain the
-      request for review. Families should not have to provide the same name every
-      time someone moves a folder.
-    bodyVietnamese: "T\u1EA1m ng\u1EEBng th\u0103m b\u1EC7nh. \u0110\u1EC3 th\u01B0
-      t\u1EA1i l\u1EC5 t\xE2n; nh\xE2n vi\xEAn ghi ng\u01B0\u1EDDi nh\u1EADn v\xE0
-      gi\u1EDD giao. Kh\xF4ng b\xE1o gia \u0111\xECnh r\u1EB1ng b\u1EC7nh nh\xE2n
-      xu\u1EA5t vi\u1EC7n n\u1EBFu ch\u01B0a c\xF3 b\xE1c s\u0129 k\xFD phi\u1EBFu.
-      Chuy\u1EC3n h\xE0nh ch\xEDnh kh\xF4ng ph\u1EA3i xu\u1EA5t vi\u1EC7n. D\u1EA5u
-      theo d\xF5i k\u1EF9 thu\u1EADt m\u1EDBi g\xE2y nh\u1EA7m l\u1EABn li\xEAn t\u1EE5c.
-      N\u1EBFu ng\u01B0\u1EDDi g\u1ECDi h\u1ECFi ph\xF2ng \u0111\xE3 bi\u1EBFn m\u1EA5t
-      kh\u1ECFi danh s\xE1ch khoa, gi\u1EEF y\xEAu c\u1EA7u \u0111\u1EC3 ki\u1EC3m
-      tra. Gia \u0111\xECnh kh\xF4ng n\xEAn ph\u1EA3i \u0111\u1ECDc l\u1EA1i c\xF9ng
-      m\u1ED9t c\xE1i t\xEAn m\u1ED7i l\u1EA7n ai \u0111\xF3 chuy\u1EC3n m\u1ED9t
-      t\u1EADp h\u1ED3 s\u01A1."
+      the discharge sheet. Administrative transfer is not discharge. The new *technical
+      observation* stamps have caused repeated mistakes at this desk. If an outside
+      caller asks for a room that no longer appears on the ward list, retain the request
+      for review. Families should not have to provide the same name every time someone
+      moves a folder.
+    bodyVietnamese: Tạm ngừng thăm bệnh. Để thư tại lễ tân; nhân viên ghi người nhận
+      và giờ giao. Không báo gia đình rằng bệnh nhân xuất viện nếu chưa có bác sĩ
+      ký phiếu. Chuyển hành chính không phải xuất viện. Dấu theo dõi kỹ thuật mới
+      gây nhầm lẫn liên tục. Nếu người gọi hỏi phòng đã biến mất khỏi danh sách khoa,
+      giữ yêu cầu để kiểm tra. Gia đình không nên phải đọc lại cùng một cái tên mỗi
+      lần ai đó chuyển một tập hồ sơ.
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -499,29 +397,21 @@ MonoBehaviour:
     chapter: 1
     required: 0
     title: A Letter Never Delivered
-    summary: Dear Daniel, the receptionist said your room changed and that visiting
-      would resume next week. I left the photograph anyway. Your brother insists
-      the dog recognizes you in it, which sounds impossible, but I am choosing to
-      believe him. They would not let me leave your own blanket because everything
-      has to be issued by the ward. I have written our number again on the back.
-      You do not need to explain why you missed the call. Just ask someone to tell
-      us which room you are in now. Love, Anna.
-    body: Dear Daniel, the receptionist said your room changed and that visiting
-      would resume next week. I left the photograph anyway. Your brother insists
-      the dog recognizes you in it, which sounds impossible, but I am choosing to
-      believe him. They would not let me leave your own blanket because everything
-      has to be issued by the ward. I have written our number again on the back.
-      You do not need to explain why you missed the call. Just ask someone to tell
-      us which room you are in now. Love, Anna.
-    bodyVietnamese: "Daniel th\xE2n m\u1EBFn, l\u1EC5 t\xE2n n\xF3i con \u0111\u1ED5i
-      ph\xF2ng v\xE0 tu\u1EA7n sau s\u1EBD \u0111\u01B0\u1EE3c th\u0103m. M\u1EB9
-      v\u1EABn \u0111\u1EC3 l\u1EA1i \u1EA3nh. Em con kh\u0103ng kh\u0103ng con ch\xF3
-      nh\u1EADn ra con trong \u1EA3nh; nghe kh\xF3 tin nh\u01B0ng m\u1EB9 mu\u1ED1n
-      tin. H\u1ECD kh\xF4ng cho \u0111\u1EC3 ch\u0103n c\u1EE7a con v\xEC m\u1ECDi
-      th\u1EE9 ph\u1EA3i do khoa c\u1EA5p. M\u1EB9 ghi l\u1EA1i s\u1ED1 nh\xE0 ph\xEDa
-      sau. Con kh\xF4ng c\u1EA7n gi\u1EA3i th\xEDch v\xEC sao l\u1EE1 cu\u1ED9c g\u1ECDi.
-      Ch\u1EC9 c\u1EA7n nh\u1EDD ai n\xF3i cho nh\xE0 m\xECnh bi\u1EBFt gi\u1EDD
-      con \u1EDF ph\xF2ng n\xE0o. Y\xEAu con, Anna."
+    summary: '• Author: Anna (family member of a transferred patient)
+
+      • Detail: Reception reassigned the patient''s room and withheld personal belongings'
+    body: Dear Daniel, the receptionist said your room changed and that visiting would
+      resume next week. I left the photograph anyway. Your brother insists the dog
+      recognizes you in it, which sounds impossible, but I am choosing to believe
+      him. They would not let me leave your own blanket because everything has to
+      be issued by the ward. I have written our number again on the back. You do not
+      need to explain why you missed the call. Just ask someone to tell us which room
+      you are in now. Love, Anna.
+    bodyVietnamese: Daniel thân mến, lễ tân nói con đổi phòng và tuần sau sẽ được
+      thăm. Mẹ vẫn để lại ảnh. Em con khăng khăng con chó nhận ra con trong ảnh; nghe
+      khó tin nhưng mẹ muốn tin. Họ không cho để chăn của con vì mọi thứ phải do khoa
+      cấp. Mẹ ghi lại số nhà phía sau. Con không cần giải thích vì sao lỡ cuộc gọi.
+      Chỉ cần nhờ ai nói cho nhà mình biết giờ con ở phòng nào. Yêu con, Anna.
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -531,30 +421,22 @@ MonoBehaviour:
     chapter: 1
     required: 0
     title: B2 Lift Maintenance Card
-    summary: "Service entry \u2014 Maya Reed. The freight lift answered a lower-floor
-      call after the public closure notice went up. That is not a fault: B2 remains
+    summary: '• Author: **Maya Reed** (Maintenance)
+
+      • Detail: B2 lift stays on the emergency circuit; keycard held by security'
+    body: 'Service entry — **Maya Reed**. The freight lift answered a lower-floor
+      call after the public closure notice went up. That is not a fault: **B2** remains
       connected to the emergency circuit. I replaced the landing lamp, not the card
       reader. Stop requesting a master bypass; the card is held by security for a
       reason. On descent, wait for the receiving door to finish opening before unloading.
       The cabin cannot safely carry a trolley across a half-open threshold. Leave
-      this card at the panel so the next shift knows what was actually repaired."
-    body: "Service entry \u2014 Maya Reed. The freight lift answered a lower-floor
-      call after the public closure notice went up. That is not a fault: B2 remains
-      connected to the emergency circuit. I replaced the landing lamp, not the card
-      reader. Stop requesting a master bypass; the card is held by security for a
-      reason. On descent, wait for the receiving door to finish opening before unloading.
-      The cabin cannot safely carry a trolley across a half-open threshold. Leave
-      this card at the panel so the next shift knows what was actually repaired."
-    bodyVietnamese: "Ghi b\u1EA3o tr\xEC \u2014 Maya Reed. Thang h\xE0ng nh\u1EADn
-      l\u1EC7nh t\u1EA7ng d\u01B0\u1EDBi sau th\xF4ng b\xE1o \u0111\xF3ng c\u1EEDa
-      c\xF4ng khai. Kh\xF4ng ph\u1EA3i l\u1ED7i: B2 v\u1EABn n\u1ED1i m\u1EA1ch kh\u1EA9n
-      c\u1EA5p. T\xF4i thay \u0111\xE8n s\u1EA3nh, kh\xF4ng thay \u0111\u1EA7u \u0111\u1ECDc
-      th\u1EBB. \u0110\u1EEBng y\xEAu c\u1EA7u m\u1EDF kh\xF3a t\u1ED5ng n\u1EEFa;
-      an ninh gi\u1EEF th\u1EBB c\xF3 l\xFD do. Khi xu\u1ED1ng, \u0111\u1EE3i c\u1EEDa
-      nh\u1EADn m\u1EDF h\u1EBFt m\u1EDBi d\u1EE1 h\xE0ng. Kh\xF4ng th\u1EC3 an to\xE0n
-      \u0111\u1EA9y xe qua ng\u01B0\u1EE1ng c\u1EEDa m\u1EDF n\u1EEDa ch\u1EEBng.
-      \u0110\u1EC3 phi\u1EBFu t\u1EA1i b\u1EA3ng \u0111\u1EC3 ca sau bi\u1EBFt th\u1EE9
-      g\xEC th\u1EF1c s\u1EF1 \u0111\u01B0\u1EE3c s\u1EEDa."
+      this card at the panel so the next shift knows what was actually repaired.'
+    bodyVietnamese: 'Ghi bảo trì — Maya Reed. Thang hàng nhận lệnh tầng dưới sau thông
+      báo đóng cửa công khai. Không phải lỗi: B2 vẫn nối mạch khẩn cấp. Tôi thay đèn
+      sảnh, không thay đầu đọc thẻ. Đừng yêu cầu mở khóa tổng nữa; an ninh giữ thẻ
+      có lý do. Khi xuống, đợi cửa nhận mở hết mới dỡ hàng. Không thể an toàn đẩy
+      xe qua ngưỡng cửa mở nửa chừng. Để phiếu tại bảng để ca sau biết thứ gì thực
+      sự được sửa.'
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -564,31 +446,24 @@ MonoBehaviour:
     chapter: 1
     required: 0
     title: Night Nurse Audio Transcript
-    summary: Recorded ward handover, transcript complete. I checked the trolley wristband
-      twice. P046 was breathing when the doors closed. The screen upstairs had already
-      changed to deceased. I asked whether we were taking the patient to emergency
-      care, and security told me the receiving team would explain. Nobody did. I
-      am leaving this recording with the paper handover because the electronic entry
-      no longer accepts corrections from our ward. If you hear this on the next shift,
-      preserve both times. Please do not sign my name under a report I did not write.
+    summary: '• Source: Recorded ward handover
+
+      • Detail: **P046** was breathing inside the B2 lift even though the upstairs
+      screen said *Deceased*'
     body: Recorded ward handover, transcript complete. I checked the trolley wristband
-      twice. P046 was breathing when the doors closed. The screen upstairs had already
-      changed to deceased. I asked whether we were taking the patient to emergency
-      care, and security told me the receiving team would explain. Nobody did. I
-      am leaving this recording with the paper handover because the electronic entry
-      no longer accepts corrections from our ward. If you hear this on the next shift,
-      preserve both times. Please do not sign my name under a report I did not write.
-    bodyVietnamese: "B\u1EA3n ch\xE9p \u0111\u1EA7y \u0111\u1EE7 b\xE0n giao ghi
-      \xE2m. T\xF4i ki\u1EC3m tra v\xF2ng nh\u1EADn d\u1EA1ng hai l\u1EA7n. P046
-      c\xF2n th\u1EDF khi c\u1EEDa \u0111\xF3ng. M\xE0n h\xECnh tr\xEAn t\u1EA7ng
-      \u0111\xE3 \u0111\u1ED5i th\xE0nh t\u1EED vong. T\xF4i h\u1ECFi c\xF3 chuy\u1EC3n
-      b\u1EC7nh nh\xE2n t\u1EDBi c\u1EA5p c\u1EE9u kh\xF4ng, an ninh n\xF3i \u0111\u1ED9i
-      nh\u1EADn s\u1EBD gi\u1EA3i th\xEDch. Kh\xF4ng ai gi\u1EA3i th\xEDch. T\xF4i
-      \u0111\u1EC3 ghi \xE2m c\xF9ng gi\u1EA5y b\xE0n giao v\xEC h\u1ED3 s\u01A1
-      \u0111i\u1EC7n t\u1EED kh\xF4ng nh\u1EADn s\u1EEDa t\u1EEB khoa n\u1EEFa. N\u1EBFu
-      ca sau nghe \u0111\u01B0\u1EE3c, gi\u1EEF c\u1EA3 hai m\u1ED1c gi\u1EDD. Xin
-      \u0111\u1EEBng k\xFD t\xEAn t\xF4i d\u01B0\u1EDBi b\xE1o c\xE1o t\xF4i kh\xF4ng
-      vi\u1EBFt."
+      twice. **P046** was breathing when the doors closed. The screen upstairs had
+      already changed to *deceased*. I asked whether we were taking the patient to
+      emergency care, and security told me the receiving team would explain. Nobody
+      did. I am leaving this recording with the paper handover because the electronic
+      entry no longer accepts corrections from our ward. If you hear this on the next
+      shift, preserve both times. Please do not sign my name under a report I did
+      not write.
+    bodyVietnamese: Bản chép đầy đủ bàn giao ghi âm. Tôi kiểm tra vòng nhận dạng hai
+      lần. P046 còn thở khi cửa đóng. Màn hình trên tầng đã đổi thành tử vong. Tôi
+      hỏi có chuyển bệnh nhân tới cấp cứu không, an ninh nói đội nhận sẽ giải thích.
+      Không ai giải thích. Tôi để ghi âm cùng giấy bàn giao vì hồ sơ điện tử không
+      nhận sửa từ khoa nữa. Nếu ca sau nghe được, giữ cả hai mốc giờ. Xin đừng ký
+      tên tôi dưới báo cáo tôi không viết.
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -598,33 +473,23 @@ MonoBehaviour:
     chapter: 2
     required: 0
     title: Operator Shutdown Checklist
-    summary: 'Before leaving the operations desk, record the active run, preserve
-      its index and place any unsigned stop-work request with the original archive.
-      Do not mark the trial complete merely because the sample has moved. Completion
-      requires an authorized review of the incident record. Dr. Cole has returned
-      this checklist twice with the same annotation: unresolved patient outcomes
-      are not empty fields. The client export tool offers a clean summary automatically.
-      That summary is a delivery convenience only. It must never replace the underlying
-      record or become the only copy available to the next operator.'
+    summary: '• Source: B2 Operations Desk (annotated by **Dr. Adrian Cole**)
+
+      • Detail: Client export tool hides unresolved patient records automatically'
     body: 'Before leaving the operations desk, record the active run, preserve its
-      index and place any unsigned stop-work request with the original archive. Do
+      index, and place any unsigned stop-work request with the original archive. Do
       not mark the trial complete merely because the sample has moved. Completion
-      requires an authorized review of the incident record. Dr. Cole has returned
-      this checklist twice with the same annotation: unresolved patient outcomes
-      are not empty fields. The client export tool offers a clean summary automatically.
+      requires an authorized review of the incident record. **Dr. Cole** has returned
+      this checklist twice with the same annotation: *unresolved patient outcomes
+      are not empty fields.* The client export tool offers a clean summary automatically.
       That summary is a delivery convenience only. It must never replace the underlying
       record or become the only copy available to the next operator.'
-    bodyVietnamese: "Tr\u01B0\u1EDBc khi r\u1EDDi b\xE0n v\u1EADn h\xE0nh, ghi l\u01B0\u1EE3t
-      ch\u1EA1y, gi\u1EEF ch\u1EC9 m\u1EE5c v\xE0 \u0111\u1EB7t y\xEAu c\u1EA7u d\u1EEBng
-      ch\u01B0a k\xFD c\xF9ng h\u1ED3 s\u01A1 g\u1ED1c. Kh\xF4ng \u0111\xE1nh d\u1EA5u
-      ho\xE0n t\u1EA5t ch\u1EC9 v\xEC m\u1EABu \u0111\xE3 chuy\u1EC3n. Ho\xE0n t\u1EA5t
-      c\u1EA7n th\u1EA9m tra c\xF3 th\u1EA9m quy\u1EC1n. Dr. Cole tr\u1EA3 phi\u1EBFu
-      hai l\u1EA7n v\u1EDBi c\xF9ng ghi ch\xFA: s\u1ED1 ph\u1EADn b\u1EC7nh nh\xE2n
-      ch\u01B0a r\xF5 kh\xF4ng ph\u1EA3i \xF4 tr\u1ED1ng. C\xF4ng c\u1EE5 xu\u1EA5t
-      cho kh\xE1ch t\u1EF1 t\u1EA1o b\u1EA3n t\xF3m t\u1EAFt s\u1EA1ch. B\u1EA3n
-      \u0111\xF3 ch\u1EC9 ti\u1EC7n giao nh\u1EADn, kh\xF4ng \u0111\u01B0\u1EE3c
-      thay d\u1EEF li\u1EC7u g\u1ED1c ho\u1EB7c tr\u1EDF th\xE0nh b\u1EA3n duy nh\u1EA5t
-      cho ng\u01B0\u1EDDi v\u1EADn h\xE0nh ti\u1EBFp theo."
+    bodyVietnamese: 'Trước khi rời bàn vận hành, ghi lượt chạy, giữ chỉ mục và đặt
+      yêu cầu dừng chưa ký cùng hồ sơ gốc. Không đánh dấu hoàn tất chỉ vì mẫu đã chuyển.
+      Hoàn tất cần thẩm tra có thẩm quyền. Dr. Cole trả phiếu hai lần với cùng ghi
+      chú: số phận bệnh nhân chưa rõ không phải ô trống. Công cụ xuất cho khách tự
+      tạo bản tóm tắt sạch. Bản đó chỉ tiện giao nhận, không được thay dữ liệu gốc
+      hoặc trở thành bản duy nhất cho người vận hành tiếp theo.'
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -634,37 +499,29 @@ MonoBehaviour:
     chapter: 2
     required: 0
     title: Contractor Export Email
-    summary: 'From: Contract Liaison. Subject: delivery scope. The receiving client
-      expects material identifiers, storage condition and a confirmation of sample
-      custody. Patient names, ward correspondence and internal objections fall outside
-      the requested export. Please use the abbreviated profile already installed
-      on the archive terminal. Reply from Adrian Cole: those fields establish what
-      happened here. Omitting them changes the meaning of the result. I will not
-      certify a sample-only record as the original. Forwarded response: certification
-      can be resolved after collection. Keep this discussion off the public incident
-      channel until our client has reviewed the package.'
-    body: 'From: Contract Liaison. Subject: delivery scope. The receiving client
-      expects material identifiers, storage condition and a confirmation of sample
-      custody. Patient names, ward correspondence and internal objections fall outside
-      the requested export. Please use the abbreviated profile already installed
-      on the archive terminal. Reply from Adrian Cole: those fields establish what
-      happened here. Omitting them changes the meaning of the result. I will not
-      certify a sample-only record as the original. Forwarded response: certification
-      can be resolved after collection. Keep this discussion off the public incident
-      channel until our client has reviewed the package.'
-    bodyVietnamese: "T\u1EEB: li\xEAn l\u1EA1c h\u1EE3p \u0111\u1ED3ng. Ch\u1EE7
-      \u0111\u1EC1: ph\u1EA1m vi giao. Kh\xE1ch ch\u1EC9 c\u1EA7n m\xE3 v\u1EADt
-      li\u1EC7u, \u0111i\u1EC1u ki\u1EC7n l\u01B0u v\xE0 x\xE1c nh\u1EADn gi\u1EEF
-      m\u1EABu. T\xEAn b\u1EC7nh nh\xE2n, th\u01B0 khoa v\xE0 ph\u1EA3n \u0111\u1ED1i
-      n\u1ED9i b\u1ED9 n\u1EB1m ngo\xE0i b\u1EA3n xu\u1EA5t \u0111\u01B0\u1EE3c y\xEAu
-      c\u1EA7u. D\xF9ng c\u1EA5u h\xECnh r\xFAt g\u1ECDn \u0111\xE3 c\xE0i tr\xEAn
-      m\xE1y l\u01B0u tr\u1EEF. Adrian Cole tr\u1EA3 l\u1EDDi: c\xE1c tr\u01B0\u1EDDng
-      \u0111\xF3 ch\u1EE9ng minh chuy\u1EC7n x\u1EA3y ra; b\u1ECF ch\xFAng l\xE0m
-      \u0111\u1ED5i \xFD ngh\u0129a. T\xF4i kh\xF4ng x\xE1c nh\u1EADn h\u1ED3 s\u01A1
-      ch\u1EC9 c\xF3 m\u1EABu l\xE0 b\u1EA3n g\u1ED1c. Ph\u1EA3n h\u1ED3i chuy\u1EC3n
-      ti\u1EBFp: c\xF3 th\u1EC3 x\u1EED l\xFD ch\u1EE9ng nh\u1EADn sau thu h\u1ED3i.
-      \u0110\u1EEBng \u0111\u01B0a th\u1EA3o lu\u1EADn l\xEAn k\xEAnh s\u1EF1 c\u1ED1
-      c\xF4ng khai tr\u01B0\u1EDBc khi kh\xE1ch xem g\xF3i."
+    summary: '• Thread: Contract Liaison ↔ **Dr. Adrian Cole**
+
+      • Detail: Client explicitly demanded stripping patient names and internal objections'
+    body: 'From: Contract Liaison. Subject: delivery scope. The receiving client expects
+      material identifiers, storage condition, and a confirmation of sample custody.
+      Patient names, ward correspondence, and internal objections fall outside the
+      requested export. Please use the abbreviated profile already installed on the
+      archive terminal.
+
+      Reply from **Adrian Cole**: those fields establish what happened here. Omitting
+      them changes the meaning of the result. I will not certify a sample-only record
+      as the original.
+
+      Forwarded response: certification can be resolved after collection. Keep this
+      discussion off the public incident channel until our client has reviewed the
+      package.'
+    bodyVietnamese: 'Từ: liên lạc hợp đồng. Chủ đề: phạm vi giao. Khách chỉ cần mã
+      vật liệu, điều kiện lưu và xác nhận giữ mẫu. Tên bệnh nhân, thư khoa và phản
+      đối nội bộ nằm ngoài bản xuất được yêu cầu. Dùng cấu hình rút gọn đã cài trên
+      máy lưu trữ. Adrian Cole trả lời: các trường đó chứng minh chuyện xảy ra; bỏ
+      chúng làm đổi ý nghĩa. Tôi không xác nhận hồ sơ chỉ có mẫu là bản gốc. Phản
+      hồi chuyển tiếp: có thể xử lý chứng nhận sau thu hồi. Đừng đưa thảo luận lên
+      kênh sự cố công khai trước khi khách xem gói.'
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -674,33 +531,23 @@ MonoBehaviour:
     chapter: 2
     required: 0
     title: Calibration Bench Note
-    summary: "Bench note \u2014 do not discard with consumables. The replacement
-      display arrives with its brightness set to maximum, which makes an unlit warning
-      look active through the scratched cover. Check the diagnostic page before logging
-      a fault. This is a display problem, not evidence that containment is operating.
-      I have tagged the affected unit and attached yesterday's reading so nobody
-      has to reconstruct the comparison from memory. If the archive later shows a
-      perfect sequence with no interruptions, compare it with the paper sheet. The
-      instruments did not become more reliable when the reporting template changed."
-    body: "Bench note \u2014 do not discard with consumables. The replacement display
-      arrives with its brightness set to maximum, which makes an unlit warning look
-      active through the scratched cover. Check the diagnostic page before logging
-      a fault. This is a display problem, not evidence that containment is operating.
-      I have tagged the affected unit and attached yesterday's reading so nobody
-      has to reconstruct the comparison from memory. If the archive later shows a
-      perfect sequence with no interruptions, compare it with the paper sheet. The
-      instruments did not become more reliable when the reporting template changed."
-    bodyVietnamese: "Ghi t\u1EA1i b\xE0n \u2014 kh\xF4ng v\u1EE9t c\xF9ng v\u1EADt
-      t\u01B0. M\xE0n thay th\u1EBF \u0111\u1EC3 \u0111\u1ED9 s\xE1ng t\u1ED1i \u0111a
-      khi\u1EBFn \u0111\xE8n c\u1EA3nh b\xE1o t\u1EAFt tr\xF4ng nh\u01B0 b\u1EADt
-      qua l\u1EDBp ph\u1EE7 x\u01B0\u1EDBc. Ki\u1EC3m tra trang ch\u1EA9n \u0111o\xE1n
-      tr\u01B0\u1EDBc khi ghi l\u1ED7i. \u0110\xE2y l\xE0 l\u1ED7i hi\u1EC3n th\u1ECB,
-      kh\xF4ng ch\u1EE9ng minh h\u1EC7 phong t\u1ECFa ho\u1EA1t \u0111\u1ED9ng. T\xF4i
-      \u0111\xE1nh d\u1EA5u m\xE1y v\xE0 \u0111\xEDnh s\u1ED1 \u0111o h\xF4m qua
-      \u0111\u1EC3 kh\xF4ng ph\u1EA3i nh\u1EDB l\u1EA1i. N\u1EBFu h\u1ED3 s\u01A1
-      sau n\xE0y cho chu\u1ED7i ho\xE0n h\u1EA3o kh\xF4ng gi\xE1n \u0111o\u1EA1n,
-      so v\u1EDBi gi\u1EA5y. Thi\u1EBFt b\u1ECB kh\xF4ng \u0111\xE1ng tin h\u01A1n
-      ch\u1EC9 v\xEC m\u1EABu b\xE1o c\xE1o \u0111\u1ED5i."
+    summary: '• Author: B2 Instrument Technician
+
+      • Detail: Faulty indicator display & altered reporting template hide trial interruptions'
+    body: Bench note — do not discard with consumables. The replacement display arrives
+      with its brightness set to maximum, which makes an unlit warning look active
+      through the scratched cover. Check the diagnostic page before logging a fault.
+      This is a display problem, not evidence that containment is operating. I have
+      tagged the affected unit and attached yesterday's reading so nobody has to reconstruct
+      the comparison from memory. If the archive later shows a perfect sequence with
+      no interruptions, compare it with the paper sheet. The instruments did not become
+      more reliable when the reporting template changed.
+    bodyVietnamese: Ghi tại bàn — không vứt cùng vật tư. Màn thay thế để độ sáng tối
+      đa khiến đèn cảnh báo tắt trông như bật qua lớp phủ xước. Kiểm tra trang chẩn
+      đoán trước khi ghi lỗi. Đây là lỗi hiển thị, không chứng minh hệ phong tỏa hoạt
+      động. Tôi đánh dấu máy và đính số đo hôm qua để không phải nhớ lại. Nếu hồ sơ
+      sau này cho chuỗi hoàn hảo không gián đoạn, so với giấy. Thiết bị không đáng
+      tin hơn chỉ vì mẫu báo cáo đổi.
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -710,33 +557,24 @@ MonoBehaviour:
     chapter: 2
     required: 0
     title: Emergency Drill Review
-    summary: 'Drill review, security copy. Staff reached the freight landing, but
-      two teams waited for contradictory clearance messages while the lift stood
-      open. A local alarm did not reach the outside coordinator. Corrective action:
-      confirm receipt beyond the facility before describing a transmission as delivered.
-      A progress bar is not an acknowledgement. Marcus Hale requested an independent
-      receiving contact and a printed boarding roster. The client declined the additional
-      reporting step as unnecessary delay. This review remains open. Do not close
-      it simply because the next drill has been removed from the calendar.'
+    summary: '• Author: **Marcus Hale** (Security Copy)
+
+      • Detail: Confirms why **BRT** requires off-site receipt confirmation (D21)
+      instead of trusting a local progress bar'
     body: 'Drill review, security copy. Staff reached the freight landing, but two
       teams waited for contradictory clearance messages while the lift stood open.
       A local alarm did not reach the outside coordinator. Corrective action: confirm
-      receipt beyond the facility before describing a transmission as delivered.
-      A progress bar is not an acknowledgement. Marcus Hale requested an independent
+      receipt beyond the facility before describing a transmission as delivered. A
+      progress bar is not an acknowledgement. **Marcus Hale** requested an independent
       receiving contact and a printed boarding roster. The client declined the additional
       reporting step as unnecessary delay. This review remains open. Do not close
       it simply because the next drill has been removed from the calendar.'
-    bodyVietnamese: "B\u1EA3n an ninh, \u0111\xE1nh gi\xE1 di\u1EC5n t\u1EADp. Nh\xE2n
-      vi\xEAn t\u1EDBi s\u1EA3nh thang h\xE0ng nh\u01B0ng hai \u0111\u1ED9i \u0111\u1EE3i
-      ch\u1EC9 th\u1ECB tr\xE1i nhau khi c\u1EEDa m\u1EDF. B\xE1o \u0111\u1ED9ng
-      c\u1EE5c b\u1ED9 kh\xF4ng t\u1EDBi \u0111i\u1EC1u ph\u1ED1i ngo\xE0i. Kh\u1EAFc
-      ph\u1EE5c: x\xE1c nh\u1EADn b\xEAn ngo\xE0i \u0111\xE3 nh\u1EADn tr\u01B0\u1EDBc
-      khi b\xE1o truy\u1EC1n th\xE0nh c\xF4ng. Thanh ti\u1EBFn tr\xECnh kh\xF4ng
-      ph\u1EA3i x\xE1c nh\u1EADn. Marcus Hale y\xEAu c\u1EA7u \u0111\u1EA7u nh\u1EADn
-      \u0111\u1ED9c l\u1EADp v\xE0 danh s\xE1ch l\xEAn thang b\u1EA3n in. Kh\xE1ch
-      t\u1EEB ch\u1ED1i v\xEC cho l\xE0 ch\u1EADm tr\u1EC5 kh\xF4ng c\u1EA7n thi\u1EBFt.
-      \u0110\xE1nh gi\xE1 v\u1EABn m\u1EDF. Kh\xF4ng \u0111\xF3ng ch\u1EC9 v\xEC
-      bu\u1ED5i di\u1EC5n t\u1EADp sau b\u1ECB x\xF3a kh\u1ECFi l\u1ECBch."
+    bodyVietnamese: 'Bản an ninh, đánh giá diễn tập. Nhân viên tới sảnh thang hàng
+      nhưng hai đội đợi chỉ thị trái nhau khi cửa mở. Báo động cục bộ không tới điều
+      phối ngoài. Khắc phục: xác nhận bên ngoài đã nhận trước khi báo truyền thành
+      công. Thanh tiến trình không phải xác nhận. Marcus Hale yêu cầu đầu nhận độc
+      lập và danh sách lên thang bản in. Khách từ chối vì cho là chậm trễ không cần
+      thiết. Đánh giá vẫn mở. Không đóng chỉ vì buổi diễn tập sau bị xóa khỏi lịch.'
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -746,33 +584,24 @@ MonoBehaviour:
     chapter: 2
     required: 0
     title: Maya's Final Shift Recording
-    summary: Personal recorder, final intact segment. This is Maya Reed. I have left
+    summary: '• Author: **Maya Reed** (Recovered personal recorder)
+
+      • Detail: Quarantine shutters locked B2 while Cole fought to halt the trial
+      and Hale protected the full directory'
+    body: Personal recorder, final intact segment. This is **Maya Reed**. I have left
       the power note at the panel and the original maintenance sheets with the archive.
-      Cole is still trying to stop the trial. Hale has ordered security to preserve
-      the records, even if the client calls again. I can hear the shutters closing
-      behind operations. If somebody reaches this desk later, do not trust the small
-      export marked complete. The full directory is still here. Take the names with
-      the numbers. We worked beside these people; they were never just a shipment.
-      End of recovered segment.
-    body: Personal recorder, final intact segment. This is Maya Reed. I have left
-      the power note at the panel and the original maintenance sheets with the archive.
-      Cole is still trying to stop the trial. Hale has ordered security to preserve
-      the records, even if the client calls again. I can hear the shutters closing
-      behind operations. If somebody reaches this desk later, do not trust the small
-      export marked complete. The full directory is still here. Take the names with
-      the numbers. We worked beside these people; they were never just a shipment.
-      End of recovered segment.
-    bodyVietnamese: "M\xE1y c\xE1 nh\xE2n, \u0111o\u1EA1n nguy\xEAn v\u1EB9n cu\u1ED1i.
-      T\xF4i l\xE0 Maya Reed. Ghi ch\xFA \u0111i\u1EC7n \u1EDF b\u1EA3ng, gi\u1EA5y
-      b\u1EA3o tr\xEC g\u1ED1c c\xF9ng h\u1ED3 s\u01A1. Cole v\u1EABn c\u1ED1 d\u1EEBng
-      th\u1EED nghi\u1EC7m. Hale l\u1EC7nh an ninh gi\u1EEF h\u1ED3 s\u01A1 d\xF9
-      kh\xE1ch g\u1ECDi n\u1EEFa. T\xF4i nghe c\u1EEDa phong t\u1ECFa \u0111\xF3ng
-      sau ph\xF2ng v\u1EADn h\xE0nh. N\u1EBFu ai t\u1EDBi b\xE0n n\xE0y sau, \u0111\u1EEBng
-      tin b\u1EA3n xu\u1EA5t nh\u1ECF \u0111\xE1nh d\u1EA5u ho\xE0n t\u1EA5t. Th\u01B0
-      m\u1EE5c \u0111\u1EA7y \u0111\u1EE7 v\u1EABn \u1EDF \u0111\xE2y. Mang theo
-      t\xEAn c\xF9ng c\xE1c con s\u1ED1. Ch\xFAng t\xF4i l\xE0m vi\u1EC7c b\xEAn
-      h\u1ECD; h\u1ECD ch\u01B0a bao gi\u1EDD ch\u1EC9 l\xE0 m\u1ED9t chuy\u1EBFn
-      h\xE0ng. H\u1EBFt \u0111o\u1EA1n kh\xF4i ph\u1EE5c."
+      **Cole** is still trying to stop the trial. **Hale** has ordered security to
+      preserve the records, even if the client calls again. I can hear the shutters
+      closing behind operations. If somebody reaches this desk later, do not trust
+      the small export marked complete. The full directory is still here. Take the
+      names with the numbers. We worked beside these people; they were never just
+      a shipment. End of recovered segment.
+    bodyVietnamese: Máy cá nhân, đoạn nguyên vẹn cuối. Tôi là Maya Reed. Ghi chú điện
+      ở bảng, giấy bảo trì gốc cùng hồ sơ. Cole vẫn cố dừng thử nghiệm. Hale lệnh
+      an ninh giữ hồ sơ dù khách gọi nữa. Tôi nghe cửa phong tỏa đóng sau phòng vận
+      hành. Nếu ai tới bàn này sau, đừng tin bản xuất nhỏ đánh dấu hoàn tất. Thư mục
+      đầy đủ vẫn ở đây. Mang theo tên cùng các con số. Chúng tôi làm việc bên họ;
+      họ chưa bao giờ chỉ là một chuyến hàng. Hết đoạn khôi phục.
     audio: {fileID: 0}
     icon: {fileID: 21300000, guid: 6dda5a7e72c37ac4c92f1e6cc411bec0, type: 3}
     preview: {fileID: 0}
@@ -781,9 +610,9 @@ MonoBehaviour:
   keyItems:
   - id: 1
     chapter: 0
-    title: T9-17 FACTORY EVIDENCE CASE
-    description: Sealed T9-17 case and its original custody records, recovered from
-      factory cold storage. Stays with the squad through extraction.
+    title: T9-17 Factory Evidence Case
+    description: Tamper-sealed cold-storage sample case from Factory shipment AL-04
+      (Seal K6). Retained through extraction.
     icon: {fileID: 21300000, guid: 20477921fd0efc146aa9752d76a2acc7, type: 3}
     acquiredAfter: 6
     consumedAfter: 0
@@ -791,9 +620,9 @@ MonoBehaviour:
     order: 1
   - id: 2
     chapter: 1
-    title: SERVICE FUSE
-    description: Replacement fuse for Northbridge's lower service panel. Install
-      it at the panel to restore service power.
+    title: Replacement Service Fuse
+    description: Heavy-duty fuse recovered from Northbridge maintenance storage to
+      restore lower service power.
     icon: {fileID: 21300000, guid: afb7d6c1e0ece31498ae94abe1ad230d, type: 3}
     acquiredAfter: 9
     consumedAfter: 10
@@ -801,9 +630,9 @@ MonoBehaviour:
     order: 2
   - id: 3
     chapter: 1
-    title: B2 ACCESS CARD
-    description: Security access card recovered with the mortuary transfer report.
-      Scan it at the B2 freight-lift reader.
+    title: B2 Freight Lift Keycard
+    description: Restricted security keycard retained with the P046 discrepancy file
+      to summon the underground B2 lift.
     icon: {fileID: 21300000, guid: 63641263d1b2ca64eaf1c0865d0cfcff, type: 3}
     acquiredAfter: 13
     consumedAfter: 14
@@ -811,9 +640,9 @@ MonoBehaviour:
     order: 3
   - id: 4
     chapter: 2
-    title: E-02 LABORATORY EVIDENCE CASE
-    description: The original E-02 archive and patient identity records. Keep this
-      case after transmitting the copy.
+    title: E-02 Laboratory Evidence Case
+    description: Physical backup drive and signed ledger from Laboratory B2 containing
+      the unredacted E-02 archive.
     icon: {fileID: 21300000, guid: 20477921fd0efc146aa9752d76a2acc7, type: 3}
     acquiredAfter: 19
     consumedAfter: 0
@@ -825,8 +654,9 @@ MonoBehaviour:
     english: 'Vanguard, get the sealed case
 
       and its records.'
-    vietnamese: "Vanguard, l\u1EA5y ki\u1EC7n ni\xEAm phong\nv\xE0 h\u1ED3 s\u01A1
-      \u0111i k\xE8m."
+    vietnamese: 'Vanguard, get the sealed case
+
+      and its records.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -836,39 +666,52 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 0
-      english: Command, this is Vanguard. We're inside the factory.
-      vietnamese: "B\u1ED9 ch\u1EC9 huy, Vanguard \u0111\xE2y. \u0110\u1ED9i t\xF4i
-        v\xE0o nh\xE0 m\xE1y r\u1ED3i."
+      english: 'Command, Vanguard is inside.
+
+        Quarantine shutters are sealed.'
+      vietnamese: 'Command, Vanguard is inside.
+
+        Quarantine shutters are sealed.'
     - role: 2
-      english: Copy, Vanguard. Pull the case from cold storage.
-      vietnamese: "Vanguard, \u0111\xE3 nh\u1EADn. L\u1EA5y ki\u1EC7n h\xE0ng trong
-        kho l\u1EA1nh."
+      english: 'Copy. T-9 came from lot T9-17.
+
+        Pull that case from cold storage.'
+      vietnamese: 'Copy. T-9 came from lot T9-17.
+
+        Pull that case from cold storage.'
     - role: 2
-      english: Leave the seal intact.
-      vietnamese: "Nh\u1EDB gi\u1EEF nguy\xEAn ni\xEAm phong."
+      english: Keep the security seal intact.
+      vietnamese: Keep the security seal intact.
     - role: 0
-      english: What about the manifest? Bring it back or read the number?
-      vietnamese: "C\xF2n t\u1EDD v\u1EADn \u0111\u01A1n th\xEC sao? \u0110em v\u1EC1
-        lu\xF4n hay ch\u1EC9 \u0111\u1ECDc s\u1ED1?"
+      english: 'What about the manifest?
+
+        Bring it or read the numbers?'
+      vietnamese: 'What about the manifest?
+
+        Bring it or read the numbers?'
     - role: 2
-      english: Bring it with the case. I need to match the seal number.
-      vietnamese: "\u0110em v\u1EC1 k\xE8m ki\u1EC7n h\xE0ng. T\xF4i c\u1EA7n \u0111\u1ED1i
-        chi\u1EBFu m\xE3 ni\xEAm phong."
+      english: 'Bring it with the case.
+
+        We need where T9-17 went next.'
+      vietnamese: 'Bring it with the case.
+
+        We need where T9-17 went next.'
     - role: 0
-      english: Roger that. We'll bring both.
-      vietnamese: "\u0110\xE3 r\xF5. \u0110\u1ED9i t\xF4i mang c\u1EA3 hai v\u1EC1."
-    - role: 0
-      english: Seal stays unbroken. Vanguard out.
-      vietnamese: "Ki\u1EC7n v\u1EABn gi\u1EEF nguy\xEAn ni\xEAm phong. Vanguard,
-        h\u1EBFt."
+      english: 'Roger. Both items, seal intact.
+
+        Vanguard out.'
+      vietnamese: 'Roger. Both items, seal intact.
+
+        Vanguard out.'
     soloCues: []
   - id: 2
     speaker: Command
     english: 'Cold store needs power.
 
       Check that shipping manifest.'
-    vietnamese: "Kho l\u1EA1nh c\u1EA7n \u0111i\u1EC7n.\nKi\u1EC3m tra v\u1EADn \u0111\u01A1n
-      \u0111\xF3."
+    vietnamese: 'Cold store needs power.
+
+      Check that shipping manifest.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -878,28 +721,38 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 0
-      english: Cold storage is dead. Grab the case or wait for power?
-      vietnamese: "Kho l\u1EA1nh m\u1EA5t \u0111i\u1EC7n r\u1ED3i. L\u1EA5y ki\u1EC7n
-        lu\xF4n hay ch\u1EDD c\xF3 \u0111i\u1EC7n?"
+      english: 'Cold storage is dead.
+
+        Grab the case or fix power first?'
+      vietnamese: 'Cold storage is dead.
+
+        Grab the case or fix power first?'
     - role: 2
-      english: Hold off. Keep the case cold while you check the manifest.
-      vietnamese: "Ch\u1EDD \u0111\xE3. Ki\u1EC7n ph\u1EA3i gi\u1EEF l\u1EA1nh trong
-        l\xFAc \u0111\u1ED9i ki\u1EC3m tra v\u1EADn \u0111\u01A1n."
+      english: 'Fix power first.
+
+        Keep T9-17 refrigerated.'
+      vietnamese: 'Fix power first.
+
+        Keep T9-17 refrigerated.'
     - role: 2
-      english: Cold storage runs on its own backup.
-      vietnamese: "Kho \u0111\xF3 c\xF3 ngu\u1ED3n d\u1EF1 ph\xF2ng ri\xEAng."
+      english: 'Check the manifest in parallel.
+
+        Match its seal at the terminal.'
+      vietnamese: 'Check the manifest in parallel.
+
+        Match its seal at the terminal.'
     - role: 0
-      english: Copy. I'll check the manual before throwing the switch.
-      vietnamese: "R\xF5. \u0110\u1EC3 t\xF4i xem l\u1EA1i quy tr\xECnh r\u1ED3i
-        \u0111\xF3ng \u0111i\u1EC7n."
+      english: Copy. Reading the breaker manual.
+      vietnamese: Copy. Reading the breaker manual.
     soloCues: []
   - id: 3
     speaker: Command
     english: 'Northbridge received it.
 
       Check their security desk.'
-    vietnamese: "Northbridge nh\u1EADn l\xF4 \u0111\xF3.\nKi\u1EC3m tra b\xE0n an
-      ninh b\xEAn \u1EA5y."
+    vietnamese: 'Northbridge received it.
+
+      Check their security desk.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -909,31 +762,38 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 2
-      english: Vanguard, that shipment reached Northbridge.
-      vietnamese: "Vanguard, l\xF4 h\xE0ng \u0111\xE3 t\u1EDBi Northbridge."
-    - role: 2
-      english: I need to know who it was for.
-      vietnamese: "T\xF4i c\u1EA7n bi\u1EBFt h\u1ECD nh\u1EADn cho ai."
+      english: 'Vanguard, AL-04 arrived here.
+
+        Find who it was delivered for.'
+      vietnamese: 'Vanguard, AL-04 arrived here.
+
+        Find who it was delivered for.'
     - role: 0
-      english: Manifest only lists a group. Where do I dig up a name?
-      vietnamese: "V\u1EADn \u0111\u01A1n ch\u1EC9 ghi m\xE3 nh\xF3m nh\u1EADn. T\xECm
-        t\xEAn ng\u01B0\u1EDDi \u1EDF \u0111\xE2u b\xE2y gi\u1EDD?"
+      english: 'Manifest only lists Group C12.
+
+        Where do we find a name?'
+      vietnamese: 'Manifest only lists Group C12.
+
+        Where do we find a name?'
     - role: 2
-      english: Start at security. Match the drop time to their log.
-      vietnamese: "B\u1EAFt \u0111\u1EA7u t\u1EEB b\xE0n b\u1EA3o v\u1EC7. So gi\u1EDD
-        giao v\u1EDBi s\u1ED5 tr\u1EF1c c\u1EE7a h\u1ECD."
+      english: 'Start at the security desk.
+
+        Match 02:40 to their intake log.'
+      vietnamese: 'Start at the security desk.
+
+        Match 02:40 to their intake log.'
     - role: 0
-      english: Copy. I'll check their log for a service entrance drop.
-      vietnamese: "R\xF5. V\u1EADn \u0111\u01A1n ghi c\u1EEDa k\u1EF9 thu\u1EADt.
-        \u0110\u1EC3 t\xF4i l\u1EA7n theo m\u1EE5c \u0111\xF3."
+      english: Copy. Heading to security.
+      vietnamese: Copy. Heading to security.
     soloCues: []
   - id: 4
     speaker: Command
     english: 'An unlisted floor.
 
       The original records should be here.'
-    vietnamese: "T\u1EA7ng n\xE0y kh\xF4ng c\xF3 tr\xEAn s\u01A1 \u0111\u1ED3.\nH\u1ED3
-      s\u01A1 g\u1ED1c ch\u1EAFc \u1EDF \u0111\xE2y."
+    vietnamese: 'An unlisted floor.
+
+      The original records should be here.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -943,31 +803,35 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 0
-      english: Command, Vanguard's on B2.
-      vietnamese: "B\u1ED9 ch\u1EC9 huy, Vanguard xu\u1ED1ng t\u1EDBi B2 r\u1ED3i."
-    - role: 0
-      english: You got a records room marked on your map?
-      vietnamese: "Tr\xEAn b\u1EA3n v\u1EBD c\u1EE7a B\u1ED9 ch\u1EC9 huy c\xF3 ph\xF2ng
-        l\u01B0u h\u1ED3 s\u01A1 kh\xF4ng?"
+      english: 'Command, Vanguard is on B2.
+
+        Any blueprint on your map?'
+      vietnamese: 'Command, Vanguard is on B2.
+
+        Any blueprint on your map?'
     - role: 2
-      english: Mine stops one floor up. B2 isn't even drawn in.
-      vietnamese: "B\u1EA3n v\u1EBD c\u1EE7a t\xF4i d\u1EEBng \u1EDF t\u1EA7ng tr\xEAn.
-        T\u1EA7ng B2 ch\u1EB3ng c\xF3 l\u1EA5y m\u1ED9t n\xE9t."
+      english: 'Negative. B2 is unlisted.
+
+        Check the receiving terminal.'
+      vietnamese: 'Negative. B2 is unlisted.
+
+        Check the receiving terminal.'
     - role: 0
-      english: Then I'll trace the code from the transfer slip.
-      vietnamese: "Th\u1EBF t\xF4i l\u1EA7n theo m\xE3 tr\xEAn phi\u1EBFu chuy\u1EC3n."
-    - role: 0
-      english: If they kept a receiving log, that code has to be in it.
-      vietnamese: "D\u01B0\u1EDBi n\xE0y m\xE0 c\xF3 s\u1ED5 nh\u1EADn th\xEC m\xE3
-        \u0111\xF3 ki\u1EC3u g\xEC c\u0169ng n\u1EB1m trong \u1EA5y."
+      english: 'Copy. Tracing the B2 transfer
+
+        to find their archive index.'
+      vietnamese: 'Copy. Tracing the B2 transfer
+
+        to find their archive index.'
     soloCues: []
   - id: 5
     speaker: Command
     english: 'Power''s back.
 
       Keep that case sealed.'
-    vietnamese: "C\xF3 \u0111i\u1EC7n r\u1ED3i.\nGi\u1EEF nguy\xEAn ni\xEAm phong
-      ki\u1EC7n."
+    vietnamese: 'Power''s back.
+
+      Keep that case sealed.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -977,39 +841,55 @@ MonoBehaviour:
     secondVoice: 4
     cues:
     - role: 0
-      english: Generator's up. Cold storage has power.
-      vietnamese: "M\xE1y ph\xE1t ch\u1EA1y r\u1ED3i. Kho l\u1EA1nh c\xF3 \u0111i\u1EC7n
-        tr\u1EDF l\u1EA1i."
+      english: 'Generator''s up.
+
+        Cold storage has power.'
+      vietnamese: 'Generator''s up.
+
+        Cold storage has power.'
     - role: 1
-      english: That light's been green a while. It wasn't powered then?
-      vietnamese: "\u0110\xE8n xanh s\xE1ng t\u1EEB n\xE3y r\u1ED3i m\xE0. L\xFAc
-        \u0111\xF3 kho ch\u01B0a c\xF3 \u0111i\u1EC7n \xE0?"
+      english: 'That green lamp was lit early.
+
+        It wasn''t powered then?'
+      vietnamese: 'That green lamp was lit early.
+
+        It wasn''t powered then?'
     - role: 0
-      english: Shares the alarm circuit. Lit up before I touched the switch.
-      vietnamese: "N\xF3 \u0103n chung m\u1EA1ch b\xE1o \u0111\u1ED9ng. Ch\u01B0a
-        \u0111\xF3ng c\u1EA7u dao \u0111\xE8n \u0111\xE3 s\xE1ng s\u1EB5n."
+      english: 'Shares the alarm return.
+
+        Lit before I threw the switch.'
+      vietnamese: 'Shares the alarm return.
+
+        Lit before I threw the switch.'
     - role: 1
-      english: Then I'll log when the generator kicked in.
-      vietnamese: "V\u1EADy t\xF4i ghi gi\u1EDD m\xE1y b\u1EAFt \u0111\u1EA7u ch\u1EA1y."
+      english: 'Got it. Make sure Logistics
+
+        checks out so we can grab T9-17.'
+      vietnamese: 'Got it. Make sure Logistics
+
+        checks out so we can grab T9-17.'
     soloCues:
     - role: 0
-      english: Command, cold storage has power.
-      vietnamese: "B\u1ED9 ch\u1EC9 huy, kho l\u1EA1nh c\xF3 \u0111i\u1EC7n r\u1ED3i."
+      english: Command, cold store has power.
+      vietnamese: Command, cold store has power.
     - role: 2
-      english: Is the generator running, or is it just the light?
-      vietnamese: "Ki\u1EC3m l\u1EA1i cho ch\u1EAFc, m\xE1y \u0111\xE3 ch\u1EA1y
-        hay m\u1EDBi s\xE1ng \u0111\xE8n b\xE1o?"
+      english: 'Did the generator engage,
+
+        or just the green lamp?'
+      vietnamese: 'Did the generator engage,
+
+        or just the green lamp?'
     - role: 0
-      english: It's running. Light came on before I even threw the switch.
-      vietnamese: "M\xE1y ch\u1EA1y r\u1ED3i. Ch\u01B0a g\u1EA1t c\u1EA7u dao \u0111\xE8n
-        \u0111\xE3 s\xE1ng s\u1EB5n."
+      english: Lever engaged. Lamp lit early.
+      vietnamese: Lever engaged. Lamp lit early.
   - id: 6
     speaker: Command
     english: 'Northbridge took it.
 
       Keep that manifest.'
-    vietnamese: "Northbridge \u0111\xE3 nh\u1EADn l\xF4 \u0111\xF3.\nGi\u1EEF l\u1EA1i
-      v\u1EADn \u0111\u01A1n."
+    vietnamese: 'Northbridge took it.
+
+      Keep that manifest.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1019,33 +899,38 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 0
-      english: Command, manifest checks out. Destination's Northbridge.
-      vietnamese: "B\xE1o c\xE1o, v\u1EADn \u0111\u01A1n kh\u1EDBp r\u1ED3i. N\u01A1i
-        giao l\xE0 Vi\u1EC7n Northbridge."
+      english: 'Command, manifest matches.
+
+        Destination is Northbridge.'
+      vietnamese: 'Command, manifest matches.
+
+        Destination is Northbridge.'
     - role: 2
-      english: Did anyone at the institute sign for it?
-      vietnamese: "B\xEAn vi\u1EC7n c\xF3 ai k\xFD nh\u1EADn ch\u01B0a?"
+      english: Did anyone sign for it there?
+      vietnamese: Did anyone sign for it there?
     - role: 0
-      english: No. Just the scheduled time. Zero two forty.
-      vietnamese: "Ch\u01B0a. Ch\u1EC9 ghi gi\u1EDD h\u1EB9n: 02:40."
-    - role: 0
-      english: That's just the dispatch sign-off.
-      vietnamese: "Ch\u1EEF k\xFD n\xE0y l\xE0 c\u1EE7a b\xEAn xu\u1EA5t kho."
+      english: 'No. Just intake time 02:40.
+
+        Only dispatch signed off.'
+      vietnamese: 'No. Just intake time 02:40.
+
+        Only dispatch signed off.'
     - role: 2
-      english: Copy. Hang on to it. We'll check it against their log.
-      vietnamese: "R\xF5. C\u1EE9 gi\u1EEF t\u1EDD \u0111\xF3 l\u1EA1i. Sang vi\u1EC7n
-        c\xF2n so v\u1EDBi s\u1ED5 nh\u1EADn."
-    - role: 0
-      english: Roger. Keeping the signed copy.
-      vietnamese: "\u0110\xE3 r\xF5. T\xF4i gi\u1EEF b\u1EA3n c\xF3 ch\u1EEF k\xFD."
+      english: 'Copy. Keep that manifest.
+
+        Kill any Tank blocking the vault.'
+      vietnamese: 'Copy. Keep that manifest.
+
+        Kill any Tank blocking the vault.'
     soloCues: []
   - id: 7
     speaker: Command
     english: 'You''ve got the case.
 
       Open the service route.'
-    vietnamese: "L\u1EA5y \u0111\u01B0\u1EE3c ki\u1EC7n r\u1ED3i.\nM\u1EDF l\u1ED1i
-      k\u1EF9 thu\u1EADt."
+    vietnamese: 'You''ve got the case.
+
+      Open the service route.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1055,42 +940,38 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 0
-      english: Command, Vanguard's got T9-17.
-      vietnamese: "B\u1ED9 ch\u1EC9 huy, Vanguard thu h\u1ED3i \u0111\u01B0\u1EE3c
-        T9-17 r\u1ED3i."
-    - role: 0
-      english: Seal's still intact.
-      vietnamese: "Ni\xEAm phong c\xF2n nguy\xEAn."
+      english: 'Command, we''ve got T9-17.
+
+        Tank is down, seal intact.'
+      vietnamese: 'Command, we''ve got T9-17.
+
+        Tank is down, seal intact.'
     - role: 2
-      english: Roger. Does it say why it came back?
-      vietnamese: "\u0110\xE3 nh\u1EADn. C\xF3 ghi sao ki\u1EC7n b\u1ECB tr\u1EA3
-        v\u1EC1 kh\xF4ng?"
+      english: Copy. Why was it returned?
+      vietnamese: Copy. Why was it returned?
     - role: 0
-      english: Says so in the addendum. Sent it back when the shutters dropped.
-      vietnamese: "C\xF3 t\u1EDD ph\u1EE5 l\u1EE5c k\u1EB9p theo. C\u1EEDa phong
-        t\u1ECFa s\u1EADp n\xEAn h\u1ECD tr\u1EA3 v\u1EC1."
-    - role: 0
-      english: They kept the patient files at the institute.
-      vietnamese: "C\xF2n h\u1ED3 s\u01A1 b\u1EC7nh nh\xE2n v\u1EABn n\u1EB1m \u1EDF
-        vi\u1EC7n."
+      english: 'Addendum says shutters closed.
+
+        Patient files stayed at Northbridge.'
+      vietnamese: 'Addendum says shutters closed.
+
+        Patient files stayed at Northbridge.'
     - role: 2
-      english: Keep the addendum with the case.
-      vietnamese: "Gi\u1EEF ph\u1EE5 l\u1EE5c \u0111i c\xF9ng ki\u1EC7n."
-    - role: 2
-      english: We'll pull the files at Northbridge.
-      vietnamese: "Sang Northbridge l\u1EA5y h\u1ED3 s\u01A1 sau."
-    - role: 0
-      english: Roger that. Moving Vanguard to the service exit controls.
-      vietnamese: "\u0110\xE3 r\xF5. T\xF4i d\u1EABn \u0111\u1ED9i ra ch\u1ED7 m\u1EDF
-        l\u1ED1i k\u1EF9 thu\u1EADt."
+      english: 'Keep the addendum attached.
+
+        Open the service exit now.'
+      vietnamese: 'Keep the addendum attached.
+
+        Open the service exit now.'
     soloCues: []
   - id: 8
     speaker: Command
     english: 'Another intake log, upstairs.
 
       Get the power back on.'
-    vietnamese: "C\xF2n s\u1ED5 ti\u1EBFp nh\u1EADn tr\xEAn t\u1EA7ng.\nC\u1EA5p
-      \u0111i\u1EC7n tr\u1EDF l\u1EA1i \u0111i."
+    vietnamese: 'Another intake log, upstairs.
+
+      Get the power back on.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1100,59 +981,73 @@ MonoBehaviour:
     secondVoice: 3
     cues:
     - role: 0
-      english: Log says admissions stopped. There's a new entry right under it.
-      vietnamese: "S\u1ED5 ghi \u0111\xE3 ng\u1EEBng ti\u1EBFp nh\u1EADn. Th\u1EBF
-        m\xE0 ngay d\u01B0\u1EDBi v\u1EABn ghi th\xEAm ca m\u1EDBi."
+      english: 'Public admissions stopped.
+
+        Yet a 02:40 intake slipped in.'
+      vietnamese: 'Public admissions stopped.
+
+        Yet a 02:40 intake slipped in.'
     - role: 1
-      english: They reopened the main entrance?
-      vietnamese: "H\u1ECD m\u1EDF l\u1EA1i c\u1EEDa ch\xEDnh \xE0?"
+      english: They reopened the main gate?
+      vietnamese: They reopened the main gate?
     - role: 0
-      english: No. Brought this one in through the service entrance.
-      vietnamese: "Kh\xF4ng. Ca n\xE0y \u0111\u01B0a v\xE0o qua c\u1EEDa k\u1EF9
-        thu\u1EADt."
-    - role: 0
-      english: Intake sheets are upstairs.
-      vietnamese: "Phi\u1EBFu ti\u1EBFp nh\u1EADn h\u1ECD c\u1EA5t tr\xEAn l\u1EA7u."
+      english: 'No. Service entrance, Group C12.
+
+        Intake sheets are upstairs.'
+      vietnamese: 'No. Service entrance, Group C12.
+
+        Intake sheets are upstairs.'
     - role: 1
-      english: Records needs power. Any note on where the fuse went?
-      vietnamese: "Ph\xF2ng tr\xEAn ph\u1EA3i c\xF3 \u0111i\u1EC7n m\u1EDBi v\xE0o
-        \u0111\u01B0\u1EE3c. S\u1ED5 c\xF3 ghi c\u1EA7u ch\xEC \u0111\u1EC3 \u0111\xE2u
-        kh\xF4ng?"
+      english: 'Records needs lower power.
+
+        Log says spare fuse is nearby.'
+      vietnamese: 'Records needs lower power.
+
+        Log says spare fuse is nearby.'
     - role: 0
-      english: Yeah. Maintenance store, same floor.
-      vietnamese: "C\xF3. Kho b\u1EA3o tr\xEC, ngay c\xF9ng t\u1EA7ng n\xE0y."
-    - role: 1
-      english: I'll grab the fuse. Hold the log so we can match times.
-      vietnamese: "\u0110\u1EC3 t\xF4i \u0111i l\u1EA5y c\u1EA7u ch\xEC. {1} gi\u1EEF
-        s\u1ED5 l\u1EA1i, l\xE1t c\xF2n so gi\u1EDD."
+      english: 'Grab it from maintenance.
+
+        I''ll keep the desk log open.'
+      vietnamese: 'Grab it from maintenance.
+
+        I''ll keep the desk log open.'
     soloCues:
     - role: 0
-      english: Main admissions closed. Service intake stayed open.
-      vietnamese: "S\u1ED5 ghi c\u1EEDa ch\xEDnh ng\u1EEBng ti\u1EBFp nh\u1EADn.
-        C\u1EEDa k\u1EF9 thu\u1EADt v\u1EABn nh\u1EADn ca m\u1EDBi."
+      english: 'Main admissions closed.
+
+        Service intake still logged C12.'
+      vietnamese: 'Main admissions closed.
+
+        Service intake still logged C12.'
     - role: 2
-      english: Does it say where they stashed that intake sheet?
-      vietnamese: "C\xF3 ghi h\u1ECD c\u1EA5t phi\u1EBFu ti\u1EBFp nh\u1EADn \u1EDF
-        \u0111\xE2u kh\xF4ng?"
+      english: 'Does it say where the intake
+
+        sheets are stored?'
+      vietnamese: 'Does it say where the intake
+
+        sheets are stored?'
     - role: 0
-      english: Upstairs. Need power to get into records.
-      vietnamese: "Tr\xEAn l\u1EA7u. Ph\u1EA3i c\xF3 \u0111i\u1EC7n m\u1EDBi v\xE0o
-        ph\xF2ng h\u1ED3 s\u01A1 \u0111\u01B0\u1EE3c."
+      english: 'Upstairs. Needs power.
+
+        Spare fuse is in maintenance.'
+      vietnamese: 'Upstairs. Needs power.
+
+        Spare fuse is in maintenance.'
     - role: 2
-      english: Any mention in the log of a spare fuse?
-      vietnamese: "Trong s\u1ED5 c\xF3 nh\u1EAFc ch\u1ED7 \u0111\u1EC3 c\u1EA7u ch\xEC
-        d\u1EF1 ph\xF2ng kh\xF4ng?"
-    - role: 0
-      english: Yeah. Maintenance store, same floor. Going to grab it.
-      vietnamese: "C\xF3. Kho b\u1EA3o tr\xEC ngay t\u1EA7ng n\xE0y. T\xF4i \u0111i
-        l\u1EA5y lu\xF4n \u0111\xE2y."
+      english: 'Grab the fuse on this floor.
+
+        Keep the desk log recorded.'
+      vietnamese: 'Grab the fuse on this floor.
+
+        Keep the desk log recorded.'
   - id: 9
     speaker: Command
     english: 'Power''s back.
 
       Match upstairs intake to the desk log.'
-    vietnamese: "C\xF3 \u0111i\u1EC7n r\u1ED3i.\nSo phi\u1EBFu tr\xEAn t\u1EA7ng
-      v\u1EDBi s\u1ED5 an ninh."
+    vietnamese: 'Power''s back.
+
+      Match upstairs intake to the desk log.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1162,28 +1057,34 @@ MonoBehaviour:
     secondVoice: 4
     cues:
     - role: 0
-      english: Records has power. I'll check under C12 upstairs.
-      vietnamese: "Ph\xF2ng h\u1ED3 s\u01A1 c\xF3 \u0111i\u1EC7n r\u1ED3i. T\xF4i
-        l\xEAn t\xECm theo nh\xF3m C12 \u0111\xE2y."
+      english: 'Records room has power.
+
+        Heading upstairs for Group C12.'
+      vietnamese: 'Records room has power.
+
+        Heading upstairs for Group C12.'
     - role: 1
-      english: Check the intake time too. Might be more than one sheet.
-      vietnamese: "Nh\u1EDB xem c\u1EA3 gi\u1EDD ti\u1EBFp nh\u1EADn. C\xF9ng nh\xF3m
-        kh\xE9o c\xF3 m\u1EA5y phi\u1EBFu li\u1EC1n."
+      english: 'Watch the intake time.
+
+        Could be multiple sheets.'
+      vietnamese: 'Watch the intake time.
+
+        Could be multiple sheets.'
     - role: 0
-      english: Zero two forty. That's what security logged, right?
-      vietnamese: "S\u1ED5 b\xE0n b\u1EA3o v\u1EC7 ghi 02:40, \u0111\xFAng kh\xF4ng?"
+      english: Zero two forty, Group C12.
+      vietnamese: Zero two forty, Group C12.
     - role: 1
-      english: Right. That's the intake time. The sheet has to match C12 too.
-      vietnamese: "\u0110\xFAng. \u0110\xF3 l\xE0 gi\u1EDD nh\u1EADn. Phi\u1EBFu
-        ph\u1EA3i kh\u1EDBp c\u1EA3 gi\u1EDD l\u1EABn nh\xF3m."
+      english: Right. Match both fields.
+      vietnamese: Right. Match both fields.
     soloCues: []
   - id: 10
     speaker: Command
     english: 'P046.
 
       Check that patient''s mortuary transfer.'
-    vietnamese: "P046.\nXem gi\u1EA5y chuy\u1EC3n nh\xE0 x\xE1c c\u1EE7a ng\u01B0\u1EDDi
-      n\xE0y."
+    vietnamese: 'P046.
+
+      Check that patient''s mortuary transfer.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1193,31 +1094,37 @@ MonoBehaviour:
     secondVoice: 4
     cues:
     - role: 0
-      english: "It's P046. Public log says \u201Crecovery transfer.\u201D"
-      vietnamese: "\u0110\xFAng l\xE0 P046 r\u1ED3i. B\u1EA3n c\xF4ng khai ghi \u201Cchuy\u1EC3n
-        \u0111i h\u1ED3i ph\u1EE5c\u201D."
+      english: 'It''s P046. Public sheet
+
+        reads "recovery transfer."'
+      vietnamese: 'It''s P046. Public sheet
+
+        reads "recovery transfer."'
     - role: 1
-      english: Sent them where?
-      vietnamese: "H\u1ED3i ph\u1EE5c \u1EDF \u0111\xE2u?"
+      english: Transferred where?
+      vietnamese: Transferred where?
     - role: 0
-      english: Internal note says B2. Technical observation.
-      vietnamese: "M\u1EE5c n\u1ED9i b\u1ED9 l\u1EA1i ghi th\u1EB3ng xu\u1ED1ng B2.
-        H\u1ECD g\u1ECDi l\xE0 theo d\xF5i k\u1EF9 thu\u1EADt."
+      english: 'Internal note says Level B2.
+
+        Technical observation.'
+      vietnamese: 'Internal note says Level B2.
+
+        Technical observation.'
     - role: 1
-      english: Did the transfer go through?
-      vietnamese: "\u0110\xE3 b\xE0n giao ng\u01B0\u1EDDi ch\u01B0a?"
+      english: Did they move the patient?
+      vietnamese: Did they move the patient?
     - role: 0
-      english: This is just the intake sheet. I'll hunt down the transfer slip.
-      vietnamese: "T\u1EDD n\xE0y m\u1EDBi ch\u1EC9 l\xE0 phi\u1EBFu ti\u1EBFp nh\u1EADn.
-        \u0110\u1EC3 t\xF4i t\xECm xem phi\u1EBFu chuy\u1EC3n \u0111\xE2u."
+      english: Checking the mortuary log next.
+      vietnamese: Checking the mortuary log next.
     soloCues: []
   - id: 11
     speaker: Command
     english: 'Logged dead at 03:05.
 
       Transferred alive at 03:50.'
-    vietnamese: "Ghi t\u1EED vong l\xFAc 03:05.\nChuy\u1EC3n \u0111i c\xF2n s\u1ED1ng
-      l\xFAc 03:50."
+    vietnamese: 'Logged dead at 03:05.
+
+      Transferred alive at 03:50.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1227,49 +1134,38 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 0
-      english: Command, mortuary logged P046 dead at zero three oh five.
-      vietnamese: "B\u1ED9 ch\u1EC9 huy, s\u1ED5 nh\xE0 x\xE1c ghi P046 t\u1EED vong
-        l\xFAc 03:05."
+      english: 'Command, mortuary logged
+
+        P046 dead at 03:05.'
+      vietnamese: 'Command, mortuary logged
+
+        P046 dead at 03:05.'
     - role: 2
       english: Then who went down to B2?
-      vietnamese: "V\u1EADy ng\u01B0\u1EDDi \u0111\u01B0a xu\u1ED1ng B2 l\xE0 ai?"
+      vietnamese: Then who went down to B2?
     - role: 0
-      english: P046. Zero three fifty.
-      vietnamese: "V\u1EABn l\xE0 P046. L\xFAc 03:50."
-    - role: 0
-      english: At handover, they signed the patient off as alive.
-      vietnamese: "\xD4 t\xECnh tr\u1EA1ng l\xFAc b\xE0n giao... h\u1ECD v\u1EABn
-        ghi c\xF2n s\u1ED1ng."
+      english: 'Same wristband, same P046.
+
+        Transferred alive at 03:50.'
+      vietnamese: 'Same wristband, same P046.
+
+        Transferred alive at 03:50.'
     - role: 2
-      english: Could be a clerical error. Check the wristband numbers, {1}.
-      vietnamese: "Bi\u1EBFt \u0111\xE2u h\u1ECD ch\xE9p nh\u1EA7m m\xE3. {1}, xem
-        l\u1EA1i s\u1ED1 v\xF2ng tay."
-    - role: 0
-      english: Already did. Same wristband. Exact one they put on at intake.
-      vietnamese: "T\xF4i so r\u1ED3i. Tr\xF9ng t\u1EEBng s\u1ED1 m\u1ED9t v\u1EDBi
-        v\xF2ng \u0111eo l\xFAc m\u1EDBi nh\u1EADp vi\u1EC7n."
-    - role: 2
-      english: Anything else on P046 after that transfer?
-      vietnamese: "Sau l\u1EA7n chuy\u1EC3n \u0111\xF3, c\xF2n gi\u1EA5y t\u1EDD
-        n\xE0o v\u1EC1 P046 n\u1EEFa kh\xF4ng?"
-    - role: 0
-      english: Nothing. That B2 transfer's the last paper trail I have.
-      vietnamese: "Kh\xF4ng. Phi\u1EBFu chuy\u1EC3n xu\u1ED1ng B2 l\xE0 t\u1EDD cu\u1ED1i
-        c\xF9ng."
-    - role: 2
-      english: Keep both. Investigators need them side by side.
-      vietnamese: "Gi\u1EEF c\u1EA3 hai t\u1EDD l\u1EA1i. T\u1ED5 \u0111i\u1EC1u
-        tra c\u1EA7n xem hai t\u1EDD c\xF9ng l\xFAc."
-    - role: 0
-      english: Roger. Keeping them together.
-      vietnamese: "\u0110\xE3 r\xF5. T\xF4i k\u1EB9p chung hai t\u1EDD l\u1EA1i."
+      english: 'Keep both records and the card.
+
+        Call the B2 freight lift now.'
+      vietnamese: 'Keep both records and the card.
+
+        Call the B2 freight lift now.'
     soloCues: []
   - id: 12
     speaker: Command
     english: 'Power''s holding.
 
       Find the original archive.'
-    vietnamese: "\u0110i\u1EC7n \u1ED5n r\u1ED3i.\nT\xECm h\u1ED3 s\u01A1 g\u1ED1c."
+    vietnamese: 'Power''s holding.
+
+      Find the original archive.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1279,39 +1175,55 @@ MonoBehaviour:
     secondVoice: 4
     cues:
     - role: 0
-      english: Data's got power. {2}, is the terminal up?
-      vietnamese: "Nh\xE1nh d\u1EEF li\u1EC7u c\xF3 \u0111i\u1EC7n r\u1ED3i. {2},
-        m\xE1y ch\u1EA1y ch\u01B0a?"
+      english: 'Data path is powered.
+
+        {2}, is the terminal up?'
+      vietnamese: 'Data path is powered.
+
+        {2}, is the terminal up?'
     - role: 1
-      english: It's up. Thought we'd have to kill the lift to run it.
-      vietnamese: "L\xEAn r\u1ED3i. T\u01B0\u1EDFng b\u1EADt m\xE1y ph\u1EA3i c\u1EAFt
-        ngu\u1ED3n thang ch\u1EE9."
+      english: 'It''s up. Thought we''d have
+
+        to cut lift power for this.'
+      vietnamese: 'It''s up. Thought we''d have
+
+        to cut lift power for this.'
     - role: 0
-      english: Lift's still live. I killed the test rig instead.
-      vietnamese: "Thang v\u1EABn c\xF2n \u0111i\u1EC7n. T\xF4i ng\u1EAFt gi\xE0n
-        th\u1EED \u0111\u1EC3 \u0111\u1EE7 t\u1EA3i."
+      english: 'Lift is still live.
+
+        I killed the test rig instead.'
+      vietnamese: 'Lift is still live.
+
+        I killed the test rig instead.'
     - role: 1
       english: Good. Pulling up P046 now.
-      vietnamese: "\u1ED4n r\u1ED3i. \u0110\u1EC3 t\xF4i tra m\xE3 P046 ngay."
+      vietnamese: Good. Pulling up P046 now.
     soloCues:
     - role: 0
-      english: Data's powered. Opening the original archive now.
-      vietnamese: "Nh\xE1nh d\u1EEF li\u1EC7u c\xF3 \u0111i\u1EC7n r\u1ED3i. T\xF4i
-        chu\u1EA9n b\u1ECB m\u1EDF b\u1EA3n g\u1ED1c."
+      english: 'Data circuit is powered.
+
+        Opening the archive terminal.'
+      vietnamese: 'Data circuit is powered.
+
+        Opening the archive terminal.'
     - role: 2
-      english: And the freight lift still has power?
-      vietnamese: "C\xF2n \u0111i\u1EC7n thang h\xE0ng th\xEC sao?"
+      english: 'Does the freight lift still
+
+        have emergency power?'
+      vietnamese: 'Does the freight lift still
+
+        have emergency power?'
     - role: 0
-      english: Both circuits are live. I cut the test rig.
-      vietnamese: "V\u1EABn gi\u1EEF c\u1EA3 hai nh\xE1nh. T\xF4i c\u1EAFt gi\xE0n
-        th\u1EED r\u1ED3i."
+      english: Both stay live. Test rig off.
+      vietnamese: Both stay live. Test rig off.
   - id: 13
     speaker: Command
     english: 'E-02.
 
       Get the original records, names and all.'
-    vietnamese: "E-02.\nL\u1EA5y h\u1ED3 s\u01A1 g\u1ED1c, gi\u1EEF c\u1EA3 t\xEAn
-      b\u1EC7nh nh\xE2n."
+    vietnamese: 'E-02.
+
+      Get the original records, names and all.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1321,45 +1233,41 @@ MonoBehaviour:
     secondVoice: 2
     cues:
     - role: 0
-      english: I've got the original E-02. Patient names are all here.
-      vietnamese: "T\xF4i m\u1EDF \u0111\u01B0\u1EE3c b\u1EA3n g\u1ED1c E-02 r\u1ED3i.
-        C\xF2n nguy\xEAn c\u1EA3 b\u1EA3ng t\xEAn b\u1EC7nh nh\xE2n."
+      english: 'Found original E-02.
+
+        Names and P046 match up.'
+      vietnamese: 'Found original E-02.
+
+        Names and P046 match up.'
     - role: 1
-      english: Can you tie the names to the Northbridge IDs?
-      vietnamese: "T\xEAn tr\xEAn \u0111\xF3 c\xF3 kh\u1EDBp v\u1EDBi m\xE3 \u1EDF
-        vi\u1EC7n kh\xF4ng?"
+      english: Anything from Dr. Cole?
+      vietnamese: Anything from Dr. Cole?
     - role: 0
-      english: Easily. Names and IDs sit in the same table.
-      vietnamese: "Kh\u1EDBp h\u1EBFt. T\xEAn v\u1EDBi m\xE3 n\u1EB1m chung b\u1EA3ng."
-    - role: 0
-      english: "Cole's request to halt the trial\u2014 that's still in here too."
-      vietnamese: "\u0110\u01A1n xin d\u1EEBng th\u1EED nghi\u1EC7m c\u1EE7a b\xE1c
-        s\u0129 Cole c\u0169ng c\xF2n nguy\xEAn \u0111\xE2y."
+      english: 'His halt order is still here.
+
+        Client export scrubbed both out.'
+      vietnamese: 'His halt order is still here.
+
+        Client export scrubbed both out.'
     - role: 1
-      english: What about the export they cut for the client?
-      vietnamese: "Th\u1EBF c\xF2n b\u1EA3n h\u1ECD xu\u1EA5t cho b\xEAn thu\xEA?"
+      english: 'Grab the physical E-02 case.
+
+        Don''t read names on open comms.'
+      vietnamese: 'Grab the physical E-02 case.
+
+        Don''t read names on open comms.'
     - role: 0
-      english: Scrubbed both right out. Nothing left but sample data.
-      vietnamese: "C\u1EAFt s\u1EA1ch c\u1EA3 hai m\u1EE5c \u0111\xF3 r\u1ED3i. Ch\u1EC9
-        ch\u1EEBa l\u1EA1i m\u1ED7i d\u1EEF li\u1EC7u m\u1EABu."
-    - role: 1
-      english: Keep the names in the archive.
-      vietnamese: "Gi\u1EEF b\u1EA3ng t\xEAn trong kho l\u01B0u tr\u1EEF th\xF4i."
-    - role: 1
-      english: Don't read them over the net.
-      vietnamese: "\u0110\u1EEBng \u0111\u1ECDc t\xEAn ng\u01B0\u1EDDi ta tr\xEAn
-        k\xEAnh."
-    - role: 0
-      english: Copy. IDs only on the air.
-      vietnamese: "R\xF5. Qua b\u1ED9 \u0111\xE0m t\xF4i ch\u1EC9 b\xE1o m\xE3."
+      english: Copy. Securing E-02 case now.
+      vietnamese: Copy. Securing E-02 case now.
     soloCues: []
   - id: 14
     speaker: Command
     english: 'Both cases secured.
 
       Send the full archive before you leave.'
-    vietnamese: "\u0110\u1EE7 hai ki\u1EC7n r\u1ED3i.\nG\u1EEDi to\xE0n b\u1ED9 h\u1ED3
-      s\u01A1 tr\u01B0\u1EDBc khi r\xFAt."
+    vietnamese: 'Both cases secured.
+
+      Send the full archive before you leave.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1369,34 +1277,38 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 0
-      english: Command, Vanguard has both cases.
-      vietnamese: "B\xE1o c\xE1o B\u1ED9 ch\u1EC9 huy, Vanguard gi\u1EEF \u0111\u1EE7
-        c\u1EA3 hai ki\u1EC7n r\u1ED3i."
-    - role: 0
-      english: Request clearance to pull out of B2.
-      vietnamese: "Xin l\u1EC7nh cho \u0111\u1ED9i r\xFAt kh\u1ECFi B2."
+      english: 'Command, we have both cases.
+
+        Request clearance to extract.'
+      vietnamese: 'Command, we have both cases.
+
+        Request clearance to extract.'
     - role: 2
-      english: Not yet. I need a full copy outside before you leave B2.
-      vietnamese: "Khoan \u0111\xE3. B\u1EA3n \u0111\u1EA7y \u0111\u1EE7 ph\u1EA3i
-        g\u1EEDi ra ngo\xE0i tr\u01B0\u1EDBc khi \u0111\u1ED9i r\u1EDDi B2."
+      english: 'Negative. Transmit full E-02
+
+        off-site before you leave.'
+      vietnamese: 'Negative. Transmit full E-02
+
+        off-site before you leave.'
     - role: 0
-      english: Confirm who's taking it.
-      vietnamese: "Xin x\xE1c nh\u1EADn \u0111\u1EA7u nh\u1EADn."
+      english: Who's receiving the upload?
+      vietnamese: Who's receiving the upload?
     - role: 2
-      english: BRT's receiving station. I'm waiting on their confirmation.
-      vietnamese: "Tr\u1EA1m ti\u1EBFp nh\u1EADn c\u1EE7a BRT. T\xF4i ch\u1EDD b\xEAn
-        \u0111\xF3 b\xE1o nh\u1EADn \u0111\u1EE7."
-    - role: 0
-      english: Roger. We'll hold until BRT confirms.
-      vietnamese: "\u0110\xE3 r\xF5. \u0110\u1ED9i t\xF4i ch\u1EDD BRT b\xE1o nh\u1EADn."
+      english: 'BRT''s off-site station.
+
+        Start the upload at the console.'
+      vietnamese: 'BRT''s off-site station.
+
+        Start the upload at the console.'
     soloCues: []
   - id: 15
     speaker: Command
     english: 'Interlock''s cycling.
 
       Hold the control room.'
-    vietnamese: "Kh\xF3a li\xEAn \u0111\u1ED9ng \u0111ang ch\u1EA1y.\nGi\u1EEF ph\xF2ng
-      \u0111i\u1EC1u khi\u1EC3n."
+    vietnamese: 'Interlock''s cycling.
+
+      Hold the control room.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1406,39 +1318,52 @@ MonoBehaviour:
     secondVoice: 3
     cues:
     - role: 0
-      english: '{2}, I hit the release. Door''s not budging.'
-      vietnamese: "{2}, t\xF4i b\u1EA5m m\u1EDF r\u1ED3i. M\xE0 c\u1EEDa v\u1EABn
-        ch\u01B0a nh\xFAc nh\xEDch g\xEC."
+      english: 'I hit the service release.
+
+        Door''s not budging.'
+      vietnamese: 'I hit the service release.
+
+        Door''s not budging.'
     - role: 1
-      english: Lock's still cycling. Mashing it won't hurry it along.
-      vietnamese: "Kh\xF3a c\xF2n \u0111ang nh\u1EA3. B\u1EA5m n\u1EEFa n\xF3 c\u0169ng
-        ch\u1EB3ng nhanh h\u01A1n."
+      english: 'Interlock is still cycling.
+
+        Hold the control room.'
+      vietnamese: 'Interlock is still cycling.
+
+        Hold the control room.'
     - role: 0
-      english: I'll hold the case in here. Call me when it clears.
-      vietnamese: "T\xF4i \xF4m ki\u1EC7n ch\u1EDD trong ph\xF2ng. C\u1EEDa m\u1EDF
-        th\xEC g\u1ECDi."
-    - role: 1
-      english: Copy. I'll watch the door.
-      vietnamese: "R\xF5. \u0110\u1EC3 t\xF4i \u0111\u1EE9ng canh c\u1EEDa."
+      english: 'Copy. Protecting the case.
+
+        Call me when it clears.'
+      vietnamese: 'Copy. Protecting the case.
+
+        Call me when it clears.'
     soloCues:
     - role: 0
-      english: I hit the release. Door's not budging.
-      vietnamese: "T\xF4i b\u1EA5m m\u1EDF r\u1ED3i. C\u1EEDa v\u1EABn ch\u01B0a
-        nh\xFAc nh\xEDch g\xEC."
+      english: 'I hit the service release.
+
+        Door''s not moving yet.'
+      vietnamese: 'I hit the service release.
+
+        Door''s not moving yet.'
     - role: 2
-      english: Let the lock finish cycling. Hold inside the control room.
-      vietnamese: "C\u1EE9 ch\u1EDD kh\xF3a nh\u1EA3 h\u1EBFt. \u1EDE y\xEAn trong
-        ph\xF2ng \u0111i\u1EC1u khi\u1EC3n."
+      english: 'Interlock is still cycling.
+
+        Hold inside the control room.'
+      vietnamese: 'Interlock is still cycling.
+
+        Hold inside the control room.'
     - role: 0
-      english: Copy. Holding the case till it clears.
-      vietnamese: "R\xF5. T\xF4i \xF4m ki\u1EC7n ch\u1EDD \u0111\xE2y t\u1EDBi khi
-        c\u1EEDa m\u1EDF."
+      english: Copy. Holding with the case.
+      vietnamese: Copy. Holding with the case.
   - id: 16
     speaker: Command
     english: 'Lift''s coming.
 
       Leave the Tank behind.'
-    vietnamese: "Thang \u0111ang t\u1EDBi.\nB\u1ECF qua Tank."
+    vietnamese: 'Lift''s coming.
+
+      Leave the Tank behind.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1448,32 +1373,37 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 0
-      english: Command, lift's been called. Vanguard's holding at the doors.
-      vietnamese: "B\u1ED9 ch\u1EC9 huy, t\xF4i b\u1EA5m g\u1ECDi thang r\u1ED3i.
-        C\u1EA3 \u0111\u1ED9i \u0111ang ch\u1EDD ngo\xE0i c\u1EEDa."
+      english: 'Command, B2 lift is called.
+
+        Squad''s holding at the doors.'
+      vietnamese: 'Command, B2 lift is called.
+
+        Squad''s holding at the doors.'
     - role: 2
-      english: Copy, {1}. Your priority is getting to B2.
-      vietnamese: "\u0110\xE3 nh\u1EADn, {1}. L\xFAc n\xE0y \u01B0u ti\xEAn s\u1ED1
-        m\u1ED9t l\xE0 xu\u1ED1ng B2."
+      english: Copy. Priority is reaching B2.
+      vietnamese: Copy. Priority is reaching B2.
     - role: 0
-      english: What if another Tank shows up like at the factory?
-      vietnamese: "L\u1EE1 l\u1EA1i \u0111\u1EE5ng Tank nh\u01B0 h\u1ED3i \u1EDF
-        nh\xE0 m\xE1y th\xEC sao?"
+      english: What if a Tank blocks us here?
+      vietnamese: What if a Tank blocks us here?
     - role: 2
-      english: Don't bog down fighting it. Doors open, get the team aboard.
-      vietnamese: "\u0110\u1EEBng d\xE2y d\u01B0a v\u1EDBi n\xF3. Thang m\u1EDF l\xE0
-        \u0111\u01B0a \u0111\u1ED9i xu\u1ED1ng ngay."
+      english: 'Don''t waste ammo fighting it.
+
+        Evade the Tank, board the lift.'
+      vietnamese: 'Don''t waste ammo fighting it.
+
+        Evade the Tank, board the lift.'
     - role: 0
-      english: Roger that. We'll wait for the lift.
-      vietnamese: "\u0110\xE3 r\xF5. \u0110\u1ED9i t\xF4i \u0111\u1EE9ng ch\u1EDD
-        thang."
+      english: Roger. Waiting for the doors.
+      vietnamese: Roger. Waiting for the doors.
     soloCues: []
   - id: 17
     speaker: Command
     english: 'Keep moving.
 
       You don''t need to kill the Tank.'
-    vietnamese: "C\u1EE9 di chuy\u1EC3n.\nKh\xF4ng c\u1EA7n h\u1EA1 Tank."
+    vietnamese: 'Keep moving.
+
+      You don''t need to kill the Tank.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1483,25 +1413,31 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 0
-      english: Transfer's running. Do I need to babysit the terminal?
-      vietnamese: "M\xE1y \u0111ang truy\u1EC1n r\u1ED3i. T\xF4i c\xF3 ph\u1EA3i
-        \u0111\u1EE9ng canh m\xE1y kh\xF4ng?"
+      english: 'Upload''s running.
+
+        Do I need to guard the console?'
+      vietnamese: 'Upload''s running.
+
+        Do I need to guard the console?'
     - role: 2
-      english: No, it runs on its own. Tank shows up, stay clear of it.
-      vietnamese: "Kh\xF4ng c\u1EA7n, m\xE1y t\u1EF1 ch\u1EA1y. Tank m\xF2 t\u1EDBi
-        th\xEC c\u1EE9 n\xE9 n\xF3 ra."
+      english: 'No, it transmits on its own.
+
+        Stay mobile. Evade any Tank.'
+      vietnamese: 'No, it transmits on its own.
+
+        Stay mobile. Evade any Tank.'
     - role: 0
-      english: Copy. Ping me once they have the whole file.
-      vietnamese: "R\xF5. \u0110\u1EA7u kia nh\u1EADn \u0111\u1EE7 th\xEC g\u1ECDi
-        t\xF4i."
+      english: Copy. Ping us when BRT confirms.
+      vietnamese: Copy. Ping us when BRT confirms.
     soloCues: []
   - id: 18
     speaker: Command
     english: 'Exit''s open.
 
       Get your people there.'
-    vietnamese: "L\u1ED1i ra m\u1EDF r\u1ED3i.\nT\u1EADp h\u1EE3p c\u1EA3 \u0111\u1ED9i
-      \u1EDF \u0111\xF3."
+    vietnamese: 'Exit''s open.
+
+      Get your people there.'
     priority: 2
     cooldown: 0
     oncePerRun: 0
@@ -1511,23 +1447,27 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 2
-      english: Vanguard, exit's open. Are you there yet?
-      vietnamese: "Vanguard, l\u1ED1i ra m\u1EDF r\u1ED3i. \u0110\u1ED9i t\u1EDBi
-        n\u01A1i ch\u01B0a?"
+      english: 'Vanguard, exit''s open.
+
+        Get the squad to the boarding zone.'
+      vietnamese: 'Vanguard, exit''s open.
+
+        Get the squad to the boarding zone.'
     - role: 0
-      english: On my way. I'll call when I get there.
-      vietnamese: "\u0110ang ch\u1EA1y t\u1EDBi. T\u1EDBi n\u01A1i t\xF4i b\xE1o
-        ngay."
+      english: Moving now. Calling once clear.
+      vietnamese: Moving now. Calling once clear.
     - role: 2
-      english: Copy. Keeping the channel clear for your call.
-      vietnamese: "R\xF5. T\xF4i gi\u1EEF k\xEAnh ch\u1EDD tin."
+      english: Copy. Channel clear.
+      vietnamese: Copy. Channel clear.
     soloCues: []
   - id: 19
     speaker: Command
     english: 'B2 next.
 
       Wait till the door''s fully open.'
-    vietnamese: "S\u1EAFp xu\u1ED1ng B2.\n\u0110\u1EE3i c\u1EEDa m\u1EDF h\u1EB3n."
+    vietnamese: 'B2 next.
+
+      Wait till the door''s fully open.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1537,40 +1477,48 @@ MonoBehaviour:
     secondVoice: 2
     cues:
     - role: 0
-      english: '{2}, what are we looking for first once we hit B2?'
-      vietnamese: "{2}, xu\u1ED1ng t\u1EDBi B2 th\xEC t\xECm c\xE1i g\xEC tr\u01B0\u1EDBc
-        \u0111\xE2y?"
+      english: '{2}, what do we check
+
+        first once we reach B2?'
+      vietnamese: '{2}, what do we check
+
+        first once we reach B2?'
     - role: 1
-      english: The receiving log. Upstairs only shows they sent them.
-      vietnamese: "S\u1ED5 b\xE0n giao. Tr\xEAn vi\u1EC7n m\u1EDBi ch\u1EC9 ghi \u0111\xE3
-        chuy\u1EC3n \u0111i."
-    - role: 1
-      english: I want to know who signed for them down on B2.
-      vietnamese: "T\xF4i mu\u1ED1n bi\u1EBFt d\u01B0\u1EDBi B2 ai l\xE0 ng\u01B0\u1EDDi
-        k\xFD nh\u1EADn."
+      english: 'The B2 transfer console.
+
+        See where they routed P046.'
+      vietnamese: 'The B2 transfer console.
+
+        See where they routed P046.'
     - role: 0
-      english: Fair enough. I'll step out first once the doors clear.
-      vietnamese: "\u0110\u01B0\u1EE3c. Ch\u1EDD c\u1EEDa m\u1EDF h\u1EB3n t\xF4i
-        b\u01B0\u1EDBc ra tr\u01B0\u1EDBc."
+      english: Fair. Wait till doors clear.
+      vietnamese: Fair. Wait till doors clear.
     soloCues:
     - role: 0
-      english: Heading down to B2. I'll look for the receiving log first.
-      vietnamese: "T\xF4i \u0111ang xu\u1ED1ng B2. T\u1EDBi n\u01A1i t\xF4i t\xECm
-        s\u1ED5 b\xE0n giao tr\u01B0\u1EDBc."
+      english: 'Heading down to Level B2.
+
+        Checking transfer console first.'
+      vietnamese: 'Heading down to Level B2.
+
+        Checking transfer console first.'
     - role: 2
-      english: Good. Wait till the doors clear all the way before stepping out.
-      vietnamese: "T\u1ED1t. Ch\u1EDD c\u1EEDa m\u1EDF h\u1EB3n r\u1ED3i h\xE3y b\u01B0\u1EDBc
-        ra."
+      english: 'Good. Wait till lift doors
+
+        clear before stepping out.'
+      vietnamese: 'Good. Wait till lift doors
+
+        clear before stepping out.'
     - role: 0
-      english: Copy. I'll call in anything on P046.
-      vietnamese: "R\xF5. C\xF3 g\xEC ghi v\u1EC1 P046 t\xF4i b\xE1o ngay."
+      english: Copy. Calling in any P046 lead.
+      vietnamese: Copy. Calling in any P046 lead.
   - id: 20
     speaker: Command
     english: 'Both cases out.
 
       BRT has the full copy. Quarantine holds.'
-    vietnamese: "\u0110\u1EE7 hai ki\u1EC7n ra ngo\xE0i.\nBRT nh\u1EADn \u0111\u1EE7
-      b\u1EA3n sao. V\u1EABn gi\u1EEF phong t\u1ECFa."
+    vietnamese: 'Both cases out.
+
+      BRT has the full copy. Quarantine holds.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1580,40 +1528,41 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 0
-      english: Command, Vanguard is clear. Both cases accounted for.
-      vietnamese: "B\u1ED9 ch\u1EC9 huy, Vanguard ra ngo\xE0i r\u1ED3i. \u0110\u1EE7
-        c\u1EA3 hai ki\u1EC7n."
+      english: 'Command, Vanguard is clear.
+
+        Both cases accounted for.'
+      vietnamese: 'Command, Vanguard is clear.
+
+        Both cases accounted for.'
     - role: 2
-      english: Roger, Vanguard. BRT has the full copy on file.
-      vietnamese: "\u0110\xE3 nh\u1EADn, Vanguard. BRT \u0111\xE3 l\u01B0u b\u1EA3n
-        sao \u0111\u1EA7y \u0111\u1EE7."
+      english: 'Roger. BRT holds the archive.
+
+        Mark P046 status unknown.'
+      vietnamese: 'Roger. BRT holds the archive.
+
+        Mark P046 status unknown.'
+    - role: 2
+      english: 'Quarantine stays in effect.
+
+        Investigators take it from here.'
+      vietnamese: 'Quarantine stays in effect.
+
+        Investigators take it from here.'
     - role: 0
-      english: What do I put down for P046's status?
-      vietnamese: "C\xF2n t\xECnh tr\u1EA1ng c\u1EE7a P046, b\xE1o c\xE1o t\xF4i
-        ghi th\u1EBF n\xE0o?"
-    - role: 2
-      english: Mark it unknown. Investigators will take it from here.
-      vietnamese: "C\u1EE9 ghi ch\u01B0a x\xE1c \u0111\u1ECBnh. T\u1ED5 \u0111i\u1EC1u
-        tra s\u1EBD x\xE1c minh ti\u1EBFp."
-    - role: 2
-      english: Quarantine remains in effect.
-      vietnamese: "L\u1EC7nh phong t\u1ECFa v\u1EABn gi\u1EEF nguy\xEAn."
-    - role: 0
-      english: Roger that. I'll brief the team at handover.
-      vietnamese: "\u0110\xE3 r\xF5. L\xFAc b\xE0n giao t\xF4i b\xE1o l\u1EA1i cho
-        \u0111\u1ED9i."
+      english: Copy. Briefing on debrief.
+      vietnamese: Copy. Briefing on debrief.
     - role: 2
       english: Command out.
-      vietnamese: "B\u1ED9 ch\u1EC9 huy, h\u1EBFt."
+      vietnamese: Command out.
     soloCues: []
   - id: 21
     speaker: Command
     english: 'Full copy received off-site.
 
-      Take both cases to the lift and
-      wait.'
-    vietnamese: "\u0110\xE3 nh\u1EADn \u0111\u1EE7 b\u1EA3n sao ngo\xE0i c\u01A1
-      s\u1EDF.\nMang hai ki\u1EC7n t\u1EDBi thang r\u1ED3i ch\u1EDD."
+      Take both cases to the lift and wait.'
+    vietnamese: 'Full copy received off-site.
+
+      Take both cases to the lift and wait.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1623,28 +1572,34 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 2
-      english: Vanguard, the station confirms it has the full E-02 copy.
-      vietnamese: "Vanguard, tr\u1EA1m ngo\xE0i b\xE1o \u0111\xE3 nh\u1EADn \u0111\u1EE7
-        b\u1EA3n sao E-02."
+      english: 'Vanguard, BRT station has
+
+        the full E-02 archive.'
+      vietnamese: 'Vanguard, BRT station has
+
+        the full E-02 archive.'
     - role: 0
-      english: Copy. Where do you want the two cases?
-      vietnamese: "\u0110\xE3 nh\u1EADn. C\xF2n hai ki\u1EC7n h\xE0ng, gi\u1EDD mang
-        \u0111i \u0111\xE2u?"
+      english: Copy. What about both cases?
+      vietnamese: Copy. What about both cases?
     - role: 2
-      english: Haul both to the freight lift and hold there.
-      vietnamese: "Mang c\u1EA3 hai ra thang h\xE0ng r\u1ED3i ch\u1EDD \u1EDF \u0111\xF3."
+      english: 'Bring both cases to the lift
+
+        and hold for extraction.'
+      vietnamese: 'Bring both cases to the lift
+
+        and hold for extraction.'
     - role: 0
-      english: Roger. We'll bring both cases to the lift and wait there.
-      vietnamese: "\u0110\xE3 r\xF5. \u0110\u1ED9i t\xF4i s\u1EBD \u0111\u01B0a c\u1EA3
-        hai ki\u1EC7n t\u1EDBi thang h\xE0ng r\u1ED3i ch\u1EDD \u1EDF \u0111\xF3."
+      english: Roger. Moving to the lift now.
+      vietnamese: Roger. Moving to the lift now.
     soloCues: []
   - id: 22
     speaker: Anonymous Client
     english: 'Keep the sample.
 
       No names or staff objections go out.'
-    vietnamese: "Gi\u1EEF m\u1EABu.\nB\u1EA3n g\u1EEDi b\u1ECF t\xEAn, ph\u1EA3n
-      \u0111\u1ED1i c\u1EE7a nh\xE2n vi\xEAn."
+    vietnamese: 'Keep the sample.
+
+      No names or staff objections go out.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1654,40 +1609,42 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 3
-      english: Vanguard, the export's for sample data only.
-      vietnamese: "Vanguard, l\xFAc xu\u1EA5t h\u1ED3 s\u01A1, b\xEAn t\xF4i ch\u1EC9
-        l\u1EA5y ph\u1EA7n d\u1EEF li\u1EC7u m\u1EABu."
+      english: 'Vanguard, the export is
+
+        for sample data only.'
+      vietnamese: 'Vanguard, the export is
+
+        for sample data only.'
     - role: 3
-      english: Strip out the patient identifiers.
-      vietnamese: "L\u01B0\u1EE3c h\u1EBFt ph\u1EA7n \u0111\u1ECBnh danh b\u1EC7nh
-        nh\xE2n \u0111i."
+      english: 'Strip out patient identities
+
+        and all staff objections.'
+      vietnamese: 'Strip out patient identities
+
+        and all staff objections.'
     - role: 0
-      english: Wipe the names, and how do you match samples to patients?
-      vietnamese: "X\xF3a s\u1EA1ch t\xEAn th\xEC sau n\xE0y bi\u1EBFt m\u1EABu n\xE0o
-        g\u1EAFn v\u1EDBi ng\u01B0\u1EDDi n\xE0o?"
+      english: 'Wipe the names and how do
+
+        you trace who was exposed?'
+      vietnamese: 'Wipe the names and how do
+
+        you trace who was exposed?'
     - role: 3
-      english: We track samples by lot number.
-      vietnamese: "Ch\xFAng t\xF4i qu\u1EA3n l\xFD m\u1EABu theo s\u1ED1 l\xF4."
-    - role: 3
-      english: Cut any staff objections from the export as well.
-      vietnamese: "B\u1ECF lu\xF4n ph\u1EA7n nh\xE2n vi\xEAn ph\u1EA3n \u0111\u1ED1i
-        kh\u1ECFi b\u1EA3n xu\u1EA5t."
-    - role: 0
-      english: Just the export, or the original E-02 too?
-      vietnamese: "Ch\u1EC9 c\u1EAFt tr\xEAn b\u1EA3n xu\u1EA5t, hay s\u1EEDa lu\xF4n
-        b\u1EA3n g\u1ED1c E-02?"
-    - role: 3
-      english: Just the export. Leave the original on site.
-      vietnamese: "Ch\u1EC9 b\u1EA3n xu\u1EA5t th\xF4i. B\u1EA3n g\u1ED1c c\u1EE9
-        \u0111\u1EC3 nguy\xEAn t\u1EA1i ch\u1ED7."
+      english: 'We track by lot number only.
+
+        Leave original E-02 on site.'
+      vietnamese: 'We track by lot number only.
+
+        Leave original E-02 on site.'
     soloCues: []
   - id: 23
     speaker: Command
     english: 'Ignore that.
 
       Send it all. Names and objections too.'
-    vietnamese: "B\u1ECF l\u1EC7nh \u0111\xF3.\nG\u1EEDi h\u1EBFt, c\u1EA3 t\xEAn
-      l\u1EABn \xFD ki\u1EBFn ph\u1EA3n \u0111\u1ED1i."
+    vietnamese: 'Ignore that.
+
+      Send it all. Names and objections too.'
     priority: 2
     cooldown: 0
     oncePerRun: 1
@@ -1697,36 +1654,42 @@ MonoBehaviour:
     secondVoice: 0
     cues:
     - role: 2
-      english: Vanguard, leave E-02 untouched. Send the full copy to BRT.
-      vietnamese: "Vanguard, gi\u1EEF nguy\xEAn b\u1EA3n E-02. G\u1EEDi tr\u1ECDn
-        b\u1ED9 v\u1EC1 BRT."
+      english: 'Vanguard, ignore that order.
+
+        Send the full E-02 copy to BRT.'
+      vietnamese: 'Vanguard, ignore that order.
+
+        Send the full E-02 copy to BRT.'
     - role: 3
-      english: We won't sign for a copy that identifies patients.
-      vietnamese: "N\u1EBFu c\xF2n \u0111\u1EC3 danh t\xEDnh b\u1EC7nh nh\xE2n, b\xEAn
-        t\xF4i t\u1EEB ch\u1ED1i k\xFD nh\u1EADn."
+      english: 'We refuse receipt if names
+
+        remain in the export.'
+      vietnamese: 'We refuse receipt if names
+
+        remain in the export.'
     - role: 2
-      english: BRT will take it. I'm authorizing the transfer.
-      vietnamese: "BRT s\u1EBD \u0111\u1EE9ng ra nh\u1EADn. L\u1EC7nh truy\u1EC1n
-        n\xE0y t\xF4i ch\u1ECBu tr\xE1ch nhi\u1EC7m."
+      english: 'BRT will receive it directly.
+
+        I''m authorizing the upload.'
+      vietnamese: 'BRT will receive it directly.
+
+        I''m authorizing the upload.'
     - role: 0
-      english: Confirming. Patient names and staff objections stay in?
-      vietnamese: "Xin x\xE1c nh\u1EADn l\u1EA1i. Gi\u1EEF t\xEAn b\u1EC7nh nh\xE2n
-        v\u1EDBi ph\u1EA7n ph\u1EA3n \u0111\u1ED1i?"
-    - role: 2
-      english: Confirmed. Send the entire archive.
-      vietnamese: "X\xE1c nh\u1EADn. Truy\u1EC1n tr\u1ECDn b\u1ED9 h\u1ED3 s\u01A1
-        \u0111i."
-    - role: 0
-      english: Roger that. Sending now.
-      vietnamese: "\u0110\xE3 r\xF5. T\xF4i cho truy\u1EC1n ngay \u0111\xE2y."
+      english: 'Confirmed. Names and Cole''s
+
+        objections stay in. Sending now.'
+      vietnamese: 'Confirmed. Names and Cole''s
+
+        objections stay in. Sending now.'
     soloCues: []
   - id: 24
     speaker: Command
     english: 'One down!
 
       Cover them and get them up.'
-    vietnamese: "M\u1ED9t ng\u01B0\u1EDDi g\u1EE5c!\nY\u1EC3m tr\u1EE3 v\xE0 c\u1EE9u
-      h\u1ECD d\u1EADy."
+    vietnamese: 'One down!
+
+      Cover them and get them up.'
     priority: 1
     cooldown: 12
     oncePerRun: 0
@@ -1736,26 +1699,38 @@ MonoBehaviour:
     secondVoice: 5
     cues:
     - role: 0
-      english: Vanguard, I'm down! Can't get back up!
-      vietnamese: "Vanguard, t\xF4i g\u1EE5c r\u1ED3i! Kh\xF4ng t\u1EF1 \u0111\u1EE9ng
-        d\u1EADy n\u1ED5i!"
+      english: 'Vanguard, I''m down!
+
+        Need cover and a revive!'
+      vietnamese: 'Vanguard, I''m down!
+
+        Need cover and a revive!'
     - role: 1
-      english: Copy! Coming to you now.
-      vietnamese: "R\xF5! T\xF4i qua ngay \u0111\xE2y."
+      english: Copy! Moving to you now.
+      vietnamese: Copy! Moving to you now.
     soloCues:
     - role: 0
-      english: Command, I'm down! Do you read me?
-      vietnamese: "B\u1ED9 ch\u1EC9 huy, t\xF4i g\u1EE5c r\u1ED3i! C\xF3 nghe th\u1EA5y
-        t\xF4i kh\xF4ng?"
+      english: 'Command, I''m down!
+
+        Do you read me?'
+      vietnamese: 'Command, I''m down!
+
+        Do you read me?'
     - role: 2
-      english: Loud and clear. Stay on the line with me.
-      vietnamese: "Nghe r\xF5. C\u1ED1 gi\u1EEF li\xEAn l\u1EA1c v\u1EDBi t\xF4i."
+      english: 'Loud and clear.
+
+        Stay on the line with me.'
+      vietnamese: 'Loud and clear.
+
+        Stay on the line with me.'
   - id: 25
     speaker: Command
     english: 'Tank!
 
       Don''t let it corner you.'
-    vietnamese: "Tank!\n\u0110\u1EEBng \u0111\u1EC3 n\xF3 d\u1ED3n v\xE0o g\xF3c."
+    vietnamese: 'Tank!
+
+      Don''t let it corner you.'
     priority: 1
     cooldown: 12
     oncePerRun: 0
@@ -1765,22 +1740,30 @@ MonoBehaviour:
     secondVoice: 1
     cues:
     - role: 0
-      english: Tank! {2}, give me room to back off!
-      vietnamese: "Tank! {2}, ch\u1EEBa l\u1ED1i cho t\xF4i l\xF9i!"
+      english: 'Tank! {2}, give me room
+
+        to back out of this lane!'
+      vietnamese: 'Tank! {2}, give me room
+
+        to back out of this lane!'
     - role: 1
-      english: Copy! Vanguard, clear a lane for {1}!
-      vietnamese: "R\xF5! Vanguard, d\u1EA1t ra m\u1EDF l\u1ED1i cho {1}!"
+      english: Copy! Vanguard, clear space!
+      vietnamese: Copy! Vanguard, clear space!
     soloCues:
     - role: 2
-      english: Tank! Vanguard, keep an exit open.
-      vietnamese: "Tank! Vanguard, gi\u1EEF s\u1EB5n \u0111\u01B0\u1EDDng l\xF9i."
+      english: 'Tank alert!
+
+        Keep an exit route open.'
+      vietnamese: 'Tank alert!
+
+        Keep an exit route open.'
     - role: 0
-      english: Copy! Getting clear now.
-      vietnamese: "R\xF5! T\xF4i l\xF9i kh\u1ECFi ch\u1ED7 n\xE0y tr\u01B0\u1EDBc."
+      english: Copy! Keeping my distance.
+      vietnamese: Copy! Keeping my distance.
   - id: 26
     speaker: Command
     english: Screamer! Watch your flanks.
-    vietnamese: "Screamer! Coi ch\u1EEBng hai b\xEAn."
+    vietnamese: Screamer! Watch your flanks.
     priority: 1
     cooldown: 12
     oncePerRun: 0
@@ -1790,24 +1773,34 @@ MonoBehaviour:
     secondVoice: 4
     cues:
     - role: 0
-      english: Screamer! Hold the comms. Let me listen for it.
-      vietnamese: "Screamer! Im k\xEAnh \u0111\xE3. \u0110\u1EC3 t\xF4i nghe xem
-        n\xF3 \u1EDF \u0111\xE2u."
+      english: 'Screamer! Hold the comms.
+
+        Let me locate its cry.'
+      vietnamese: 'Screamer! Hold the comms.
+
+        Let me locate its cry.'
     - role: 1
-      english: Copy.
-      vietnamese: "R\xF5."
+      english: Copy. Staying off air.
+      vietnamese: Copy. Staying off air.
     soloCues:
     - role: 0
-      english: Screamer! Command, hold the air for a second.
-      vietnamese: "Screamer! B\u1ED9 ch\u1EC9 huy, im k\xEAnh m\u1ED9t nh\u1ECBp
-        \u0111\xE3."
+      english: 'Screamer! Command, hold air
+
+        so I can track its sound.'
+      vietnamese: 'Screamer! Command, hold air
+
+        so I can track its sound.'
     - role: 2
-      english: Staying off the air. Call if you pick anything up.
-      vietnamese: "T\xF4i gi\u1EEF im k\xEAnh. Nghe th\u1EA5y g\xEC th\xEC b\xE1o."
+      english: 'Staying off the air.
+
+        Call if you spot it.'
+      vietnamese: 'Staying off the air.
+
+        Call if you spot it.'
   - id: 27
     speaker: Command
     english: Infector! Keep your distance.
-    vietnamese: "Infector! Gi\u1EEF kho\u1EA3ng c\xE1ch."
+    vietnamese: Infector! Keep your distance.
     priority: 1
     cooldown: 12
     oncePerRun: 0
@@ -1817,23 +1810,30 @@ MonoBehaviour:
     secondVoice: 3
     cues:
     - role: 0
-      english: Infector! Backing off! {2}, don't crowd me!
-      vietnamese: "Infector! T\xF4i l\xF9i \u0111\xE2y! {2}, \u0111\u1EEBng \u0111i
-        s\xE1t t\xF4i!"
+      english: 'Infector! Backing off!
+
+        {2}, keep your spacing!'
+      vietnamese: 'Infector! Backing off!
+
+        {2}, keep your spacing!'
     - role: 1
       english: Copy. Giving you room.
-      vietnamese: "R\xF5. T\xF4i gi\xE3n kho\u1EA3ng c\xE1ch ngay."
+      vietnamese: Copy. Giving you room.
     soloCues:
     - role: 2
-      english: Vanguard, Infector alert! Keep your distance.
-      vietnamese: "Vanguard, c\xF3 Infector! Gi\xE3n kho\u1EA3ng c\xE1ch ra."
+      english: 'Infector alert!
+
+        Keep your distance.'
+      vietnamese: 'Infector alert!
+
+        Keep your distance.'
     - role: 0
       english: Copy. Backing off.
-      vietnamese: "R\xF5. T\xF4i \u0111ang l\xF9i l\u1EA1i."
+      vietnamese: Copy. Backing off.
   - id: 28
     speaker: Command
     english: They're up. Regroup.
-    vietnamese: "H\u1ECD d\u1EADy r\u1ED3i. T\u1EADp h\u1EE3p l\u1EA1i."
+    vietnamese: They're up. Regroup.
     priority: 1
     cooldown: 12
     oncePerRun: 0
@@ -1843,84 +1843,78 @@ MonoBehaviour:
     secondVoice: 5
     cues:
     - role: 0
-      english: Command, I'm back on my feet.
-      vietnamese: "B\u1ED9 ch\u1EC9 huy, t\xF4i \u0111\u1EE9ng d\u1EADy \u0111\u01B0\u1EE3c
-        r\u1ED3i."
+      english: Command, back on my feet.
+      vietnamese: Command, back on my feet.
     - role: 2
-      english: Copy. Can you keep up with the team?
-      vietnamese: "\u0110\xE3 nh\u1EADn. C\xF3 theo k\u1ECBp \u0111\u1ED9i kh\xF4ng?"
+      english: Copy. Can you keep moving?
+      vietnamese: Copy. Can you keep moving?
     - role: 0
-      english: Yeah. Rejoining the team now.
-      vietnamese: "\u0110\u01B0\u1EE3c. T\xF4i nh\u1EADp \u0111\u1ED9i ngay \u0111\xE2y."
+      english: Yeah. Regrouping with squad.
+      vietnamese: Yeah. Regrouping with squad.
     soloCues:
     - role: 0
-      english: Command, I'm back on my feet.
-      vietnamese: "B\u1ED9 ch\u1EC9 huy, t\xF4i \u0111\u1EE9ng d\u1EADy \u0111\u01B0\u1EE3c
-        r\u1ED3i."
+      english: Command, back on my feet.
+      vietnamese: Command, back on my feet.
     - role: 2
       english: Copy. Can you move on your own?
-      vietnamese: "\u0110\xE3 nh\u1EADn. T\u1EF1 \u0111i ti\u1EBFp \u0111\u01B0\u1EE3c
-        ch\u01B0a?"
+      vietnamese: Copy. Can you move on your own?
     - role: 0
-      english: Yeah. I can keep moving.
-      vietnamese: "\u0110\u01B0\u1EE3c. T\xF4i \u0111i ti\u1EBFp \u0111\u01B0\u1EE3c."
+      english: Yeah. Pushing forward now.
+      vietnamese: Yeah. Pushing forward now.
   objectives:
   - id: 1
-    title: ISOLATE PRODUCTION
-    instructions: Isolate production at the isolation panel. Follow Utilities Procedure
-      and keep the cold-store circuit connected.
-    result: Backup control unlocks.
-    hint: Read Utilities Procedure for the production isolation step.
-    hint2: Reopen Utilities Procedure in Files and find the production / backup sequence.
-    hint3: Use Utilities Procedure to identify the isolation control before engaging
-      backup.
+    title: Isolate production power
+    instructions: Shut off the PRODUCTION branch at the west breaker. Leave the cold-store
+      circuit connected so the T9-17 case stays refrigerated.
+    result: Production power isolated.
+    hint: Check the west breaker panel and read Factory Utilities Procedure.
+    hint2: Isolate the PRODUCTION branch first; do not cut power to Cold Storage.
+    hint3: Hold [F] at the West Production Breaker marked by the POWER waypoint.
     choices: []
     secondaryChoices: []
     file: 1
   - id: 2
-    title: BACKUP COLD STORE
-    instructions: Engage the cold-store backup at the backup panel after Isolate.
-      This enables Generator.
-    result: Generator control unlocks.
-    hint: Read the backup-feed step in Utilities Procedure.
-    hint2: Reopen Utilities Procedure in Files and compare the backup-feed sequence.
-    hint3: Use Utilities Procedure to distinguish the cold-store backup from production.
+    title: Engage cold-store backup
+    instructions: Switch the east panel to BACKUP COLD STORE feed so the refrigeration
+      generator can start.
+    result: Cold-store backup engaged.
+    hint: Production is isolated. Move to the east backup feed panel.
+    hint2: Follow the POWER waypoint to the east breaker and switch on the backup
+      feed.
+    hint3: Hold [F] at the East Cold-Store Backup Panel to ready the generator.
     choices: []
     secondaryChoices: []
     file: 1
   - id: 3
-    title: START GENERATOR
-    instructions: Start the cold-store generator after Backup. Confirm the physical
-      control to restore power.
-    result: Power branch is recorded.
-    hint: Read the generator step in Utilities Procedure.
-    hint2: Reopen Utilities Procedure in Files and check the physical-control warning.
-    hint3: Use Utilities Procedure to check the generator control rather than relying
-      on its lamp.
+    title: Start cold-store generator
+    instructions: Pull the physical generator control lever to restore cold-store
+      power. Ignore the green alarm lamp—it lights before the contactor closes.
+    result: Cold-store power restored.
+    hint: Backup feed is ready. Find the cold-store generator control.
+    hint2: Do not rely on the green lamp. Use the physical generator lever.
+    hint3: Hold [F] at the Cold-Store Generator lever following the POWER waypoint.
     choices: []
     secondaryChoices: []
     file: 1
   - id: 4
-    title: READ DELIVERY MANIFEST
-    instructions: Read the Delivery Manifest to record it in team Files and unlock
-      Verify Shipping Release.
-    result: Manifest appears in Files.
-    hint: Read the Delivery Manifest at its marked interaction body.
-    hint2: Open Files in team inventory to reread the Delivery Manifest once recorded.
-    hint3: Use the Delivery Manifest as the source for the shipping release comparison.
+    title: Read delivery manifest
+    instructions: Collect the original Delivery Manifest to log the shipment number,
+      security seal, destination, and intake time.
+    result: Delivery manifest recorded in Journal.
+    hint: Follow the LOGISTICS waypoint to find the Delivery Manifest.
+    hint2: Look for the paper manifest near the dispatch desk in the factory.
+    hint3: Press [F] on the Delivery Manifest sheet to save AL-04 / K6 details.
     choices: []
     secondaryChoices: []
     file: 2
   - id: 5
-    title: VERIFY SHIPPING RELEASE
-    instructions: Compare the shipping release with the recorded Delivery Manifest.
-      Select both groups to verify Logistics.
-    result: Logistics branch is recorded.
-    hint: Read the recorded Delivery Manifest before comparing the two groups.
-    hint2: Reopen the Delivery Manifest in Files; compare shipment / seal and destination
-      / receiving time separately.
-    hint3: Use the Delivery Manifest as the source for each group; no choice is selected
-      for you.
+    title: Verify shipping release
+    instructions: Match both shipment fields against your recorded Delivery Manifest
+      (FILE_02). Wrong selections do not lock the terminal.
+    result: 'Shipping release verified: AL-04 / K6 to Northbridge at 02:40.'
+    hint: Compare the terminal fields with the Delivery Manifest saved in your Journal.
+    hint2: 'Check both groups separately: Shipment/Seal and Destination/Time.'
+    hint3: Match Shipment AL-04 / Seal K6 and Destination Northbridge / 02:40.
     choices:
     - AL-03 / K9
     - AL-04 / K6
@@ -1931,83 +1925,84 @@ MonoBehaviour:
     - NORTHBRIDGE / 04:20
     file: 2
   - id: 6
-    title: SECURE T9-17 CASE
-    instructions: Recover the sealed evidence case and its records after Power, Logistics
-      and the Tank are confirmed.
-    result: Case joins team inventory.
-    hint: Restore Power, verify Logistics and bring down the Tank before collecting
-      the case.
-    hint2: Review the recorded Delivery Manifest and Utilities Procedure for incomplete
-      branch steps.
-    hint3: Read the B2 Transfer Addendum after collection to continue the evidence
-      trail.
+    title: Secure T9-17 case
+    instructions: With cold-store power active, logistics verified, and the Tank eliminated,
+      retrieve the sealed T9-17 Evidence Case and its transfer addendum.
+    result: T9-17 Evidence Case secured. Seal intact.
+    hint: Complete Power and Logistics first, then eliminate the Tank guarding cold
+      storage.
+    hint2: The Tank must be killed before the cold-store case unlocks.
+    hint3: Approach the refrigerated vault and hold [F] to secure the T9-17 Evidence
+      Case.
     choices: []
     secondaryChoices: []
     file: 3
   - id: 7
-    title: OPEN SERVICE ROUTE
-    instructions: Activate the service-route control cabinet after recovering the
-      case. Prepare for the interlock cycle.
-    result: Service-route countdown starts.
-    hint: Review the case record before using the service-route control cabinet.
-    hint2: Reopen the B2 Transfer Addendum in Files to review the recorded route.
-    hint3: Read the preparation and boarding status after activating the control
-      cabinet.
+    title: Open service route
+    instructions: Activate the service-route interlock cabinet. Once unlocked, gather
+      the squad in the preparation zone and hold until the gate opens.
+    result: Service interlock cycling. Hold the control room.
+    hint: With T9-17 secured, follow the waypoint to the service-route cabinet.
+    hint2: Hold [F] at the service-route panel while standing inside the preparation
+      zone.
+    hint3: Have the squad gather at the service exit, ready up, and defend until the
+      interlock clears.
     choices: []
     secondaryChoices: []
     file: 0
   - id: 8
-    title: READ SECURITY DESK LOG
-    instructions: Record the technical intake hidden behind the public admissions
-      log.
-    result: Desk log appears in Files.
-    hint: Read the Security Desk Log; it points to the upper records room and the
-      service fuse.
-    hint2: 
-    hint3: 
+    title: Read security desk log
+    instructions: Inspect the security desk log to uncover how shipment AL-04 entered
+      the institute after public admissions closed.
+    result: Security desk log recorded.
+    hint: Search the ground-floor reception security desk for the intake log.
+    hint2: Follow the waypoint to the front desk and inspect the security log.
+    hint3: Hold [F] at the Security Desk Log to reveal the service intake and spare
+      fuse location.
     choices: []
     secondaryChoices: []
     file: 4
   - id: 9
-    title: RECOVER SERVICE FUSE
-    instructions: Recover the spare fuse from ground-floor maintenance storage.
-    result: Fuse joins team inventory.
-    hint: The fuse is shared by the squad and can be installed by any living operator.
-    hint2: 
-    hint3: 
+    title: Recover service fuse
+    instructions: Collect the replacement fuse from ground-floor maintenance storage.
+      The fuse is shared across the squad.
+    result: Service fuse acquired.
+    hint: The Security Desk Log points to ground-floor maintenance storage.
+    hint2: Check the ground-floor maintenance room marked by the waypoint.
+    hint3: Hold [F] on the spare Service Fuse inside ground-floor maintenance storage.
     choices: []
     secondaryChoices: []
     file: 0
   - id: 10
-    title: INSTALL SERVICE FUSE
-    instructions: Install the recovered fuse at the lower service panel.
-    result: Service power can be restored.
-    hint: Read the desk log and recover the fuse; neither is consumed by a wrong
-      interaction.
-    hint2: 
-    hint3: 
+    title: Install service fuse
+    instructions: Fit the replacement fuse into the lower service breaker box so power
+      can be restored to the upper records room.
+    result: Service fuse installed.
+    hint: Bring the spare fuse to the lower service electrical panel.
+    hint2: Follow the waypoint to the lower service panel near the maintenance corridor.
+    hint3: Hold [F] at the fuse box to install the Service Fuse.
     choices: []
     secondaryChoices: []
     file: 0
   - id: 11
-    title: RESTORE SERVICE POWER
-    instructions: Bring the lower service circuit online after fitting the replacement
-      fuse.
-    result: Upper records become accessible.
-    hint: The upper records room needs this circuit.
-    hint2: 
-    hint3: 
+    title: Restore lower power
+    instructions: Throw the lower service breaker to bring the upper records room
+      terminal online.
+    result: Upper records room powered.
+    hint: The fuse is fitted. Flip the lower service power switch.
+    hint2: Use the power lever right next to the newly installed fuse box.
+    hint3: Hold [F] on the Lower Service Breaker to restore power upstairs.
     choices: []
     secondaryChoices: []
     file: 0
   - id: 12
-    title: IDENTIFY PATIENT
-    instructions: Select the record matching the desk log's group and receiving time.
-    result: Intake comparison is recorded.
-    hint: Compare the intake sheet against the group and receiving time recorded
-      in the Security Desk Log.
-    hint2: 
-    hint3: 
+    title: Verify P046 intake
+    instructions: Read the Intake Record (FILE_05) and select the patient entry that
+      matches Group C12 and receiving time 02:40 from the desk log.
+    result: Patient P046 confirmed under Group C12 (02:40).
+    hint: Go upstairs to the powered records room and read the Intake Record first.
+    hint2: Cross-check the Intake Record against Group C12 and time 02:40 in FILE_04.
+    hint3: Select the entry matching Patient P046, Group C12, receiving time 02:40.
     choices:
     - P041 / C08 / 01:20
     - P046 / C12 / 02:40
@@ -2015,14 +2010,15 @@ MonoBehaviour:
     secondaryChoices: []
     file: 5
   - id: 13
-    title: VERIFY MORTUARY TRANSFER
-    instructions: Select the discrepancy that requires independent review. Retain
-      the B2 card with the report.
-    result: Lift card joins team inventory.
-    hint: Read the Mortuary Transfer Discrepancy and compare its fields with the
-      recorded Intake Record.
-    hint2: 
-    hint3: 
+    title: Flag mortuary contradiction
+    instructions: Inspect the Mortuary Transfer Discrepancy (FILE_06) and log the
+      contradiction between the death entry and the B2 freight transfer.
+    result: Contradiction logged. B2 Access Card acquired.
+    hint: Follow the waypoint to the mortuary desk and read the discrepancy report.
+    hint2: Compare the mortuary time (03:05) with the living B2 transfer time (03:50)
+      for P046.
+    hint3: Confirm the contradiction (Death 03:05 vs Live Transfer 03:50) to claim
+      the B2 Access Card.
     choices:
     - 'CONTRADICTION: DEATH 03:05 / LIVE TRANSFER 03:50'
     - 'CONSISTENT: DEATH FOLLOWED BY BODY COLLECTION'
@@ -2030,59 +2026,61 @@ MonoBehaviour:
     secondaryChoices: []
     file: 6
   - id: 14
-    title: CALL B2 FREIGHT LIFT
-    instructions: Scan the B2 card. Prepare for the lift cycle and board with the
-      squad.
-    result: Freight-lift countdown starts.
-    hint: The card is spent at this panel; it cannot be used remotely from Inventory.
-    hint2: 
-    hint3: 
+    title: Call B2 freight lift
+    instructions: Scan the B2 Access Card at the freight lift console. Stay in the
+      lift landing zone until the cabin arrives—you do not need to kill the Tank.
+    result: B2 freight lift inbound. Evade the Tank and prepare to board.
+    hint: Take the B2 Access Card to the freight lift console.
+    hint2: Hold [F] at the B2 Lift Panel, then gather in the preparation area.
+    hint3: Keep moving to evade the Tank until the lift doors open, then board immediately.
     choices: []
     secondaryChoices: []
     file: 0
   - id: 15
-    title: TRACE B2 TRANSFER
-    instructions: Trace the institute transfer into the laboratory index.
-    result: Archive index appears in Files.
-    hint: Follow the institute transfer record to the laboratory index and compare
-      all recorded identifiers.
-    hint2: 
-    hint3: 
+    title: Trace B2 transfer
+    instructions: Check the B2 receiving terminal to link Northbridge shipment AL-04
+      and patient P046 to the underground lab directory.
+    result: B2 transfer traced to archive directory.
+    hint: Check the B2 receiving terminal near the freight lift landing.
+    hint2: Follow the waypoint to the B2 intake console to trace where P046 was logged.
+    hint3: Hold [F] at the B2 Transfer Console to unlock the archive trail.
     choices: []
     secondaryChoices: []
     file: 7
   - id: 16
-    title: READ ARCHIVE INDEX
-    instructions: Record the original-archive directory before searching the terminal.
-    result: Archive index appears in Files.
-    hint: Read the B2 Archive Index and keep the original-archive directory in the
-      journal.
-    hint2: 
-    hint3: 
+    title: Read B2 archive index
+    instructions: Inspect the restricted B2 Archive Index to identify which original
+      archive connects T9-17, Group C12, and Patient P046.
+    result: B2 Archive Index recorded.
+    hint: Locate the B2 Archive Index before opening the main archive terminal.
+    hint2: Follow the waypoint to the operations desk and inspect the archive directory.
+    hint3: Hold [F] on the B2 Archive Index to record the original archive ID (E-02).
     choices: []
     secondaryChoices: []
     file: 7
   - id: 17
-    title: ALLOCATE EMERGENCY POWER
-    instructions: 'Keep SAFETY online. Disable TEST RIG before enabling DATA and
-      FREIGHT LIFT. Capacity: six units.'
-    result: Archive console unlocks.
-    hint: Read Emergency Power Allocation before changing the switches; compare its
-      circuit requirements and capacity.
-    hint2: 
-    hint3: 
+    title: Allocate emergency power
+    instructions: 'Read Maya''s Emergency Power note (FILE_08). Total capacity is
+      6 units: keep SAFETY (2) online, turn TEST RIG (4) OFF, and enable DATA (2)
+      + FREIGHT LIFT (2).'
+    result: 'Emergency power balanced: SAFETY, DATA, and FREIGHT LIFT online.'
+    hint: Read Emergency Power Allocation (FILE_08) at the power panel.
+    hint2: Total load cannot exceed 6 units. TEST RIG (4) leaves no room for DATA
+      and LIFT.
+    hint3: Turn TEST RIG off, then switch DATA and FREIGHT LIFT on alongside SAFETY
+      (6/6).
     choices: []
     secondaryChoices: []
     file: 8
   - id: 18
-    title: VERIFY ORIGINAL ARCHIVE
-    instructions: Select the archive matching all identifiers and preserve its identity
-      table.
-    result: Laboratory case unlocks.
-    hint: Compare the original archive against the B2 Archive Index saved in the
-      journal.
-    hint2: 
-    hint3: 
+    title: Verify original E-02 archive
+    instructions: Search the powered archive terminal and select the unredacted original
+      archive matching T9-17, Group C12, and Patient P046 (FILE_07).
+    result: Original E-02 archive verified with full patient table and Cole's halt
+      order.
+    hint: With DATA powered, open the Archive Terminal and check FILE_07 in your Journal.
+    hint2: Reject sample-only or earlier logs. Match T9-17, Group C12, and P046.
+    hint3: Select E-02 / T9-17 / C12 / P046 to recover the unredacted archive.
     choices:
     - E-01 / T9-03 / C08
     - E-02 / T9-17 / C12 / P046
@@ -2090,25 +2088,27 @@ MonoBehaviour:
     secondaryChoices: []
     file: 9
   - id: 19
-    title: SECURE E-02 CASE
-    instructions: Secure the original archive in the laboratory evidence case. Retain
-      the factory case as well.
-    result: Case joins team inventory.
-    hint: The original must be verified before the sealed case is released.
-    hint2: 
-    hint3: 
+    title: Secure E-02 case
+    instructions: Collect the physical E-02 Laboratory Evidence Case while keeping
+      the T9-17 Factory Case secured.
+    result: E-02 Evidence Case secured. Both cases accounted for.
+    hint: Now that E-02 is verified, collect the physical E-02 Evidence Case.
+    hint2: Follow the waypoint to the vault beside the archive terminal.
+    hint3: Hold [F] to secure the E-02 Evidence Case before transmitting.
     choices: []
     secondaryChoices: []
     file: 9
   - id: 20
-    title: TRANSMIT COMPLETE EVIDENCE
-    instructions: Prepare the squad, transmit a complete copy to BRT custody and
-      call the freight lift. Do not delete patient fields.
-    result: Transmission countdown starts.
-    hint: Keep both original cases. Transmission does not require eliminating every
-      infected.
-    hint2: 
-    hint3: 
+    title: Transmit full E-02 archive
+    instructions: Start the off-site transmission to BRT and ready the squad in the
+      preparation zone. Keep moving once the upload starts—you do not need to kill
+      the Tank.
+    result: Transmission active. Hold out until BRT confirms receipt.
+    hint: Take both cases to the transmission terminal and start the BRT upload.
+    hint2: Hold [F] at the transmission console, then stay inside the preparation
+      zone.
+    hint3: Do not stop to fight the Tank once upload begins—survive until BRT confirms
+      receipt, then board the lift.
     choices: []
     secondaryChoices: []
     file: 9

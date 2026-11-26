@@ -138,6 +138,10 @@ namespace FPS
 
         public int CurrentSimulationTick => networkTimer != null ? networkTimer.CurrentTick : 0;
         public Animator CharacterAnimation => characterAnimation;
+        public float PlanarSpeed => planarSpeed;
+        public float MaxMoveSpeed => speed;
+        public bool IsGrounded => isGrounded;
+        public Vector2 MoveInput => cachedMove;
 
         // ==========================================
         // INITIALIZATION

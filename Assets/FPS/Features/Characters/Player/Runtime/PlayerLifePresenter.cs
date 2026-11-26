@@ -527,7 +527,7 @@ namespace FPS
             {
                 eye = mouse != null ? mouse.BodyCam : null;
                 if (eye == null) return;
-                eyeRest = eye.transform.localPosition;
+                eyeRest = mouse != null ? mouse.BodyCamRestLocalPosition : eye.transform.localPosition;
                 eyeCached = true;
             }
             bool downed = health.LifeState == PlayerLifeState.Downed;
@@ -542,12 +542,14 @@ namespace FPS
             float k = Mathf.SmoothStep(0f, 1f, eyeBlend);
 
             Transform parent = eye.transform.parent;
-            Vector3 standing = parent != null ? parent.TransformPoint(eyeRest) : eyeRest;
+            Vector3 headBobLocal = mouse != null ? mouse.HeadBobCameraPositionOffset * (1f - k) : Vector3.zero;
+            Vector3 standing = parent != null ? parent.TransformPoint(eyeRest + headBobLocal) : (eyeRest + headBobLocal);
             Vector3 lyingFacing = Quaternion.Euler(0f, eyeYaw, 0f) * Vector3.forward;
             Vector3 lying = transform.position + Vector3.up * animationSet.downedEyeHeight - lyingFacing * animationSet.downedHeadBack;
             // Local, so the camera still follows its parent if that moves later this frame.
             eye.transform.localPosition = parent != null ? parent.InverseTransformPoint(Vector3.Lerp(standing, lying, k)) : Vector3.Lerp(standing, lying, k);
-            eyeDrop = standing.y - eye.transform.position.y;
+            Vector3 standingRest = parent != null ? parent.TransformPoint(eyeRest) : eyeRest;
+            eyeDrop = standingRest.y - eye.transform.position.y;
 
             // Head resting on one side, chin up a little, slow laboured breathing.
             float t = Time.time;

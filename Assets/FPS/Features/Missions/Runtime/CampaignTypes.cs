@@ -243,7 +243,7 @@ namespace FPS
         public static bool SupplyWanted(bool reserve, int minimumPartySize, int partySize, bool stationReleased) =>
             reserve ? stationReleased : partySize >= minimumPartySize;
 
-        public static int HintTier(float seconds) => seconds >= 135 ? 3 : seconds >= 90 ? 2 : seconds >= 45 ? 1 : 0;
+        public static int HintTier(float seconds) => seconds >= 75 ? 3 : seconds >= 45 ? 2 : seconds >= 25 ? 1 : 0;
         public static string HintText(CampaignState state, CampaignObjectiveDefinition definition, float seconds)
         {
             int tier = HintTier(seconds);
@@ -267,9 +267,9 @@ namespace FPS
 
         // The one thing each chapter is for; shown on the tracker and as the Missions group title.
         public static string ChapterName(CampaignChapter chapter) => chapter switch
-        { CampaignChapter.Factory => "FACTORY", CampaignChapter.Asylum => "NORTHBRIDGE", _ => "B2 / LABORATORY" };
+        { CampaignChapter.Factory => "FACTORY", CampaignChapter.Asylum => "NORTHBRIDGE", _ => "LABORATORY B2" };
         public static string ChapterGoal(CampaignChapter chapter) => chapter switch
-        { CampaignChapter.Factory => "Recover the evidence case", CampaignChapter.Asylum => "Call the B2 lift", _ => "Transmit the evidence" };
+        { CampaignChapter.Factory => "Recover the T9-17 case", CampaignChapter.Asylum => "Trace P046 & reach B2", _ => "Transmit complete E-02" };
         public static bool IsEncounter(CampaignObjectiveId id) => id is CampaignObjectiveId.FactoryRoute or CampaignObjectiveId.AsylumLift or CampaignObjectiveId.LabTransmit;
         public static CampaignChapter ChapterOf(CampaignObjectiveId id) => id <= CampaignObjectiveId.FactoryRoute ? CampaignChapter.Factory
             : id <= CampaignObjectiveId.AsylumLift ? CampaignChapter.Asylum : CampaignChapter.Laboratory;

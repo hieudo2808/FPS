@@ -18,7 +18,7 @@ namespace FPS.Tests
             Assert.That(catalog.dialogue.Select(scene => (int)scene.id), Is.EquivalentTo(Enumerable.Range(1, 28)));
             Assert.That(catalog.dialogue.Where(scene => scene.soloCues.Length > 0).Select(scene => (int)scene.id),
                 Is.EquivalentTo(new[] { 5, 8, 12, 15, 19, 24, 25, 26, 27, 28 }));
-            Assert.That(catalog.dialogue.Sum(scene => scene.cues.Length + scene.soloCues.Length), Is.EqualTo(166));
+            Assert.That(catalog.dialogue.Sum(scene => scene.cues.Length + scene.soloCues.Length), Is.EqualTo(132));
             var operators = new[] { Mason, Doc, Vega, Raven };
             foreach (var scene in catalog.dialogue)
             foreach (var first in operators)
@@ -43,11 +43,11 @@ namespace FPS.Tests
             var power = catalog.FindDialogue(CampaignDialogueId.FactoryGenerator);
             Assert.That(CampaignDialogue.Cast(power, new[] { Raven, Mason }), Is.EqualTo((Mason, Raven)));
             Assert.That(CampaignDialogue.Cast(power, new[] { Raven, Raven }), Is.EqualTo((Raven, None)));
-            Assert.That(power.CuesFor(None)[0].Format(Raven, None), Does.StartWith("Raven: Command, cold storage"));
+            Assert.That(power.CuesFor(None)[0].Format(Raven, None), Does.StartWith("Raven: Command, cold store"));
             var records = catalog.FindDialogue(CampaignDialogueId.AsylumPower);
-            Assert.That(records.CuesFor(None)[1].Format(Doc, None), Does.StartWith("Command: Check the intake time"));
+            Assert.That(records.CuesFor(None)[1].Format(Doc, None), Does.StartWith("Command: Watch the intake time"));
             var door = catalog.FindDialogue(CampaignDialogueId.FactoryEncounter);
-            Assert.That(door.cues[0].Format(Doc, Raven), Does.StartWith("Doc: Raven, I hit the release."));
+            Assert.That(door.cues[0].Format(Doc, Raven), Does.StartWith("Doc: I hit the service release."));
             var down = catalog.FindDialogue(CampaignDialogueId.OperatorDowned);
             Assert.That(CampaignDialogue.Cast(down, new[] { Vega, Doc }, Doc), Is.EqualTo((Doc, Vega)));
             Assert.That(CampaignDialogue.Cast(down, new[] { Doc }, Doc), Is.EqualTo((Doc, None)));
@@ -71,7 +71,7 @@ namespace FPS.Tests
             Add(CampaignDialogueId.OperatorDowned, 12, .1f);
             Assert.That(At(.1f), Does.StartWith("Doc: Vanguard, I'm down!"));
             Add(CampaignDialogueId.Revived, 12, 1);
-            Assert.That(At(4), Is.EqualTo("Doc: Command, I'm back on my feet."));
+            Assert.That(At(4), Is.EqualTo("Doc: Command, back on my feet."));
             Assert.That(At(12), Is.EqualTo(interrupted), "Expired alert replies must not carry into the resumed scene");
             radio.Clear();
             Assert.That(radio.Advance(12, CampaignChapter.Factory, CampaignPhase.Exploring, out _, out _), Is.False);
@@ -91,10 +91,10 @@ namespace FPS.Tests
             for (int time = 0; time < 120; time += 5)
                 if (radio.Advance(time, CampaignChapter.Laboratory, CampaignPhase.Encounter, out var text, out _) && text.Length > 0)
                     played.Add(text);
-            Assert.That(played.Count, Is.EqualTo(17));
-            Assert.That(played[6], Does.StartWith("Client: Just the export."));
-            Assert.That(played[7], Does.StartWith("Command: Vanguard, leave E-02 untouched."));
-            Assert.That(played[13], Does.StartWith("Command: Vanguard, the station confirms"));
+            Assert.That(played.Count, Is.EqualTo(12));
+            Assert.That(played[3], Does.StartWith("Client: We track by lot number only."));
+            Assert.That(played[4], Does.StartWith("Command: Vanguard, ignore that order."));
+            Assert.That(played[8], Does.StartWith("Command: Vanguard, BRT station has"));
         }
     }
 }

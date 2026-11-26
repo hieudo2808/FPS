@@ -22,11 +22,24 @@ namespace FPS
         [SerializeField] private Camera bodyCam;
         [SerializeField] private Camera weaponCam;
 
+        [Header("Head Bob")]
+        [SerializeField] private bool enableHeadBob = true;
+        [SerializeField] private FirstPersonHeadBobSettings headBobSettings = FirstPersonHeadBobSettings.Default;
+
         private float xRotation = 0f;
         private float yRotation = 0f;
         private float lookSensitivityMultiplier = 1f;
         private bool subscribedToSettings;
         private RecoilController recoilController;
+        private PlayerMovement playerMovement;
+        private PlayerHealth playerHealth;
+        private WeaponManager weaponManager;
+        private PlayerLifePresenter lifePresenter;
+        private readonly FirstPersonHeadBob headBob = new FirstPersonHeadBob();
+        private FirstPersonHeadBobOutput headBobOutput;
+        private Vector3 bodyCamRestLocalPosition;
+        private bool bodyCamRestCached;
+        private bool headBobTemporarilySuppressed;
         private Vector2 cosmeticRecoil;
         // Downed: the eyes are low, the head is propped on the ground, so turning and pitch are limited.
         private bool lookConstrained;
@@ -45,6 +58,25 @@ namespace FPS
 
         public Camera BodyCam => bodyCam;
         public bool LookConstrained => lookConstrained;
+        public Vector3 BodyCamRestLocalPosition => bodyCamRestCached ? bodyCamRestLocalPosition : (bodyCam != null ? bodyCam.transform.localPosition : Vector3.zero);
+        public Vector3 HeadBobCameraPositionOffset => headBobTemporarilySuppressed ? Vector3.zero : headBobOutput.cameraPositionOffset;
+        public Vector3 HeadBobCameraEulerOffset => headBobTemporarilySuppressed ? Vector3.zero : headBobOutput.cameraEulerOffset;
+        public Vector3 HeadBobWeaponPositionOffset => headBobTemporarilySuppressed ? Vector3.zero : headBobOutput.weaponPositionOffset;
+        public Vector3 HeadBobWeaponEulerOffset => headBobTemporarilySuppressed ? Vector3.zero : headBobOutput.weaponEulerOffset;
+
+        public void SetHeadBobTemporarilySuppressed(bool suppressed)
+        {
+            if (headBobTemporarilySuppressed == suppressed)
+                return;
+
+            headBobTemporarilySuppressed = suppressed;
+            if (bodyCam != null && bodyCamRestCached)
+            {
+                if (lifePresenter == null || lifePresenter.EyeDrop <= 0.0001f)
+                    bodyCam.transform.localPosition = bodyCamRestLocalPosition + HeadBobCameraPositionOffset;
+                RenderRotation();
+            }
+        }
 
         /// <summary>
         /// Limit the look while lying down: yaw within <paramref name="halfYaw"/> of <paramref name="centerYaw"/>,
@@ -72,6 +104,15 @@ namespace FPS
         private void Awake()
         {
             recoilController = GetComponent<RecoilController>();
+            playerMovement = GetComponent<PlayerMovement>();
+            playerHealth = GetComponent<PlayerHealth>();
+            weaponManager = GetComponent<WeaponManager>();
+            lifePresenter = GetComponent<PlayerLifePresenter>();
+            if (bodyCam != null)
+            {
+                bodyCamRestLocalPosition = bodyCam.transform.localPosition;
+                bodyCamRestCached = true;
+            }
             // Older player prefabs serialized the retired 10..500 range. Keep
             // runtime behavior canonical even if an un-upgraded prefab is loaded.
             minSensitivity = SettingsManager.MinMouseSensitivity;
@@ -129,6 +170,11 @@ namespace FPS
         {
             bool wasOwner = IsOwner;
             lookSensitivityMultiplier = 1f;
+            headBob.Reset();
+            headBobOutput = default;
+            headBobTemporarilySuppressed = false;
+            if (bodyCam != null && bodyCamRestCached)
+                bodyCam.transform.localPosition = bodyCamRestLocalPosition;
             DisableLocalCameraAndListener();
             if (wasOwner && LocalInstance == this)
             {
@@ -158,7 +204,8 @@ namespace FPS
                 return;
 
             AudioListener[] listeners = FindObjectsByType<AudioListener>(
-                FindObjectsInactive.Include);
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
             for (int i = 0; i < listeners.Length; i++)
             {
                 if (listeners[i] != localListener)
@@ -174,7 +221,9 @@ namespace FPS
                 return;
 
             fallback.enabled = true;
-            AudioListener[] listeners = FindObjectsByType<AudioListener>(FindObjectsInactive.Include);
+            AudioListener[] listeners = FindObjectsByType<AudioListener>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
             for (int i = 0; i < listeners.Length; i++)
             {
                 if (listeners[i] != fallback)
@@ -244,7 +293,61 @@ namespace FPS
 
         private void LateUpdate()
         {
-            if (IsOwner) RenderRotation();
+            if (!IsOwner)
+                return;
+
+            UpdateHeadBob();
+            RenderRotation();
+        }
+
+        private void UpdateHeadBob()
+        {
+            if (bodyCam != null && !bodyCamRestCached)
+            {
+                bodyCamRestLocalPosition = bodyCam.transform.localPosition;
+                bodyCamRestCached = true;
+            }
+
+            if (!enableHeadBob)
+            {
+                headBob.Reset();
+                headBobOutput = default;
+                if (bodyCam != null && bodyCamRestCached && (lifePresenter == null || lifePresenter.EyeDrop <= 0.0001f))
+                    bodyCam.transform.localPosition = bodyCamRestLocalPosition;
+                return;
+            }
+
+            if (playerMovement == null) playerMovement = GetComponent<PlayerMovement>();
+            if (playerHealth == null) playerHealth = GetComponent<PlayerHealth>();
+            if (weaponManager == null) weaponManager = GetComponent<WeaponManager>();
+            if (lifePresenter == null) lifePresenter = GetComponent<PlayerLifePresenter>();
+
+            Weapon activeWeapon = weaponManager != null && weaponManager.CurrentWeapon != null
+                ? weaponManager.CurrentWeapon.GetComponent<Weapon>()
+                : null;
+            bool isAlive = playerHealth == null || playerHealth.LifeState == PlayerLifeState.Alive;
+            bool suppressed = !isAlive || lookConstrained || InputManager.GameplayInputBlocked;
+
+            var input = new FirstPersonHeadBobInput
+            {
+                planarSpeed = playerMovement != null ? playerMovement.PlanarSpeed : 0f,
+                maxSpeed = playerMovement != null ? playerMovement.MaxMoveSpeed : 5f,
+                moveInput = playerMovement != null ? playerMovement.MoveInput : Vector2.zero,
+                isGrounded = playerMovement != null && playerMovement.IsGrounded,
+                isSprinting = playerMovement != null && playerMovement.IsSprinting,
+                aimBlend = activeWeapon != null ? activeWeapon.AimBlend : 0f,
+                isScopedOverlay = activeWeapon != null && activeWeapon.IsAiming && activeWeapon.Data != null && activeWeapon.Data.showScopeOverlay,
+                isSuppressed = suppressed
+            };
+
+            headBobOutput = headBob.Evaluate(in headBobSettings, in input, Time.deltaTime);
+
+            // When PlayerLifePresenter is absent or idle (standing), apply camera bob directly.
+            // When PlayerLifePresenter runs later in LateUpdate, it composes HeadBobCameraPositionOffset * (1 - k).
+            if (bodyCam != null && bodyCamRestCached && (lifePresenter == null || !lifePresenter.isActiveAndEnabled))
+            {
+                bodyCam.transform.localPosition = bodyCamRestLocalPosition + HeadBobCameraPositionOffset;
+            }
         }
 
         private void ApplyLookConstraint()
@@ -261,9 +364,13 @@ namespace FPS
         private void RenderRotation()
         {
             if (bodyCam != null)
+            {
+                Vector3 bobEuler = HeadBobCameraEulerOffset;
                 bodyCam.transform.localRotation = Quaternion.Euler(
-                    Mathf.Clamp(xRotation - cosmeticRecoil.x, minRotationX, maxRotationX) + lookOffset.x,
-                    cosmeticRecoil.y + lookOffset.y, lookOffset.z);
+                    Mathf.Clamp(xRotation - cosmeticRecoil.x, minRotationX, maxRotationX) + lookOffset.x + bobEuler.x,
+                    cosmeticRecoil.y + lookOffset.y + bobEuler.y,
+                    lookOffset.z + bobEuler.z);
+            }
             transform.localRotation = Quaternion.Euler(0f, yRotation, 0f);
         }
 

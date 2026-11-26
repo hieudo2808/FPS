@@ -259,7 +259,7 @@ namespace FPS
         {
             readingRecord = true;
             ShowDetail(HudSkin.Get("File"), "Campaign Record", "RECORDED",
-                trackingHud != null ? trackingHud.JournalRecordText() : CampaignDialogue.Journal(campaign.State));
+                CampaignTextHighlight.Format(trackingHud != null ? trackingHud.JournalRecordText() : CampaignDialogue.Journal(campaign.State), Theme));
         }
 
         private void SelectFile(CampaignFileDefinition file)
@@ -268,7 +268,7 @@ namespace FPS
             selectedFile = file.id;
             readingRecord = false;
             ShowDetail(file.preview != null ? file.preview : file.icon != null ? file.icon : HudSkin.Get("File"), file.title,
-                file.required ? "EVIDENCE" : "OPTIONAL FILE", string.IsNullOrWhiteSpace(file.body) ? file.summary : file.body);
+                file.required ? "EVIDENCE" : "OPTIONAL FILE", CampaignTextHighlight.FormatFileRecord(file, Theme));
         }
 
         private void PopulateMissions()
@@ -340,7 +340,7 @@ namespace FPS
                 : available ? "" : "\n\nRequires: " + CampaignRules.Availability(campaign.State, objective.id).Reason.Replace(" / ", " — "));
             var branch = CampaignRules.FactoryBranchOf(objective.id);
             ShowDetail(MissionIcon(done, available), System.Globalization.CultureInfo.InvariantCulture.TextInfo.ToTitleCase(objective.title.ToLowerInvariant()), done ? "COMPLETE" : tracked ? "TRACKING" : available ? "AVAILABLE" : "LOCKED",
-                body);
+                CampaignTextHighlight.Format(body, Theme));
             detailCategory.text = CampaignRules.ChapterName(campaign.State.chapter)
                 + (branch == CampaignFactoryBranch.None ? "" : " — " + branch.ToString().ToUpperInvariant());
         }

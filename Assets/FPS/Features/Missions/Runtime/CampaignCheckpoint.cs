@@ -107,7 +107,7 @@ namespace FPS
                 try
                 {
                     checkpoint = JsonUtility.FromJson<CampaignCheckpoint>(File.ReadAllText(path));
-                    if (checkpoint == null) throw new InvalidDataException("Checkpoint trống.");
+                    if (checkpoint == null) throw new InvalidDataException("Checkpoint file is empty.");
                     checkpoint.Migrate();
                     checkpoint.Validate();
                     error = "";
@@ -116,14 +116,14 @@ namespace FPS
                 catch (Exception e) when (e is IOException or InvalidDataException or ArgumentException or UnauthorizedAccessException)
                 { error = e.Message; checkpoint = null; }
             }
-            if (string.IsNullOrEmpty(error)) error = "Chưa có checkpoint đã lưu.";
+            if (string.IsNullOrEmpty(error)) error = "No saved checkpoint found.";
             return false;
         }
 
         private void Migrate()
         {
             if (version is < 1 or > 4 || state == null || state.version is < 1 or > 3)
-                throw new InvalidDataException("Checkpoint version không được hỗ trợ.");
+                throw new InvalidDataException("Unsupported checkpoint version.");
             if (version == 1) version = 2;
             if (version == 2)
             {
@@ -152,7 +152,7 @@ namespace FPS
                 || !Enum.IsDefined(typeof(CampaignFactoryBranch), state.lastFactoryBranch)
                 || state.checkpoint < 0 || state.checkpoint > 5 || state.checkpoint / 2 != (int)state.chapter
                 || claimedSupplies == null || claimedSupplies.Count > 128)
-                throw new InvalidDataException("Checkpoint không tương thích hoặc thiếu dữ liệu.");
+                throw new InvalidDataException("Incompatible or incomplete checkpoint.");
             var ids = new HashSet<ulong>();
             foreach (var p in players)
             {
@@ -163,11 +163,11 @@ namespace FPS
                     || p.fragCount > 3 || p.incendiaryCount > 3 || p.medkitCount > 2 || p.antidoteCount > 2
                     || (byte)p.selectedThrowable > 1 || p.survivalInventoryVersion > 1
                     || p.medicine > 2 || p.equipped > 1 || !ValidWeapon(p.first) || !ValidWeapon(p.second))
-                    throw new InvalidDataException("Snapshot player không hợp lệ.");
+                    throw new InvalidDataException("Invalid player snapshot.");
             }
             foreach (string id in claimedSupplies)
                 if (string.IsNullOrWhiteSpace(id) || System.Text.Encoding.UTF8.GetByteCount(id) > 61)
-                    throw new InvalidDataException("Mã tiếp tế không hợp lệ.");
+                    throw new InvalidDataException("Invalid supply ID.");
         }
         private static bool Finite(Vector3 p) => float.IsFinite(p.x) && float.IsFinite(p.y) && float.IsFinite(p.z);
         private static bool ValidWeapon(CampaignWeaponSave w) => w.magazine >= 0 && w.reserve >= 0

@@ -148,7 +148,7 @@ namespace FPS.Tests
             foreach (var cue in campaign.Dialogue(id).CuesFor(second))
             {
                 string expected = cue.Format(first, second);
-                yield return Wait(() => hostCaption.text == expected && Peer()?.radioCaption == expected,
+                yield return Wait(() => CampaignTextHighlight.StripRichText(hostCaption.text) == expected && Peer()?.radioCaption == expected,
                     14, $"D{(int)id:00}: {Tag(expected)}");
                 Debug.Log($"[Radio48] D{(int)id:00} host = client: {Tag(expected)}");
             }

@@ -65,7 +65,7 @@ namespace FPS
         public float InteractionBandBottom { get; private set; } = HudLayout.InteractionBottom;
         public bool HasEndingDialogue => radio.HasEnding;
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-        internal string RadioCaption => subtitle != null ? subtitle.text : string.Empty;
+        internal string RadioCaption => CampaignTextHighlight.StripRichText(subtitle != null ? subtitle.text : string.Empty);
 #endif
         private void Awake() { Instance = this; Build(); HudSignals.NotifySourcesChanged(); }
         private void OnEnable()
@@ -131,8 +131,9 @@ namespace FPS
             var objective = nearbyHint != null ? nearbyHint.objectiveId : CampaignObjectiveId.None;
             hintProgress.Observe(Campaign?.State, objective);
             var definition = Campaign?.ContentCatalog?.FindObjective(objective);
+            float[] hintSeconds = { 25f, 45f, 75f };
             for (int i = 0; i < hintText.Length; i++)
-                hintText[i] = CampaignRules.HintText(Campaign?.State, definition, 45 + i * 45);
+                hintText[i] = CampaignRules.HintText(Campaign?.State, definition, hintSeconds[i]);
         }
         private void RefreshCampaign()
         {
@@ -402,7 +403,7 @@ namespace FPS
         {
             var go = new GameObject(name, typeof(RectTransform), typeof(Text)); go.transform.SetParent(parent,false);
             var r=go.GetComponent<RectTransform>();r.anchorMin=min;r.anchorMax=max;r.offsetMin=r.offsetMax=Vector2.zero;
-            var t=go.GetComponent<Text>();t.font=font;t.fontSize=(int)Theme.Size(size);t.color=Theme.Text;t.raycastTarget=false;t.horizontalOverflow=HorizontalWrapMode.Wrap;t.verticalOverflow=VerticalWrapMode.Truncate;
+            var t=go.GetComponent<Text>();t.font=font;t.fontSize=(int)Theme.Size(size);t.color=Theme.Text;t.raycastTarget=false;t.supportRichText=true;t.horizontalOverflow=HorizontalWrapMode.Wrap;t.verticalOverflow=VerticalWrapMode.Truncate;
             var outline=go.AddComponent<Outline>();outline.effectColor=Color.black;outline.effectDistance=new Vector2(1,-1);return t;
         }
         private UnityEngine.UI.Button Button(Transform parent,string label,Vector2 min,Vector2 max,Action clicked)
@@ -528,10 +529,12 @@ namespace FPS
                 manifestPageTitle.text = file != null ? file.title : focused.Title;
                 deviceBody.color = record ? Theme.Background : Theme.Text;
                 // Record page: the source once it is on file (plus any cross-reference), otherwise how to obtain it.
-                string page = recorded ? file.body : file != null ? "SOURCE NOT RECORDED\nRecord this document before comparing its fields." : focused.Instructions;
+                string page = recorded ? CampaignTextHighlight.FormatFileRecord(file, Theme, onPaper: true)
+                    : file != null ? CampaignTextHighlight.Format("SOURCE NOT RECORDED\nRecord this document before comparing its fields.", Theme, onPaper: true)
+                    : CampaignTextHighlight.Format(focused.Instructions, Theme, onPaper: true);
                 if (recorded && reference != null && Campaign.State.HasFile(referenceId))
-                    page += "\n\nCROSS-REFERENCE — " + reference.title + "\n" + reference.body;
-                deviceBody.text = record ? page : body.text.Substring(body.text.IndexOf("\n\n", StringComparison.Ordinal) + 2);
+                    page += "\n\nCROSS-REFERENCE — " + reference.title + "\n" + CampaignTextHighlight.FormatFileRecord(reference, Theme, onPaper: true);
+                deviceBody.text = record ? page : CampaignTextHighlight.Format(body.text.Substring(body.text.IndexOf("\n\n", StringComparison.Ordinal) + 2), Theme);
                 deviceState.text = DeviceStateLabel(Campaign.State, objective, result);
                 deviceAction.text = result == CampaignResult.Accepted ? "READY" : result == CampaignResult.AlreadyDone ? "RECORDED" : "READ SOURCE";
                 if (!record) RenderDeviceNotice(result, false);
@@ -897,14 +900,14 @@ namespace FPS
             int tier = CampaignRules.HintTier(hintProgress.Seconds);
             bool blocked = focused == null && HUDManager.HasInstance && HUDManager.Instance.HasInteractionPrompt;
             string hint = nearbyHint == null || blocked || nearbyThreat || Time.unscaledTime < combatUntil || tier == 0
-                ? "" : hintText[tier - 1];
+                ? "" : CampaignTextHighlight.Format(hintText[tier - 1], Theme);
             SetInteractionText(string.IsNullOrWhiteSpace(hint) ? interactionText
                 : string.IsNullOrEmpty(interactionText) ? hint : interactionText + "\n" + hint);
         }
         private void UpdateSubtitles()
         {
             if (!radio.Advance(Time.unscaledTime, Campaign.State.chapter, Campaign.State.phase, out string text, out var clip)) return;
-            subtitle.text = text;
+            subtitle.text = CampaignTextHighlight.Format(text, Theme);
             RefreshPresentation();
             if (dialogueAudio != null && clip != null) dialogueAudio.PlayOneShot(clip);
         }
